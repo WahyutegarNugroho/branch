@@ -263,7 +263,7 @@ export function LinkButton({ link, profileId, profile }: { link: Link, profileId
       }
     }
     ;(buttonStyle as any)['--spotlight-color-rgba'] = `rgba(${r}, ${g}, ${b}, 0.5)`
-    spotlightClass = " spotlight-active animate-glow-pulse"
+    spotlightClass = " spotlight-active"
   }
 
   // Animation Effects support

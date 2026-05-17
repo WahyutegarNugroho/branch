@@ -427,7 +427,7 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
                         }
                       }
                       ;(buttonStyle as any)['--spotlight-color-rgba'] = `rgba(${r}, ${g}, ${b}, 0.5)`
-                      spotlightClass = " spotlight-active animate-glow-pulse"
+                      spotlightClass = " spotlight-active"
                     }
 
                     // Animation Effects support
