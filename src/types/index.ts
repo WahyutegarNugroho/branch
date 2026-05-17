@@ -13,6 +13,7 @@ export interface Profile {
   button_style?: string
   font_family?: string
   social_links?: Record<string, string> | null
+  show_branding?: boolean
   created_at: string
   updated_at: string
 }
@@ -34,6 +35,8 @@ export interface Link {
   bg_opacity?: number | null
   icon_color?: string | null
   show_icon?: boolean
+  link_type?: 'link' | 'header'
+  thumbnail_url?: string | null
 }
 
 export interface Analytics {

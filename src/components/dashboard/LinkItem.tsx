@@ -67,6 +67,8 @@ export function LinkItem({ link }: { link: any }) {
   const [validFrom, setValidFrom] = useState(link.valid_from ? formatDateTimeLocal(link.valid_from) : '')
   const [validUntil, setValidUntil] = useState(link.valid_until ? formatDateTimeLocal(link.valid_until) : '')
   const [isEmbed, setIsEmbed] = useState(!!link.is_embed)
+  const [linkType, setLinkType] = useState(link.link_type || 'link')
+  const [thumbnailUrl, setThumbnailUrl] = useState(link.thumbnail_url || '')
 
   useEffect(() => {
     setTitle(link.title || '')
@@ -84,7 +86,9 @@ export function LinkItem({ link }: { link: any }) {
     setValidFrom(link.valid_from ? formatDateTimeLocal(link.valid_from) : '')
     setValidUntil(link.valid_until ? formatDateTimeLocal(link.valid_until) : '')
     setIsEmbed(!!link.is_embed)
-  }, [link.title, link.url, link.icon_position, link.bg_color, link.text_color, link.bg_opacity, link.is_active, link.show_icon, link.icon_color, link.valid_from, link.valid_until, link.is_embed])
+    setLinkType(link.link_type || 'link')
+    setThumbnailUrl(link.thumbnail_url || '')
+  }, [link.title, link.url, link.icon_position, link.bg_color, link.text_color, link.bg_opacity, link.is_active, link.show_icon, link.icon_color, link.valid_from, link.valid_until, link.is_embed, link.link_type, link.thumbnail_url])
 
   // Dispatch real-time live preview updates
   useEffect(() => {
@@ -95,7 +99,7 @@ export function LinkItem({ link }: { link: any }) {
         id: link.id,
         changes: {
           title,
-          url,
+          url: linkType === 'header' ? '' : url,
           icon_position: iconPosition,
           bg_color: customStyleEnabled ? bgColor : null,
           text_color: customStyleEnabled ? textColor : null,
@@ -112,10 +116,12 @@ export function LinkItem({ link }: { link: any }) {
           valid_from: scheduleEnabled && validFrom ? new Date(validFrom).toISOString() : null,
           valid_until: scheduleEnabled && validUntil ? new Date(validUntil).toISOString() : null,
           is_embed: isEmbed,
+          link_type: linkType,
+          thumbnail_url: linkType === 'header' ? null : thumbnailUrl,
         }
       }
     }))
-  }, [title, url, iconPosition, customStyleEnabled, bgColor, textColor, bgOpacity, isActive, showIcon, iconColorMode, iconColor, scheduleEnabled, validFrom, validUntil, isEmbed, isEditing, link.id])
+  }, [title, url, iconPosition, customStyleEnabled, bgColor, textColor, bgOpacity, isActive, showIcon, iconColorMode, iconColor, scheduleEnabled, validFrom, validUntil, isEmbed, isEditing, link.id, linkType, thumbnailUrl])
 
   const matchedPlatform = getPlatformByName(title)
   const MatchedIcon = matchedPlatform?.icon
@@ -198,43 +204,81 @@ export function LinkItem({ link }: { link: any }) {
     return (
       <Card ref={setNodeRef} style={style} className="p-5 mb-4 bg-zinc-900/60 border-white/10 shadow-2xl rounded-2xl backdrop-blur-xl relative">
         <form action={handleSave} className="space-y-4">
-          <div className="flex gap-4">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setIsPlatformPickerOpen(true)}
-              className="w-14 h-14 shrink-0 rounded-2xl border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 p-0 flex items-center justify-center transition-all group shadow-inner mt-1"
-            >
-              {MatchedIcon ? (
-                <MatchedIcon size={28} color={matchedPlatform?.color} className="group-hover:scale-110 transition-transform" />
-              ) : (
-                <Search size={24} className="text-zinc-400 group-hover:text-white transition-colors" />
-              )}
-            </Button>
-            <div className="flex-1 space-y-3">
-              <Input name="title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title" required className="font-bold rounded-xl border-white/10 bg-white/5 text-white focus-visible:ring-brand-pink h-12" />
-              <Input name="url" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="URL" required className="rounded-xl border-white/10 bg-white/5 text-white focus-visible:ring-brand-pink h-12" />
+          <input type="hidden" name="link_type" value={linkType} />
+          
+          {linkType === 'header' ? (
+            <div className="space-y-3">
+              <span className="text-xs text-brand-pink font-bold uppercase tracking-wider block">Section Divider / Header</span>
+              <Input name="title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Header Title (e.g., My Socials, Projects)" required className="font-bold rounded-xl border-white/10 bg-white/5 text-white focus-visible:ring-brand-pink h-12" />
+              <input type="hidden" name="url" value="" />
             </div>
-          </div>
+          ) : (
+            <div className="flex gap-4">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setIsPlatformPickerOpen(true)}
+                className="w-14 h-14 shrink-0 rounded-2xl border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 p-0 flex items-center justify-center transition-all group shadow-inner mt-1"
+              >
+                {MatchedIcon ? (
+                  <MatchedIcon size={28} color={matchedPlatform?.color} className="group-hover:scale-110 transition-transform" />
+                ) : (
+                  <Search size={24} className="text-zinc-400 group-hover:text-white transition-colors" />
+                )}
+              </Button>
+              <div className="flex-1 space-y-3">
+                <Input name="title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title" required className="font-bold rounded-xl border-white/10 bg-white/5 text-white focus-visible:ring-brand-pink h-12" />
+                <Input name="url" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="URL" required className="rounded-xl border-white/10 bg-white/5 text-white focus-visible:ring-brand-pink h-12" />
+              </div>
+            </div>
+          )}
 
-          {/* Embed Switch */}
-          <div className="flex items-center justify-between p-4 bg-zinc-950/40 border border-white/5 rounded-2xl">
-            <div className="space-y-0.5">
-              <span className="text-sm font-bold text-white flex items-center gap-1.5">
-                🖼️ Tampilkan sebagai Embed Media
-              </span>
-              <p className="text-[10px] text-zinc-400 max-w-[280px]">
-                Tampilkan langsung video YouTube, lagu Spotify, SoundCloud, atau TikTok di halaman profil Anda alih-alih sebagai tautan biasa.
-              </p>
+          {/* Embed Switch (Link only) */}
+          {linkType === 'link' && (
+            <div className="flex items-center justify-between p-4 bg-zinc-950/40 border border-white/5 rounded-2xl">
+              <div className="space-y-0.5">
+                <span className="text-sm font-bold text-white flex items-center gap-1.5">
+                  🖼️ Tampilkan sebagai Embed Media
+                </span>
+                <p className="text-[10px] text-zinc-400 max-w-[280px]">
+                  Tampilkan langsung video YouTube, lagu Spotify, SoundCloud, atau TikTok di halaman profil Anda alih-alih sebagai tautan biasa.
+                </p>
+              </div>
+              <Switch 
+                id={`is_embed_${link.id}`} 
+                checked={isEmbed} 
+                onCheckedChange={setIsEmbed} 
+                className="data-[state=checked]:bg-brand-pink"
+              />
+              <input type="hidden" name="is_embed" value={isEmbed ? 'on' : 'off'} />
             </div>
-            <Switch 
-              id={`is_embed_${link.id}`} 
-              checked={isEmbed} 
-              onCheckedChange={setIsEmbed} 
-              className="data-[state=checked]:bg-brand-pink"
-            />
-            <input type="hidden" name="is_embed" value={isEmbed ? 'on' : 'off'} />
-          </div>
+          )}
+
+          {/* Thumbnail URL Input (Link only) */}
+          {linkType === 'link' && (
+            <div className="p-4 bg-zinc-950/40 border border-white/5 rounded-2xl space-y-2">
+              <span className="text-sm font-bold text-white flex items-center gap-1.5">
+                🖼️ Link Thumbnail
+              </span>
+              <p className="text-[10px] text-zinc-400 max-w-[400px]">
+                Tambahkan gambar kecil di sebelah kiri tautan Anda. Masukkan URL gambar (PNG, JPG, atau GIF).
+              </p>
+              <div className="flex items-center gap-3">
+                <Input 
+                  name="thumbnail_url" 
+                  value={thumbnailUrl} 
+                  onChange={(e) => setThumbnailUrl(e.target.value)} 
+                  placeholder="https://example.com/image.png (Optional)" 
+                  className="rounded-xl border-white/10 bg-white/5 text-white h-10 text-sm focus-visible:ring-brand-pink flex-1" 
+                />
+                {thumbnailUrl && (
+                  <div className="w-10 h-10 rounded-xl overflow-hidden shrink-0 border border-white/10">
+                    <img src={thumbnailUrl} alt="Thumbnail preview" className="w-full h-full object-cover" />
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* Custom Theme Section */}
           <div className="bg-zinc-950/40 border border-white/5 p-4 rounded-2xl space-y-4">
@@ -332,61 +376,63 @@ export function LinkItem({ link }: { link: any }) {
                   </div>
                 </div>
 
-                {/* Logo Color Mode Options */}
-                <div className="sm:col-span-2 space-y-1.5 pt-2 border-t border-white/5">
-                  <span className="text-xs text-zinc-400">Logo Color Mode:</span>
-                  <div className="flex bg-zinc-950 p-1 rounded-xl border border-white/10 w-fit">
-                    <button
-                      type="button"
-                      onClick={() => setIconColorMode('original')}
-                      className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
-                        iconColorMode === 'original'
-                          ? 'bg-brand-pink text-white shadow'
-                          : 'text-zinc-400 hover:text-white'
-                      }`}
-                    >
-                      Original
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setIconColorMode('text')}
-                      className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
-                        iconColorMode === 'text'
-                          ? 'bg-brand-pink text-white shadow'
-                          : 'text-zinc-400 hover:text-white'
-                      }`}
-                    >
-                      Same as Text
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setIconColorMode('custom')}
-                      className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
-                        iconColorMode === 'custom'
-                          ? 'bg-brand-pink text-white shadow'
-                          : 'text-zinc-400 hover:text-white'
-                      }`}
-                    >
-                      Custom Color
-                    </button>
+                {/* Logo Color Mode Options (Link only) */}
+                {linkType === 'link' && (
+                  <div className="sm:col-span-2 space-y-1.5 pt-2 border-t border-white/5">
+                    <span className="text-xs text-zinc-400">Logo Color Mode:</span>
+                    <div className="flex bg-zinc-950 p-1 rounded-xl border border-white/10 w-fit">
+                      <button
+                        type="button"
+                        onClick={() => setIconColorMode('original')}
+                        className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+                          iconColorMode === 'original'
+                            ? 'bg-brand-pink text-white shadow'
+                            : 'text-zinc-400 hover:text-white'
+                        }`}
+                      >
+                        Original
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setIconColorMode('text')}
+                        className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+                          iconColorMode === 'text'
+                            ? 'bg-brand-pink text-white shadow'
+                            : 'text-zinc-400 hover:text-white'
+                        }`}
+                      >
+                        Same as Text
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setIconColorMode('custom')}
+                        className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+                          iconColorMode === 'custom'
+                            ? 'bg-brand-pink text-white shadow'
+                            : 'text-zinc-400 hover:text-white'
+                        }`}
+                      >
+                        Custom Color
+                      </button>
+                    </div>
+                    <input 
+                      type="hidden" 
+                      name="icon_color" 
+                      value={
+                        customStyleEnabled 
+                          ? iconColorMode === 'original' 
+                            ? '' 
+                            : iconColorMode === 'text' 
+                            ? 'text' 
+                            : iconColor 
+                          : ''
+                      } 
+                    />
                   </div>
-                  <input 
-                    type="hidden" 
-                    name="icon_color" 
-                    value={
-                      customStyleEnabled 
-                        ? iconColorMode === 'original' 
-                          ? '' 
-                          : iconColorMode === 'text' 
-                          ? 'text' 
-                          : iconColor 
-                        : ''
-                    } 
-                  />
-                </div>
+                )}
 
-                {/* Custom Logo Color Picker */}
-                {iconColorMode === 'custom' && (
+                {/* Custom Logo Color Picker (Link only) */}
+                {linkType === 'link' && iconColorMode === 'custom' && (
                   <div className="sm:col-span-2 space-y-1.5 animate-in fade-in slide-in-from-top-2 duration-200">
                     <span className="text-xs text-zinc-400">Custom Logo Color:</span>
                     <div className="flex items-center gap-2">
@@ -420,55 +466,57 @@ export function LinkItem({ link }: { link: any }) {
             )}
           </div>
 
-          {/* Link Scheduling Section */}
-          <div className="bg-zinc-950/40 border border-white/5 p-4 rounded-2xl space-y-4">
-            <div className="flex items-center space-x-2">
-              <Switch 
-                id={`schedule_enabled_${link.id}`} 
-                checked={scheduleEnabled} 
-                onCheckedChange={setScheduleEnabled} 
-                className="data-[state=checked]:bg-brand-pink"
-              />
-              <label htmlFor={`schedule_enabled_${link.id}`} className="text-sm font-bold text-white cursor-pointer flex items-center gap-1.5">
-                ⏰ Jadwalkan Tautan (Schedule)
-              </label>
-            </div>
-
-            {scheduleEnabled && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2 duration-200">
-                <div className="space-y-1.5">
-                  <span className="text-xs text-zinc-400">Tanggal Mulai (Valid From):</span>
-                  <Input 
-                    type="datetime-local" 
-                    name="valid_from" 
-                    value={validFrom} 
-                    onChange={(e) => setValidFrom(e.target.value)}
-                    className="rounded-xl border-white/10 bg-white/5 text-white h-10 text-xs focus-visible:ring-brand-pink w-full block [color-scheme:dark]" 
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <span className="text-xs text-zinc-400">Tanggal Selesai (Valid Until):</span>
-                  <Input 
-                    type="datetime-local" 
-                    name="valid_until" 
-                    value={validUntil} 
-                    onChange={(e) => setValidUntil(e.target.value)}
-                    className="rounded-xl border-white/10 bg-white/5 text-white h-10 text-xs focus-visible:ring-brand-pink w-full block [color-scheme:dark]" 
-                  />
-                </div>
-                <p className="sm:col-span-2 text-[10px] text-zinc-500 italic">
-                  Tautan hanya akan muncul pada halaman publik Anda selama rentang waktu di atas. Kosongkan salah satu untuk tidak membatasinya.
-                </p>
+          {/* Link Scheduling Section (Link only) */}
+          {linkType === 'link' && (
+            <div className="bg-zinc-950/40 border border-white/5 p-4 rounded-2xl space-y-4">
+              <div className="flex items-center space-x-2">
+                <Switch 
+                  id={`schedule_enabled_${link.id}`} 
+                  checked={scheduleEnabled} 
+                  onCheckedChange={setScheduleEnabled} 
+                  className="data-[state=checked]:bg-brand-pink"
+                />
+                <label htmlFor={`schedule_enabled_${link.id}`} className="text-sm font-bold text-white cursor-pointer flex items-center gap-1.5">
+                  ⏰ Jadwalkan Tautan (Schedule)
+                </label>
               </div>
-            )}
 
-            {!scheduleEnabled && (
-              <>
-                <input type="hidden" name="valid_from" value="" />
-                <input type="hidden" name="valid_until" value="" />
-              </>
-            )}
-          </div>
+              {scheduleEnabled && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2 duration-200">
+                  <div className="space-y-1.5">
+                    <span className="text-xs text-zinc-400">Tanggal Mulai (Valid From):</span>
+                    <Input 
+                      type="datetime-local" 
+                      name="valid_from" 
+                      value={validFrom} 
+                      onChange={(e) => setValidFrom(e.target.value)}
+                      className="rounded-xl border-white/10 bg-white/5 text-white h-10 text-xs focus-visible:ring-brand-pink w-full block [color-scheme:dark]" 
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <span className="text-xs text-zinc-400">Tanggal Selesai (Valid Until):</span>
+                    <Input 
+                      type="datetime-local" 
+                      name="valid_until" 
+                      value={validUntil} 
+                      onChange={(e) => setValidUntil(e.target.value)}
+                      className="rounded-xl border-white/10 bg-white/5 text-white h-10 text-xs focus-visible:ring-brand-pink w-full block [color-scheme:dark]" 
+                    />
+                  </div>
+                  <p className="sm:col-span-2 text-[10px] text-zinc-500 italic">
+                    Tautan hanya akan muncul pada halaman publik Anda selama rentang waktu di atas. Kosongkan salah satu untuk tidak membatasinya.
+                  </p>
+                </div>
+              )}
+
+              {!scheduleEnabled && (
+                <>
+                  <input type="hidden" name="valid_from" value="" />
+                  <input type="hidden" name="valid_until" value="" />
+                </>
+              )}
+            </div>
+          )}
           
           <div className="flex flex-wrap items-center justify-between gap-4 pt-2 border-t border-white/5 mt-4">
             <div className="flex flex-wrap items-center gap-6">
@@ -482,66 +530,76 @@ export function LinkItem({ link }: { link: any }) {
                 <input type="hidden" name="is_active" value={isActive ? 'on' : ''} />
                 <label htmlFor={`is_active_${link.id}`} className="text-sm text-zinc-400">Active</label>
               </div>
-              <div className="flex items-center space-x-2">
-                <Switch 
-                  id={`show_icon_${link.id}`} 
-                  checked={showIcon} 
-                  onCheckedChange={setShowIcon} 
-                  className="data-[state=checked]:bg-brand-pink" 
-                />
-                <input type="hidden" name="show_icon" value={showIcon ? 'on' : ''} />
-                <label htmlFor={`show_icon_${link.id}`} className="text-sm text-zinc-400">Show Logo</label>
-              </div>
-              <div className="flex flex-col space-y-1.5">
-                <span className="text-sm text-zinc-400">Logo Position:</span>
-                <div className="flex bg-zinc-950 p-1 rounded-xl border border-white/10 w-fit">
-                  <button
-                    type="button"
-                    onClick={() => setIconPosition('left_far')}
-                    className={`px-3 py-1 text-xs font-semibold rounded-lg transition-all ${
-                      iconPosition === 'left_far' || iconPosition === 'left'
-                        ? 'bg-brand-pink text-white shadow'
-                        : 'text-zinc-400 hover:text-white'
-                    }`}
-                  >
-                    Left Far
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setIconPosition('left_near')}
-                    className={`px-3 py-1 text-xs font-semibold rounded-lg transition-all ${
-                      iconPosition === 'left_near'
-                        ? 'bg-brand-pink text-white shadow'
-                        : 'text-zinc-400 hover:text-white'
-                    }`}
-                  >
-                    Left
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setIconPosition('right_near')}
-                    className={`px-3 py-1 text-xs font-semibold rounded-lg transition-all ${
-                      iconPosition === 'right_near'
-                        ? 'bg-brand-pink text-white shadow'
-                        : 'text-zinc-400 hover:text-white'
-                    }`}
-                  >
-                    Right
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setIconPosition('right_far')}
-                    className={`px-3 py-1 text-xs font-semibold rounded-lg transition-all ${
-                      iconPosition === 'right_far' || iconPosition === 'right'
-                        ? 'bg-brand-pink text-white shadow'
-                        : 'text-zinc-400 hover:text-white'
-                    }`}
-                  >
-                    Right Far
-                  </button>
-                </div>
-                <input type="hidden" name="icon_position" value={iconPosition} />
-              </div>
+
+              {linkType === 'link' ? (
+                <>
+                  <div className="flex items-center space-x-2">
+                    <Switch 
+                      id={`show_icon_${link.id}`} 
+                      checked={showIcon} 
+                      onCheckedChange={setShowIcon} 
+                      className="data-[state=checked]:bg-brand-pink" 
+                    />
+                    <input type="hidden" name="show_icon" value={showIcon ? 'on' : ''} />
+                    <label htmlFor={`show_icon_${link.id}`} className="text-sm text-zinc-400">Show Logo</label>
+                  </div>
+                  <div className="flex flex-col space-y-1.5">
+                    <span className="text-sm text-zinc-400">Logo Position:</span>
+                    <div className="flex bg-zinc-950 p-1 rounded-xl border border-white/10 w-fit">
+                      <button
+                        type="button"
+                        onClick={() => setIconPosition('left_far')}
+                        className={`px-3 py-1 text-xs font-semibold rounded-lg transition-all ${
+                          iconPosition === 'left_far' || iconPosition === 'left'
+                            ? 'bg-brand-pink text-white shadow'
+                            : 'text-zinc-400 hover:text-white'
+                        }`}
+                      >
+                        Left Far
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setIconPosition('left_near')}
+                        className={`px-3 py-1 text-xs font-semibold rounded-lg transition-all ${
+                          iconPosition === 'left_near'
+                            ? 'bg-brand-pink text-white shadow'
+                            : 'text-zinc-400 hover:text-white'
+                        }`}
+                      >
+                        Left
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setIconPosition('right_near')}
+                        className={`px-3 py-1 text-xs font-semibold rounded-lg transition-all ${
+                          iconPosition === 'right_near'
+                            ? 'bg-brand-pink text-white shadow'
+                            : 'text-zinc-400 hover:text-white'
+                        }`}
+                      >
+                        Right
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setIconPosition('right_far')}
+                        className={`px-3 py-1 text-xs font-semibold rounded-lg transition-all ${
+                          iconPosition === 'right_far' || iconPosition === 'right'
+                            ? 'bg-brand-pink text-white shadow'
+                            : 'text-zinc-400 hover:text-white'
+                        }`}
+                      >
+                        Right Far
+                      </button>
+                    </div>
+                    <input type="hidden" name="icon_position" value={iconPosition} />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <input type="hidden" name="show_icon" value="" />
+                  <input type="hidden" name="icon_position" value="" />
+                </>
+              )}
             </div>
             <div className="flex gap-2">
               <Button type="button" variant="ghost" className="text-zinc-400 hover:text-white hover:bg-white/10 rounded-xl" onClick={() => setIsEditing(false)} disabled={loading}>Cancel</Button>
@@ -569,12 +627,13 @@ export function LinkItem({ link }: { link: any }) {
   const isRightFar = pos === 'right' || pos === 'right_far'
   const isLeftNear = pos === 'left_near'
   const isRightNear = pos === 'right_near'
+  const isHeader = link.link_type === 'header'
 
   return (
     <Card 
       ref={setNodeRef} 
       style={style} 
-      className="p-4 mb-4 bg-zinc-900/40 border-white/10 shadow-lg rounded-2xl backdrop-blur-md group hover:border-white/20 transition-all relative flex flex-col sm:flex-row items-stretch sm:items-center gap-4 sm:gap-2"
+      className={`p-4 mb-4 ${isHeader ? 'bg-zinc-900/80 border-brand-pink/20 border shadow-md' : 'bg-zinc-900/40 border-white/10 shadow-lg'} rounded-2xl backdrop-blur-md group hover:border-white/20 transition-all relative flex flex-col sm:flex-row items-stretch sm:items-center gap-4 sm:gap-2`}
     >
       {/* Left side: Drag Handle & Main Content */}
       <div className="flex items-center gap-2 flex-1 min-w-0">
@@ -583,55 +642,75 @@ export function LinkItem({ link }: { link: any }) {
           <GripVertical size={18} />
         </div>
 
-        {/* Icon & Details */}
-        <div className="flex items-center gap-3 min-w-0 flex-1">
-          {/* Render Left Far Icon */}
-          {isLeftFar && (
-            <div className="flex items-center justify-center w-11 h-11 shrink-0 rounded-xl bg-white/5 border border-white/10 shadow-inner overflow-hidden">
-              {DisplayIcon && link.show_icon !== false ? (
-                <DisplayIcon size={22} color={displayPlatform?.color} />
-              ) : (
-                <LinkIcon size={18} className="text-zinc-500" />
-              )}
+        {isHeader ? (
+          /* Header Layout */
+          <div className="flex items-center gap-3 min-w-0 flex-1 py-1">
+            <div className="flex items-center justify-center w-10 h-10 shrink-0 rounded-xl bg-brand-pink/10 border border-brand-pink/20">
+              <span className="text-brand-pink font-bold text-sm">H</span>
             </div>
-          )}
-
-          {/* Details */}
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-2">
-              {isLeftNear && DisplayIcon && link.show_icon !== false && (
-                <DisplayIcon size={18} color={displayPlatform?.color} className="shrink-0" />
-              )}
-              <p className="font-bold text-white truncate text-base leading-snug">{link.title}</p>
-              {isRightNear && DisplayIcon && link.show_icon !== false && (
-                <DisplayIcon size={18} color={displayPlatform?.color} className="shrink-0" />
-              )}
-            </div>
-            
-            <p className="text-xs text-zinc-400 flex items-center gap-1.5 truncate mt-1">
-              <ExternalLink size={10} className="text-zinc-500 shrink-0" /> 
-              <span className="truncate hover:text-brand-pink transition-colors">{link.url}</span>
-            </p>
-            
-            {(link.valid_from || link.valid_until) && (
-              <p className="text-[10px] text-brand-pink flex items-center gap-1 mt-1.5 font-semibold">
-                <span className="w-1.5 h-1.5 rounded-full bg-brand-pink animate-pulse" />
-                Scheduled: {link.valid_from ? new Date(link.valid_from).toLocaleDateString() : 'Always'} - {link.valid_until ? new Date(link.valid_until).toLocaleDateString() : 'Always'}
+            <div className="min-w-0 flex-1">
+              <p className="font-extrabold text-white text-base leading-snug tracking-tight">{link.title}</p>
+              <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider mt-0.5 flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-brand-pink shrink-0" />
+                Section Divider
               </p>
+            </div>
+          </div>
+        ) : (
+          /* Standard Link Layout */
+          <div className="flex items-center gap-3 min-w-0 flex-1">
+            {/* Render Left Far Icon */}
+            {isLeftFar && (
+              <div className="flex items-center justify-center w-11 h-11 shrink-0 rounded-xl bg-white/5 border border-white/10 shadow-inner overflow-hidden">
+                {link.thumbnail_url ? (
+                  <img src={link.thumbnail_url} alt="" className="w-full h-full object-cover animate-in fade-in duration-200" />
+                ) : DisplayIcon && link.show_icon !== false ? (
+                  <DisplayIcon size={22} color={displayPlatform?.color} />
+                ) : (
+                  <LinkIcon size={18} className="text-zinc-500" />
+                )}
+              </div>
+            )}
+
+            {/* Details */}
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-2">
+                {isLeftNear && DisplayIcon && link.show_icon !== false && (
+                  <DisplayIcon size={18} color={displayPlatform?.color} className="shrink-0" />
+                )}
+                <p className="font-bold text-white truncate text-base leading-snug">{link.title}</p>
+                {isRightNear && DisplayIcon && link.show_icon !== false && (
+                  <DisplayIcon size={18} color={displayPlatform?.color} className="shrink-0" />
+                )}
+              </div>
+              
+              <p className="text-xs text-zinc-400 flex items-center gap-1.5 truncate mt-1">
+                <ExternalLink size={10} className="text-zinc-500 shrink-0" /> 
+                <span className="truncate hover:text-brand-pink transition-colors">{link.url}</span>
+              </p>
+              
+              {(link.valid_from || link.valid_until) && (
+                <p className="text-[10px] text-brand-pink flex items-center gap-1 mt-1.5 font-semibold">
+                  <span className="w-1.5 h-1.5 rounded-full bg-brand-pink animate-pulse" />
+                  Scheduled: {link.valid_from ? new Date(link.valid_from).toLocaleDateString() : 'Always'} - {link.valid_until ? new Date(link.valid_until).toLocaleDateString() : 'Always'}
+                </p>
+              )}
+            </div>
+
+            {/* Render Right Far Icon */}
+            {isRightFar && (
+              <div className="flex items-center justify-center w-11 h-11 shrink-0 rounded-xl bg-white/5 border border-white/10 shadow-inner overflow-hidden">
+                {link.thumbnail_url ? (
+                  <img src={link.thumbnail_url} alt="" className="w-full h-full object-cover animate-in fade-in duration-200" />
+                ) : DisplayIcon && link.show_icon !== false ? (
+                  <DisplayIcon size={22} color={displayPlatform?.color} />
+                ) : (
+                  <LinkIcon size={18} className="text-zinc-500" />
+                )}
+              </div>
             )}
           </div>
-
-          {/* Render Right Far Icon */}
-          {isRightFar && (
-            <div className="flex items-center justify-center w-11 h-11 shrink-0 rounded-xl bg-white/5 border border-white/10 shadow-inner overflow-hidden">
-              {DisplayIcon && link.show_icon !== false ? (
-                <DisplayIcon size={22} color={displayPlatform?.color} />
-              ) : (
-                <LinkIcon size={18} className="text-zinc-500" />
-              )}
-            </div>
-          )}
-        </div>
+        )}
       </div>
 
       {/* Right side: Switch & Actions */}
@@ -676,7 +755,7 @@ export function LinkItem({ link }: { link: any }) {
               <Trash2 className="w-5 h-5 text-red-500" />
             </div>
             <div className="min-w-0 text-left">
-              <h4 className="text-white font-bold text-sm leading-snug">Hapus Tautan?</h4>
+              <h4 className="text-white font-bold text-sm leading-snug">{isHeader ? 'Hapus Header?' : 'Hapus Tautan?'}</h4>
               <p className="text-zinc-400 text-xs truncate max-w-[200px] sm:max-w-md mt-0.5">
                 Hapus <span className="text-red-400 font-semibold">"{link.title}"</span> secara permanen?
               </p>

@@ -96,6 +96,21 @@ export function LinkButton({ link, profileId, profile }: { link: Link, profileId
     }).catch(err => console.error('Analytics error:', err))
   }
 
+  // Render Section Header
+  if (link.link_type === 'header') {
+    return (
+      <div className="w-full text-center py-5 mt-6 first:mt-2 select-none">
+        <h2 
+          style={{ color: link.text_color || undefined }} 
+          className="text-base sm:text-lg font-extrabold tracking-wider uppercase text-white/95 drop-shadow-md cursor-default px-4"
+        >
+          {link.title}
+        </h2>
+        <div className="h-[2px] w-12 mx-auto bg-gradient-to-r from-transparent via-white/20 to-transparent mt-2.5" />
+      </div>
+    )
+  }
+
   if (link.is_embed) {
     const embedInfo = parseEmbedUrl(link.url)
     if (embedInfo) {
@@ -119,6 +134,13 @@ export function LinkButton({ link, profileId, profile }: { link: Link, profileId
   const matchedPlatform = getPlatformByName(link.title)
   const PlatformIcon = link.show_icon !== false ? matchedPlatform?.icon : null
   
+  const ThumbnailImg = link.thumbnail_url ? (
+    <div className="w-7 h-7 rounded-full overflow-hidden border border-white/20 shadow-inner flex items-center justify-center shrink-0 z-10 group-hover:scale-105 transition-transform">
+      <img src={link.thumbnail_url} alt="" className="w-full h-full object-cover" />
+    </div>
+  ) : null
+
+  const hasGraphic = !!ThumbnailImg || !!PlatformIcon
   const pos = link.icon_position || 'left_far'
   const isLeftFar = pos === 'left' || pos === 'left_far'
   const isRightFar = pos === 'right' || pos === 'right_far'
@@ -161,7 +183,7 @@ export function LinkButton({ link, profileId, profile }: { link: Link, profileId
     baseBtnClass += " bg-white/10 hover:bg-white/20 border border-white/15 shadow-[0_8px_30px_rgba(0,0,0,0.3)] hover:shadow-[0_0_25px_rgba(255,255,255,0.15)]"
   }
 
-  if (!PlatformIcon) {
+  if (!hasGraphic) {
     return (
       <a
         href={link.url}
@@ -200,13 +222,13 @@ export function LinkButton({ link, profileId, profile }: { link: Link, profileId
         <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity" style={{ backgroundColor: matchedPlatform?.color || '#ffffff' }} />
         
         {isLeftNear && (
-          <PlatformIcon size={24} color={finalIconColor} className="group-hover:scale-110 transition-transform drop-shadow-sm z-10 shrink-0" />
+          ThumbnailImg ? ThumbnailImg : (PlatformIcon && <PlatformIcon size={24} color={finalIconColor} className="group-hover:scale-110 transition-transform drop-shadow-sm z-10 shrink-0" />)
         )}
         
         <span className="z-10 text-center">{link.title}</span>
         
         {isRightNear && (
-          <PlatformIcon size={24} color={finalIconColor} className="group-hover:scale-110 transition-transform drop-shadow-sm z-10 shrink-0" />
+          ThumbnailImg ? ThumbnailImg : (PlatformIcon && <PlatformIcon size={24} color={finalIconColor} className="group-hover:scale-110 transition-transform drop-shadow-sm z-10 shrink-0" />)
         )}
       </a>
     )
@@ -236,7 +258,7 @@ export function LinkButton({ link, profileId, profile }: { link: Link, profileId
       
       <div className={`w-8 flex items-center shrink-0 z-10 ${isRightFar ? 'justify-end' : 'justify-start'}`}>
         {isLeftFar && (
-          <PlatformIcon size={24} color={finalIconColor} className="group-hover:scale-110 transition-transform drop-shadow-sm" />
+          ThumbnailImg ? ThumbnailImg : (PlatformIcon && <PlatformIcon size={24} color={finalIconColor} className="group-hover:scale-110 transition-transform drop-shadow-sm" />)
         )}
       </div>
       
@@ -244,7 +266,7 @@ export function LinkButton({ link, profileId, profile }: { link: Link, profileId
       
       <div className={`w-8 flex items-center shrink-0 z-10 ${isRightFar ? 'justify-end' : 'justify-start'}`}>
         {isRightFar && (
-          <PlatformIcon size={24} color={finalIconColor} className="group-hover:scale-110 transition-transform drop-shadow-sm" />
+          ThumbnailImg ? ThumbnailImg : (PlatformIcon && <PlatformIcon size={24} color={finalIconColor} className="group-hover:scale-110 transition-transform drop-shadow-sm" />)
         )}
       </div>
     </a>

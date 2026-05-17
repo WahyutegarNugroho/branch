@@ -5,12 +5,14 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { logout } from '@/app/auth/actions'
-import { LogOut, Copy, Check, Zap } from 'lucide-react'
+import { LogOut, Copy, Check, Zap, Share2 } from 'lucide-react'
 import { toast } from 'sonner'
+import { ShareModal } from '@/components/dashboard/ShareModal'
 
 export function DashboardNav({ username }: { username?: string }) {
   const pathname = usePathname()
   const [copied, setCopied] = useState(false)
+  const [isShareOpen, setIsShareOpen] = useState(false)
 
   const handleCopy = async () => {
     if (!username) return
@@ -65,18 +67,21 @@ export function DashboardNav({ username }: { username?: string }) {
         </div>
         <div className="flex items-center gap-3">
           {username && (
-            <Button
-              variant="outline"
-              onClick={handleCopy}
-              className="rounded-full border-white/10 bg-white/5 text-zinc-300 hover:text-white hover:bg-white/10 h-10 px-4 text-xs font-semibold flex items-center gap-2 shadow-sm transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
-            >
-              {copied ? (
-                <Check className="w-3.5 h-3.5 text-emerald-400 animate-in fade-in zoom-in duration-200" />
-              ) : (
-                <Copy className="w-3.5 h-3.5" />
-              )}
-              <span>{copied ? 'Link Copied!' : `branch.app/${username}`}</span>
-            </Button>
+            <>
+              <Button
+                variant="outline"
+                onClick={() => setIsShareOpen(true)}
+                className="rounded-full border-white/10 bg-white/5 text-zinc-300 hover:text-white hover:bg-white/10 h-10 px-4 text-xs font-semibold flex items-center gap-2 shadow-sm transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+              >
+                <Share2 className="w-3.5 h-3.5" />
+                <span>Share</span>
+              </Button>
+              <ShareModal 
+                isOpen={isShareOpen}
+                onClose={() => setIsShareOpen(false)}
+                profile={{ username } as any}
+              />
+            </>
           )}
           <Button variant="ghost" className="text-zinc-400 hover:text-white hover:bg-white/10 rounded-full" onClick={() => logout()}>
             <LogOut className="mr-2 h-4 w-4" />

@@ -206,3 +206,46 @@ CREATE POLICY "Allow user to delete avatar" ON storage.objects
         bucket_id = 'avatars' AND 
         (storage.foldername(name))[1] = auth.uid()::text
     );
+
+
+-- ==========================================
+-- PHASE 1 UPGRADES
+-- ==========================================
+
+-- Alter public.links table
+ALTER TABLE public.links ADD COLUMN IF NOT EXISTS link_type VARCHAR(20) DEFAULT 'link';
+ALTER TABLE public.links ADD COLUMN IF NOT EXISTS thumbnail_url TEXT;
+
+-- Alter public.profiles table
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS show_branding BOOLEAN DEFAULT true;
+
+-- Create themes table
+CREATE TABLE IF NOT EXISTS public.themes (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    bg_type VARCHAR(20) DEFAULT 'solid',
+    bg_color VARCHAR(50) DEFAULT '#ffffff',
+    bg_image_url TEXT,
+    button_shape VARCHAR(20) DEFAULT 'rounded-2xl',
+    button_style VARCHAR(20) DEFAULT 'soft',
+    font_family VARCHAR(50) DEFAULT 'font-sans-theme',
+    is_premium BOOLEAN DEFAULT false,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Enable RLS for themes
+ALTER TABLE public.themes ENABLE ROW LEVEL SECURITY;
+
+-- Allow public read access to themes
+CREATE POLICY "Allow public read themes" ON public.themes
+    FOR SELECT USING (true);
+
+-- Insert initial preset themes
+INSERT INTO public.themes (name, bg_type, bg_color, button_shape, button_style, font_family)
+VALUES 
+    ('Minimal Dark', 'solid', '#09090b', 'rounded-2xl', 'soft', 'font-sans-theme'),
+    ('Sunset Glow', 'gradient', 'linear-gradient(to bottom, #ec4899, #f97316)', 'rounded-full', 'fill', 'font-sans-theme'),
+    ('Forest Breeze', 'gradient', 'linear-gradient(to bottom, #115e59, #14b8a6)', 'rounded-lg', 'outline', 'font-sans-theme'),
+    ('Neo Retro', 'solid', '#facc15', 'rounded-none', 'flat', 'font-sans-theme')
+ON CONFLICT DO NOTHING;
+

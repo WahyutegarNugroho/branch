@@ -23,19 +23,23 @@ export async function getLinks() {
   return data
 }
 
-export async function createLink() {
+export async function createLink(linkType: string = 'link') {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) return { error: 'Unauthorized' }
 
+  const title = linkType === 'header' ? 'New Header' : 'New Link'
+  const url = linkType === 'header' ? '' : 'https://'
+
   const { data, error } = await supabase
     .from('links')
     .insert([{ 
       profile_id: user.id,
-      title: 'New Link',
-      url: 'https://',
+      title,
+      url,
       is_active: true,
+      link_type: linkType,
       sort_order: 0 // Will be handled on the client side, or we can fetch max sort_order
     }])
     .select()
@@ -70,6 +74,16 @@ export async function updateLink(id: string, formData: FormData) {
   }
   if (icon_position) {
     updateData.icon_position = icon_position
+  }
+
+  // Thumbnail support
+  if (formData.has('thumbnail_url')) {
+    updateData.thumbnail_url = formData.get('thumbnail_url') as string || null
+  }
+
+  // Link Type support
+  if (formData.has('link_type')) {
+    updateData.link_type = formData.get('link_type') as string
   }
 
   // Button styling parameters

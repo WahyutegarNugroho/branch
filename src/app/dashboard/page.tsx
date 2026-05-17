@@ -13,22 +13,35 @@ export default async function DashboardPage() {
 
   async function handleCreateLinkAction() {
     'use server'
-    await createLink()
+    await createLink('link')
+  }
+
+  async function handleCreateHeaderAction() {
+    'use server'
+    await createLink('header')
   }
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-extrabold tracking-tight text-white">Links</h1>
-        <p className="text-zinc-400 text-base mt-1">Manage your links and embed content.</p>
+        <h1 className="text-3xl font-extrabold tracking-tight text-white">Links & Sections</h1>
+        <p className="text-zinc-400 text-base mt-1">Manage your links, sections, and embed content.</p>
       </div>
       
-      <form action={handleCreateLinkAction}>
-        <Button type="submit" className="w-full h-14 rounded-2xl bg-gradient-to-r from-brand-pink to-brand-orange hover:opacity-90 transition-opacity text-white font-bold text-lg border-0 shadow-lg">
-          <Plus className="mr-2 h-6 w-6" />
-          Add New Link
-        </Button>
-      </form>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <form action={handleCreateLinkAction} className="w-full">
+          <Button type="submit" className="w-full h-14 rounded-2xl bg-gradient-to-r from-brand-pink to-brand-orange hover:opacity-90 transition-all text-white font-bold text-lg border-0 shadow-lg cursor-pointer">
+            <Plus className="mr-2 h-6 w-6" />
+            Add New Link
+          </Button>
+        </form>
+        <form action={handleCreateHeaderAction} className="w-full">
+          <Button type="submit" className="w-full h-14 rounded-2xl bg-zinc-800 hover:bg-zinc-700/80 transition-all text-white font-bold text-lg border border-white/10 shadow-lg cursor-pointer">
+            <Plus className="mr-2 h-6 w-6" />
+            Add New Header
+          </Button>
+        </form>
+      </div>
 
       <LinkManager initialLinks={links} />
     </div>

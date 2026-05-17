@@ -229,6 +229,21 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
                 })
                 if (activeLinks.length > 0) {
                   return activeLinks.map(link => {
+                    // Render Section Header in Live Preview
+                    if (link.link_type === 'header') {
+                      return (
+                        <div key={link.id} className="w-full text-center py-2 mt-4 first:mt-1 select-none">
+                          <h3 
+                            style={{ color: link.text_color || undefined }} 
+                            className="text-xs font-extrabold tracking-wider uppercase text-white/95 drop-shadow-md cursor-default px-2"
+                          >
+                            {link.title}
+                          </h3>
+                          <div className="h-[1.5px] w-8 mx-auto bg-gradient-to-r from-transparent via-white/20 to-transparent mt-1.5" />
+                        </div>
+                      )
+                    }
+
                     if (link.is_embed) {
                       const embedInfo = parseEmbedUrl(link.url)
                       if (embedInfo) {
@@ -251,6 +266,13 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
                     const matchedPlatform = getPlatformByName(link.title)
                     const PlatformIcon = link.show_icon !== false ? matchedPlatform?.icon : null
                     
+                    const ThumbnailImg = link.thumbnail_url ? (
+                      <div className="w-5 h-5 rounded-full overflow-hidden border border-white/20 shadow-inner flex items-center justify-center shrink-0 z-10">
+                        <img src={link.thumbnail_url} alt="" className="w-full h-full object-cover" />
+                      </div>
+                    ) : null
+
+                    const hasGraphic = !!ThumbnailImg || !!PlatformIcon
                     const pos = link.icon_position || 'left_far'
                     const isLeftFar = pos === 'left' || pos === 'left_far'
                     const isRightFar = pos === 'right' || pos === 'right_far'
@@ -265,7 +287,7 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
                       buttonStyle.backgroundColor = `rgba(255, 255, 255, ${link.bg_opacity / 100})`
                     }
 
-                     if (link.text_color) {
+                    if (link.text_color) {
                       buttonStyle.color = link.text_color
                       buttonStyle.borderColor = `${link.text_color}33` // 20% opacity hex
                     }
@@ -293,7 +315,7 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
                       baseBtnClass += " bg-white/15 border border-white/15 shadow-[0_4px_15px_rgba(0,0,0,0.3)]"
                     }
 
-                    if (!PlatformIcon) {
+                    if (!hasGraphic) {
                       return (
                         <div 
                           key={link.id} 
@@ -315,13 +337,13 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
                           <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity" style={{ backgroundColor: matchedPlatform?.color || '#ffffff' }} />
                           
                           {isLeftNear && (
-                            <PlatformIcon size={18} color={finalIconColor} className="drop-shadow-sm z-10 shrink-0" />
+                            ThumbnailImg ? ThumbnailImg : <PlatformIcon size={18} color={finalIconColor} className="drop-shadow-sm z-10 shrink-0" />
                           )}
                           
                           <span className="z-10 text-center truncate max-w-[160px]">{link.title}</span>
                           
                           {isRightNear && (
-                            <PlatformIcon size={18} color={finalIconColor} className="drop-shadow-sm z-10 shrink-0" />
+                            ThumbnailImg ? ThumbnailImg : <PlatformIcon size={18} color={finalIconColor} className="drop-shadow-sm z-10 shrink-0" />
                           )}
                         </div>
                       )
@@ -348,7 +370,7 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
                         
                         <div className={`w-6 flex items-center shrink-0 z-10 ${isRightFar ? 'justify-end' : 'justify-start'}`}>
                           {isLeftFar && (
-                            <PlatformIcon size={18} color={finalIconColor} className="drop-shadow-sm" />
+                            ThumbnailImg ? ThumbnailImg : <PlatformIcon size={18} color={finalIconColor} className="drop-shadow-sm" />
                           )}
                         </div>
                         
@@ -356,7 +378,7 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
                         
                         <div className={`w-6 flex items-center shrink-0 z-10 ${isRightFar ? 'justify-end' : 'justify-start'}`}>
                           {isRightFar && (
-                            <PlatformIcon size={18} color={finalIconColor} className="drop-shadow-sm" />
+                            ThumbnailImg ? ThumbnailImg : <PlatformIcon size={18} color={finalIconColor} className="drop-shadow-sm" />
                           )}
                         </div>
                       </div>
@@ -373,15 +395,17 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
             </div>
             
             {/* Live Preview Branding Pill */}
-            <div className="mt-12 mb-6">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-white/40 text-[10px] font-semibold backdrop-blur-md">
-                <span>Powered by</span>
-                <div className="w-4 h-4 rounded bg-gradient-to-tr from-brand-pink to-brand-orange flex items-center justify-center">
-                  <Zap className="w-2.5 h-2.5 text-white" />
+            {profile?.show_branding !== false && (
+              <div className="mt-12 mb-6">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-white/40 text-[10px] font-semibold backdrop-blur-md">
+                  <span>Powered by</span>
+                  <div className="w-4 h-4 rounded bg-gradient-to-tr from-brand-pink to-brand-orange flex items-center justify-center">
+                    <Zap className="w-2.5 h-2.5 text-white" />
+                  </div>
+                  <span className="font-bold text-white/80">Branch</span>
                 </div>
-                <span className="font-bold text-white/80">Branch</span>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>

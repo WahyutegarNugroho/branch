@@ -235,23 +235,25 @@ export function AnimatedProfile({ profile, links, bgClass, bgStyle }: { profile:
           </motion.div>
 
           {/* Footer branding */}
-          <motion.div 
-            variants={footerVariants}
-            className="mt-16 mb-8 z-10"
-          >
-            <a 
-              href="/" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white/50 hover:text-white transition-all text-xs font-semibold shadow-sm backdrop-blur-md hover:scale-[1.02] active:scale-[0.98]"
+          {profile.show_branding !== false && (
+            <motion.div 
+              variants={footerVariants}
+              className="mt-16 mb-8 z-10"
             >
-              <span>Powered by</span>
-              <div className="w-5 h-5 rounded-md bg-gradient-to-tr from-brand-pink to-brand-orange flex items-center justify-center shadow-inner">
-                <Zap className="w-3 h-3 text-white" />
-              </div>
-              <span className="font-bold text-white/90">Branch</span>
-            </a>
-          </motion.div>
+              <a 
+                href="/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white/50 hover:text-white transition-all text-xs font-semibold shadow-sm backdrop-blur-md hover:scale-[1.02] active:scale-[0.98]"
+              >
+                <span>Powered by</span>
+                <div className="w-5 h-5 rounded-md bg-gradient-to-tr from-brand-pink to-brand-orange flex items-center justify-center shadow-inner">
+                  <Zap className="w-3 h-3 text-white" />
+                </div>
+                <span className="font-bold text-white/90">Branch</span>
+              </a>
+            </motion.div>
+          )}
         </motion.div>
       </div>
     </div>
