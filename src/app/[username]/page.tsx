@@ -3,8 +3,8 @@ import { notFound } from 'next/navigation'
 import { AnimatedProfile } from '@/components/public/AnimatedProfile'
 import { Metadata } from 'next'
 
-// This ensures page is cached and revalidated (ISR)
-export const revalidate = 60 // Revalidate every 60 seconds
+// Force dynamic rendering to ensure real-time updates and bypass caching
+export const dynamic = 'force-dynamic'
 
 export async function generateMetadata({ params }: { params: { username: string } }): Promise<Metadata> {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
