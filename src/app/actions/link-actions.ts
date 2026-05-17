@@ -121,6 +121,9 @@ export async function updateLink(id: string, formData: FormData) {
   if (formData.has('animation')) {
     updateData.animation = formData.get('animation') as string || null
   }
+  if (formData.has('spotlight_color')) {
+    updateData.spotlight_color = formData.get('spotlight_color') as string || null
+  }
   if (formData.has('embed_type')) {
     updateData.embed_type = formData.get('embed_type') as string || null
   }

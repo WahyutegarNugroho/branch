@@ -246,7 +246,24 @@ export function LinkButton({ link, profileId, profile }: { link: Link, profileId
   // Spotlight / Priority support
   let spotlightClass = ""
   if (link.is_spotlight) {
-    spotlightClass = " ring-2 ring-brand-pink ring-offset-2 ring-offset-zinc-950/80 shadow-[0_0_20px_rgba(236,72,153,0.5)] border-brand-pink/50 animate-glow-pulse"
+    const spotClr = link.spotlight_color || '#ec4899'
+    ;(buttonStyle as any)['--spotlight-color'] = spotClr
+    
+    let r = 236, g = 72, b = 153
+    if (spotClr.startsWith('#')) {
+      const cleanHex = spotClr.slice(1)
+      if (cleanHex.length === 6) {
+        r = parseInt(cleanHex.slice(0, 2), 16)
+        g = parseInt(cleanHex.slice(2, 4), 16)
+        b = parseInt(cleanHex.slice(4, 6), 16)
+      } else if (cleanHex.length === 3) {
+        r = parseInt(cleanHex[0] + cleanHex[0], 16)
+        g = parseInt(cleanHex[1] + cleanHex[1], 16)
+        b = parseInt(cleanHex[2] + cleanHex[2], 16)
+      }
+    }
+    ;(buttonStyle as any)['--spotlight-color-rgba'] = `rgba(${r}, ${g}, ${b}, 0.5)`
+    spotlightClass = " spotlight-active animate-glow-pulse"
   }
 
   // Animation Effects support

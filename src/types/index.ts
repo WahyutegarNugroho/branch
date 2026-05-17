@@ -54,6 +54,7 @@ export interface Link {
   embed_type?: string | null
   is_spotlight?: boolean
   animation?: string | null
+  spotlight_color?: string | null
   link_images?: LinkImage[]
   images?: LinkImage[]
 }

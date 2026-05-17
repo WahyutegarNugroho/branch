@@ -70,6 +70,7 @@ export function LinkItem({ link }: { link: any }) {
   const [linkType, setLinkType] = useState(link.link_type || 'link')
   const [thumbnailUrl, setThumbnailUrl] = useState(link.thumbnail_url || '')
   const [isSpotlight, setIsSpotlight] = useState(!!link.is_spotlight)
+  const [spotlightColor, setSpotlightColor] = useState(link.spotlight_color || '#ec4899')
   const [animation, setAnimation] = useState(link.animation || 'none')
   const [carouselImages, setCarouselImages] = useState<any[]>([])
 
@@ -103,8 +104,9 @@ export function LinkItem({ link }: { link: any }) {
     setLinkType(link.link_type || 'link')
     setThumbnailUrl(link.thumbnail_url || '')
     setIsSpotlight(!!link.is_spotlight)
+    setSpotlightColor(link.spotlight_color || '#ec4899')
     setAnimation(link.animation || 'none')
-  }, [link.title, link.url, link.icon_position, link.bg_color, link.text_color, link.bg_opacity, link.is_active, link.show_icon, link.icon_color, link.valid_from, link.valid_until, link.is_embed, link.link_type, link.thumbnail_url, link.is_spotlight, link.animation])
+  }, [link.title, link.url, link.icon_position, link.bg_color, link.text_color, link.bg_opacity, link.is_active, link.show_icon, link.icon_color, link.valid_from, link.valid_until, link.is_embed, link.link_type, link.thumbnail_url, link.is_spotlight, link.spotlight_color, link.animation])
 
   // Dispatch real-time live preview updates
   useEffect(() => {
@@ -135,12 +137,13 @@ export function LinkItem({ link }: { link: any }) {
           link_type: linkType,
           thumbnail_url: linkType === 'header' ? null : thumbnailUrl,
           is_spotlight: isSpotlight,
+          spotlight_color: isSpotlight ? spotlightColor : null,
           animation: animation === 'none' ? null : animation,
           images: carouselImages,
         }
       }
     }))
-  }, [title, url, iconPosition, customStyleEnabled, bgColor, textColor, bgOpacity, isActive, showIcon, iconColorMode, iconColor, scheduleEnabled, validFrom, validUntil, isEmbed, isEditing, link.id, linkType, thumbnailUrl, isSpotlight, animation, carouselImages])
+  }, [title, url, iconPosition, customStyleEnabled, bgColor, textColor, bgOpacity, isActive, showIcon, iconColorMode, iconColor, scheduleEnabled, validFrom, validUntil, isEmbed, isEditing, link.id, linkType, thumbnailUrl, isSpotlight, spotlightColor, animation, carouselImages])
 
   const matchedPlatform = getPlatformByName(title)
   const MatchedIcon = matchedPlatform?.icon
@@ -154,6 +157,7 @@ export function LinkItem({ link }: { link: any }) {
     formData.append('show_icon', formData.get('show_icon') ? 'on' : '')
     formData.append('is_spotlight', isSpotlight ? 'on' : 'off')
     formData.append('animation', animation)
+    formData.append('spotlight_color', spotlightColor)
     
     const result = await updateLink(link.id, formData)
     if (result.error) {
@@ -226,6 +230,9 @@ export function LinkItem({ link }: { link: any }) {
       <Card ref={setNodeRef} style={style} className="p-5 mb-4 bg-zinc-900/60 border-white/10 shadow-2xl rounded-2xl backdrop-blur-xl relative">
         <form action={handleSave} className="space-y-4">
           <input type="hidden" name="link_type" value={linkType} />
+          <input type="hidden" name="is_spotlight" value={isSpotlight ? 'on' : 'off'} />
+          <input type="hidden" name="animation" value={animation} />
+          <input type="hidden" name="spotlight_color" value={spotlightColor} />
           
           {linkType === 'header' ? (
             <div className="space-y-3">
@@ -402,9 +409,31 @@ export function LinkItem({ link }: { link: any }) {
                   id={`is_spotlight_${link.id}`} 
                   checked={isSpotlight} 
                   onCheckedChange={setIsSpotlight} 
-                  className="data-[state=checked]:bg-brand-pink"
-                />
+                    />
               </div>
+
+              {isSpotlight && (
+                <div className="space-y-2 pt-2 border-t border-white/5 animate-in fade-in slide-in-from-top-1 duration-200">
+                  <span className="text-xs text-zinc-400">Pilih Warna Spotlight:</span>
+                  <div className="flex items-center gap-2">
+                    <div className="w-10 h-10 rounded-xl border border-white/10 overflow-hidden shrink-0 relative">
+                      <input 
+                        type="color" 
+                        value={spotlightColor} 
+                        onChange={(e) => setSpotlightColor(e.target.value)} 
+                        className="absolute inset-0 w-full h-full p-0 border-0 cursor-pointer bg-transparent scale-150" 
+                      />
+                    </div>
+                    <Input 
+                      type="text" 
+                      value={spotlightColor} 
+                      onChange={(e) => setSpotlightColor(e.target.value)} 
+                      maxLength={7}
+                      className="font-mono rounded-xl border-white/10 bg-white/5 text-white h-10 text-sm focus-visible:ring-brand-pink w-32" 
+                    />
+                  </div>
+                </div>
+              )}
 
               <div className="space-y-2 pt-2 border-t border-white/5">
                 <span className="text-xs font-bold text-white flex items-center gap-1.5">

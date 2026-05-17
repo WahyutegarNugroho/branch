@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { QRCodeCanvas } from 'qrcode.react'
 import { toast } from 'sonner'
 import { 
@@ -28,6 +29,11 @@ export function ShareModal({
   const [copied, setCopied] = useState(false)
   const canvasRef = useRef<HTMLDivElement>(null)
   const [shareUrl, setShareUrl] = useState('')
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   useEffect(() => {
     if (typeof window !== 'undefined' && profile?.username) {
@@ -35,7 +41,7 @@ export function ShareModal({
     }
   }, [profile?.username])
 
-  if (!isOpen || !profile) return null
+  if (!isOpen || !profile || !mounted) return null
 
   const handleCopy = async () => {
     try {
@@ -69,8 +75,8 @@ export function ShareModal({
     }
   }
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+  return createPortal(
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
       {/* Modal Dialog container */}
       <div className="relative w-full max-w-md bg-zinc-950 border border-white/10 rounded-3xl p-6 shadow-2xl animate-in scale-in duration-200 flex flex-col items-center">
         {/* Close Button */}
@@ -160,6 +166,7 @@ export function ShareModal({
           </a>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }
