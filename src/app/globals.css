@@ -173,4 +173,11 @@
   .font-mono-theme {
     font-family: var(--font-mono), monospace !important;
   }
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
 }
