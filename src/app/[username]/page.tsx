@@ -6,7 +6,8 @@ import { Metadata } from 'next'
 // Force dynamic rendering to ensure real-time updates and bypass caching
 export const dynamic = 'force-dynamic'
 
-export async function generateMetadata({ params }: { params: { username: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ username: string }> }): Promise<Metadata> {
+  const { username } = await params
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   const supabase = createClient(supabaseUrl, supabaseKey)
@@ -14,7 +15,7 @@ export async function generateMetadata({ params }: { params: { username: string 
   const { data: profile } = await supabase
     .from('profiles')
     .select('full_name, username, bio, avatar_url')
-    .eq('username', params.username)
+    .eq('username', username)
     .single()
 
   if (!profile) {
@@ -45,7 +46,8 @@ export async function generateMetadata({ params }: { params: { username: string 
   }
 }
 
-export default async function PublicProfilePage({ params }: { params: { username: string } }) {
+export default async function PublicProfilePage({ params }: { params: Promise<{ username: string }> }) {
+  const { username } = await params
   // Use generic client because public profiles don't need user session
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -54,7 +56,7 @@ export default async function PublicProfilePage({ params }: { params: { username
   const { data: profile, error: profileError } = await supabase
     .from('profiles')
     .select('*')
-    .eq('username', params.username)
+    .eq('username', username)
     .single()
 
   if (profileError || !profile) {
