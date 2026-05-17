@@ -35,6 +35,15 @@ function hexToRgba(hex: string, opacity: number) {
   return `rgba(${r}, ${g}, ${b}, ${opacity / 100})`;
 }
 
+// Inline keyframes — injected via <style> tag to bypass Turbopack CSS tree-shaking
+const ANIMATION_KEYFRAMES = `
+@keyframes pulseSlow { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.025); } }
+@keyframes bounceSlow { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes shakeQuick { 0%, 75%, 100% { transform: translateX(0); } 80%, 90% { transform: translateX(-4px); } 85%, 95% { transform: translateX(4px); } }
+@keyframes wobbleQuick { 0%, 75%, 100% { transform: rotate(0deg); } 80%, 90% { transform: rotate(-2deg); } 85%, 95% { transform: rotate(2deg); } }
+@keyframes glowPulse { 0%, 100% { box-shadow: 0 0 5px rgba(236,72,153,0.4), 0 0 15px rgba(236,72,153,0.2); } 50% { box-shadow: 0 0 18px rgba(236,72,153,0.8), 0 0 30px rgba(236,72,153,0.4); } }
+`
+
 function parseEmbedUrl(url: string) {
   try {
     const cleanUrl = url.trim()
@@ -159,6 +168,8 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
 
   return (
     <div className="flex h-[calc(100vh-64px)] items-center justify-center p-8 sticky top-16">
+      {/* Inject animation keyframes directly into DOM to bypass Turbopack tree-shaking */}
+      <style dangerouslySetInnerHTML={{ __html: ANIMATION_KEYFRAMES }} />
       {/* Smartphone Mockup with Tech Glow */}
       <div className="relative h-[700px] w-[340px] rounded-[3rem] border-[12px] border-zinc-900 bg-zinc-950 shadow-[0_0_50px_rgba(139,92,246,0.15)] overflow-hidden flex flex-col">
         {/* Dynamic Island / Notch */}
@@ -430,23 +441,19 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
                       spotlightClass = " spotlight-active"
                     }
 
-                    // Animation Effects support
-                    let animationClass = ""
-                    if (link.animation && link.animation !== 'none') {
-                      if (link.animation === 'pulse') {
-                        animationClass = " animate-pulse-slow"
-                      } else if (link.animation === 'bounce') {
-                        animationClass = " animate-bounce-slow"
-                      } else if (link.animation === 'shake') {
-                        animationClass = " animate-shake-quick"
-                      } else if (link.animation === 'wobble') {
-                        animationClass = " animate-wobble-quick"
-                      } else if (link.animation === 'glow') {
-                        animationClass = " animate-glow-pulse"
-                      }
+                    // Animation Effects support — use inline styles to bypass Turbopack CSS purging
+                    const animationMap: Record<string, string> = {
+                      pulse: 'pulseSlow 2.5s infinite ease-in-out',
+                      bounce: 'bounceSlow 2s infinite ease-in-out',
+                      shake: 'shakeQuick 2.5s infinite ease-in-out',
+                      wobble: 'wobbleQuick 2.5s infinite ease-in-out',
+                      glow: 'glowPulse 2s infinite ease-in-out',
+                    }
+                    if (link.animation && link.animation !== 'none' && animationMap[link.animation]) {
+                      buttonStyle.animation = animationMap[link.animation]
                     }
 
-                    const extraClasses = ` ${spotlightClass} ${animationClass}`
+                    const extraClasses = ` ${spotlightClass}`
                     baseBtnClass += extraClasses
 
                     if (!hasGraphic) {
