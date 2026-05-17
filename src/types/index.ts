@@ -4,7 +4,7 @@ export interface Profile {
   full_name: string | null
   bio: string | null
   avatar_url: string | null
-  bg_type: 'solid' | 'gradient' | 'image'
+  bg_type: 'solid' | 'gradient' | 'image' | 'video'
   bg_color: string
   bg_image_url: string | null
   bg_overlay_opacity: number
@@ -22,6 +22,14 @@ export interface Profile {
   tiktok_pixel_id?: string | null
   ga_measurement_id?: string | null
   custom_domain?: string | null
+  text_color?: string | null
+  social_style?: string | null
+  profile_align?: string | null
+  avatar_shape?: string | null
+  banner_url?: string | null
+  link_spacing?: string | null
+  avatar_size?: string | null
+  bg_video_url?: string | null
 }
 
 export interface Link {

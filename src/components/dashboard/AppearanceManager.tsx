@@ -11,7 +11,7 @@ import { Slider } from '@/components/ui/slider'
 import { updateAppearance, updateProfileInfo, updateSocialLinks, updateBranding } from '@/app/actions/profile-actions'
 import { Switch } from '@/components/ui/switch'
 import { toast } from 'sonner'
-import { Loader2 } from 'lucide-react'
+import { Loader2, AlignLeft, AlignCenter, Palette, LayoutGrid, Image, Video, Sparkles, Sliders } from 'lucide-react'
 import { 
   FaInstagram, 
   FaYoutube, 
@@ -50,7 +50,7 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
   const [buttonStyle, setButtonStyle] = useState(profile?.button_style || 'soft')
   const [fontFamily, setFontFamily] = useState(profile?.font_family || 'font-sans-theme')
   const [bgColor, setBgColor] = useState(profile?.bg_color || '#09090b')
-  const [bgType, setBgType] = useState(profile?.bg_type || 'solid')
+  const [bgType, setBgType] = useState<'solid' | 'gradient' | 'image' | 'video'>(profile?.bg_type || 'solid')
   const [fullName, setFullName] = useState(profile?.full_name ?? '')
   const [bio, setBio] = useState(profile?.bio ?? '')
   const [isColorPickerOpen, setIsColorPickerOpen] = useState(false)
@@ -67,9 +67,21 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
   const [avatarUrl, setAvatarUrl] = useState(profile?.avatar_url || '')
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
   const [isCropOpen, setIsCropOpen] = useState(false)
-  const [cropType, setCropType] = useState<'avatar' | 'bg'>('bg')
+  const [cropType, setCropType] = useState<'avatar' | 'bg' | 'banner'>('bg')
   const [username, setUsername] = useState(profile?.username ?? '')
   const [usernameStatus, setUsernameStatus] = useState<'idle' | 'checking' | 'available' | 'taken' | 'invalid'>('idle')
+
+  const [textColor, setTextColor] = useState(profile?.text_color || '#ffffff')
+  const [socialStyle, setSocialStyle] = useState(profile?.social_style || 'circle')
+  const [profileAlign, setProfileAlign] = useState(profile?.profile_align || 'center')
+  const [avatarShape, setAvatarShape] = useState(profile?.avatar_shape || 'circle')
+  const [bannerUrl, setBannerUrl] = useState(profile?.banner_url || '')
+  const [linkSpacing, setLinkSpacing] = useState(profile?.link_spacing || 'normal')
+  const [avatarSize, setAvatarSize] = useState(profile?.avatar_size || 'medium')
+  const [bgVideoUrl, setBgVideoUrl] = useState(profile?.bg_video_url || '')
+  const [isTextColorPickerOpen, setIsTextColorPickerOpen] = useState(false)
+
+  const bannerInputRef = useRef<HTMLInputElement>(null)
 
   const [hostPrefix, setHostPrefix] = useState('branch.app/')
   const [themes, setThemes] = useState<any[]>([])
@@ -181,7 +193,7 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const avatarInputRef = useRef<HTMLInputElement>(null)
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'avatar' | 'bg' = 'bg') => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'avatar' | 'bg' | 'banner' = 'bg') => {
     const file = e.target.files?.[0]
     if (!file) return
 
@@ -212,7 +224,8 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
       }
 
       const isAvatar = cropType === 'avatar'
-      const prefix = isAvatar ? 'avatar' : 'bg'
+      const isBanner = cropType === 'banner'
+      const prefix = isAvatar ? 'avatar' : isBanner ? 'banner' : 'bg'
       const fileName = `${user.id}/${prefix}_${Date.now()}.jpg`
       const file = new File([croppedBlob], `${prefix}_${Date.now()}.jpg`, { type: 'image/jpeg' })
       const bucketName = isAvatar ? 'avatars' : 'backgrounds'
@@ -236,6 +249,17 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
         window.dispatchEvent(new CustomEvent('profile-update', {
           detail: {
             avatar_url: publicUrl
+          }
+        }))
+      } else if (isBanner) {
+        setBannerUrl(publicUrl)
+        setIsCropOpen(false)
+        toast.success('Banner hero berhasil dipotong!')
+
+        // Sync immediately to virtual smartphone preview
+        window.dispatchEvent(new CustomEvent('profile-update', {
+          detail: {
+            banner_url: publicUrl
           }
         }))
       } else {
@@ -266,10 +290,11 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
         bg_color: bgColor,
         bg_type: bgType,
         bg_image_url: bgImageUrl,
-        bg_overlay_opacity: opacity[0]
+        bg_overlay_opacity: opacity[0],
+        bg_video_url: bgVideoUrl
       }
     }))
-  }, [bgColor, bgType, bgImageUrl, opacity])
+  }, [bgColor, bgType, bgImageUrl, opacity, bgVideoUrl])
 
   // Sync profile text inputs to live preview in real time
   useEffect(() => {
@@ -297,10 +322,17 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
       detail: {
         button_shape: buttonShape,
         button_style: buttonStyle,
-        font_family: fontFamily
+        font_family: fontFamily,
+        text_color: textColor,
+        social_style: socialStyle,
+        profile_align: profileAlign,
+        avatar_shape: avatarShape,
+        banner_url: bannerUrl,
+        link_spacing: linkSpacing,
+        avatar_size: avatarSize
       }
     }))
-  }, [buttonShape, buttonStyle, fontFamily])
+  }, [buttonShape, buttonStyle, fontFamily, textColor, socialStyle, profileAlign, avatarShape, bannerUrl, linkSpacing, avatarSize])
 
   const handleSocialChange = (key: string, val: string) => {
     setSocialLinks(prev => ({
@@ -363,6 +395,17 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
     formData.set('bg_color', bgColor) // Ensure latest bgColor state is used
     formData.set('bg_type', bgType)   // Force latest controlled bgType state to be used
     formData.set('bg_image_url', bgImageUrl) // Ensure latest uploaded image URL is used
+    
+    // Phase 4 additions
+    formData.set('text_color', textColor)
+    formData.set('social_style', socialStyle)
+    formData.set('profile_align', profileAlign)
+    formData.set('avatar_shape', avatarShape)
+    formData.set('banner_url', bannerUrl)
+    formData.set('link_spacing', linkSpacing)
+    formData.set('avatar_size', avatarSize)
+    formData.set('bg_video_url', bgVideoUrl)
+
     const result = await updateAppearance(formData)
     if (result.error) {
       toast.error(result.error)
@@ -651,7 +694,7 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
         </CardHeader>
         <CardContent>
           <form key={`app-${profile?.updated_at || 'initial'}`} action={onAppSubmit} className="space-y-6">
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               <div className="cursor-pointer" onClick={() => { setBgType('solid'); setIsColorPickerOpen(true); }}>
                 <input type="radio" name="bg_type" value="solid" checked={bgType === 'solid'} onChange={() => setBgType('solid')} id="bg_type_solid" className="peer sr-only" />
                 <div className={`h-24 rounded-2xl border-2 ${bgType === 'solid' ? 'border-brand-pink' : 'border-white/10'} flex flex-col items-center justify-center bg-white/5 transition-all relative overflow-hidden`}>
@@ -679,6 +722,13 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
                   <span className="font-semibold text-white drop-shadow-md relative z-10">Image</span>
                 </div>
               </div>
+              <div className="cursor-pointer" onClick={() => { setBgType('video'); }}>
+                <input type="radio" name="bg_type" value="video" checked={bgType === 'video'} onChange={() => setBgType('video')} id="bg_type_video" className="peer sr-only" />
+                <div className={`h-24 rounded-2xl border-2 ${bgType === 'video' ? 'border-brand-pink' : 'border-white/10'} flex flex-col items-center justify-center bg-white/5 transition-all relative overflow-hidden`}>
+                  <Video className="w-5 h-5 text-zinc-400 mb-1 relative z-10" />
+                  <span className="font-semibold text-zinc-300 relative z-10">Video</span>
+                </div>
+              </div>
             </div>
 
             {/* Hidden image file uploader input */}
@@ -701,6 +751,23 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
                 className="rounded-xl border-white/10 bg-white/5 text-white focus-visible:ring-brand-pink h-12"
               />
             </div>
+
+            {bgType === 'video' && (
+              <div className="space-y-2 animate-in fade-in duration-200">
+                <Label htmlFor="bg_video_url" className="text-zinc-300 flex items-center gap-2">
+                  <Video className="w-4 h-4 text-brand-pink" /> Background Video URL (MP4, YouTube, etc.)
+                </Label>
+                <Input
+                  id="bg_video_url"
+                  name="bg_video_url"
+                  value={bgVideoUrl}
+                  onChange={(e) => setBgVideoUrl(e.target.value)}
+                  placeholder="https://assets.mixkit.co/videos/preview/mixkit-stars-in-space-background-1611-large.mp4"
+                  className="rounded-xl border-white/10 bg-white/5 text-white focus-visible:ring-brand-pink h-12 text-sm"
+                />
+                <p className="text-[11px] text-zinc-400">Masukkan link direct MP4 (.mp4), link YouTube, atau link short video lainnya.</p>
+              </div>
+            )}
 
             <div className="space-y-4">
               <Label className="text-zinc-300">Dark Overlay Opacity ({opacity?.[0] ?? 0}%)</Label>
@@ -779,6 +846,223 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
                   <input type="hidden" name="font_family" value={fontFamily} />
                 </div>
               </div>
+
+              {/* === PHASE 4: ENHANCED APPEARANCE CONTROLS === */}
+
+              {/* 1. Header Banner & Alignment */}
+              <div className="space-y-4 pt-6 border-t border-white/5 animate-in fade-in duration-300">
+                <h3 className="text-sm font-bold text-zinc-300 flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-brand-pink" /> Layout & Hero Banner
+                </h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Banner Image Uploader */}
+                  <div className="space-y-2">
+                    <Label className="text-zinc-400 text-xs">Hero Banner Image (Rasio 3:1)</Label>
+                    <div className="flex items-center gap-3">
+                      <Button
+                        type="button"
+                        onClick={() => {
+                          setCropType('banner');
+                          bannerInputRef.current?.click();
+                        }}
+                        className="bg-white/5 border border-white/10 hover:bg-white/10 text-white rounded-xl text-xs h-10 px-4 flex items-center gap-2"
+                      >
+                        <Image className="w-4 h-4 text-zinc-400" />
+                        {bannerUrl ? 'Ubah Banner' : 'Unggah Banner'}
+                      </Button>
+                      
+                      {bannerUrl && (
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          onClick={() => {
+                            setBannerUrl('');
+                            window.dispatchEvent(new CustomEvent('profile-update', {
+                              detail: { banner_url: '' }
+                            }));
+                          }}
+                          className="bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 rounded-xl text-xs h-10 px-3"
+                        >
+                          Hapus
+                        </Button>
+                      )}
+                    </div>
+                    {bannerUrl && (
+                      <div className="w-full aspect-[3/1] rounded-xl overflow-hidden border border-white/10 mt-2">
+                        <img src={bannerUrl} alt="Banner preview" className="w-full h-full object-cover" />
+                      </div>
+                    )}
+                    <input
+                      type="file"
+                      ref={bannerInputRef}
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => handleFileChange(e, 'banner')}
+                    />
+                  </div>
+
+                  {/* Profile alignment */}
+                  <div className="space-y-2">
+                    <Label className="text-zinc-400 text-xs">Konten Alignment (Penyelarasan)</Label>
+                    <div className="grid grid-cols-2 gap-2">
+                      {[
+                        { val: 'center', label: 'Tengah', icon: AlignCenter },
+                        { val: 'left', label: 'Rata Kiri', icon: AlignLeft }
+                      ].map((item) => {
+                        const Icon = item.icon
+                        return (
+                          <div
+                            key={item.val}
+                            onClick={() => setProfileAlign(item.val)}
+                            className={`h-12 flex items-center justify-center gap-2 rounded-xl border-2 cursor-pointer transition-all ${
+                              profileAlign === item.val
+                                ? 'border-brand-pink bg-brand-pink/10 text-white font-bold'
+                                : 'border-white/10 bg-white/5 text-zinc-400 hover:border-white/20'
+                            }`}
+                          >
+                            <Icon className="w-4 h-4 shrink-0" />
+                            <span className="text-xs">{item.label}</span>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 2. Avatar & Spacing Controls */}
+              <div className="space-y-4 pt-6 border-t border-white/5 animate-in fade-in duration-300">
+                <h3 className="text-sm font-bold text-zinc-300 flex items-center gap-2">
+                  <Sliders className="w-4 h-4 text-brand-orange" /> Jarak & Elemen Kustom
+                </h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {/* Avatar Shape */}
+                  <div className="space-y-2">
+                    <Label className="text-zinc-400 text-xs">Bentuk Avatar (Shape)</Label>
+                    <div className="grid grid-cols-3 gap-1">
+                      {[
+                        { val: 'circle', label: 'Bulat' },
+                        { val: 'rounded', label: 'Kotak' },
+                        { val: 'hexagon', label: 'Hexa' }
+                      ].map((item) => (
+                        <div
+                          key={item.val}
+                          onClick={() => setAvatarShape(item.val)}
+                          className={`h-10 flex items-center justify-center rounded-xl border-2 cursor-pointer transition-all ${
+                            avatarShape === item.val
+                              ? 'border-brand-pink bg-brand-pink/10 text-white font-semibold'
+                              : 'border-white/10 bg-white/5 text-zinc-400 hover:border-white/20'
+                          }`}
+                        >
+                          <span className="text-[11px]">{item.label}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Avatar Size */}
+                  <div className="space-y-2">
+                    <Label className="text-zinc-400 text-xs">Ukuran Avatar (Size)</Label>
+                    <div className="grid grid-cols-3 gap-1">
+                      {[
+                        { val: 'small', label: 'Kecil' },
+                        { val: 'medium', label: 'Sedang' },
+                        { val: 'large', label: 'Besar' }
+                      ].map((item) => (
+                        <div
+                          key={item.val}
+                          onClick={() => setAvatarSize(item.val)}
+                          className={`h-10 flex items-center justify-center rounded-xl border-2 cursor-pointer transition-all ${
+                            avatarSize === item.val
+                              ? 'border-brand-pink bg-brand-pink/10 text-white font-semibold'
+                              : 'border-white/10 bg-white/5 text-zinc-400 hover:border-white/20'
+                          }`}
+                        >
+                          <span className="text-[11px]">{item.label}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Link Spacing */}
+                  <div className="space-y-2">
+                    <Label className="text-zinc-400 text-xs">Jarak Link (Spacing)</Label>
+                    <div className="grid grid-cols-3 gap-1">
+                      {[
+                        { val: 'compact', label: 'Rapat' },
+                        { val: 'normal', label: 'Normal' },
+                        { val: 'relaxed', label: 'Lebar' }
+                      ].map((item) => (
+                        <div
+                          key={item.val}
+                          onClick={() => setLinkSpacing(item.val)}
+                          className={`h-10 flex items-center justify-center rounded-xl border-2 cursor-pointer transition-all ${
+                            linkSpacing === item.val
+                              ? 'border-brand-pink bg-brand-pink/10 text-white font-semibold'
+                              : 'border-white/10 bg-white/5 text-zinc-400 hover:border-white/20'
+                          }`}
+                        >
+                          <span className="text-[11px]">{item.label}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 3. Global Color & Social Icons Style */}
+              <div className="space-y-4 pt-6 border-t border-white/5 animate-in fade-in duration-300">
+                <h3 className="text-sm font-bold text-zinc-300 flex items-center gap-2">
+                  <Palette className="w-4 h-4 text-brand-pink" /> Warna Global & Gaya Ikon
+                </h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Global Text Color Picker */}
+                  <div className="space-y-2">
+                    <Label className="text-zinc-400 text-xs">Warna Teks Profil (Global Text Color)</Label>
+                    <div className="flex gap-2">
+                      <div
+                        onClick={() => setIsTextColorPickerOpen(true)}
+                        className="w-12 h-12 rounded-xl border-2 border-white/15 cursor-pointer shadow-inner shrink-0 transition-transform hover:scale-105"
+                        style={{ backgroundColor: textColor }}
+                      />
+                      <Input
+                        value={textColor}
+                        onChange={(e) => setTextColor(e.target.value)}
+                        placeholder="#ffffff"
+                        className="rounded-xl border-white/10 bg-white/5 text-white focus-visible:ring-brand-pink h-12"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Social Icons Style */}
+                  <div className="space-y-2">
+                    <Label className="text-zinc-400 text-xs">Gaya Border Ikon Sosial</Label>
+                    <div className="grid grid-cols-4 gap-1">
+                      {[
+                        { val: 'circle', label: 'Bulat' },
+                        { val: 'outline', label: 'Garis' },
+                        { val: 'square', label: 'Kotak' },
+                        { val: 'minimal', label: 'Polos' }
+                      ].map((item) => (
+                        <div
+                          key={item.val}
+                          onClick={() => setSocialStyle(item.val)}
+                          className={`h-12 flex items-center justify-center rounded-xl border-2 cursor-pointer transition-all ${
+                            socialStyle === item.val
+                              ? 'border-brand-pink bg-brand-pink/10 text-white font-semibold'
+                              : 'border-white/10 bg-white/5 text-zinc-400 hover:border-white/20'
+                          }`}
+                        >
+                          <span className="text-[11px]">{item.label}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <Button type="submit" disabled={appLoading} className="rounded-xl bg-gradient-to-r from-brand-pink to-brand-orange hover:opacity-90 text-white border-0 font-semibold h-11 px-6 shadow-lg">
@@ -840,6 +1124,15 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
         onSelectGradient={(gradient) => {
           setBgColor(gradient)
           setBgType('gradient')
+        }}
+      />
+
+      <ColorPickerDialog
+        isOpen={isTextColorPickerOpen}
+        onClose={() => setIsTextColorPickerOpen(false)}
+        initialColor={textColor}
+        onSelectColor={(color) => {
+          setTextColor(color)
         }}
       />
 

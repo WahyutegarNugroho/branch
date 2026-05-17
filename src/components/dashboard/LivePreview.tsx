@@ -168,29 +168,73 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
 
         {/* Content Area */}
         <div className={bgClass} style={bgStyle}>
+          {profile?.bg_type === 'video' && profile?.bg_video_url && (
+            <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
+              <video 
+                src={profile.bg_video_url} 
+                autoPlay 
+                muted 
+                loop 
+                playsInline 
+                className="w-full h-full object-cover"
+              />
+            </div>
+          )}
+
+          {profile?.banner_url && (
+            <div className="absolute top-0 inset-x-0 h-24 w-full overflow-hidden border-b border-white/10 z-0">
+              <img src={profile.banner_url} alt="Banner" className="w-full h-full object-cover" />
+            </div>
+          )}
+
           {(profile?.bg_overlay_opacity ?? 0) > 0 && (
             <div 
-              className="absolute inset-0 bg-black pointer-events-none" 
+              className="absolute inset-0 bg-black pointer-events-none z-0" 
               style={{ opacity: (profile?.bg_overlay_opacity ?? 0) / 100 }}
             />
           )}
           
-          <div className={`relative z-10 w-full flex flex-col items-center ${profile?.font_family || 'font-sans-theme'}`}>
+          <div 
+            className={`relative z-10 w-full flex flex-col ${
+              profile?.profile_align === 'left' ? 'items-start text-left' : 'items-center text-center'
+            } ${profile?.font_family || 'font-sans-theme'} ${profile?.banner_url ? 'pt-8' : ''}`}
+            style={{ color: profile?.text_color || '#ffffff' }}
+          >
             {profile?.avatar_url ? (
-              <img src={profile.avatar_url} alt="Avatar" className="w-24 h-24 rounded-full mb-4 object-cover border-2 border-white/20 shadow-lg" />
+              <img 
+                src={profile.avatar_url} 
+                alt="Avatar" 
+                className={`object-cover border-2 border-white/20 shadow-lg ${
+                  profile?.avatar_shape === 'rounded' ? 'rounded-2xl' : 
+                  profile?.avatar_shape === 'hexagon' ? '' : 'rounded-full'
+                } ${
+                  profile?.avatar_size === 'small' ? 'w-16 h-16' : 
+                  profile?.avatar_size === 'large' ? 'w-28 h-28' : 'w-24 h-24'
+                } mb-4 ${profile?.banner_url ? 'mt-4 border-4 border-zinc-950' : ''}`}
+                style={{ clipPath: profile?.avatar_shape === 'hexagon' ? 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' : undefined }}
+              />
             ) : (
-              <div className="w-24 h-24 rounded-full bg-zinc-800 mb-4 flex items-center justify-center text-white text-3xl font-bold border-2 border-white/20 shadow-lg">
+              <div 
+                className={`bg-zinc-800 mb-4 flex items-center justify-center text-white text-3xl font-bold border-2 border-white/20 shadow-lg ${
+                  profile?.avatar_shape === 'rounded' ? 'rounded-2xl' : 
+                  profile?.avatar_shape === 'hexagon' ? '' : 'rounded-full'
+                } ${
+                  profile?.avatar_size === 'small' ? 'w-16 h-16' : 
+                  profile?.avatar_size === 'large' ? 'w-28 h-28' : 'w-24 h-24'
+                } ${profile?.banner_url ? 'mt-4 border-4 border-zinc-950' : ''}`}
+                style={{ clipPath: profile?.avatar_shape === 'hexagon' ? 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' : undefined }}
+              >
                 {profile?.username?.charAt(0).toUpperCase() || 'B'}
               </div>
             )}
             
-            <h2 className="text-white font-bold text-lg mb-1 drop-shadow-md text-center">
+            <h2 style={{ color: profile?.text_color || '#ffffff' }} className="font-bold text-lg mb-1 drop-shadow-md text-center">
               {profile?.full_name || `@${profile?.username || 'username'}`}
             </h2>
-            <p className="text-white/80 text-sm text-center mb-6 max-w-[250px] drop-shadow-sm">
+            <p style={{ color: (profile?.text_color || '#ffffff') + 'cc' }} className="text-sm text-center mb-6 max-w-[250px] drop-shadow-sm">
               {profile?.bio || 'No bio yet.'}
             </p>
-
+ 
             {profile?.social_links && typeof profile.social_links === 'object' && Object.keys(profile.social_links).length > 0 && (
               <div className="flex flex-wrap items-center justify-center gap-2.5 mb-6 z-10">
                 {Object.keys(profile.social_links).map((key) => {
@@ -199,11 +243,17 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
                   if (!url) return null
                   const IconComponent = socialsIconMap[key]
                   if (!IconComponent) return null
-
+ 
                   return (
                     <div
                       key={key}
-                      className="w-7 h-7 rounded-full bg-white/5 border border-white/10 text-white/70 flex items-center justify-center shadow-sm backdrop-blur-md"
+                      className={`w-7 h-7 flex items-center justify-center shadow-sm backdrop-blur-md ${
+                        profile?.social_style === 'outline' ? 'bg-transparent border border-white/30 text-white' :
+                        profile?.social_style === 'square' ? 'bg-white/5 border border-white/10 text-white rounded-lg' :
+                        profile?.social_style === 'minimal' ? 'bg-transparent border-0 text-white shadow-none' :
+                        'rounded-full bg-white/5 border border-white/10 text-white'
+                      }`}
+                      style={{ color: profile?.text_color || '#ffffff' }}
                     >
                       <IconComponent size={14} />
                     </div>
@@ -211,8 +261,11 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
                 })}
               </div>
             )}
-
-            <div className="w-full space-y-3">
+ 
+            <div className={`w-full ${
+              profile?.link_spacing === 'compact' ? 'space-y-2' : 
+              profile?.link_spacing === 'relaxed' ? 'space-y-4' : 'space-y-3'
+            }`}>
               {(() => {
                 const now = new Date()
                 const activeLinks = (localLinks || []).filter(link => {

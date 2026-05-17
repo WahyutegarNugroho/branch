@@ -37,6 +37,15 @@ export async function updateAppearance(formData: FormData) {
   const button_style = formData.get('button_style') as string || 'soft'
   const font_family = formData.get('font_family') as string || 'font-sans-theme'
 
+  const text_color = formData.get('text_color') as string || '#ffffff'
+  const social_style = formData.get('social_style') as string || 'circle'
+  const profile_align = formData.get('profile_align') as string || 'center'
+  const avatar_shape = formData.get('avatar_shape') as string || 'circle'
+  const banner_url = formData.get('banner_url') as string || null
+  const link_spacing = formData.get('link_spacing') as string || 'normal'
+  const avatar_size = formData.get('avatar_size') as string || 'medium'
+  const bg_video_url = formData.get('bg_video_url') as string || null
+
   const { error } = await supabase
     .from('profiles')
     .update({
@@ -47,6 +56,14 @@ export async function updateAppearance(formData: FormData) {
       button_shape,
       button_style,
       font_family,
+      text_color,
+      social_style,
+      profile_align,
+      avatar_shape,
+      banner_url,
+      link_spacing,
+      avatar_size,
+      bg_video_url,
       updated_at: new Date().toISOString()
     })
     .eq('id', user.id)

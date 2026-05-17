@@ -83,6 +83,8 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
   } else if (profile.bg_type === 'image' && profile.bg_image_url) {
     bgStyle.backgroundImage = `url(${profile.bg_image_url})`
     bgClass += " bg-cover bg-center bg-no-repeat"
+  } else if (profile.bg_type === 'video') {
+    bgStyle.backgroundColor = '#09090b'
   } else {
     // Default modern fallback
     bgStyle.backgroundColor = '#09090b'

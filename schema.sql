@@ -318,4 +318,19 @@ ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS tiktok_pixel_id VARCHAR(100
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS ga_measurement_id VARCHAR(100);
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS custom_domain VARCHAR(255);
 
+-- ==========================================
+-- PHASE 4: ENHANCED APPEARANCE & CUSTOMIZATION
+-- ==========================================
+
+-- 1. Extend profiles table with global style controls, banners, and layout alignments
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS text_color VARCHAR(50) DEFAULT '#ffffff';
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS social_style VARCHAR(30) DEFAULT 'circle';
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS profile_align VARCHAR(20) DEFAULT 'center';
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS avatar_shape VARCHAR(20) DEFAULT 'circle';
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS banner_url TEXT;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS link_spacing VARCHAR(20) DEFAULT 'normal';
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS avatar_size VARCHAR(20) DEFAULT 'medium';
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS bg_video_url TEXT;
+
+
 

@@ -210,18 +210,23 @@ export function LinkButton({ link, profileId, profile }: { link: Link, profileId
     buttonStyle.backgroundColor = `rgba(255, 255, 255, ${link.bg_opacity / 100})`
   }
 
+  const textClr = link.text_color || profile?.text_color || '#ffffff'
+  buttonStyle.color = textClr
   if (link.text_color) {
-    buttonStyle.color = link.text_color
     buttonStyle.borderColor = `${link.text_color}33` // 20% opacity hex
+  } else if (profile?.text_color) {
+    buttonStyle.borderColor = `${profile.text_color}33`
   }
 
   let finalIconColor = matchedPlatform?.color || '#ffffff'
   if (link.icon_color) {
     if (link.icon_color === 'text') {
-      finalIconColor = link.text_color || '#ffffff'
+      finalIconColor = textClr
     } else {
       finalIconColor = link.icon_color
     }
+  } else {
+    finalIconColor = textClr
   }
 
   const shapeClass = profile?.button_shape || 'rounded-2xl'
