@@ -16,6 +16,12 @@ export interface Profile {
   show_branding?: boolean
   created_at: string
   updated_at: string
+  seo_title?: string | null
+  seo_description?: string | null
+  meta_pixel_id?: string | null
+  tiktok_pixel_id?: string | null
+  ga_measurement_id?: string | null
+  custom_domain?: string | null
 }
 
 export interface Link {
@@ -59,4 +65,9 @@ export interface Analytics {
   device: string | null
   referrer: string | null
   created_at: string
+  country?: string | null
+  city?: string | null
+  utm_source?: string | null
+  utm_medium?: string | null
+  utm_campaign?: string | null
 }

@@ -3,7 +3,14 @@ import { createClient } from '@supabase/supabase-js'
 
 export async function POST(request: Request) {
   try {
-    const { profile_id, link_id, referrer } = await request.json()
+    const { 
+      profile_id, 
+      link_id, 
+      referrer,
+      utm_source,
+      utm_medium,
+      utm_campaign
+    } = await request.json()
 
     if (!profile_id) {
       return NextResponse.json({ error: 'Missing profile_id' }, { status: 400 })
@@ -19,13 +26,41 @@ export async function POST(request: Request) {
     const isMobile = /mobile/i.test(userAgent)
     const device = isMobile ? 'mobile' : 'desktop'
 
+    // Detect IP Geolocation
+    const ip = request.headers.get('cf-connecting-ip') || 
+               request.headers.get('x-real-ip') || 
+               request.headers.get('x-forwarded-for')?.split(',')[0].trim() || 
+               '';
+
+    let country = 'Indonesia'
+    let city = 'Jakarta'
+    
+    const isLocalIp = !ip || ip === '127.0.0.1' || ip === '::1' || ip.startsWith('localhost') || ip.startsWith('192.168.') || ip.startsWith('10.') || ip.startsWith('172.');
+    if (!isLocalIp) {
+      try {
+        const res = await fetch(`http://ip-api.com/json/${ip}?fields=status,country,city`, { signal: AbortSignal.timeout(2000) });
+        const data = await res.json();
+        if (data && data.status === 'success') {
+          country = data.country || 'Indonesia'
+          city = data.city || 'Jakarta'
+        }
+      } catch (err) {
+        console.error('IP Geolocation error:', err);
+      }
+    }
+
     const { error } = await supabase
       .from('analytics')
       .insert([{
         profile_id,
         link_id: link_id || null,
         device,
-        referrer: referrer || null
+        referrer: referrer || null,
+        country,
+        city,
+        utm_source: utm_source || null,
+        utm_medium: utm_medium || null,
+        utm_campaign: utm_campaign || null
       }])
 
     if (error) {

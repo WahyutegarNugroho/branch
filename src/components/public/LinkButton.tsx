@@ -83,6 +83,18 @@ import { Profile, Link } from '@/types'
 
 export function LinkButton({ link, profileId, profile }: { link: Link, profileId: string, profile?: Profile }) {
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    // Extract UTMs from current URL query string
+    let utm_source = null
+    let utm_medium = null
+    let utm_campaign = null
+    
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search)
+      utm_source = params.get('utm_source')
+      utm_medium = params.get('utm_medium')
+      utm_campaign = params.get('utm_campaign')
+    }
+
     // Send background analytics request
     fetch('/api/analytics', {
       method: 'POST',
@@ -92,6 +104,9 @@ export function LinkButton({ link, profileId, profile }: { link: Link, profileId
       body: JSON.stringify({
         profile_id: profileId,
         link_id: link.id,
+        utm_source,
+        utm_medium,
+        utm_campaign,
       }),
     }).catch(err => console.error('Analytics error:', err))
   }

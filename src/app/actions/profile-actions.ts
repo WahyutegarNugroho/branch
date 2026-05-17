@@ -171,3 +171,42 @@ export async function updateBranding(showBranding: boolean) {
   revalidatePath('/[username]', 'page')
   return { success: true }
 }
+
+export async function updateSettings(formData: FormData) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) return { error: 'Unauthorized' }
+
+  const seo_title = formData.get('seo_title') as string || null
+  const seo_description = formData.get('seo_description') as string || null
+  const meta_pixel_id = formData.get('meta_pixel_id') as string || null
+  const tiktok_pixel_id = formData.get('tiktok_pixel_id') as string || null
+  const ga_measurement_id = formData.get('ga_measurement_id') as string || null
+  
+  let custom_domain = formData.get('custom_domain') as string || null
+  if (custom_domain) {
+    custom_domain = custom_domain.toLowerCase().trim().replace(/^(https?:\/\/)?(www\.)?/, '')
+  }
+
+  const { error } = await supabase
+    .from('profiles')
+    .update({
+      seo_title,
+      seo_description,
+      meta_pixel_id,
+      tiktok_pixel_id,
+      ga_measurement_id,
+      custom_domain,
+      updated_at: new Date().toISOString()
+    })
+    .eq('id', user.id)
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  revalidatePath('/dashboard')
+  revalidatePath('/[username]', 'page')
+  return { success: true }
+}

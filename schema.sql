@@ -299,4 +299,23 @@ CREATE POLICY Allow_owners_to_delete_link_images ON public.link_images
         )
     );
 
+-- ==========================================
+-- PHASE 3: ADVANCED ANALYTICS & SEO EXTENSIONS
+-- ==========================================
+
+-- 1. Extend analytics table with Geolocation & UTM tracking fields
+ALTER TABLE public.analytics ADD COLUMN IF NOT EXISTS country VARCHAR(100);
+ALTER TABLE public.analytics ADD COLUMN IF NOT EXISTS city VARCHAR(100);
+ALTER TABLE public.analytics ADD COLUMN IF NOT EXISTS utm_source VARCHAR(100);
+ALTER TABLE public.analytics ADD COLUMN IF NOT EXISTS utm_medium VARCHAR(100);
+ALTER TABLE public.analytics ADD COLUMN IF NOT EXISTS utm_campaign VARCHAR(100);
+
+-- 2. Extend profiles table with Custom SEO, Pixels, Google Analytics, and Custom Domain fields
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS seo_title VARCHAR(255);
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS seo_description TEXT;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS meta_pixel_id VARCHAR(100);
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS tiktok_pixel_id VARCHAR(100);
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS ga_measurement_id VARCHAR(100);
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS custom_domain VARCHAR(255);
+
 

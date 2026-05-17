@@ -63,6 +63,14 @@ export function DashboardNav({ username }: { username?: string }) {
                 Analytics
               </Button>
             </Link>
+            <Link href="/dashboard/settings">
+              <Button
+                variant={pathname === '/dashboard/settings' ? 'default' : 'ghost'}
+                className={pathname === '/dashboard/settings' ? 'bg-white text-zinc-950 hover:bg-zinc-200 rounded-full' : 'text-zinc-400 hover:text-white hover:bg-white/10 rounded-full'}
+              >
+                Settings
+              </Button>
+            </Link>
           </nav>
         </div>
         <div className="flex items-center gap-3">
