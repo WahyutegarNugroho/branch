@@ -35,8 +35,21 @@ export interface Link {
   bg_opacity?: number | null
   icon_color?: string | null
   show_icon?: boolean
-  link_type?: 'link' | 'header'
+  link_type?: 'link' | 'header' | 'carousel'
   thumbnail_url?: string | null
+  embed_type?: string | null
+  is_spotlight?: boolean
+  animation?: string | null
+  link_images?: LinkImage[]
+  images?: LinkImage[]
+}
+
+export interface LinkImage {
+  id: string
+  link_id: string
+  image_url: string
+  sort_order: number
+  created_at: string
 }
 
 export interface Analytics {

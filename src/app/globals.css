@@ -180,4 +180,48 @@
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
+
+  /* Spotlight/Priority & Custom Animations */
+  @keyframes shakeQuick {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+  }
+  @keyframes wobbleQuick {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-1.5deg); }
+    75% { transform: rotate(1.5deg); }
+  }
+  @keyframes glowPulse {
+    0%, 100% {
+      box-shadow: 0 0 5px rgba(236, 72, 153, 0.4), 0 0 15px rgba(236, 72, 153, 0.2);
+    }
+    50% {
+      box-shadow: 0 0 18px rgba(236, 72, 153, 0.8), 0 0 30px rgba(236, 72, 153, 0.4);
+    }
+  }
+  @keyframes bounceSlow {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+  @keyframes pulseSlow {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.025); }
+  }
+
+  .animate-pulse-slow {
+    animation: pulseSlow 2.5s infinite ease-in-out;
+  }
+  .animate-bounce-slow {
+    animation: bounceSlow 2s infinite ease-in-out;
+  }
+  .animate-shake-quick:hover {
+    animation: shakeQuick 0.35s infinite ease-in-out;
+  }
+  .animate-wobble-quick:hover {
+    animation: wobbleQuick 0.35s infinite ease-in-out;
+  }
+  .animate-glow-pulse {
+    animation: glowPulse 2s infinite ease-in-out;
+  }
 }

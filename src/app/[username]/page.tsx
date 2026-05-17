@@ -65,7 +65,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
 
   const { data: links, error: linksError } = await supabase
     .from('links')
-    .select('*')
+    .select('*, link_images(*)')
     .eq('profile_id', profile.id)
     .eq('is_active', true)
     .order('sort_order', { ascending: true })

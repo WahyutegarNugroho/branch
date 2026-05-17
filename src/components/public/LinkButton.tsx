@@ -111,6 +111,46 @@ export function LinkButton({ link, profileId, profile }: { link: Link, profileId
     )
   }
 
+  // Render Image Carousel / Gallery
+  if (link.link_type === 'carousel') {
+    const images = link.link_images || []
+    return (
+      <div className="w-full space-y-3 py-2">
+        {link.title && (
+          <h3 className="text-sm font-bold text-white/80 uppercase tracking-wider px-2 flex items-center gap-2">
+            <span>🖼️</span> {link.title}
+          </h3>
+        )}
+        <div className="flex gap-4 overflow-x-auto pb-3 pt-1 px-2 no-scrollbar scroll-smooth snap-x snap-mandatory">
+          {images.length === 0 ? (
+            <div className="w-full py-8 text-center text-zinc-500 bg-zinc-900/30 border border-white/5 rounded-2xl border-dashed">
+              No images in this gallery yet
+            </div>
+          ) : (
+            images.map((img: any) => (
+              <div 
+                key={img.id} 
+                className="w-[200px] h-[130px] rounded-2xl overflow-hidden border border-white/10 shadow-lg shrink-0 snap-center relative group/img cursor-pointer transition-transform hover:scale-[1.03]"
+                onClick={() => {
+                  window.open(img.image_url, '_blank')
+                }}
+              >
+                <img 
+                  src={img.image_url} 
+                  alt="" 
+                  className="w-full h-full object-cover" 
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover/img:opacity-100 transition-opacity flex items-end p-2.5">
+                  <span className="text-[9px] text-white/90 truncate font-semibold">Buka Gambar Penuh ↗</span>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+    )
+  }
+
   if (link.is_embed) {
     const embedInfo = parseEmbedUrl(link.url)
     if (embedInfo) {
@@ -183,6 +223,31 @@ export function LinkButton({ link, profileId, profile }: { link: Link, profileId
     baseBtnClass += " bg-white/10 hover:bg-white/20 border border-white/15 shadow-[0_8px_30px_rgba(0,0,0,0.3)] hover:shadow-[0_0_25px_rgba(255,255,255,0.15)]"
   }
 
+  // Spotlight / Priority support
+  let spotlightClass = ""
+  if (link.is_spotlight) {
+    spotlightClass = " ring-2 ring-brand-pink ring-offset-2 ring-offset-zinc-950/80 shadow-[0_0_20px_rgba(236,72,153,0.5)] border-brand-pink/50 animate-glow-pulse"
+  }
+
+  // Animation Effects support
+  let animationClass = ""
+  if (link.animation && link.animation !== 'none') {
+    if (link.animation === 'pulse') {
+      animationClass = " animate-pulse-slow"
+    } else if (link.animation === 'bounce') {
+      animationClass = " animate-bounce-slow"
+    } else if (link.animation === 'shake') {
+      animationClass = " animate-shake-quick"
+    } else if (link.animation === 'wobble') {
+      animationClass = " animate-wobble-quick"
+    } else if (link.animation === 'glow') {
+      animationClass = " animate-glow-pulse"
+    }
+  }
+
+  const extraClasses = ` ${spotlightClass} ${animationClass}`
+  baseBtnClass += extraClasses
+
   if (!hasGraphic) {
     return (
       <a
@@ -208,6 +273,7 @@ export function LinkButton({ link, profileId, profile }: { link: Link, profileId
   } else if (styleVal === 'shadow') {
     baseBtnClassNear += " bg-white/10 hover:bg-white/20 border border-white/15 shadow-[0_8px_30px_rgba(0,0,0,0.3)] hover:shadow-[0_0_25px_rgba(255,255,255,0.15)]"
   }
+  baseBtnClassNear += extraClasses
 
   if (isLeftNear || isRightNear) {
     return (
@@ -244,6 +310,7 @@ export function LinkButton({ link, profileId, profile }: { link: Link, profileId
   } else if (styleVal === 'shadow') {
     baseBtnClassBetween += " bg-white/10 hover:bg-white/20 border border-white/15 shadow-[0_8px_30px_rgba(0,0,0,0.3)] hover:shadow-[0_0_25px_rgba(255,255,255,0.15)]"
   }
+  baseBtnClassBetween += extraClasses
 
   return (
     <a

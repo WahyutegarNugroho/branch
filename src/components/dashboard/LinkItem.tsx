@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useEffect } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { GripVertical, Trash2, Edit2, Check, ExternalLink, Search, Link as LinkIcon } from 'lucide-react'
+import { GripVertical, Trash2, Edit2, Check, ExternalLink, Search, Link as LinkIcon, Images } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
@@ -69,6 +69,20 @@ export function LinkItem({ link }: { link: any }) {
   const [isEmbed, setIsEmbed] = useState(!!link.is_embed)
   const [linkType, setLinkType] = useState(link.link_type || 'link')
   const [thumbnailUrl, setThumbnailUrl] = useState(link.thumbnail_url || '')
+  const [isSpotlight, setIsSpotlight] = useState(!!link.is_spotlight)
+  const [animation, setAnimation] = useState(link.animation || 'none')
+  const [carouselImages, setCarouselImages] = useState<any[]>([])
+
+  const getCarouselImages = async () => {
+    const { getLinkImages } = require('@/app/actions/link-actions')
+    return await getLinkImages(link.id)
+  }
+
+  useEffect(() => {
+    if (linkType === 'carousel') {
+      getCarouselImages().then(imgs => setCarouselImages(imgs))
+    }
+  }, [link.id, linkType])
 
   useEffect(() => {
     setTitle(link.title || '')
@@ -88,7 +102,9 @@ export function LinkItem({ link }: { link: any }) {
     setIsEmbed(!!link.is_embed)
     setLinkType(link.link_type || 'link')
     setThumbnailUrl(link.thumbnail_url || '')
-  }, [link.title, link.url, link.icon_position, link.bg_color, link.text_color, link.bg_opacity, link.is_active, link.show_icon, link.icon_color, link.valid_from, link.valid_until, link.is_embed, link.link_type, link.thumbnail_url])
+    setIsSpotlight(!!link.is_spotlight)
+    setAnimation(link.animation || 'none')
+  }, [link.title, link.url, link.icon_position, link.bg_color, link.text_color, link.bg_opacity, link.is_active, link.show_icon, link.icon_color, link.valid_from, link.valid_until, link.is_embed, link.link_type, link.thumbnail_url, link.is_spotlight, link.animation])
 
   // Dispatch real-time live preview updates
   useEffect(() => {
@@ -118,10 +134,13 @@ export function LinkItem({ link }: { link: any }) {
           is_embed: isEmbed,
           link_type: linkType,
           thumbnail_url: linkType === 'header' ? null : thumbnailUrl,
+          is_spotlight: isSpotlight,
+          animation: animation === 'none' ? null : animation,
+          images: carouselImages,
         }
       }
     }))
-  }, [title, url, iconPosition, customStyleEnabled, bgColor, textColor, bgOpacity, isActive, showIcon, iconColorMode, iconColor, scheduleEnabled, validFrom, validUntil, isEmbed, isEditing, link.id, linkType, thumbnailUrl])
+  }, [title, url, iconPosition, customStyleEnabled, bgColor, textColor, bgOpacity, isActive, showIcon, iconColorMode, iconColor, scheduleEnabled, validFrom, validUntil, isEmbed, isEditing, link.id, linkType, thumbnailUrl, isSpotlight, animation, carouselImages])
 
   const matchedPlatform = getPlatformByName(title)
   const MatchedIcon = matchedPlatform?.icon
@@ -133,6 +152,8 @@ export function LinkItem({ link }: { link: any }) {
     setLoading(true)
     formData.append('is_active', formData.get('is_active') ? 'on' : '')
     formData.append('show_icon', formData.get('show_icon') ? 'on' : '')
+    formData.append('is_spotlight', isSpotlight ? 'on' : 'off')
+    formData.append('animation', animation)
     
     const result = await updateLink(link.id, formData)
     if (result.error) {
@@ -212,6 +233,91 @@ export function LinkItem({ link }: { link: any }) {
               <Input name="title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Header Title (e.g., My Socials, Projects)" required className="font-bold rounded-xl border-white/10 bg-white/5 text-white focus-visible:ring-brand-pink h-12" />
               <input type="hidden" name="url" value="" />
             </div>
+          ) : linkType === 'carousel' ? (
+            <div className="space-y-4">
+              <span className="text-xs text-brand-pink font-bold uppercase tracking-wider block">Image Carousel / Gallery</span>
+              <div className="space-y-3">
+                <Input name="title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Carousel Title (e.g., My Portfolio, Event Photos)" required className="font-bold rounded-xl border-white/10 bg-white/5 text-white focus-visible:ring-brand-pink h-12" />
+                <input type="hidden" name="url" value="" />
+              </div>
+              
+              {/* Carousel Image Manager */}
+              <div className="p-4 bg-zinc-950/40 border border-white/5 rounded-2xl space-y-4">
+                <span className="text-sm font-bold text-white block">🖼️ Kelola Gambar Carousel</span>
+                <p className="text-[10px] text-zinc-400">
+                  Masukkan URL gambar untuk ditambahkan ke galeri carousel profil Anda. Pengunjung dapat menggesernya secara horizontal.
+                </p>
+                
+                {/* Add new Image input */}
+                <div className="flex gap-2">
+                  <Input 
+                    type="url" 
+                    placeholder="https://example.com/slide-image.png" 
+                    id={`new_carousel_img_${link.id}`}
+                    className="rounded-xl border-white/10 bg-white/5 text-white h-10 text-sm focus-visible:ring-brand-pink flex-1"
+                  />
+                  <Button 
+                    type="button" 
+                    onClick={async () => {
+                      const input = document.getElementById(`new_carousel_img_${link.id}`) as HTMLInputElement;
+                      if (!input || !input.value) return;
+                      const imageUrl = input.value;
+                      const { addLinkImage } = require('@/app/actions/link-actions');
+                      const res = await addLinkImage(link.id, imageUrl);
+                      if (res.error) {
+                        toast.error(res.error);
+                      } else {
+                        toast.success('Gambar berhasil ditambahkan!');
+                        input.value = '';
+                        // Refresh router and fetch again
+                        router.refresh();
+                        const updatedImages = await getCarouselImages();
+                        setCarouselImages(updatedImages);
+                      }
+                    }}
+                    className="bg-brand-pink hover:bg-brand-pink/90 text-white rounded-xl font-bold px-4 h-10 shrink-0 cursor-pointer"
+                  >
+                    Tambah
+                  </Button>
+                </div>
+
+                {/* List of images */}
+                <div className="space-y-2 mt-3 max-h-[200px] overflow-y-auto no-scrollbar">
+                  {carouselImages.length === 0 ? (
+                    <p className="text-xs text-zinc-500 italic text-center py-2">Belum ada gambar. Tambahkan satu di atas!</p>
+                  ) : (
+                    carouselImages.map((img: any) => (
+                      <div key={img.id} className="flex items-center justify-between p-2 bg-zinc-900/60 rounded-xl border border-white/5">
+                        <div className="flex items-center gap-3 min-w-0 flex-1">
+                          <img src={img.image_url} alt="" className="w-10 h-10 rounded-lg object-cover border border-white/10 shrink-0" />
+                          <span className="text-[10px] text-zinc-400 truncate flex-1">{img.image_url}</span>
+                        </div>
+                        <Button 
+                          type="button" 
+                          variant="ghost" 
+                          size="icon" 
+                          onClick={async () => {
+                            const { deleteLinkImage } = require('@/app/actions/link-actions');
+                            const res = await deleteLinkImage(img.id);
+                            if (res.error) {
+                              toast.error(res.error);
+                            } else {
+                              toast.success('Gambar dihapus');
+                              router.refresh();
+                              const updatedImages = await getCarouselImages();
+                              setCarouselImages(updatedImages);
+                            }
+                          }}
+                          className="w-8 h-8 text-zinc-500 hover:text-red-500 hover:bg-white/5 rounded-lg transition-colors shrink-0"
+                        >
+                          <Trash2 size={14} />
+                        </Button>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            </div>
           ) : (
             <div className="flex gap-4">
               <Button
@@ -276,6 +382,49 @@ export function LinkItem({ link }: { link: any }) {
                     <img src={thumbnailUrl} alt="Thumbnail preview" className="w-full h-full object-cover" />
                   </div>
                 )}
+              </div>
+            </div>
+          )}
+
+          {/* Spotlight & Animation Effects (Link only) */}
+          {linkType === 'link' && (
+            <div className="p-4 bg-zinc-950/40 border border-white/5 rounded-2xl space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <span className="text-sm font-bold text-white flex items-center gap-1.5">
+                    ⭐ Priority / Spotlight Link
+                  </span>
+                  <p className="text-[10px] text-zinc-400 max-w-[280px]">
+                    Beri highlight bersinar khusus agar tautan ini menarik perhatian utama pengunjung.
+                  </p>
+                </div>
+                <Switch 
+                  id={`is_spotlight_${link.id}`} 
+                  checked={isSpotlight} 
+                  onCheckedChange={setIsSpotlight} 
+                  className="data-[state=checked]:bg-brand-pink"
+                />
+              </div>
+
+              <div className="space-y-2 pt-2 border-t border-white/5">
+                <span className="text-xs font-bold text-white flex items-center gap-1.5">
+                  ✨ Efek Animasi
+                </span>
+                <p className="text-[10px] text-zinc-400">
+                  Pilih efek gerakan untuk menarik pandangan pengunjung secara halus.
+                </p>
+                <select
+                  value={animation}
+                  onChange={(e) => setAnimation(e.target.value)}
+                  className="w-full rounded-xl border border-white/10 bg-zinc-900 text-white h-10 px-3 text-sm focus:outline-none focus:ring-1 focus:ring-brand-pink"
+                >
+                  <option value="none">Tanpa Animasi</option>
+                  <option value="pulse">Pulse (Denyut Perlahan)</option>
+                  <option value="bounce">Bounce (Memantul)</option>
+                  <option value="shake">Shake (Goyang Samping)</option>
+                  <option value="wobble">Wobble (Bergetar)</option>
+                  <option value="glow">Glow (Cahaya Bersinar)</option>
+                </select>
               </div>
             </div>
           )}
@@ -628,12 +777,13 @@ export function LinkItem({ link }: { link: any }) {
   const isLeftNear = pos === 'left_near'
   const isRightNear = pos === 'right_near'
   const isHeader = link.link_type === 'header'
+  const isCarousel = link.link_type === 'carousel'
 
   return (
     <Card 
       ref={setNodeRef} 
       style={style} 
-      className={`p-4 mb-4 ${isHeader ? 'bg-zinc-900/80 border-brand-pink/20 border shadow-md' : 'bg-zinc-900/40 border-white/10 shadow-lg'} rounded-2xl backdrop-blur-md group hover:border-white/20 transition-all relative flex flex-col sm:flex-row items-stretch sm:items-center gap-4 sm:gap-2`}
+      className={`p-4 mb-4 ${isHeader ? 'bg-zinc-900/80 border-brand-pink/20 border shadow-md' : isCarousel ? 'bg-zinc-900/80 border-brand-pink/20 border shadow-md' : 'bg-zinc-900/40 border-white/10 shadow-lg'} rounded-2xl backdrop-blur-md group hover:border-white/20 transition-all relative flex flex-col sm:flex-row items-stretch sm:items-center gap-4 sm:gap-2`}
     >
       {/* Left side: Drag Handle & Main Content */}
       <div className="flex items-center gap-2 flex-1 min-w-0">
@@ -653,6 +803,20 @@ export function LinkItem({ link }: { link: any }) {
               <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider mt-0.5 flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-brand-pink shrink-0" />
                 Section Divider
+              </p>
+            </div>
+          </div>
+        ) : isCarousel ? (
+          /* Carousel Layout */
+          <div className="flex items-center gap-3 min-w-0 flex-1 py-1">
+            <div className="flex items-center justify-center w-10 h-10 shrink-0 rounded-xl bg-brand-pink/10 border border-brand-pink/20">
+              <Images size={20} className="text-brand-pink" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="font-extrabold text-white text-base leading-snug tracking-tight">{link.title}</p>
+              <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider mt-0.5 flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-brand-pink shrink-0" />
+                Image Carousel / Gallery
               </p>
             </div>
           </div>

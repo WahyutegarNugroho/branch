@@ -11,7 +11,7 @@ export async function getLinks() {
 
   const { data, error } = await supabase
     .from('links')
-    .select('*')
+    .select('*, link_images(*)')
     .eq('profile_id', user.id)
     .order('sort_order', { ascending: true })
 
@@ -114,6 +114,17 @@ export async function updateLink(id: string, formData: FormData) {
     updateData.valid_until = untilVal ? new Date(untilVal).toISOString() : null
   }
 
+  // Phase 2 features
+  if (formData.has('is_spotlight')) {
+    updateData.is_spotlight = formData.get('is_spotlight') === 'on' || formData.get('is_spotlight') === 'true'
+  }
+  if (formData.has('animation')) {
+    updateData.animation = formData.get('animation') as string || null
+  }
+  if (formData.has('embed_type')) {
+    updateData.embed_type = formData.get('embed_type') as string || null
+  }
+
   const { error } = await supabase
     .from('links')
     .update(updateData)
@@ -202,3 +213,95 @@ export async function applyStylesToAllLinks(bgColor: string | null, textColor: s
   revalidatePath('/[username]', 'page')
   return { success: true }
 }
+
+export async function getLinkImages(linkId: string) {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('link_images')
+    .select('*')
+    .eq('link_id', linkId)
+    .order('sort_order', { ascending: true })
+
+  if (error) {
+    console.error('Error fetching link images:', error)
+    return []
+  }
+  return data
+}
+
+export async function addLinkImage(linkId: string, imageUrl: string) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) return { error: 'Unauthorized' }
+
+  // Verify owner of the link
+  const { data: link, error: linkErr } = await supabase
+    .from('links')
+    .select('id')
+    .eq('id', linkId)
+    .eq('profile_id', user.id)
+    .single()
+
+  if (linkErr || !link) return { error: 'Unauthorized or Link not found' }
+
+  const { data, error } = await supabase
+    .from('link_images')
+    .insert([{
+      link_id: linkId,
+      image_url: imageUrl,
+      sort_order: 0
+    }])
+    .select()
+    .single()
+
+  if (error) return { error: error.message }
+
+  revalidatePath('/dashboard')
+  revalidatePath('/[username]', 'page')
+  return { success: true, image: data }
+}
+
+export async function deleteLinkImage(id: string) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) return { error: 'Unauthorized' }
+
+  const { error } = await supabase
+    .from('link_images')
+    .delete()
+    .eq('id', id)
+
+  if (error) return { error: error.message }
+
+  revalidatePath('/dashboard')
+  revalidatePath('/[username]', 'page')
+  return { success: true }
+}
+
+export async function reorderLinkImages(images: { id: string, sort_order: number }[]) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) return { error: 'Unauthorized' }
+
+  const promises = images.map(item =>
+    supabase
+      .from('link_images')
+      .update({ sort_order: item.sort_order })
+      .eq('id', item.id)
+  )
+
+  const results = await Promise.all(promises)
+  const hasError = results.some(r => r.error)
+
+  if (hasError) {
+    return { error: 'Failed to reorder carousel images' }
+  }
+
+  revalidatePath('/dashboard')
+  revalidatePath('/[username]', 'page')
+  return { success: true }
+}
+

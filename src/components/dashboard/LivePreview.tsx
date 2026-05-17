@@ -244,6 +244,40 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
                       )
                     }
 
+                    // Render Carousel in Live Preview
+                    if (link.link_type === 'carousel') {
+                      const images = link.link_images || link.images || []
+                      return (
+                        <div key={link.id} className="w-full space-y-2 py-1 select-none pointer-events-auto">
+                          {link.title && (
+                            <h4 className="text-[10px] font-extrabold text-white/80 uppercase tracking-wider px-1">
+                              🖼️ {link.title}
+                            </h4>
+                          )}
+                          <div className="flex gap-2.5 overflow-x-auto pb-2 pt-0.5 px-1 no-scrollbar scroll-smooth snap-x snap-mandatory">
+                            {images.length === 0 ? (
+                              <div className="w-full py-6 text-center text-[10px] text-zinc-500 bg-zinc-900/30 border border-white/5 rounded-xl border-dashed">
+                                No images in this gallery yet
+                              </div>
+                            ) : (
+                              images.map((img: any) => (
+                                <div 
+                                  key={img.id} 
+                                  className="w-[120px] h-[80px] rounded-xl overflow-hidden border border-white/10 shadow shrink-0 snap-center relative"
+                                >
+                                  <img 
+                                    src={img.image_url} 
+                                    alt="" 
+                                    className="w-full h-full object-cover" 
+                                  />
+                                </div>
+                              ))
+                            )}
+                          </div>
+                        </div>
+                      )
+                    }
+
                     if (link.is_embed) {
                       const embedInfo = parseEmbedUrl(link.url)
                       if (embedInfo) {
@@ -315,6 +349,31 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
                       baseBtnClass += " bg-white/15 border border-white/15 shadow-[0_4px_15px_rgba(0,0,0,0.3)]"
                     }
 
+                    // Spotlight / Priority support
+                    let spotlightClass = ""
+                    if (link.is_spotlight) {
+                      spotlightClass = " ring-2 ring-brand-pink ring-offset-2 ring-offset-zinc-950/80 shadow-[0_0_15px_rgba(236,72,153,0.5)] border-brand-pink/50 animate-glow-pulse"
+                    }
+
+                    // Animation Effects support
+                    let animationClass = ""
+                    if (link.animation && link.animation !== 'none') {
+                      if (link.animation === 'pulse') {
+                        animationClass = " animate-pulse-slow"
+                      } else if (link.animation === 'bounce') {
+                        animationClass = " animate-bounce-slow"
+                      } else if (link.animation === 'shake') {
+                        animationClass = " animate-shake-quick"
+                      } else if (link.animation === 'wobble') {
+                        animationClass = " animate-wobble-quick"
+                      } else if (link.animation === 'glow') {
+                        animationClass = " animate-glow-pulse"
+                      }
+                    }
+
+                    const extraClasses = ` ${spotlightClass} ${animationClass}`
+                    baseBtnClass += extraClasses
+
                     if (!hasGraphic) {
                       return (
                         <div 
@@ -337,13 +396,13 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
                           <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity" style={{ backgroundColor: matchedPlatform?.color || '#ffffff' }} />
                           
                           {isLeftNear && (
-                            ThumbnailImg ? ThumbnailImg : <PlatformIcon size={18} color={finalIconColor} className="drop-shadow-sm z-10 shrink-0" />
+                            ThumbnailImg ? ThumbnailImg : (PlatformIcon && <PlatformIcon size={18} color={finalIconColor} className="drop-shadow-sm z-10 shrink-0" />)
                           )}
                           
                           <span className="z-10 text-center truncate max-w-[160px]">{link.title}</span>
                           
                           {isRightNear && (
-                            ThumbnailImg ? ThumbnailImg : <PlatformIcon size={18} color={finalIconColor} className="drop-shadow-sm z-10 shrink-0" />
+                            ThumbnailImg ? ThumbnailImg : (PlatformIcon && <PlatformIcon size={18} color={finalIconColor} className="drop-shadow-sm z-10 shrink-0" />)
                           )}
                         </div>
                       )
@@ -359,6 +418,7 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
                     } else if (styleVal === 'shadow') {
                       baseBtnClassBetween += " bg-white/15 border border-white/15 shadow-[0_4px_15px_rgba(0,0,0,0.3)]"
                     }
+                    baseBtnClassBetween += extraClasses
 
                     return (
                       <div 
@@ -370,7 +430,7 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
                         
                         <div className={`w-6 flex items-center shrink-0 z-10 ${isRightFar ? 'justify-end' : 'justify-start'}`}>
                           {isLeftFar && (
-                            ThumbnailImg ? ThumbnailImg : <PlatformIcon size={18} color={finalIconColor} className="drop-shadow-sm" />
+                            ThumbnailImg ? ThumbnailImg : (PlatformIcon && <PlatformIcon size={18} color={finalIconColor} className="drop-shadow-sm" />)
                           )}
                         </div>
                         
@@ -378,7 +438,7 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
                         
                         <div className={`w-6 flex items-center shrink-0 z-10 ${isRightFar ? 'justify-end' : 'justify-start'}`}>
                           {isRightFar && (
-                            ThumbnailImg ? ThumbnailImg : <PlatformIcon size={18} color={finalIconColor} className="drop-shadow-sm" />
+                            ThumbnailImg ? ThumbnailImg : (PlatformIcon && <PlatformIcon size={18} color={finalIconColor} className="drop-shadow-sm" />)
                           )}
                         </div>
                       </div>

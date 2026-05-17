@@ -249,3 +249,54 @@ VALUES
     ('Neo Retro', 'solid', '#facc15', 'rounded-none', 'flat', 'font-sans-theme')
 ON CONFLICT DO NOTHING;
 
+
+-- ==========================================
+-- PHASE 2 UPGRADES
+-- ==========================================
+
+-- 1. Alter public.links table to support Spotlight, Animations, and explicit Embed Type
+ALTER TABLE public.links ADD COLUMN IF NOT EXISTS embed_type VARCHAR(50);
+ALTER TABLE public.links ADD COLUMN IF NOT EXISTS is_spotlight BOOLEAN DEFAULT false;
+ALTER TABLE public.links ADD COLUMN IF NOT EXISTS animation VARCHAR(50);
+
+-- 2. Create public.link_images table for Image Carousel/Gallery
+CREATE TABLE IF NOT EXISTS public.link_images (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    link_id UUID REFERENCES public.links(id) ON DELETE CASCADE NOT NULL,
+    image_url TEXT NOT NULL,
+    sort_order INT DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- 3. Enable Row Level Security
+ALTER TABLE public.link_images ENABLE ROW LEVEL SECURITY;
+
+-- 4. Set up RLS Policies for link_images
+CREATE POLICY Allow_public_read_link_images ON public.link_images
+    FOR SELECT USING (true);
+
+CREATE POLICY Allow_owners_to_insert_link_images ON public.link_images
+    FOR INSERT WITH CHECK (
+        EXISTS (
+            SELECT 1 FROM public.links
+            WHERE links.id = link_images.link_id AND links.profile_id = auth.uid()
+        )
+    );
+
+CREATE POLICY Allow_owners_to_update_link_images ON public.link_images
+    FOR UPDATE USING (
+        EXISTS (
+            SELECT 1 FROM public.links
+            WHERE links.id = link_images.link_id AND links.profile_id = auth.uid()
+        )
+    );
+
+CREATE POLICY Allow_owners_to_delete_link_images ON public.link_images
+    FOR DELETE USING (
+        EXISTS (
+            SELECT 1 FROM public.links
+            WHERE links.id = link_images.link_id AND links.profile_id = auth.uid()
+        )
+    );
+
+

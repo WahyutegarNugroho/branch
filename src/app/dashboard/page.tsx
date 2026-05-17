@@ -21,6 +21,11 @@ export default async function DashboardPage() {
     await createLink('header')
   }
 
+  async function handleCreateCarouselAction() {
+    'use server'
+    await createLink('carousel')
+  }
+
   return (
     <div className="space-y-6">
       <div>
@@ -28,17 +33,23 @@ export default async function DashboardPage() {
         <p className="text-zinc-400 text-base mt-1">Manage your links, sections, and embed content.</p>
       </div>
       
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <form action={handleCreateLinkAction} className="w-full">
-          <Button type="submit" className="w-full h-14 rounded-2xl bg-gradient-to-r from-brand-pink to-brand-orange hover:opacity-90 transition-all text-white font-bold text-lg border-0 shadow-lg cursor-pointer">
-            <Plus className="mr-2 h-6 w-6" />
+          <Button type="submit" className="w-full h-14 rounded-2xl bg-gradient-to-r from-brand-pink to-brand-orange hover:opacity-90 transition-all text-white font-bold text-sm border-0 shadow-lg cursor-pointer">
+            <Plus className="mr-1.5 h-5 w-5" />
             Add New Link
           </Button>
         </form>
+        <form action={handleCreateCarouselAction} className="w-full">
+          <Button type="submit" className="w-full h-14 rounded-2xl bg-zinc-800 hover:bg-zinc-700/85 transition-all text-white font-bold text-sm border border-white/10 shadow-lg cursor-pointer">
+            <Plus className="mr-1.5 h-5 w-5" />
+            Add Carousel
+          </Button>
+        </form>
         <form action={handleCreateHeaderAction} className="w-full">
-          <Button type="submit" className="w-full h-14 rounded-2xl bg-zinc-800 hover:bg-zinc-700/80 transition-all text-white font-bold text-lg border border-white/10 shadow-lg cursor-pointer">
-            <Plus className="mr-2 h-6 w-6" />
-            Add New Header
+          <Button type="submit" className="w-full h-14 rounded-2xl bg-zinc-800 hover:bg-zinc-700/85 transition-all text-white font-bold text-sm border border-white/10 shadow-lg cursor-pointer">
+            <Plus className="mr-1.5 h-5 w-5" />
+            Add Header Section
           </Button>
         </form>
       </div>
