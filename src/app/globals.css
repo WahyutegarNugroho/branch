@@ -112,6 +112,42 @@
   --brand-pink: oklch(0.7 0.2 340);
   --brand-orange: oklch(0.75 0.2 40);
   --surface-soft: oklch(0.98 0 0);
+
+  /* Custom Animations */
+  --animate-pulse-slow: pulseSlow 2.5s infinite ease-in-out;
+  --animate-bounce-slow: bounceSlow 2s infinite ease-in-out;
+  --animate-shake-quick: shakeQuick 2.5s infinite ease-in-out;
+  --animate-wobble-quick: wobbleQuick 2.5s infinite ease-in-out;
+  --animate-glow-pulse: glowPulse 2s infinite ease-in-out;
+}
+
+@layer utilities {
+  @keyframes pulseSlow {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.025); }
+  }
+  @keyframes bounceSlow {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+  @keyframes shakeQuick {
+    0%, 75%, 100% { transform: translateX(0); }
+    80%, 90% { transform: translateX(-4px); }
+    85%, 95% { transform: translateX(4px); }
+  }
+  @keyframes wobbleQuick {
+    0%, 75%, 100% { transform: rotate(0deg); }
+    80%, 90% { transform: rotate(-2deg); }
+    85%, 95% { transform: rotate(2deg); }
+  }
+  @keyframes glowPulse {
+    0%, 100% {
+      box-shadow: 0 0 5px rgba(236, 72, 153, 0.4), 0 0 15px rgba(236, 72, 153, 0.2);
+    }
+    50% {
+      box-shadow: 0 0 18px rgba(236, 72, 153, 0.8), 0 0 30px rgba(236, 72, 153, 0.4);
+    }
+  }
 }
 
 .dark {
@@ -181,49 +217,7 @@
     display: none;
   }
 
-  /* Spotlight/Priority & Custom Animations */
-  @keyframes shakeQuick {
-    0%, 75%, 100% { transform: translateX(0); }
-    80%, 90% { transform: translateX(-4px); }
-    85%, 95% { transform: translateX(4px); }
-  }
-  @keyframes wobbleQuick {
-    0%, 75%, 100% { transform: rotate(0deg); }
-    80%, 90% { transform: rotate(-2deg); }
-    85%, 95% { transform: rotate(2deg); }
-  }
-  @keyframes glowPulse {
-    0%, 100% {
-      box-shadow: 0 0 5px rgba(236, 72, 153, 0.4), 0 0 15px rgba(236, 72, 153, 0.2);
-    }
-    50% {
-      box-shadow: 0 0 18px rgba(236, 72, 153, 0.8), 0 0 30px rgba(236, 72, 153, 0.4);
-    }
-  }
-  @keyframes bounceSlow {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-6px); }
-  }
-  @keyframes pulseSlow {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.025); }
-  }
-
-  .animate-pulse-slow {
-    animation: pulseSlow 2.5s infinite ease-in-out;
-  }
-  .animate-bounce-slow {
-    animation: bounceSlow 2s infinite ease-in-out;
-  }
-  .animate-shake-quick {
-    animation: shakeQuick 2.5s infinite ease-in-out;
-  }
-  .animate-wobble-quick {
-    animation: wobbleQuick 2.5s infinite ease-in-out;
-  }
-  .animate-glow-pulse {
-    animation: glowPulse 2s infinite ease-in-out;
-  }
+  /* Spotlight/Priority & Custom Animations are now in @theme inline block above */
 
   .spotlight-active {
     box-shadow: 0 0 15px var(--spotlight-color-rgba, rgba(236, 72, 153, 0.5)) !important;

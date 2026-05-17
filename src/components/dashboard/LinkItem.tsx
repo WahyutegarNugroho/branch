@@ -153,11 +153,11 @@ export function LinkItem({ link }: { link: any }) {
 
   async function handleSave(formData: FormData) {
     setLoading(true)
-    formData.append('is_active', formData.get('is_active') ? 'on' : '')
-    formData.append('show_icon', formData.get('show_icon') ? 'on' : '')
-    formData.append('is_spotlight', isSpotlight ? 'on' : 'off')
-    formData.append('animation', animation)
-    formData.append('spotlight_color', spotlightColor)
+    formData.set('is_active', isActive ? 'on' : '')
+    formData.set('show_icon', showIcon ? 'on' : '')
+    formData.set('is_spotlight', isSpotlight ? 'on' : 'off')
+    formData.set('animation', animation === 'none' ? '' : animation)
+    formData.set('spotlight_color', spotlightColor)
     
     const result = await updateLink(link.id, formData)
     if (result.error) {
@@ -231,7 +231,6 @@ export function LinkItem({ link }: { link: any }) {
         <form action={handleSave} className="space-y-4">
           <input type="hidden" name="link_type" value={linkType} />
           <input type="hidden" name="is_spotlight" value={isSpotlight ? 'on' : 'off'} />
-          <input type="hidden" name="animation" value={animation} />
           <input type="hidden" name="spotlight_color" value={spotlightColor} />
           
           {linkType === 'header' ? (
@@ -443,6 +442,7 @@ export function LinkItem({ link }: { link: any }) {
                   Pilih efek gerakan untuk menarik pandangan pengunjung secara halus.
                 </p>
                 <select
+                  name="animation"
                   value={animation}
                   onChange={(e) => setAnimation(e.target.value)}
                   className="w-full rounded-xl border border-white/10 bg-zinc-900 text-white h-10 px-3 text-sm focus:outline-none focus:ring-1 focus:ring-brand-pink"
