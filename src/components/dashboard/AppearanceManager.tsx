@@ -174,7 +174,7 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
       }
     }))
     
-    toast.success(`Tema "${theme.name}" diterapkan di preview! Klik "Save Appearance" di bagian bawah untuk menyimpan ke profil publik Anda.`)
+    toast.success(`Theme "${theme.name}" applied to preview! Click "Save Appearance" below to save it to your public profile.`)
   }
 
   async function onBrandingSubmit(e: React.FormEvent) {
@@ -184,7 +184,7 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
     if (result.error) {
       toast.error(result.error)
     } else {
-      toast.success('Pengaturan branding berhasil diperbarui!')
+      toast.success('Branding settings updated successfully!')
       router.refresh()
     }
     setBrandingLoading(false)
@@ -199,7 +199,7 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
 
     // Check size limit (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
-      toast.error('Ukuran gambar maksimal adalah 5MB!')
+      toast.error('Maximum image size is 5MB!')
       return
     }
 
@@ -219,7 +219,7 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
       const supabase = createClient()
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) {
-        toast.error('Anda harus login terlebih dahulu!')
+        toast.error('You must be logged in first!')
         return
       }
 
@@ -243,7 +243,7 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
       if (isAvatar) {
         setAvatarUrl(publicUrl)
         setIsCropOpen(false)
-        toast.success('Foto profil berhasil dipotong!')
+        toast.success('Profile photo cropped successfully!')
 
         // Sync immediately to virtual smartphone preview
         window.dispatchEvent(new CustomEvent('profile-update', {
@@ -254,7 +254,7 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
       } else if (isBanner) {
         setBannerUrl(publicUrl)
         setIsCropOpen(false)
-        toast.success('Banner hero berhasil dipotong!')
+        toast.success('Hero banner cropped successfully!')
 
         // Sync immediately to virtual smartphone preview
         window.dispatchEvent(new CustomEvent('profile-update', {
@@ -266,7 +266,7 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
         setBgImageUrl(publicUrl)
         setBgType('image')
         setIsCropOpen(false)
-        toast.success('Gambar latar belakang berhasil dipotong!')
+        toast.success('Background image cropped successfully!')
 
         // Sync immediately to virtual smartphone preview
         window.dispatchEvent(new CustomEvent('profile-update', {
@@ -279,7 +279,7 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
       }
     } catch (err: any) {
       console.error('Error uploading image:', err)
-      toast.error(`Gagal mengunggah gambar: ${err.message}`)
+      toast.error(`Failed to upload image: ${err.message}`)
     }
   }
 
@@ -359,12 +359,12 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
     setInfoLoading(true)
 
     if (usernameStatus === 'taken') {
-      toast.error('Username sudah digunakan oleh orang lain!')
+      toast.error('Username is already taken by someone else!')
       setInfoLoading(false)
       return
     }
     if (usernameStatus === 'invalid') {
-      toast.error('Username tidak valid!')
+      toast.error('Invalid username!')
       setInfoLoading(false)
       return
     }
@@ -377,9 +377,9 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
     if (result.error) {
       toast.error(result.error)
     } else {
-      toast.success('Informasi profil berhasil diperbarui!')
+      toast.success('Profile information updated successfully!')
       if (username !== profile?.username) {
-        toast.info('Username Anda diubah, menyinkronkan dashboard...')
+        toast.info('Your username was changed, syncing dashboard...')
         router.push('/dashboard')
       } else {
         router.refresh()
@@ -523,7 +523,7 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
                 </div>
               </div>
               <p className="text-[11px] text-zinc-500 font-medium">
-                Tautan unik profil publik Anda. Hanya boleh diisi huruf kecil, angka, underscore (_), atau strip (-).
+                Your unique public profile link. Only lowercase letters, numbers, underscores (_), or hyphens (-) are allowed.
               </p>
             </div>
 
@@ -599,17 +599,17 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
       {/* Preset Themes Gallery */}
       <Card className="rounded-2xl shadow-sm border-white/10 bg-zinc-900/50 backdrop-blur-md animate-in fade-in slide-in-from-top-4 duration-300">
         <CardHeader>
-          <CardTitle className="text-xl text-white font-bold flex items-center gap-2">
+          <CardTitle className="text-xl text-white font-display-theme font-black flex items-center gap-2">
             🎨 Preset Themes Gallery
           </CardTitle>
           <CardDescription className="text-zinc-400">
-            Pilih dari tema premium yang dirancang secara profesional untuk mempercantik profil Anda secara instan.
+            Choose from professionally designed premium themes to instantly beautify your profile.
           </CardDescription>
         </CardHeader>
         <CardContent>
           {themes.length === 0 ? (
             <div className="flex items-center justify-center py-6 text-zinc-500 text-sm font-medium animate-pulse">
-              Memuat galeri tema...
+              Loading themes gallery...
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -765,7 +765,7 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
                   placeholder="https://assets.mixkit.co/videos/preview/mixkit-stars-in-space-background-1611-large.mp4"
                   className="rounded-xl border-white/10 bg-white/5 text-white focus-visible:ring-brand-pink h-12 text-sm"
                 />
-                <p className="text-[11px] text-zinc-400">Masukkan link direct MP4 (.mp4), link YouTube, atau link short video lainnya.</p>
+                <p className="text-[11px] text-zinc-400">Enter a direct MP4 (.mp4) link, YouTube video link, or other short video url.</p>
               </div>
             )}
 
@@ -869,7 +869,7 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
                         className="bg-white/5 border border-white/10 hover:bg-white/10 text-white rounded-xl text-xs h-10 px-4 flex items-center gap-2"
                       >
                         <Image className="w-4 h-4 text-zinc-400" />
-                        {bannerUrl ? 'Ubah Banner' : 'Unggah Banner'}
+                        {bannerUrl ? 'Change Banner' : 'Upload Banner'}
                       </Button>
                       
                       {bannerUrl && (
@@ -884,7 +884,7 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
                           }}
                           className="bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 rounded-xl text-xs h-10 px-3"
                         >
-                          Hapus
+                          Delete
                         </Button>
                       )}
                     </div>
@@ -904,11 +904,11 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
 
                   {/* Profile alignment */}
                   <div className="space-y-2">
-                    <Label className="text-zinc-400 text-xs">Konten Alignment (Penyelarasan)</Label>
+                    <Label className="text-zinc-400 text-xs">Content Alignment</Label>
                     <div className="grid grid-cols-2 gap-2">
                       {[
-                        { val: 'center', label: 'Tengah', icon: AlignCenter },
-                        { val: 'left', label: 'Rata Kiri', icon: AlignLeft }
+                        { val: 'center', label: 'Center', icon: AlignCenter },
+                        { val: 'left', label: 'Left Align', icon: AlignLeft }
                       ].map((item) => {
                         const Icon = item.icon
                         return (
@@ -934,18 +934,18 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
               {/* 2. Avatar & Spacing Controls */}
               <div className="space-y-4 pt-6 border-t border-white/5 animate-in fade-in duration-300">
                 <h3 className="text-sm font-bold text-zinc-300 flex items-center gap-2">
-                  <Sliders className="w-4 h-4 text-brand-orange" /> Jarak & Elemen Kustom
+                  <Sliders className="w-4 h-4 text-brand-orange" /> Spacing & Custom Elements
                 </h3>
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {/* Avatar Shape */}
                   <div className="space-y-2">
-                    <Label className="text-zinc-400 text-xs">Bentuk Avatar (Shape)</Label>
+                    <Label className="text-zinc-400 text-xs">Avatar Shape</Label>
                     <div className="grid grid-cols-3 gap-1">
                       {[
-                        { val: 'circle', label: 'Bulat' },
-                        { val: 'rounded', label: 'Kotak' },
-                        { val: 'hexagon', label: 'Hexa' }
+                        { val: 'circle', label: 'Circle' },
+                        { val: 'rounded', label: 'Square' },
+                        { val: 'hexagon', label: 'Hexagon' }
                       ].map((item) => (
                         <div
                           key={item.val}
@@ -964,12 +964,12 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
 
                   {/* Avatar Size */}
                   <div className="space-y-2">
-                    <Label className="text-zinc-400 text-xs">Ukuran Avatar (Size)</Label>
+                    <Label className="text-zinc-400 text-xs">Avatar Size</Label>
                     <div className="grid grid-cols-3 gap-1">
                       {[
-                        { val: 'small', label: 'Kecil' },
-                        { val: 'medium', label: 'Sedang' },
-                        { val: 'large', label: 'Besar' }
+                        { val: 'small', label: 'Small' },
+                        { val: 'medium', label: 'Medium' },
+                        { val: 'large', label: 'Large' }
                       ].map((item) => (
                         <div
                           key={item.val}
@@ -988,12 +988,12 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
 
                   {/* Link Spacing */}
                   <div className="space-y-2">
-                    <Label className="text-zinc-400 text-xs">Jarak Link (Spacing)</Label>
+                    <Label className="text-zinc-400 text-xs">Link Spacing</Label>
                     <div className="grid grid-cols-3 gap-1">
                       {[
-                        { val: 'compact', label: 'Rapat' },
+                        { val: 'compact', label: 'Compact' },
                         { val: 'normal', label: 'Normal' },
-                        { val: 'relaxed', label: 'Lebar' }
+                        { val: 'relaxed', label: 'Relaxed' }
                       ].map((item) => (
                         <div
                           key={item.val}
@@ -1015,13 +1015,13 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
               {/* 3. Global Color & Social Icons Style */}
               <div className="space-y-4 pt-6 border-t border-white/5 animate-in fade-in duration-300">
                 <h3 className="text-sm font-bold text-zinc-300 flex items-center gap-2">
-                  <Palette className="w-4 h-4 text-brand-pink" /> Warna Global & Gaya Ikon
+                  <Palette className="w-4 h-4 text-brand-pink" /> Global Colors & Icon Styles
                 </h3>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {/* Global Text Color Picker */}
                   <div className="space-y-2">
-                    <Label className="text-zinc-400 text-xs">Warna Teks Profil (Global Text Color)</Label>
+                    <Label className="text-zinc-400 text-xs">Profile Text Color (Global Text Color)</Label>
                     <div className="flex gap-2">
                       <div
                         onClick={() => setIsTextColorPickerOpen(true)}
@@ -1039,13 +1039,13 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
 
                   {/* Social Icons Style */}
                   <div className="space-y-2">
-                    <Label className="text-zinc-400 text-xs">Gaya Border Ikon Sosial</Label>
+                    <Label className="text-zinc-400 text-xs">Social Icon Border Style</Label>
                     <div className="grid grid-cols-4 gap-1">
                       {[
-                        { val: 'circle', label: 'Bulat' },
-                        { val: 'outline', label: 'Garis' },
-                        { val: 'square', label: 'Kotak' },
-                        { val: 'minimal', label: 'Polos' }
+                        { val: 'circle', label: 'Circle' },
+                        { val: 'outline', label: 'Outline' },
+                        { val: 'square', label: 'Square' },
+                        { val: 'minimal', label: 'Minimal' }
                       ].map((item) => (
                         <div
                           key={item.val}
@@ -1075,11 +1075,11 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
       {/* Branding Settings (White-label) */}
       <Card className="rounded-2xl shadow-sm border-white/10 bg-zinc-900/50 backdrop-blur-md animate-in fade-in slide-in-from-top-4 duration-300">
         <CardHeader>
-          <CardTitle className="text-xl text-white font-bold flex items-center gap-2">
+          <CardTitle className="text-xl text-white font-display-theme font-black flex items-center gap-2">
             🏷️ White-label Branding
           </CardTitle>
           <CardDescription className="text-zinc-400">
-            Sembunyikan branding "Powered by Branch" dari halaman profil Anda.
+            Hide the "Powered by Branch" branding from your profile page.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -1087,10 +1087,10 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
             <div className="flex items-center justify-between p-4 bg-zinc-950/40 border border-white/5 rounded-2xl">
               <div className="space-y-0.5">
                 <span className="text-sm font-bold text-white flex items-center gap-1.5">
-                  Tampilkan Branding Branch
+                  Show Branch Branding
                 </span>
                 <p className="text-[11px] text-zinc-400 max-w-sm">
-                  Matikan opsi ini untuk menyembunyikan branding Branch di bagian bawah profil publik Anda.
+                  Turn off this option to hide the Branch branding at the bottom of your public profile.
                 </p>
               </div>
               <Switch 

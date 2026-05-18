@@ -83,7 +83,7 @@ export default function LandingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-50 overflow-hidden font-sans selection:bg-brand-pink/30 relative">
+    <div className="min-h-screen bg-zinc-950 text-zinc-50 overflow-hidden font-sans-theme selection:bg-brand-pink/30 relative">
       {/* Mesh Background Gradients */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div className="absolute top-[-25%] left-[-15%] w-[60%] h-[60%] rounded-full bg-brand-pink/20 blur-[130px] animate-pulse" style={{ animationDuration: '8s' }} />
@@ -97,7 +97,7 @@ export default function LandingPage() {
             <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-pink to-brand-orange flex items-center justify-center shadow-lg shadow-brand-pink/20">
               <Zap className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-black tracking-tight bg-gradient-to-r from-white via-white to-white/70 bg-clip-text text-transparent">Branch</span>
+            <span className="text-xl font-display-theme font-black tracking-tight bg-gradient-to-r from-white via-white to-white/70 bg-clip-text text-transparent">Branch</span>
           </div>
           <div className="flex items-center gap-5">
             <Link href="/login" className="text-sm font-semibold text-zinc-300 hover:text-white transition-colors">
@@ -127,7 +127,7 @@ export default function LandingPage() {
               className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-bold text-zinc-300 mb-8 backdrop-blur-md shadow-inner"
             >
               <Sparkles className="w-3.5 h-3.5 text-brand-pink animate-spin" style={{ animationDuration: '4s' }} />
-              <span className="bg-gradient-to-r from-brand-pink to-brand-orange bg-clip-text text-transparent uppercase tracking-wider text-[10px] font-black">Upgrade Baru</span>
+              <span className="bg-gradient-to-r from-brand-pink to-brand-orange bg-clip-text text-transparent uppercase tracking-wider text-[10px] font-black">NEW UPDATE</span>
               <span className="w-1.5 h-1.5 rounded-full bg-white/20" />
               <span>Branch Pro Features Enabled</span>
             </motion.div>
@@ -135,18 +135,18 @@ export default function LandingPage() {
             {/* Title */}
             <motion.h1 
               variants={itemVariants} 
-              className="text-5xl sm:text-6xl md:text-8xl font-black tracking-tight mb-8 leading-[1.05]"
+              className="text-5xl sm:text-6xl md:text-8xl font-display-theme font-black tracking-tight mb-8 leading-[1.05]"
             >
-              Satu Tautan. <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-pink via-brand-pink to-brand-orange">Ekspresi Tanpa Batas.</span>
+              One Link. <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-pink via-brand-pink to-brand-orange">Infinite Expression.</span>
             </motion.h1>
             
             {/* Subdescription */}
             <motion.p 
               variants={itemVariants} 
-              className="text-lg md:text-xl text-zinc-400 mb-12 max-w-2xl leading-relaxed font-medium"
+              className="text-lg md:text-xl text-zinc-400 mb-12 max-w-2xl leading-relaxed font-medium font-sans-theme"
             >
-              Buat halaman link-in-bio yang menakjubkan dalam hitungan detik. Atur tautan dengan header, tampilkan thumbnail gambar, terapkan tema premium, dan bagikan dengan QR code instan.
+              Create stunning link-in-bio pages in seconds. Organize your links with headers, display image thumbnails, apply premium themes, and share with instant QR codes.
             </motion.p>
             
             {/* Claim / Call To Action */}
@@ -156,13 +156,13 @@ export default function LandingPage() {
             >
               <Link href="/register">
                 <Button className="h-14 px-8 rounded-full bg-gradient-to-r from-brand-pink to-brand-orange hover:opacity-90 transition-opacity text-white font-extrabold text-lg border-0 shadow-lg shadow-brand-pink/15 hover:scale-[1.02] active:scale-[0.98]">
-                  Buat Halaman Gratis
+                  Create Your Free Page
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
               </Link>
               <Link href="/login">
                 <Button variant="outline" className="h-14 px-8 rounded-full border-white/10 bg-white/5 hover:bg-white/10 text-white font-extrabold text-lg backdrop-blur-md shadow-sm transition-all">
-                  Kelola Linktree Anda
+                  Manage Your Linktree
                 </Button>
               </Link>
             </motion.div>
@@ -170,11 +170,11 @@ export default function LandingPage() {
 
           {/* Interactive Live Mockup Customizer Section */}
           <div className="mt-28 w-full flex flex-col items-center">
-            <h3 className="text-2xl md:text-3xl font-black text-white mb-3">
-              Coba Tema Interaktif Kami
+            <h3 className="text-2xl md:text-3xl font-display-theme font-black text-white mb-3">
+              Try Our Interactive Themes
             </h3>
             <p className="text-zinc-400 text-sm md:text-base max-w-md mb-8">
-              Klik pemilih tema di bawah untuk mengubah tampilan live mockup smartphone secara instan!
+              Click the theme selectors below to change the live smartphone mockup look instantly!
             </p>
 
             {/* Theme Selector Buttons */}
@@ -216,7 +216,7 @@ export default function LandingPage() {
                     JD
                   </div>
 
-                  <h4 className={`font-black text-base mb-1 drop-shadow-sm ${currentTheme.textColor}`}>
+                  <h4 className={`font-display-theme font-black text-base mb-1 drop-shadow-sm ${currentTheme.textColor}`}>
                     Jane Doe
                   </h4>
                   <p className={`text-xs text-center mb-5 max-w-[200px] opacity-90 drop-shadow-sm ${currentTheme.textColor}`}>
@@ -264,11 +264,11 @@ export default function LandingPage() {
         {/* Feature Bento Section */}
         <section className="py-24 px-6 max-w-7xl mx-auto border-t border-white/5 relative">
           <div className="text-center mb-20">
-            <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-4">
-              Fitur Premium Tanpa Batas.
+            <h2 className="text-3xl md:text-5xl font-display-theme font-black tracking-tight mb-4">
+              Unlimited Premium Features.
             </h2>
             <p className="text-zinc-400 text-base md:text-lg max-w-2xl mx-auto font-medium">
-              Dirancang khusus untuk creator independen, influencer, dan brand modern.
+              Designed specifically for independent creators, influencers, and modern brands.
             </p>
           </div>
 
@@ -282,12 +282,12 @@ export default function LandingPage() {
             >
               <div>
                 <Palette className="w-10 h-10 text-brand-pink mb-6" />
-                <h3 className="text-2xl font-bold mb-2">Preset Themes Gallery</h3>
+                <h3 className="text-2xl font-display-theme font-bold mb-2">Preset Themes Gallery</h3>
                 <p className="text-zinc-400 max-w-md text-sm leading-relaxed">
-                  Pilih dari galeri tema profesional, mesh gradients, solid color, atau gambar kustom dengan dark overlay opacity. Atur bentuk button bulat, kotak, pill, atau soft shadow secara instan.
+                  Choose from a gallery of professional themes, mesh gradients, solid colors, or custom images with dark overlay opacity. Instantly adjust button shapes to rounded, square, pill, or soft shadow.
                 </p>
               </div>
-              <div className="mt-8 grid grid-cols-4 gap-2">
+              <div className="mt-8 grid grid-cols-4 gap-2 font-display-theme">
                 <div className="h-10 bg-zinc-950 border border-white/10 rounded-lg flex items-center justify-center text-[10px] text-zinc-500 font-bold">Minimal</div>
                 <div className="h-10 bg-gradient-to-tr from-pink-500 to-orange-500 rounded-lg flex items-center justify-center text-[10px] text-white font-bold">Sunset</div>
                 <div className="h-10 bg-gradient-to-tr from-teal-800 to-teal-500 rounded-lg flex items-center justify-center text-[10px] text-white font-bold">Forest</div>
@@ -302,9 +302,9 @@ export default function LandingPage() {
             >
               <div>
                 <QrCode className="w-10 h-10 text-brand-orange mb-6" />
-                <h3 className="text-2xl font-bold mb-2">QR Code & Share</h3>
+                <h3 className="text-2xl font-display-theme font-bold mb-2">QR Code & Share</h3>
                 <p className="text-zinc-400 text-sm leading-relaxed">
-                  Bagikan profil Anda secara offline menggunakan kode QR dinamis dengan download PNG resolusi tinggi secara instan.
+                  Share your profile offline using dynamic QR codes with instant high-resolution PNG download.
                 </p>
               </div>
               <div className="mt-8 flex justify-center">
@@ -321,9 +321,9 @@ export default function LandingPage() {
             >
               <div>
                 <LayoutTemplate className="w-10 h-10 text-brand-orange mb-6" />
-                <h3 className="text-2xl font-bold mb-2">Section Headers</h3>
+                <h3 className="text-2xl font-display-theme font-bold mb-2">Section Headers</h3>
                 <p className="text-zinc-400 text-sm leading-relaxed">
-                  Kelompokkan tautan Anda ke dalam kategori terpisah menggunakan Section Dividers & Headers elegan untuk meningkatkan navigasi profil.
+                  Group your links into separate categories using elegant Section Dividers & Headers to enhance profile navigation.
                 </p>
               </div>
             </motion.div>
@@ -335,9 +335,9 @@ export default function LandingPage() {
             >
               <div>
                 <Eye className="w-10 h-10 text-emerald-400 mb-6" />
-                <h3 className="text-2xl font-bold mb-2">White-label Branding</h3>
+                <h3 className="text-2xl font-display-theme font-bold mb-2">White-label Branding</h3>
                 <p className="text-zinc-400 max-w-md text-sm leading-relaxed">
-                  Dapatkan kontrol penuh atas brand Anda. Hilangkan branding "Powered by Branch" di bagian bawah halaman profil publik untuk tampilan mandiri profesional.
+                  Get full control over your brand. Remove "Powered by Branch" branding at the bottom of public profile pages for a professional, independent look.
                 </p>
               </div>
             </motion.div>
@@ -349,9 +349,9 @@ export default function LandingPage() {
             >
               <div className="flex-1">
                 <BarChart3 className="w-10 h-10 text-brand-pink mb-6" />
-                <h3 className="text-2xl font-bold mb-2">Analytics Mendalam</h3>
+                <h3 className="text-2xl font-display-theme font-bold mb-2">Deep Analytics</h3>
                 <p className="text-zinc-400 text-sm leading-relaxed max-w-xl">
-                  Pantau total kunjungan, klik tautan individu, perangkat pengunjung, serta situs perujuk (referrer) secara langsung. Gunakan data untuk meningkatkan jangkauan bisnis Anda.
+                  Monitor total visits, individual link clicks, visitor devices, and referring sites (referrer) in real time. Use insights to grow your business reach.
                 </p>
               </div>
             </motion.div>
@@ -363,15 +363,15 @@ export default function LandingPage() {
         <section className="py-24 px-6 max-w-4xl mx-auto text-center relative z-10">
           <div className="p-8 md:p-16 rounded-3xl bg-gradient-to-tr from-brand-pink/10 to-brand-orange/10 border border-brand-pink/20 backdrop-blur-xl relative overflow-hidden flex flex-col items-center">
             <div className="absolute top-0 right-0 w-32 h-32 rounded-full bg-brand-pink/20 blur-3xl" />
-            <h2 className="text-3xl md:text-5xl font-black text-white mb-4">
-              Siap Menampilkan Diri Anda?
+            <h2 className="text-3xl md:text-5xl font-display-theme font-black text-white mb-4">
+              Ready to Show Your True Self?
             </h2>
             <p className="text-zinc-400 text-sm md:text-base max-w-md mb-8">
-              Mulai buat link-in-bio super premium Anda secara gratis dalam hitungan detik.
+              Start building your super premium link-in-bio page for free in seconds.
             </p>
             <Link href="/register">
               <Button className="h-14 px-8 rounded-full bg-gradient-to-r from-brand-pink to-brand-orange hover:opacity-90 transition-opacity text-white font-extrabold text-lg border-0 shadow-lg hover:scale-[1.02] active:scale-[0.98]">
-                Buat Branch Sekarang
+                Create Your Branch Now
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
             </Link>
@@ -384,7 +384,7 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6 text-zinc-500 text-sm">
           <div className="flex items-center gap-2">
             <Zap className="w-4 h-4 text-brand-pink" />
-            <span className="font-extrabold text-white">Branch</span>
+            <span className="font-display-theme font-extrabold text-white">Branch</span>
           </div>
           <p>© 2026 Branch Inc. All rights reserved.</p>
           <div className="flex gap-4">

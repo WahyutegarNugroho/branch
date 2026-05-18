@@ -49,11 +49,11 @@ export function AnalyticsDashboard({ initialData }: { initialData: any }) {
   // Load custom date range
   const handleCustomRangeLoad = async () => {
     if (!startDate || !endDate) {
-      toast.error('Pilih tanggal awal dan akhir terlebih dahulu')
+      toast.error('Please select both a start and end date first')
       return
     }
     if (new Date(startDate) > new Date(endDate)) {
-      toast.error('Tanggal awal tidak boleh melebihi tanggal akhir')
+      toast.error('Start date cannot be after the end date')
       return
     }
 
@@ -72,7 +72,7 @@ export function AnalyticsDashboard({ initialData }: { initialData: any }) {
   // Compile and export data as CSV
   const handleExportCSV = () => {
     if (!stats.rawRecords || stats.rawRecords.length === 0) {
-      toast.error('Tidak ada data analitik untuk diekspor')
+      toast.error('No analytics data available to export')
       return
     }
 
@@ -123,9 +123,9 @@ export function AnalyticsDashboard({ initialData }: { initialData: any }) {
       link.click()
       document.body.removeChild(link)
       
-      toast.success('Data analitik berhasil diunduh (CSV)!')
+      toast.success('Analytics data successfully downloaded (CSV)!')
     } catch (e) {
-      toast.error('Gagal mengekspor data')
+      toast.error('Failed to export data')
     }
   }
 
@@ -135,23 +135,23 @@ export function AnalyticsDashboard({ initialData }: { initialData: any }) {
   const maxCities = stats.topCities?.length > 0 ? Math.max(...stats.topCities.map((c: any) => c.count)) : 0
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 font-sans-theme">
       {/* Dynamic Controls Row */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-zinc-900/40 p-4 rounded-2xl border border-white/5 backdrop-blur-md">
         <div className="flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-2 text-zinc-400 text-sm font-semibold">
             <Calendar className="w-4 h-4 text-brand-pink" />
-            Rentang Waktu:
+            Time Range:
           </div>
           <select 
             value={filterType}
             onChange={(e) => handleFilterChange(e.target.value)}
             className="bg-zinc-950 border border-white/10 rounded-xl px-3 py-1.5 text-sm text-white focus:outline-none focus:border-brand-pink/50 cursor-pointer"
           >
-            <option value="7">7 Hari Terakhir</option>
-            <option value="30">30 Hari Terakhir</option>
-            <option value="90">90 Hari Terakhir</option>
-            <option value="custom">Kustom Tanggal</option>
+            <option value="7">Last 7 Days</option>
+            <option value="30">Last 30 Days</option>
+            <option value="90">Last 90 Days</option>
+            <option value="custom">Custom Date Range</option>
           </select>
 
           {filterType === 'custom' && (
@@ -160,20 +160,20 @@ export function AnalyticsDashboard({ initialData }: { initialData: any }) {
                 type="date" 
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="bg-zinc-950 border border-white/10 rounded-xl px-2 py-1 text-xs text-white focus:outline-none focus:border-brand-pink"
+                className="bg-zinc-950 border border-white/10 rounded-xl px-2 py-1 text-xs text-white focus:outline-none focus:border-brand-pink [color-scheme:dark]"
               />
               <span className="text-zinc-500 text-xs">-</span>
               <input 
                 type="date" 
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                className="bg-zinc-950 border border-white/10 rounded-xl px-2 py-1 text-xs text-white focus:outline-none focus:border-brand-pink"
+                className="bg-zinc-950 border border-white/10 rounded-xl px-2 py-1 text-xs text-white focus:outline-none focus:border-brand-pink [color-scheme:dark]"
               />
               <button 
                 onClick={handleCustomRangeLoad}
-                className="bg-brand-pink hover:bg-brand-pink/90 text-white font-bold text-xs px-3 py-1.5 rounded-xl transition-colors active:scale-95 flex items-center gap-1 shrink-0"
+                className="bg-brand-pink hover:bg-brand-pink/90 text-white font-bold text-xs px-3 py-1.5 rounded-xl transition-colors active:scale-95 flex items-center gap-1 shrink-0 cursor-pointer"
               >
-                Terapkan
+                Apply
               </button>
             </div>
           )}
@@ -182,17 +182,17 @@ export function AnalyticsDashboard({ initialData }: { initialData: any }) {
         {/* Download CSV Action */}
         <button 
           onClick={handleExportCSV}
-          className="bg-white/10 hover:bg-white/15 text-white font-semibold text-sm px-4 py-2 rounded-xl border border-white/10 transition-all active:scale-95 flex items-center justify-center gap-2"
+          className="bg-white/10 hover:bg-white/15 text-white font-semibold text-sm px-4 py-2 rounded-xl border border-white/10 transition-all active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
         >
           <Download className="w-4 h-4" />
-          Ekspor CSV
+          Export CSV
         </button>
       </div>
 
       {loading ? (
         <div className="h-[400px] flex flex-col items-center justify-center gap-3">
           <Loader2 className="w-8 h-8 text-brand-pink animate-spin" />
-          <p className="text-zinc-400 text-sm font-semibold">Memuat Data Analitik...</p>
+          <p className="text-zinc-400 text-sm font-semibold">Loading Analytics Data...</p>
         </div>
       ) : (
         <>
@@ -232,7 +232,7 @@ export function AnalyticsDashboard({ initialData }: { initialData: any }) {
           {/* Time Series Chart Card */}
           <Card className="border-white/10 bg-zinc-900/50 backdrop-blur-md shadow-lg rounded-2xl">
             <CardHeader>
-              <CardTitle className="text-xl font-bold text-white">Performance Over Time</CardTitle>
+              <CardTitle className="text-xl font-display-theme font-black text-white">Performance Over Time</CardTitle>
             </CardHeader>
             <CardContent>
               <AnalyticsChart data={stats.chartData} />
@@ -245,7 +245,7 @@ export function AnalyticsDashboard({ initialData }: { initialData: any }) {
             {/* Top Performing Links */}
             <Card className="border-white/10 bg-zinc-900/50 backdrop-blur-md shadow-lg rounded-2xl flex flex-col">
               <CardHeader>
-                <CardTitle className="text-xl font-bold text-white flex items-center gap-2">
+                <CardTitle className="text-xl font-display-theme font-black text-white flex items-center gap-2">
                   <LinkIcon className="w-5 h-5 text-brand-pink" />
                   Top Performing Links
                 </CardTitle>
@@ -284,7 +284,7 @@ export function AnalyticsDashboard({ initialData }: { initialData: any }) {
             {/* Geolocation Top Countries & Cities */}
             <Card className="border-white/10 bg-zinc-900/50 backdrop-blur-md shadow-lg rounded-2xl">
               <CardHeader>
-                <CardTitle className="text-xl font-bold text-white flex items-center gap-2">
+                <CardTitle className="text-xl font-display-theme font-black text-white flex items-center gap-2">
                   <MapPin className="w-5 h-5 text-emerald-400" />
                   Audience Geolocation
                 </CardTitle>
@@ -344,7 +344,7 @@ export function AnalyticsDashboard({ initialData }: { initialData: any }) {
             {/* Referrer Sources */}
             <Card className="border-white/10 bg-zinc-900/50 backdrop-blur-md shadow-lg rounded-2xl">
               <CardHeader>
-                <CardTitle className="text-xl font-bold text-white flex items-center gap-2">
+                <CardTitle className="text-xl font-display-theme font-black text-white flex items-center gap-2">
                   <Share2 className="w-5 h-5 text-brand-orange" />
                   Top Traffic Sources
                 </CardTitle>
@@ -387,7 +387,7 @@ export function AnalyticsDashboard({ initialData }: { initialData: any }) {
               {/* Devices Breakdown */}
               <Card className="border-white/10 bg-zinc-900/50 backdrop-blur-md shadow-lg rounded-2xl">
                 <CardHeader>
-                  <CardTitle className="text-xl font-bold text-white flex items-center gap-2">
+                  <CardTitle className="text-xl font-display-theme font-black text-white flex items-center gap-2">
                     <Laptop className="w-5 h-5 text-blue-400" />
                     Devices Breakdown
                   </CardTitle>
@@ -431,7 +431,7 @@ export function AnalyticsDashboard({ initialData }: { initialData: any }) {
               {/* UTM Campaigns Table */}
               <Card className="border-white/10 bg-zinc-900/50 backdrop-blur-md shadow-lg rounded-2xl">
                 <CardHeader>
-                  <CardTitle className="text-xl font-bold text-white flex items-center gap-2">
+                  <CardTitle className="text-xl font-display-theme font-black text-white flex items-center gap-2">
                     <Target className="w-5 h-5 text-brand-pink" />
                     UTM Campaign Performance
                   </CardTitle>

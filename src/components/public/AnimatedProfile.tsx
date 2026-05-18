@@ -179,7 +179,7 @@ export function AnimatedProfile({ profile, links, bgClass, bgStyle }: { profile:
                 }).catch(() => {});
               } else {
                 navigator.clipboard.writeText(window.location.href);
-                alert('Tautan profil disalin!');
+                alert('Profile link copied!');
               }
             }}
             className="w-9 h-9 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white/90 hover:text-white border border-white/10 transition-all active:scale-95"

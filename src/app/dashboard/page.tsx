@@ -27,9 +27,9 @@ export default async function DashboardPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 font-sans-theme">
       <div>
-        <h1 className="text-3xl font-extrabold tracking-tight text-white">Links & Sections</h1>
+        <h1 className="text-3xl font-display-theme font-black tracking-tight text-white">Links & Sections</h1>
         <p className="text-zinc-400 text-base mt-1">Manage your links, sections, and embed content.</p>
       </div>
       

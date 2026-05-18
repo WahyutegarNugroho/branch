@@ -34,52 +34,52 @@ export function SettingsForm({ profile }: { profile: any }) {
     try {
       const res = await updateSettings(formData)
       if (res?.error) {
-        toast.error(`Gagal menyimpan: ${res.error}`)
+        toast.error(`Failed to save: ${res.error}`)
       } else {
-        toast.success('Pengaturan berhasil disimpan!')
+        toast.success('Settings successfully saved!')
       }
     } catch (err) {
-      toast.error('Terjadi kesalahan koneksi server')
+      toast.error('A server connection error occurred')
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 max-w-[800px]">
+    <form onSubmit={handleSubmit} className="space-y-6 max-w-[800px] font-sans-theme">
       
       {/* 1. Custom SEO Settings */}
       <Card className="border-white/10 bg-zinc-900/50 backdrop-blur-md shadow-lg rounded-2xl">
         <CardHeader>
-          <CardTitle className="text-xl font-bold text-white flex items-center gap-2">
+          <CardTitle className="text-xl font-display-theme font-black text-white flex items-center gap-2">
             <Search className="w-5 h-5 text-brand-pink" />
-            Kustomisasi SEO & Meta Tags
+            Custom SEO & Meta Tags
           </CardTitle>
           <CardDescription className="text-zinc-400">
-            Tingkatkan visibilitas pencarian Google Anda dengan judul dan deskripsi metadata khusus.
+            Improve your Google search visibility with custom title and metadata description.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <label className="text-xs font-semibold text-zinc-300">Judul Halaman SEO (Title Tag)</label>
+            <label className="text-xs font-semibold text-zinc-300">SEO Page Title (Title Tag)</label>
             <Input 
               name="seo_title"
               placeholder={profile.full_name || `@${profile.username}`}
               defaultValue={profile.seo_title || ''}
               className="bg-zinc-950 border-white/10 rounded-xl text-white focus-visible:ring-brand-pink"
             />
-            <p className="text-[10px] text-zinc-500">Direkomendasikan di bawah 60 karakter untuk tampilan hasil Google terbaik.</p>
+            <p className="text-[10px] text-zinc-500">Recommended under 60 characters for best Google search results.</p>
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs font-semibold text-zinc-300">Deskripsi Halaman SEO (Meta Description)</label>
+            <label className="text-xs font-semibold text-zinc-300">SEO Page Description (Meta Description)</label>
             <Textarea 
               name="seo_description"
-              placeholder={profile.bio || "Hubungkan dan lihat semua tautan penting di satu tempat."}
+              placeholder={profile.bio || "Connect and view all important links in one place."}
               defaultValue={profile.seo_description || ''}
               className="bg-zinc-950 border-white/10 rounded-xl text-white min-h-[80px] focus-visible:ring-brand-pink"
             />
-            <p className="text-[10px] text-zinc-500">Direkomendasikan di bawah 160 karakter untuk memberikan rangkuman yang jelas di halaman pencarian.</p>
+            <p className="text-[10px] text-zinc-500">Recommended under 160 characters to provide a clear summary in search engine results.</p>
           </div>
         </CardContent>
       </Card>
@@ -87,12 +87,12 @@ export function SettingsForm({ profile }: { profile: any }) {
       {/* 2. Retargeting & Tracking Pixels */}
       <Card className="border-white/10 bg-zinc-900/50 backdrop-blur-md shadow-lg rounded-2xl">
         <CardHeader>
-          <CardTitle className="text-xl font-bold text-white flex items-center gap-2">
+          <CardTitle className="text-xl font-display-theme font-black text-white flex items-center gap-2">
             <LineChart className="w-5 h-5 text-brand-orange" />
-            Integrasi Piksel & Pelacakan Web
+            Pixel & Web Tracking Integration
           </CardTitle>
           <CardDescription className="text-zinc-400">
-            Tautkan akun iklan marketing Anda untuk merekam perilaku pengunjung secara instan.
+            Link your marketing ad accounts to record visitor behavior instantly.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -103,11 +103,11 @@ export function SettingsForm({ profile }: { profile: any }) {
             </label>
             <Input 
               name="meta_pixel_id"
-              placeholder="Contoh: 123456789012345"
+              placeholder="Example: 123456789012345"
               defaultValue={profile.meta_pixel_id || ''}
               className="bg-zinc-950 border-white/10 rounded-xl text-white focus-visible:ring-blue-500"
             />
-            <p className="text-[10px] text-zinc-500">Catat kunjungan dari platform Facebook & Instagram untuk optimalisasi penayangan iklan.</p>
+            <p className="text-[10px] text-zinc-500">Record visits from Facebook & Instagram platforms to optimize ad delivery.</p>
           </div>
 
           <div className="space-y-2">
@@ -117,11 +117,11 @@ export function SettingsForm({ profile }: { profile: any }) {
             </label>
             <Input 
               name="tiktok_pixel_id"
-              placeholder="Contoh: C52A6F18B3E49"
+              placeholder="Example: C52A6F18B3E49"
               defaultValue={profile.tiktok_pixel_id || ''}
               className="bg-zinc-950 border-white/10 rounded-xl text-white focus-visible:ring-red-500"
             />
-            <p className="text-[10px] text-zinc-500">Lacak konversi kampanye promosi dan optimasi audiens tertarget di platform TikTok.</p>
+            <p className="text-[10px] text-zinc-500">Track promotional campaign conversions and target audiences on TikTok.</p>
           </div>
 
           <div className="space-y-2">
@@ -131,11 +131,11 @@ export function SettingsForm({ profile }: { profile: any }) {
             </label>
             <Input 
               name="ga_measurement_id"
-              placeholder="Contoh: G-A1B2C3D4E5"
+              placeholder="Example: G-A1B2C3D4E5"
               defaultValue={profile.ga_measurement_id || ''}
               className="bg-zinc-950 border-white/10 rounded-xl text-white focus-visible:ring-emerald-500"
             />
-            <p className="text-[10px] text-zinc-500">Hubungkan properti Google Analytics (GA4) untuk memantau data demografi & analisis pengunjung terperinci.</p>
+            <p className="text-[10px] text-zinc-500">Connect Google Analytics (GA4) properties to monitor demographics & detailed visitor analysis.</p>
           </div>
         </CardContent>
       </Card>
@@ -143,20 +143,20 @@ export function SettingsForm({ profile }: { profile: any }) {
       {/* 3. Custom Domain Configuration */}
       <Card className="border-white/10 bg-zinc-900/50 backdrop-blur-md shadow-lg rounded-2xl">
         <CardHeader>
-          <CardTitle className="text-xl font-bold text-white flex items-center gap-2">
+          <CardTitle className="text-xl font-display-theme font-black text-white flex items-center gap-2">
             <Globe className="w-5 h-5 text-blue-400" />
-            Integrasi Custom Domain
+            Custom Domain Integration
           </CardTitle>
           <CardDescription className="text-zinc-400">
-            Akses halaman bio premium Anda menggunakan nama domain pribadi Anda sendiri (contoh: bio.namaanda.com).
+            Access your premium bio page using your own personal domain name (example: bio.yourname.com).
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-5">
           <div className="space-y-2">
-            <label className="text-xs font-semibold text-zinc-300">Nama Domain Kustom Anda</label>
+            <label className="text-xs font-semibold text-zinc-300">Your Custom Domain Name</label>
             <Input 
               name="custom_domain"
-              placeholder="bio.namaanda.com"
+              placeholder="bio.yourname.com"
               value={customDomain}
               onChange={(e) => setCustomDomain(e.target.value)}
               className="bg-zinc-950 border-white/10 rounded-xl text-white focus-visible:ring-blue-400"
@@ -164,7 +164,7 @@ export function SettingsForm({ profile }: { profile: any }) {
             {customDomain.trim() && (
               <p className="text-xs text-emerald-400 flex items-center gap-1.5 mt-1">
                 <CheckCircle className="w-3.5 h-3.5 shrink-0" />
-                <span>Halaman akan siap diakses di:</span>
+                <span>Page will be ready to access at:</span>
                 <span className="font-bold underline">https://{customDomain.toLowerCase().trim()}</span>
               </p>
             )}
@@ -174,24 +174,24 @@ export function SettingsForm({ profile }: { profile: any }) {
           <div className="bg-zinc-950/60 p-4 rounded-xl border border-white/5 space-y-3">
             <div className="flex items-center gap-2 text-xs font-bold text-zinc-300">
               <Server className="w-4 h-4 text-blue-400" />
-              Panduan Konfigurasi DNS Server:
+              DNS Server Configuration Guide:
             </div>
             <p className="text-[11px] text-zinc-400 leading-relaxed">
-              Buka pengelola nama domain Anda (misal: Niagahoster, GoDaddy, Cloudflare) dan tambahkan baris data catatan DNS berikut agar tersambung sempurna:
+              Open your domain registrar (e.g., Niagahoster, GoDaddy, Cloudflare) and add the following DNS record:
             </p>
             <div className="overflow-x-auto">
               <table className="w-full text-left text-[11px] font-mono text-zinc-300">
                 <thead>
                   <tr className="border-b border-white/5 text-zinc-500 font-bold">
-                    <th className="pb-1.5">Tipe (Type)</th>
-                    <th className="pb-1.5">Nama (Host/Name)</th>
-                    <th className="pb-1.5">Tujuan (Value/Target)</th>
+                    <th className="pb-1.5">Type</th>
+                    <th className="pb-1.5">Name (Host/Name)</th>
+                    <th className="pb-1.5">Value/Target</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr className="text-zinc-200">
                     <td className="py-2 font-bold text-blue-400">CNAME</td>
-                    <td className="py-2">@ atau subdomain (misal: bio)</td>
+                    <td className="py-2">@ or subdomain (e.g., bio)</td>
                     <td className="py-2">cname.branch.bio</td>
                   </tr>
                 </tbody>
@@ -200,7 +200,7 @@ export function SettingsForm({ profile }: { profile: any }) {
             <div className="p-3 bg-brand-orange/10 rounded-lg border border-brand-orange/20 flex gap-2.5">
               <AlertTriangle className="w-5 h-5 text-brand-orange shrink-0 mt-0.5" />
               <p className="text-[10px] text-brand-orange/90 leading-relaxed">
-                <strong>Catatan Penting:</strong> Perubahan DNS memerlukan waktu propagasi internet antara 1 - 24 jam sebelum domain kustom Anda dapat diakses secara merata di seluruh dunia.
+                <strong>Important Note:</strong> DNS changes require an internet propagation time of 1 - 24 hours before your custom domain can be accessed worldwide.
               </p>
             </div>
           </div>
@@ -217,12 +217,12 @@ export function SettingsForm({ profile }: { profile: any }) {
           {loading ? (
             <>
               <Loader2 className="w-4 h-4 animate-spin" />
-              <span>Menyimpan...</span>
+              <span>Saving...</span>
             </>
           ) : (
             <>
               <Save className="w-4 h-4" />
-              <span>Simpan Perubahan</span>
+              <span>Save Changes</span>
             </>
           )}
         </Button>

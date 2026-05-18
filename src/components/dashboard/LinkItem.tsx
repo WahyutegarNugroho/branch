@@ -249,9 +249,9 @@ export function LinkItem({ link }: { link: any }) {
               
               {/* Carousel Image Manager */}
               <div className="p-4 bg-zinc-950/40 border border-white/5 rounded-2xl space-y-4">
-                <span className="text-sm font-bold text-white block">🖼️ Kelola Gambar Carousel</span>
+                <span className="text-sm font-bold text-white block">🖼️ Manage Carousel Images</span>
                 <p className="text-[10px] text-zinc-400">
-                  Masukkan URL gambar untuk ditambahkan ke galeri carousel profil Anda. Pengunjung dapat menggesernya secara horizontal.
+                  Enter image URLs to add to your profile's carousel gallery. Visitors can swipe them horizontally.
                 </p>
                 
                 {/* Add new Image input */}
@@ -273,7 +273,7 @@ export function LinkItem({ link }: { link: any }) {
                       if (res.error) {
                         toast.error(res.error);
                       } else {
-                        toast.success('Gambar berhasil ditambahkan!');
+                        toast.success('Image successfully added!');
                         input.value = '';
                         // Refresh router and fetch again
                         router.refresh();
@@ -283,14 +283,14 @@ export function LinkItem({ link }: { link: any }) {
                     }}
                     className="bg-brand-pink hover:bg-brand-pink/90 text-white rounded-xl font-bold px-4 h-10 shrink-0 cursor-pointer"
                   >
-                    Tambah
+                    Add
                   </Button>
                 </div>
 
                 {/* List of images */}
                 <div className="space-y-2 mt-3 max-h-[200px] overflow-y-auto no-scrollbar">
                   {carouselImages.length === 0 ? (
-                    <p className="text-xs text-zinc-500 italic text-center py-2">Belum ada gambar. Tambahkan satu di atas!</p>
+                    <p className="text-xs text-zinc-500 italic text-center py-2">No images yet. Add one above!</p>
                   ) : (
                     carouselImages.map((img: any) => (
                       <div key={img.id} className="flex items-center justify-between p-2 bg-zinc-900/60 rounded-xl border border-white/5">
@@ -308,7 +308,7 @@ export function LinkItem({ link }: { link: any }) {
                             if (res.error) {
                               toast.error(res.error);
                             } else {
-                              toast.success('Gambar dihapus');
+                              toast.success('Image deleted');
                               router.refresh();
                               const updatedImages = await getCarouselImages();
                               setCarouselImages(updatedImages);
@@ -350,10 +350,10 @@ export function LinkItem({ link }: { link: any }) {
             <div className="flex items-center justify-between p-4 bg-zinc-950/40 border border-white/5 rounded-2xl">
               <div className="space-y-0.5">
                 <span className="text-sm font-bold text-white flex items-center gap-1.5">
-                  🖼️ Tampilkan sebagai Embed Media
+                  🖼️ Display as Embed Media
                 </span>
                 <p className="text-[10px] text-zinc-400 max-w-[280px]">
-                  Tampilkan langsung video YouTube, lagu Spotify, SoundCloud, atau TikTok di halaman profil Anda alih-alih sebagai tautan biasa.
+                  Display YouTube videos, Spotify tracks, SoundCloud, or TikTok directly on your profile instead of standard links.
                 </p>
               </div>
               <Switch 
@@ -373,7 +373,7 @@ export function LinkItem({ link }: { link: any }) {
                 🖼️ Link Thumbnail
               </span>
               <p className="text-[10px] text-zinc-400 max-w-[400px]">
-                Tambahkan gambar kecil di sebelah kiri tautan Anda. Masukkan URL gambar (PNG, JPG, atau GIF).
+                Add a small image to the left of your link. Enter an image URL (PNG, JPG, or GIF).
               </p>
               <div className="flex items-center gap-3">
                 <Input 
@@ -401,7 +401,7 @@ export function LinkItem({ link }: { link: any }) {
                     ⭐ Priority / Spotlight Link
                   </span>
                   <p className="text-[10px] text-zinc-400 max-w-[280px]">
-                    Beri highlight bersinar khusus agar tautan ini menarik perhatian utama pengunjung.
+                    Highlight this link with a special glowing effect to draw the user's primary attention.
                   </p>
                 </div>
                 <Switch 
@@ -413,7 +413,7 @@ export function LinkItem({ link }: { link: any }) {
 
               {isSpotlight && (
                 <div className="space-y-2 pt-2 border-t border-white/5 animate-in fade-in slide-in-from-top-1 duration-200">
-                  <span className="text-xs text-zinc-400">Pilih Warna Spotlight:</span>
+                  <span className="text-xs text-zinc-400">Choose Spotlight Color:</span>
                   <div className="flex items-center gap-2">
                     <div className="w-10 h-10 rounded-xl border border-white/10 overflow-hidden shrink-0 relative">
                       <input 
@@ -436,10 +436,10 @@ export function LinkItem({ link }: { link: any }) {
 
               <div className="space-y-2 pt-2 border-t border-white/5">
                 <span className="text-xs font-bold text-white flex items-center gap-1.5">
-                  ✨ Efek Animasi
+                  ✨ Animation Effect
                 </span>
                 <p className="text-[10px] text-zinc-400">
-                  Pilih efek gerakan untuk menarik pandangan pengunjung secara halus.
+                  Choose a movement effect to subtly attract visitors' eyes.
                 </p>
                 <select
                   name="animation"
@@ -447,12 +447,12 @@ export function LinkItem({ link }: { link: any }) {
                   onChange={(e) => setAnimation(e.target.value)}
                   className="w-full rounded-xl border border-white/10 bg-zinc-900 text-white h-10 px-3 text-sm focus:outline-none focus:ring-1 focus:ring-brand-pink"
                 >
-                  <option value="none">Tanpa Animasi</option>
-                  <option value="pulse">Pulse (Denyut Perlahan)</option>
-                  <option value="bounce">Bounce (Memantul)</option>
-                  <option value="shake">Shake (Goyang Samping)</option>
-                  <option value="wobble">Wobble (Bergetar)</option>
-                  <option value="glow">Glow (Cahaya Bersinar)</option>
+                  <option value="none">No Animation</option>
+                  <option value="pulse">Pulse (Slow Pulse)</option>
+                  <option value="bounce">Bounce</option>
+                  <option value="shake">Shake</option>
+                  <option value="wobble">Wobble</option>
+                  <option value="glow">Glow</option>
                 </select>
               </div>
             </div>
@@ -655,14 +655,14 @@ export function LinkItem({ link }: { link: any }) {
                   className="data-[state=checked]:bg-brand-pink"
                 />
                 <label htmlFor={`schedule_enabled_${link.id}`} className="text-sm font-bold text-white cursor-pointer flex items-center gap-1.5">
-                  ⏰ Jadwalkan Tautan (Schedule)
+                  ⏰ Schedule Link
                 </label>
               </div>
 
               {scheduleEnabled && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2 duration-200">
                   <div className="space-y-1.5">
-                    <span className="text-xs text-zinc-400">Tanggal Mulai (Valid From):</span>
+                    <span className="text-xs text-zinc-400">Start Date (Valid From):</span>
                     <Input 
                       type="datetime-local" 
                       name="valid_from" 
@@ -672,7 +672,7 @@ export function LinkItem({ link }: { link: any }) {
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <span className="text-xs text-zinc-400">Tanggal Selesai (Valid Until):</span>
+                    <span className="text-xs text-zinc-400">End Date (Valid Until):</span>
                     <Input 
                       type="datetime-local" 
                       name="valid_until" 
@@ -682,7 +682,7 @@ export function LinkItem({ link }: { link: any }) {
                     />
                   </div>
                   <p className="sm:col-span-2 text-[10px] text-zinc-500 italic">
-                    Tautan hanya akan muncul pada halaman publik Anda selama rentang waktu di atas. Kosongkan salah satu untuk tidak membatasinya.
+                    The link will only appear on your public page during the time range above. Leave either blank to not restrict it.
                   </p>
                 </div>
               )}
@@ -942,15 +942,15 @@ export function LinkItem({ link }: { link: any }) {
 
       {/* Premium Deletion Confirmation Overlay */}
       {showDeleteConfirm && (
-        <div className="absolute inset-0 z-30 bg-zinc-950/98 backdrop-blur-md rounded-2xl flex items-center justify-between px-5 animate-in fade-in zoom-in-95 duration-200">
+        <div className="absolute inset-0 z-30 bg-zinc-950/98 backdrop-blur-md rounded-2xl flex items-center justify-between px-5 animate-in fade-in zoom-in-95 duration-200 font-sans-theme">
           <div className="flex items-center gap-3 min-w-0">
             <div className="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center border border-red-500/20 shrink-0">
               <Trash2 className="w-5 h-5 text-red-500" />
             </div>
             <div className="min-w-0 text-left">
-              <h4 className="text-white font-bold text-sm leading-snug">{isHeader ? 'Hapus Header?' : 'Hapus Tautan?'}</h4>
+              <h4 className="text-white font-bold text-sm leading-snug">{isHeader ? 'Delete Header?' : 'Delete Link?'}</h4>
               <p className="text-zinc-400 text-xs truncate max-w-[200px] sm:max-w-md mt-0.5">
-                Hapus <span className="text-red-400 font-semibold">"{link.title}"</span> secara permanen?
+                Delete <span className="text-red-400 font-semibold">"{link.title}"</span> permanently?
               </p>
             </div>
           </div>
@@ -962,7 +962,7 @@ export function LinkItem({ link }: { link: any }) {
               className="rounded-xl text-zinc-400 hover:text-white hover:bg-white/5 text-xs font-semibold h-9 px-4 transition-colors"
               disabled={loading}
             >
-              Batal
+              Cancel
             </Button>
             <Button
               type="button"
@@ -970,7 +970,7 @@ export function LinkItem({ link }: { link: any }) {
               className="rounded-xl bg-red-500 hover:bg-red-600 text-white text-xs font-bold h-9 px-4 border-0 shadow-lg shadow-red-500/20 transition-all active:scale-95"
               disabled={loading}
             >
-              Hapus
+              Delete
             </Button>
           </div>
         </div>

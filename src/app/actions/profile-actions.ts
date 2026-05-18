@@ -93,13 +93,13 @@ export async function updateProfileInfo(formData: FormData) {
     // Regex validation: lowercase letters, numbers, underscores, and dashes
     const usernameRegex = /^[a-z0-9_-]+$/
     if (!usernameRegex.test(username) || username.length < 3 || username.length > 30) {
-      return { error: 'Username tidak valid. Gunakan 3-30 karakter berupa huruf kecil, angka, underscore, atau strip.' }
+      return { error: 'Invalid username. Use 3-30 characters of lowercase letters, numbers, underscores, or hyphens.' }
     }
 
     // Blacklist check
     const blacklist = ['admin', 'api', 'dashboard', 'login', 'register', 'auth', 'settings', 'appearance', 'analytics']
     if (blacklist.includes(username)) {
-      return { error: 'Username ini dilindungi dan tidak dapat digunakan.' }
+      return { error: 'This username is protected and cannot be used.' }
     }
 
     // Uniqueness check
@@ -111,7 +111,7 @@ export async function updateProfileInfo(formData: FormData) {
       .maybeSingle()
 
     if (existingUser) {
-      return { error: 'Username sudah digunakan oleh orang lain.' }
+      return { error: 'Username is already taken by someone else.' }
     }
   }
 

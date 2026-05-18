@@ -137,9 +137,9 @@ export function ColorPickerDialog({ isOpen, onClose, initialColor, onSelectColor
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-[480px] bg-[#0d0d0f] border border-white/10 text-white rounded-[2rem] p-6 shadow-2xl overflow-hidden [&>button]:text-zinc-400 [&>button]:hover:text-white">
+      <DialogContent className="max-w-[480px] bg-[#0d0d0f] border border-white/10 text-white rounded-[2rem] p-6 shadow-2xl overflow-hidden [&>button]:text-zinc-400 [&>button]:hover:text-white font-sans-theme">
         <DialogHeader className="sr-only">
-          <DialogTitle>Pilih Warna</DialogTitle>
+          <DialogTitle>Select Color</DialogTitle>
         </DialogHeader>
 
         {/* Color Picker Styling Override - Hide standard hue */}
@@ -174,11 +174,11 @@ export function ColorPickerDialog({ isOpen, onClose, initialColor, onSelectColor
             <VerticalHueSlider hue={hue} onChange={handleHueChange} />
           </div>
 
-          {/* Compare section: BARU vs SEKARANG */}
+          {/* Compare section: NEW vs CURRENT */}
           <div className="border border-white/5 bg-[#141416] rounded-2xl overflow-hidden">
-            <div className="grid grid-cols-2 text-[10px] tracking-wider text-zinc-500 font-bold uppercase text-center pt-2 pb-1 border-b border-white/5">
-              <span>Baru</span>
-              <span>Sekarang</span>
+            <div className="grid grid-cols-2 text-[10px] tracking-wider text-zinc-500 font-bold uppercase text-center pt-2 pb-1 border-b border-white/5 font-display-theme">
+              <span>New</span>
+              <span>Current</span>
             </div>
             <div className="grid grid-cols-2 h-10">
               <div style={{ backgroundColor: color }} className="transition-all" />
@@ -190,7 +190,7 @@ export function ColorPickerDialog({ isOpen, onClose, initialColor, onSelectColor
           <div className="grid grid-cols-3 gap-3">
             {/* HSB */}
             <div className="space-y-1.5 text-center">
-              <span className="text-[10px] font-bold text-zinc-500 tracking-wider">HSB</span>
+              <span className="text-[10px] font-bold text-zinc-500 tracking-wider font-display-theme">HSB</span>
               <div className="grid grid-cols-3 gap-1 bg-[#141416] border border-white/5 rounded-xl p-1 text-[11px]">
                 <div className="flex flex-col py-1 border-r border-white/5">
                   <span className="text-[9px] text-zinc-600 font-semibold mb-0.5">H</span>
@@ -209,7 +209,7 @@ export function ColorPickerDialog({ isOpen, onClose, initialColor, onSelectColor
 
             {/* RGB */}
             <div className="space-y-1.5 text-center">
-              <span className="text-[10px] font-bold text-zinc-500 tracking-wider">RGB</span>
+              <span className="text-[10px] font-bold text-zinc-500 tracking-wider font-display-theme">RGB</span>
               <div className="grid grid-cols-3 gap-1 bg-[#141416] border border-white/5 rounded-xl p-1 text-[11px]">
                 <div className="flex flex-col py-1 border-r border-white/5">
                   <span className="text-[9px] text-zinc-600 font-semibold mb-0.5">R</span>
@@ -228,7 +228,7 @@ export function ColorPickerDialog({ isOpen, onClose, initialColor, onSelectColor
 
             {/* CMYK */}
             <div className="space-y-1.5 text-center">
-              <span className="text-[10px] font-bold text-zinc-500 tracking-wider">CMYK</span>
+              <span className="text-[10px] font-bold text-zinc-500 tracking-wider font-display-theme">CMYK</span>
               <div className="grid grid-cols-4 gap-0.5 bg-[#141416] border border-white/5 rounded-xl p-1 text-[9px] leading-tight">
                 <div className="flex flex-col py-1 border-r border-white/5">
                   <span className="text-[8px] text-zinc-600 font-semibold mb-0.5">C</span>
@@ -252,7 +252,7 @@ export function ColorPickerDialog({ isOpen, onClose, initialColor, onSelectColor
 
           {/* Hex display & Copy */}
           <div className="relative flex items-center justify-between bg-[#070708] border border-white/10 rounded-2xl h-14 px-5">
-            <span className="text-zinc-600 font-bold text-xl">#</span>
+            <span className="text-zinc-600 font-bold text-xl font-display-theme">#</span>
             <input 
               type="text" 
               value={color.replace('#', '').toUpperCase()} 
@@ -267,14 +267,14 @@ export function ColorPickerDialog({ isOpen, onClose, initialColor, onSelectColor
             <button 
               type="button"
               onClick={handleCopy}
-              className="text-zinc-500 hover:text-white transition-colors p-2"
-              aria-label="Salin kode warna Hex"
+              className="text-zinc-500 hover:text-white transition-colors p-2 cursor-pointer"
+              aria-label="Copy Hex color code"
             >
               {copied ? <Check size={18} className="text-green-500" /> : <Copy size={18} />}
             </button>
           </div>
 
-          {/* ATUR SEBAGAI WARNA SAAT INI button */}
+          {/* SET AS CURRENT COLOR button */}
           <Button 
             onClick={(e) => {
               e.stopPropagation()
@@ -282,9 +282,9 @@ export function ColorPickerDialog({ isOpen, onClose, initialColor, onSelectColor
             }}
             onPointerDown={(e) => e.stopPropagation()}
             onMouseDown={(e) => e.stopPropagation()}
-            className="w-full h-14 bg-white text-black hover:bg-zinc-200 transition-colors font-bold text-sm tracking-widest rounded-2xl uppercase shadow-lg shadow-white/5"
+            className="w-full h-14 bg-white text-black hover:bg-zinc-200 transition-colors font-display-theme font-black text-sm tracking-widest rounded-2xl uppercase shadow-lg shadow-white/5 cursor-pointer"
           >
-            Atur Sebagai Warna Saat Ini
+            Set as Current Color
           </Button>
         </div>
       </DialogContent>

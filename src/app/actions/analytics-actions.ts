@@ -90,7 +90,7 @@ export async function getAnalyticsStats(days?: number, startDate?: string, endDa
   })
 
   const chartData = Object.keys(chartMap).map(date => ({
-    name: new Date(date).toLocaleDateString('id-ID', { month: 'short', day: 'numeric' }),
+    name: new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
     views: chartMap[date].views,
     clicks: chartMap[date].clicks
   }))

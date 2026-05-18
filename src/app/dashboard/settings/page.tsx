@@ -12,9 +12,9 @@ export default async function SettingsPage() {
   }
 
   return (
-    <div className="space-y-6 pb-12">
+    <div className="space-y-6 pb-12 font-sans-theme">
       <div>
-        <h1 className="text-3xl font-extrabold tracking-tight text-white">Settings</h1>
+        <h1 className="text-3xl font-display-theme font-black tracking-tight text-white">Settings</h1>
         <p className="text-zinc-400 text-base mt-1">Configure your custom SEO tags, web tracking pixels, and custom domains.</p>
       </div>
 

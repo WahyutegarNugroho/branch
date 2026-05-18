@@ -20,23 +20,23 @@ export function DashboardNav({ username }: { username?: string }) {
       const publicUrl = `${window.location.origin}/${username}`
       await navigator.clipboard.writeText(publicUrl)
       setCopied(true)
-      toast.success('Link profil disalin ke clipboard!')
+      toast.success('Profile link copied to clipboard!')
       setTimeout(() => setCopied(false), 2000)
     } catch (err) {
-      console.error('Gagal menyalin link:', err)
-      toast.error('Gagal menyalin link')
+      console.error('Failed to copy link:', err)
+      toast.error('Failed to copy link')
     }
   }
 
   return (
-    <div className="sticky top-0 z-50 w-full border-b border-white/10 bg-zinc-950/70 backdrop-blur-xl">
+    <div className="sticky top-0 z-50 w-full border-b border-white/10 bg-zinc-950/70 backdrop-blur-xl font-sans-theme">
       <div className="flex h-16 items-center justify-between px-4 md:px-8 max-w-[1280px] mx-auto">
         <div className="flex items-center gap-8">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-brand-pink to-brand-orange flex items-center justify-center">
               <Zap className="w-5 h-5 text-white" />
             </div>
-            <span className="font-bold text-xl tracking-tight text-white hidden sm:block">Branch</span>
+            <span className="font-display-theme font-black text-xl tracking-tight text-white hidden sm:block">Branch</span>
           </div>
           <nav className="flex items-center space-x-1 lg:space-x-2">
             <Link href="/dashboard">

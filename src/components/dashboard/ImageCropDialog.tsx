@@ -155,17 +155,17 @@ export function ImageCropDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={() => !isLoading && onClose()}>
-      <DialogContent className="max-w-[450px] bg-[#222] border border-white/10 text-white rounded-2xl shadow-2xl p-6 font-sans select-none">
+      <DialogContent className="max-w-[450px] bg-[#222] border border-white/10 text-white rounded-2xl shadow-2xl p-6 font-sans select-none font-sans-theme">
         <DialogHeader>
-          <DialogTitle className="text-lg font-semibold text-center text-white mb-2">
-            {isCircle ? "Sesuaikan Foto Profil" : "Sesuaikan Latar Belakang Gambar"}
+          <DialogTitle className="text-lg font-display-theme font-black text-center text-white mb-2">
+            {isCircle ? "Adjust Profile Photo" : "Adjust Background Image"}
           </DialogTitle>
         </DialogHeader>
 
         <div className="flex flex-col items-center gap-6 mt-2">
           {/* Helper instructions */}
           <p className="text-xs text-zinc-400 text-center px-4">
-            Seret/drag foto di dalam bingkai untuk memosisikan area, dan gunakan slider di bawah untuk memperbesar area.
+            Drag the photo inside the frame to adjust the position, and use the slider below to zoom.
           </p>
 
           {/* Draggable Viewport Frame */}
@@ -214,7 +214,7 @@ export function ImageCropDialog({
             {/* Zoom Slider */}
             <div className="flex flex-col gap-2">
               <div className="flex justify-between items-center text-xs text-zinc-400">
-                <span>Perbesaran Gambar</span>
+                <span>Image Zoom</span>
                 <span className="font-semibold text-brand-pink">{Math.round(zoom * 100)}%</span>
               </div>
               <input
@@ -234,22 +234,22 @@ export function ImageCropDialog({
                 variant="outline"
                 onClick={onClose}
                 disabled={isLoading}
-                className="flex-1 bg-zinc-800 border-zinc-700 text-zinc-300 hover:bg-zinc-700 hover:text-white"
+                className="flex-1 bg-zinc-800 border-zinc-700 text-zinc-300 hover:bg-zinc-700 hover:text-white cursor-pointer"
               >
-                Batal
+                Cancel
               </Button>
               <Button
                 onClick={handleApply}
                 disabled={isLoading || !baseSize.width}
-                className="flex-1 bg-gradient-to-r from-brand-pink to-brand-orange hover:opacity-90 text-white font-semibold shadow-lg relative"
+                className="flex-1 bg-gradient-to-r from-brand-pink to-brand-orange hover:opacity-90 text-white font-semibold shadow-lg relative cursor-pointer"
               >
                 {isLoading ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Menyimpan...
+                    Saving...
                   </>
                 ) : (
-                  "Terapkan"
+                  "Apply"
                 )}
               </Button>
             </div>
