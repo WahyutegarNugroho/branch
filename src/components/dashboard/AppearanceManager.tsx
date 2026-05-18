@@ -481,45 +481,47 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
             </div>
 
             {/* Username / Custom Link Edit */}
-            <div className="space-y-2 border-b border-white/5 pb-6 mb-6">
+            <div className="space-y-2 border-b border-white/5 pb-6 mb-6 font-sans-theme">
               <Label htmlFor="username" className="text-zinc-300 font-semibold">Custom Profile URL</Label>
-              <div className="relative flex items-center">
-                <span className="absolute left-4 text-zinc-500 font-bold select-none text-sm tracking-wide">
+              <div className="flex items-stretch shadow-sm rounded-xl overflow-hidden">
+                <span className="bg-zinc-900/80 border border-white/10 border-r-0 rounded-l-xl px-4 flex items-center text-zinc-500 font-bold text-sm tracking-wide shrink-0 select-none font-display-theme">
                   {hostPrefix}
                 </span>
-                <Input
-                  id="username"
-                  name="username"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/\s+/g, ''))}
-                  placeholder="username"
-                  required
-                  className="rounded-xl border-white/10 bg-white/5 text-white focus-visible:ring-brand-pink h-12 pl-[145px] pr-28 text-sm font-semibold tracking-wide"
-                />
-                
-                {/* Real-time Status Badge inside input */}
-                <div className="absolute right-3 flex items-center gap-1.5 pointer-events-none">
-                  {usernameStatus === 'checking' && (
-                    <span className="text-[10px] bg-zinc-800 text-zinc-400 font-bold px-2 py-1 rounded-md animate-pulse">
-                      Checking...
-                    </span>
-                  )}
-                  {usernameStatus === 'available' && (
-                    <span className="text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold px-2 py-1 rounded-md flex items-center gap-1">
-                      <span className="w-1 h-1 rounded-full bg-emerald-400 animate-ping" />
-                      Available
-                    </span>
-                  )}
-                  {usernameStatus === 'taken' && (
-                    <span className="text-[10px] bg-rose-500/10 text-rose-400 border border-rose-500/20 font-bold px-2 py-1 rounded-md">
-                      Taken
-                    </span>
-                  )}
-                  {usernameStatus === 'invalid' && (
-                    <span className="text-[10px] bg-amber-500/10 text-amber-400 border border-amber-500/20 font-bold px-2 py-1 rounded-md">
-                      Invalid
-                    </span>
-                  )}
+                <div className="relative flex-1">
+                  <Input
+                    id="username"
+                    name="username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/\s+/g, ''))}
+                    placeholder="username"
+                    required
+                    className="rounded-r-xl rounded-l-none border-white/10 bg-white/5 text-white focus-visible:ring-brand-pink h-12 pl-3 pr-28 text-sm font-semibold tracking-wide w-full focus-visible:ring-offset-0 focus:border-brand-pink"
+                  />
+                  
+                  {/* Real-time Status Badge inside input */}
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5 pointer-events-none font-sans-theme">
+                    {usernameStatus === 'checking' && (
+                      <span className="text-[10px] bg-zinc-800 text-zinc-400 font-bold px-2 py-1 rounded-md animate-pulse">
+                        Checking...
+                      </span>
+                    )}
+                    {usernameStatus === 'available' && (
+                      <span className="text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold px-2 py-1 rounded-md flex items-center gap-1">
+                        <span className="w-1 h-1 rounded-full bg-emerald-400 animate-ping" />
+                        Available
+                      </span>
+                    )}
+                    {usernameStatus === 'taken' && (
+                      <span className="text-[10px] bg-rose-500/10 text-rose-400 border border-rose-500/20 font-bold px-2 py-1 rounded-md">
+                        Taken
+                      </span>
+                    )}
+                    {usernameStatus === 'invalid' && (
+                      <span className="text-[10px] bg-amber-500/10 text-amber-400 border border-amber-500/20 font-bold px-2 py-1 rounded-md">
+                        Invalid
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
               <p className="text-[11px] text-zinc-500 font-medium">
