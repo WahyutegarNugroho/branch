@@ -1,4 +1,4 @@
-# 🌿 Branch
+# Branch
 
 <div align="center">
 
@@ -12,19 +12,19 @@
 
 A high-performance, beautiful, and self-hostable Linktree alternative built for modern creators, developers, and businesses who refuse to compromise on design, data ownership, and page load speed.
 
-[Explore Features](#-key-features) • [Why Branch?](#-the-problem-branch-solves) • [Tech Stack](#-tech-stack--rationales) • [Database Architecture](#-database-schema) • [Installation Guide](#-getting-started)
+[Explore Features](#key-features) • [Why Branch?](#the-problem-branch-solves) • [Tech Stack](#tech-stack--rationales) • [Database Architecture](#database-schema) • [Installation Guide](#getting-started)
 
 </div>
 
 ---
 
-## 📖 Short Description
+## Short Description
 
 **Branch** is a powerful Link-in-Bio platform that lets you build, customize, and deploy gorgeous profile landing pages in seconds. Unlike generic alternatives, Branch features a **real-time interactive visual customizer**, built-in **privacy-first analytics**, precise **link scheduling**, and support for **rich embedded media** (YouTube, Spotify, TikTok, and more). Developed with the elegant, editorial design language of Notion, Branch operates at lightning speeds thanks to Next.js server actions and static rendering.
 
 ---
 
-## ⚡ The Problem Branch Solves
+## The Problem Branch Solves
 
 Traditional link-in-bio services like Linktree or Beacons have increasingly burdened creators and developers:
 
@@ -35,41 +35,41 @@ Traditional link-in-bio services like Linktree or Beacons have increasingly burd
 
 ---
 
-## ✨ Key Features
+## Key Features
 
-### 🎨 1. Unlimited Visual Engine
+### 1. Unlimited Visual Engine
 Customization goes far beyond simple template-picking. In Branch, you can control:
 * **Backgrounds:** Solid hex colors, linear/radial gradients, premium pre-configured image backdrops, or custom background video loops.
 * **Geometries & Buttons:** Toggle between sharp (`rounded-none`), default rounded (`rounded-lg`), pill-shaped (`rounded-full`), and soft styles. Adjust border thickness, drop shadows, and opacity.
 * **Typography:** Premium humanist-geometric font combinations based on the elegant *Notion-Sans (Inter-based)* typeface.
 * **Layout Alignments:** Custom header positioning, bio alignments (left, center, right), and adjustable avatar geometries (circular vs. soft-square PFP).
 
-### 🔄 2. Interactive Live Preview Canvas
+### 2. Interactive Live Preview Canvas
 No more guessing what your page looks like on mobile. The admin dashboard features a responsive, fully interactive **real-time phone preview simulator**. Every background tweak, link sorting, and button animation updates instantly on the virtual phone before you hit publish.
 
-### ⏱️ 3. Timed Link Visibility & Spotlight Highlights
+### 3. Timed Link Visibility & Spotlight Highlights
 * **Link Scheduling:** Configure `valid_from` and `valid_until` date-time fields. Links will automatically appear and disappear from your public bio precisely when your marketing campaigns start or end.
 * **Spotlight Animations:** Make critical actions stand out using dynamic highlight animations like *Shake*, *Pulse*, *Glow*, or *Bounce* powered by Framer Motion.
 
-### 📊 4. In-Depth, Privacy-First Analytics
+### 4. In-Depth, Privacy-First Analytics
 Keep full control of your insights without tracking scripts. The native dashboard displays:
 * **Performance Metrics:** Total views, unique clicks, and overall Click-Through Rate (CTR).
 * **7-Day Interactive Timelines:** Beautifully plotted time-series data using Recharts.
 * **Referrals & Hardware:** Complete breakdown of top referral paths (Instagram, TikTok, Twitter, Google) and visitor devices (Mobile, Tablet, Desktop).
 * **Extended Logs:** Location geo-mapping (Countries/Cities) and UTM marketing campaign trackers.
 
-### 🎥 5. Rich Inline Media & Preset Integrations
+### 5. Rich Inline Media & Preset Integrations
 * **Dynamic Embeds:** Support for interactive inline players. Visitors can watch YouTube videos, play Spotify podcasts, or watch TikTok feeds without leaving your landing page.
 * **29+ Social Platform Presets:** Standard social accounts (GitHub, Twitter, LinkedIn, Instagram, etc.) are preloaded with high-quality icons, smart link recognition, and flexible positioning rules.
 * **Custom Image Carousels:** Display galleries, product cards, or portfolio images inside your links.
 
-### 🔒 6. Enterprise Security & RLS Policies
+### 6. Security & RLS Policies
 * **Supabase Authentication:** Secure, frictionless user logins, signups, and email verifications.
 * **Strict RLS Enforcements:** Postgres Row-Level Security policies ensure users can only modify, delete, or read their own private link and analytics models.
 
 ---
 
-## 🛠️ Tech Stack & Rationales
+## Tech Stack & Rationales
 
 Branch employs a modern, production-grade architecture designed for speed, type safety, and painless deployment:
 
@@ -85,7 +85,7 @@ Branch employs a modern, production-grade architecture designed for speed, type 
 
 ---
 
-## 🗄️ Database Schema
+## Database Schema
 
 The database relies on a highly normalized PostgreSQL schema structure:
 
@@ -155,7 +155,7 @@ erDiagram
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 Follow these steps to run Branch locally on your machine:
 
@@ -208,10 +208,16 @@ Open your browser and navigate to **[http://localhost:3000](http://localhost:300
 
 ---
 
-## 🌿 Contributing
+## Contributing
 
 Branch is built on collaboration. If you have feature requests, design assets, or bug fixes, feel free to open a Pull Request or create an Issue. Let's make the best open-source link platform together!
 
-## 📄 License
+---
+
+## License
 
 This project is licensed under the [MIT License](LICENSE). Feel free to use, modify, and distribute it as you see fit.
+
+---
+
+© 2026 whtsn dev.
