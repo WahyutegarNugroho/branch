@@ -234,6 +234,9 @@
 .animate-pulse-slow {
   animation: pulseSlow 2.5s infinite ease-in-out !important;
 }
+.hover-pulse-effect:hover {
+  animation: pulseSlow 1s infinite ease-in-out !important;
+}
 
 @keyframes bounceSlow {
   0%, 100% { transform: translateY(0); }
@@ -259,6 +262,9 @@
 }
 .animate-wobble-quick {
   animation: wobbleQuick 2.5s infinite ease-in-out !important;
+}
+.hover-wobble-effect:hover {
+  animation: wobbleQuick 1s infinite ease-in-out !important;
 }
 
 @keyframes glowPulse {
@@ -290,10 +296,11 @@
   width: 50%;
   height: 100%;
   background: linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent);
-  transform: translateX(-100%) skewX(-15deg);
+  transform: translateX(-200%) skewX(-15deg);
 }
+.group:hover .hover-shine-effect::before,
 .hover-shine-effect:hover::before {
-  animation: shineSlide 0.7s ease-out;
+  animation: shineSlide 0.7s ease-out forwards;
 }
 
 /* Glitch Hover */
@@ -305,6 +312,7 @@
   80% { transform: translate(2px, -2px) }
   100% { transform: translate(0) }
 }
+.group:hover .hover-glitch-effect,
 .hover-glitch-effect:hover {
   animation: glitchAnim 0.3s infinite;
 }

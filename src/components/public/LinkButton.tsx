@@ -177,16 +177,18 @@ export function LinkButton({ link, profileId, profile, visitorTheme, isPreview =
   
   const styleVal = profile?.button_style || 'soft'
   const hoverEffect = profile?.button_hover_effect || 'none'
-  let hoverClass = ""
-  if (hoverEffect === 'scale') hoverClass = " hover:scale-[1.03] transition-transform"
-  if (hoverEffect === 'lift') hoverClass = " hover:-translate-y-1 hover:shadow-xl transition-all"
-  if (hoverEffect === 'glow') hoverClass = " hover:shadow-[0_0_20px_rgba(255,255,255,0.4)] transition-shadow"
-  if (hoverEffect === 'wobble') hoverClass = " hover:animate-wobble-quick"
-  if (hoverEffect === 'pulse') hoverClass = " hover:animate-pulse-slow"
-  if (hoverEffect === 'shine') hoverClass = " hover-shine-effect"
-  if (hoverEffect === 'glitch') hoverClass = " hover-glitch-effect"
+  let wrapperHoverClass = ""
+  let btnHoverClass = ""
+  
+  if (hoverEffect === 'scale') wrapperHoverClass = " hover:scale-[1.03] transition-transform"
+  if (hoverEffect === 'lift') wrapperHoverClass = " hover:-translate-y-1 hover:drop-shadow-xl transition-all"
+  if (hoverEffect === 'glow') wrapperHoverClass = " hover:drop-shadow-[0_0_15px_rgba(255,255,255,0.4)] transition-shadow"
+  if (hoverEffect === 'wobble') wrapperHoverClass = " hover-wobble-effect"
+  if (hoverEffect === 'pulse') wrapperHoverClass = " hover-pulse-effect"
+  if (hoverEffect === 'shine') btnHoverClass = " hover-shine-effect"
+  if (hoverEffect === 'glitch') btnHoverClass = " hover-glitch-effect"
 
-  let wrapperClass = `group w-full relative block transition-all ${hoverClass}`
+  let wrapperClass = `group w-full relative block transition-all ${wrapperHoverClass}`
   let wrapperStyle: React.CSSProperties = {}
   
   let baseBtnClass = `flex items-center justify-center w-full py-4 px-6 text-white font-semibold transition-all overflow-hidden ${shapeClass}`
@@ -268,7 +270,7 @@ export function LinkButton({ link, profileId, profile, visitorTheme, isPreview =
     wrapperStyle.animation = animationMap[link.animation]
   }
 
-  const extraClasses = ` ${spotlightClass}`
+  const extraClasses = ` ${spotlightClass} ${btnHoverClass}`
   baseBtnClass += extraClasses
 
   if (!hasGraphic) {
