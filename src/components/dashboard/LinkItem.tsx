@@ -14,6 +14,10 @@ import { Card } from '@/components/ui/card'
 import { PlatformPickerDialog } from './PlatformPickerDialog'
 import { getPlatformByName, Platform } from '@/utils/platforms'
 import { useRouter } from 'next/navigation'
+import { LinkCarouselManager } from './LinkCarouselManager'
+import { LinkBasicInputs } from './LinkBasicInputs'
+import { LinkDesignSettings } from './LinkDesignSettings'
+import { LinkScheduleSettings } from './LinkScheduleSettings'
 
 // Helper to format ISO string to datetime-local format
 const formatDateTimeLocal = (isoString?: string) => {
@@ -74,6 +78,7 @@ export function LinkItem({ link }: { link: Link }) {
   const [isSpotlight, setIsSpotlight] = useState(!!link.is_spotlight)
   const [spotlightColor, setSpotlightColor] = useState(link.spotlight_color || '#ec4899')
   const [animation, setAnimation] = useState(link.animation || 'none')
+  const [isStickyCta, setIsStickyCta] = useState(!!link.is_sticky_cta)
   const [carouselImages, setCarouselImages] = useState<any[]>([])
 
   const getCarouselImages = async () => {
@@ -108,7 +113,8 @@ export function LinkItem({ link }: { link: Link }) {
     setIsSpotlight(!!link.is_spotlight)
     setSpotlightColor(link.spotlight_color || '#ec4899')
     setAnimation(link.animation || 'none')
-  }, [link.title, link.url, link.icon_position, link.bg_color, link.text_color, link.bg_opacity, link.is_active, link.show_icon, link.icon_color, link.valid_from, link.valid_until, link.is_embed, link.link_type, link.thumbnail_url, link.is_spotlight, link.spotlight_color, link.animation])
+    setIsStickyCta(!!link.is_sticky_cta)
+  }, [link.title, link.url, link.icon_position, link.bg_color, link.text_color, link.bg_opacity, link.is_active, link.show_icon, link.icon_color, link.valid_from, link.valid_until, link.is_embed, link.link_type, link.thumbnail_url, link.is_spotlight, link.spotlight_color, link.animation, link.is_sticky_cta])
 
   // Dispatch real-time live preview updates
   useEffect(() => {
@@ -139,13 +145,14 @@ export function LinkItem({ link }: { link: Link }) {
           link_type: linkType,
           thumbnail_url: linkType === 'header' ? null : thumbnailUrl,
           is_spotlight: isSpotlight,
-          spotlight_color: isSpotlight ? spotlightColor : null,
+          spotlight_color: spotlightColor,
           animation: animation === 'none' ? null : animation,
-          images: carouselImages,
+          is_sticky_cta: isStickyCta,
+          carousel_images: carouselImages,
         }
       }
     }))
-  }, [title, url, iconPosition, customStyleEnabled, bgColor, textColor, bgOpacity, isActive, showIcon, iconColorMode, iconColor, scheduleEnabled, validFrom, validUntil, isEmbed, isEditing, link.id, linkType, thumbnailUrl, isSpotlight, spotlightColor, animation, carouselImages])
+  }, [title, url, iconPosition, customStyleEnabled, bgColor, textColor, bgOpacity, isActive, showIcon, iconColorMode, iconColor, scheduleEnabled, validFrom, validUntil, isEmbed, isEditing, link.id, linkType, thumbnailUrl, isSpotlight, spotlightColor, animation, isStickyCta, carouselImages])
 
   const matchedPlatform = getPlatformByName(title)
   const MatchedIcon = matchedPlatform?.icon
@@ -160,6 +167,7 @@ export function LinkItem({ link }: { link: Link }) {
     formData.set('is_spotlight', isSpotlight ? 'on' : 'off')
     formData.set('animation', animation === 'none' ? '' : animation)
     formData.set('spotlight_color', spotlightColor)
+    formData.set('is_sticky_cta', isStickyCta ? 'on' : 'off')
     
     const result = await updateLink(link.id, formData)
     if (result.error) {
@@ -249,82 +257,13 @@ export function LinkItem({ link }: { link: Link }) {
                 <input type="hidden" name="url" value="" />
               </div>
               
-              {/* Carousel Image Manager */}
-              <div className="p-4 bg-zinc-950/40 border border-white/5 rounded-2xl space-y-4">
-                <span className="text-sm font-bold text-white block">🖼️ Manage Carousel Images</span>
-                <p className="text-[10px] text-zinc-400">
-                  Enter image URLs to add to your profile's carousel gallery. Visitors can swipe them horizontally.
-                </p>
-                
-                {/* Add new Image input */}
-                <div className="flex gap-2">
-                  <Input 
-                    type="url" 
-                    placeholder="https://example.com/slide-image.png" 
-                    id={`new_carousel_img_${link.id}`}
-                    className="rounded-xl border-white/10 bg-white/5 text-white h-10 text-sm focus-visible:ring-brand-pink flex-1"
-                  />
-                  <Button 
-                    type="button" 
-                    onClick={async () => {
-                      const input = document.getElementById(`new_carousel_img_${link.id}`) as HTMLInputElement;
-                      if (!input || !input.value) return;
-                      const imageUrl = input.value;
-                      const { addLinkImage } = require('@/app/actions/link-actions');
-                      const res = await addLinkImage(link.id, imageUrl);
-                      if (res.error) {
-                        toast.error(res.error);
-                      } else {
-                        toast.success('Image successfully added!');
-                        input.value = '';
-                        // Refresh router and fetch again
-                        router.refresh();
-                        const updatedImages = await getCarouselImages();
-                        setCarouselImages(updatedImages);
-                      }
-                    }}
-                    className="bg-brand-pink hover:bg-brand-pink/90 text-white rounded-xl font-bold px-4 h-10 shrink-0 cursor-pointer"
-                  >
-                    Add
-                  </Button>
-                </div>
-
-                {/* List of images */}
-                <div className="space-y-2 mt-3 max-h-[200px] overflow-y-auto no-scrollbar">
-                  {carouselImages.length === 0 ? (
-                    <p className="text-xs text-zinc-500 italic text-center py-2">No images yet. Add one above!</p>
-                  ) : (
-                    carouselImages.map((img: any) => (
-                      <div key={img.id} className="flex items-center justify-between p-2 bg-zinc-900/60 rounded-xl border border-white/5">
-                        <div className="flex items-center gap-3 min-w-0 flex-1">
-                          <img src={img.image_url} alt="" className="w-10 h-10 rounded-lg object-cover border border-white/10 shrink-0" />
-                          <span className="text-[10px] text-zinc-400 truncate flex-1">{img.image_url}</span>
-                        </div>
-                        <Button 
-                          type="button" 
-                          variant="ghost" 
-                          size="icon" 
-                          onClick={async () => {
-                            const { deleteLinkImage } = require('@/app/actions/link-actions');
-                            const res = await deleteLinkImage(img.id);
-                            if (res.error) {
-                              toast.error(res.error);
-                            } else {
-                              toast.success('Image deleted');
-                              router.refresh();
-                              const updatedImages = await getCarouselImages();
-                              setCarouselImages(updatedImages);
-                            }
-                          }}
-                          className="w-8 h-8 text-zinc-500 hover:text-red-500 hover:bg-white/5 rounded-lg transition-colors shrink-0"
-                        >
-                          <Trash2 size={14} />
-                        </Button>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </div>
+              <LinkCarouselManager 
+                linkId={link.id} 
+                carouselImages={carouselImages} 
+                setCarouselImages={setCarouselImages} 
+                router={router} 
+                getCarouselImages={getCarouselImages} 
+              />
             </div>
           ) : (
             <div className="flex gap-4">
@@ -340,361 +279,59 @@ export function LinkItem({ link }: { link: Link }) {
                   <Search size={24} className="text-zinc-400 group-hover:text-white transition-colors" />
                 )}
               </Button>
-              <div className="flex-1 space-y-3">
-                <Input name="title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title" required className="font-bold rounded-xl border-white/10 bg-white/5 text-white focus-visible:ring-brand-pink h-12" />
-                <Input name="url" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="URL" required className="rounded-xl border-white/10 bg-white/5 text-white focus-visible:ring-brand-pink h-12" />
-              </div>
-            </div>
-          )}
-
-          {/* Embed Switch (Link only) */}
-          {linkType === 'link' && (
-            <div className="flex items-center justify-between p-4 bg-zinc-950/40 border border-white/5 rounded-2xl">
-              <div className="space-y-0.5">
-                <span className="text-sm font-bold text-white flex items-center gap-1.5">
-                  🖼️ Display as Embed Media
-                </span>
-                <p className="text-[10px] text-zinc-400 max-w-[280px]">
-                  Display YouTube videos, Spotify tracks, SoundCloud, or TikTok directly on your profile instead of standard links.
-                </p>
-              </div>
-              <Switch 
-                id={`is_embed_${link.id}`} 
-                checked={isEmbed} 
-                onCheckedChange={setIsEmbed} 
-                className="data-[state=checked]:bg-brand-pink"
+              <LinkBasicInputs
+                title={title}
+                setTitle={setTitle}
+                url={url}
+                setUrl={setUrl}
+                isEmbed={isEmbed}
+                setIsEmbed={setIsEmbed}
               />
-              <input type="hidden" name="is_embed" value={isEmbed ? 'on' : 'off'} />
             </div>
           )}
 
-          {/* Thumbnail URL Input (Link only) */}
-          {linkType === 'link' && (
-            <div className="p-4 bg-zinc-950/40 border border-white/5 rounded-2xl space-y-2">
-              <span className="text-sm font-bold text-white flex items-center gap-1.5">
-                🖼️ Link Thumbnail
-              </span>
-              <p className="text-[10px] text-zinc-400 max-w-[400px]">
-                Add a small image to the left of your link. Enter an image URL (PNG, JPG, or GIF).
-              </p>
-              <div className="flex items-center gap-3">
-                <Input 
-                  name="thumbnail_url" 
-                  value={thumbnailUrl} 
-                  onChange={(e) => setThumbnailUrl(e.target.value)} 
-                  placeholder="https://example.com/image.png (Optional)" 
-                  className="rounded-xl border-white/10 bg-white/5 text-white h-10 text-sm focus-visible:ring-brand-pink flex-1" 
-                />
-                {thumbnailUrl && (
-                  <div className="w-10 h-10 rounded-xl overflow-hidden shrink-0 border border-white/10">
-                    <img src={thumbnailUrl} alt="Thumbnail preview" className="w-full h-full object-cover" />
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* Spotlight & Animation Effects (Link only) */}
-          {linkType === 'link' && (
-            <div className="p-4 bg-zinc-950/40 border border-white/5 rounded-2xl space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <span className="text-sm font-bold text-white flex items-center gap-1.5">
-                    ⭐ Priority / Spotlight Link
-                  </span>
-                  <p className="text-[10px] text-zinc-400 max-w-[280px]">
-                    Highlight this link with a special glowing effect to draw the user's primary attention.
-                  </p>
-                </div>
-                <Switch 
-                  id={`is_spotlight_${link.id}`} 
-                  checked={isSpotlight} 
-                  onCheckedChange={setIsSpotlight} 
-                    />
-              </div>
-
-              {isSpotlight && (
-                <div className="space-y-2 pt-2 border-t border-white/5 animate-in fade-in slide-in-from-top-1 duration-200">
-                  <span className="text-xs text-zinc-400">Choose Spotlight Color:</span>
-                  <div className="flex items-center gap-2">
-                    <div className="w-10 h-10 rounded-xl border border-white/10 overflow-hidden shrink-0 relative">
-                      <input 
-                        type="color" 
-                        value={spotlightColor} 
-                        onChange={(e) => setSpotlightColor(e.target.value)} 
-                        className="absolute inset-0 w-full h-full p-0 border-0 cursor-pointer bg-transparent scale-150" 
-                      />
-                    </div>
-                    <Input 
-                      type="text" 
-                      value={spotlightColor} 
-                      onChange={(e) => setSpotlightColor(e.target.value)} 
-                      maxLength={7}
-                      className="font-mono rounded-xl border-white/10 bg-white/5 text-white h-10 text-sm focus-visible:ring-brand-pink w-32" 
-                    />
-                  </div>
-                </div>
-              )}
-
-              <div className="space-y-2 pt-2 border-t border-white/5">
-                <span className="text-xs font-bold text-white flex items-center gap-1.5">
-                  ✨ Animation Effect
-                </span>
-                <p className="text-[10px] text-zinc-400">
-                  Choose a movement effect to subtly attract visitors' eyes.
-                </p>
-                <select
-                  name="animation"
-                  value={animation}
-                  onChange={(e) => setAnimation(e.target.value)}
-                  className="w-full rounded-xl border border-white/10 bg-zinc-900 text-white h-10 px-3 text-sm focus:outline-none focus:ring-1 focus:ring-brand-pink"
-                >
-                  <option value="none">No Animation</option>
-                  <option value="pulse">Pulse (Slow Pulse)</option>
-                  <option value="bounce">Bounce</option>
-                  <option value="shake">Shake</option>
-                  <option value="wobble">Wobble</option>
-                  <option value="glow">Glow</option>
-                </select>
-              </div>
-            </div>
-          )}
-
-          {/* Custom Theme Section */}
-          <div className="bg-zinc-950/40 border border-white/5 p-4 rounded-2xl space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <Switch 
-                  id={`custom_style_${link.id}`} 
-                  checked={customStyleEnabled} 
-                  onCheckedChange={setCustomStyleEnabled} 
-                  className="data-[state=checked]:bg-brand-pink"
-                />
-                <label htmlFor={`custom_style_${link.id}`} className="text-sm font-bold text-white cursor-pointer flex items-center gap-1.5">
-                  🎨 Custom Button Style
-                </label>
-              </div>
-
-              {customStyleEnabled && (
-                <Button 
-                  type="button" 
-                  variant="ghost" 
-                  size="sm" 
-                  onClick={handleApplyToAll}
-                  disabled={loading}
-                  className="text-xs text-brand-pink hover:text-brand-orange hover:bg-white/5 rounded-xl font-bold transition-all px-2.5 h-8 border border-brand-pink/20"
-                >
-                  Apply to All
-                </Button>
-              )}
-            </div>
-
-            {customStyleEnabled && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2 duration-200">
-                {/* Background Color */}
-                <div className="space-y-1.5">
-                  <span className="text-xs text-zinc-400">Background Color:</span>
-                  <div className="flex items-center gap-2">
-                    <div className="w-10 h-10 rounded-xl border border-white/10 overflow-hidden shrink-0 relative">
-                      <input 
-                        type="color" 
-                        value={bgColor} 
-                        onChange={(e) => setBgColor(e.target.value)} 
-                        className="absolute inset-0 w-full h-full p-0 border-0 cursor-pointer bg-transparent scale-150" 
-                      />
-                    </div>
-                    <Input 
-                      type="text" 
-                      value={bgColor} 
-                      onChange={(e) => setBgColor(e.target.value)} 
-                      maxLength={7}
-                      className="font-mono rounded-xl border-white/10 bg-white/5 text-white h-10 text-sm focus-visible:ring-brand-pink" 
-                    />
-                    <input type="hidden" name="bg_color" value={bgColor} />
-                  </div>
-                </div>
-
-                {/* Text Color */}
-                <div className="space-y-1.5">
-                  <span className="text-xs text-zinc-400">Text & Icon Color:</span>
-                  <div className="flex items-center gap-2">
-                    <div className="w-10 h-10 rounded-xl border border-white/10 overflow-hidden shrink-0 relative">
-                      <input 
-                        type="color" 
-                        value={textColor} 
-                        onChange={(e) => setTextColor(e.target.value)} 
-                        className="absolute inset-0 w-full h-full p-0 border-0 cursor-pointer bg-transparent scale-150" 
-                      />
-                    </div>
-                    <Input 
-                      type="text" 
-                      value={textColor} 
-                      onChange={(e) => setTextColor(e.target.value)} 
-                      maxLength={7}
-                      className="font-mono rounded-xl border-white/10 bg-white/5 text-white h-10 text-sm focus-visible:ring-brand-pink" 
-                    />
-                    <input type="hidden" name="text_color" value={textColor} />
-                  </div>
-                </div>
-
-                {/* Background Opacity Slider */}
-                <div className="sm:col-span-2 space-y-1.5">
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs text-zinc-400">Button Opacity:</span>
-                    <span className="text-xs font-bold text-white font-mono">{bgOpacity}%</span>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <input 
-                      type="range" 
-                      min="0" 
-                      max="100" 
-                      value={bgOpacity} 
-                      onChange={(e) => setBgOpacity(parseInt(e.target.value, 10))} 
-                      className="flex-1 accent-brand-pink h-1.5 bg-zinc-800 rounded-lg appearance-none cursor-pointer"
-                    />
-                    <input type="hidden" name="bg_opacity" value={bgOpacity} />
-                  </div>
-                </div>
-
-                {/* Logo Color Mode Options (Link only) */}
-                {linkType === 'link' && (
-                  <div className="sm:col-span-2 space-y-1.5 pt-2 border-t border-white/5">
-                    <span className="text-xs text-zinc-400">Logo Color Mode:</span>
-                    <div className="flex bg-zinc-950 p-1 rounded-xl border border-white/10 w-fit">
-                      <button
-                        type="button"
-                        onClick={() => setIconColorMode('original')}
-                        className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
-                          iconColorMode === 'original'
-                            ? 'bg-brand-pink text-white shadow'
-                            : 'text-zinc-400 hover:text-white'
-                        }`}
-                      >
-                        Original
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setIconColorMode('text')}
-                        className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
-                          iconColorMode === 'text'
-                            ? 'bg-brand-pink text-white shadow'
-                            : 'text-zinc-400 hover:text-white'
-                        }`}
-                      >
-                        Same as Text
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setIconColorMode('custom')}
-                        className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
-                          iconColorMode === 'custom'
-                            ? 'bg-brand-pink text-white shadow'
-                            : 'text-zinc-400 hover:text-white'
-                        }`}
-                      >
-                        Custom Color
-                      </button>
-                    </div>
-                    <input 
-                      type="hidden" 
-                      name="icon_color" 
-                      value={
-                        customStyleEnabled 
-                          ? iconColorMode === 'original' 
-                            ? '' 
-                            : iconColorMode === 'text' 
-                            ? 'text' 
-                            : iconColor 
-                          : ''
-                      } 
-                    />
-                  </div>
-                )}
-
-                {/* Custom Logo Color Picker (Link only) */}
-                {linkType === 'link' && iconColorMode === 'custom' && (
-                  <div className="sm:col-span-2 space-y-1.5 animate-in fade-in slide-in-from-top-2 duration-200">
-                    <span className="text-xs text-zinc-400">Custom Logo Color:</span>
-                    <div className="flex items-center gap-2">
-                      <div className="w-10 h-10 rounded-xl border border-white/10 overflow-hidden shrink-0 relative">
-                        <input 
-                          type="color" 
-                          value={iconColor} 
-                          onChange={(e) => setIconColor(e.target.value)} 
-                          className="absolute inset-0 w-full h-full p-0 border-0 cursor-pointer bg-transparent scale-150" 
-                        />
-                      </div>
-                      <Input 
-                        type="text" 
-                        value={iconColor} 
-                        onChange={(e) => setIconColor(e.target.value)} 
-                        maxLength={7}
-                        className="font-mono rounded-xl border-white/10 bg-white/5 text-white h-10 text-sm focus-visible:ring-brand-pink w-40" 
-                      />
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {!customStyleEnabled && (
-              <>
-                <input type="hidden" name="bg_color" value="" />
-                <input type="hidden" name="text_color" value="" />
-                <input type="hidden" name="bg_opacity" value="" />
-              </>
-            )}
-          </div>
+          <LinkDesignSettings
+            linkId={link.id}
+            linkType={linkType}
+            isSpotlight={isSpotlight}
+            setIsSpotlight={setIsSpotlight}
+            spotlightColor={spotlightColor}
+            setSpotlightColor={setSpotlightColor}
+            animation={animation}
+            setAnimation={setAnimation}
+            customStyleEnabled={customStyleEnabled}
+            setCustomStyleEnabled={setCustomStyleEnabled}
+            bgColor={bgColor}
+            setBgColor={setBgColor}
+            textColor={textColor}
+            setTextColor={setTextColor}
+            bgOpacity={bgOpacity as number}
+            setBgOpacity={setBgOpacity}
+            iconColorMode={iconColorMode}
+            setIconColorMode={setIconColorMode}
+            iconColor={iconColor}
+            setIconColor={setIconColor}
+            thumbnailUrl={thumbnailUrl}
+            setThumbnailUrl={setThumbnailUrl}
+            iconPosition={iconPosition}
+            setIconPosition={setIconPosition}
+            isStickyCta={isStickyCta}
+            setIsStickyCta={setIsStickyCta}
+            loading={loading}
+            handleApplyToAll={handleApplyToAll}
+          />
 
           {/* Link Scheduling Section (Link only) */}
           {linkType === 'link' && (
             <div className="bg-zinc-950/40 border border-white/5 p-4 rounded-2xl space-y-4">
-              <div className="flex items-center space-x-2">
-                <Switch 
-                  id={`schedule_enabled_${link.id}`} 
-                  checked={scheduleEnabled} 
-                  onCheckedChange={setScheduleEnabled} 
-                  className="data-[state=checked]:bg-brand-pink"
-                />
-                <label htmlFor={`schedule_enabled_${link.id}`} className="text-sm font-bold text-white cursor-pointer flex items-center gap-1.5">
-                  ⏰ Schedule Link
-                </label>
-              </div>
-
-              {scheduleEnabled && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2 duration-200">
-                  <div className="space-y-1.5">
-                    <span className="text-xs text-zinc-400">Start Date (Valid From):</span>
-                    <Input 
-                      type="datetime-local" 
-                      name="valid_from" 
-                      value={validFrom} 
-                      onChange={(e) => setValidFrom(e.target.value)}
-                      className="rounded-xl border-white/10 bg-white/5 text-white h-10 text-xs focus-visible:ring-brand-pink w-full block [color-scheme:dark]" 
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <span className="text-xs text-zinc-400">End Date (Valid Until):</span>
-                    <Input 
-                      type="datetime-local" 
-                      name="valid_until" 
-                      value={validUntil} 
-                      onChange={(e) => setValidUntil(e.target.value)}
-                      className="rounded-xl border-white/10 bg-white/5 text-white h-10 text-xs focus-visible:ring-brand-pink w-full block [color-scheme:dark]" 
-                    />
-                  </div>
-                  <p className="sm:col-span-2 text-[10px] text-zinc-500 italic">
-                    The link will only appear on your public page during the time range above. Leave either blank to not restrict it.
-                  </p>
-                </div>
-              )}
-
-              {!scheduleEnabled && (
-                <>
-                  <input type="hidden" name="valid_from" value="" />
-                  <input type="hidden" name="valid_until" value="" />
-                </>
-              )}
+              <LinkScheduleSettings
+                scheduleEnabled={scheduleEnabled}
+                setScheduleEnabled={setScheduleEnabled}
+                validFrom={validFrom}
+                setValidFrom={setValidFrom}
+                validUntil={validUntil}
+                setValidUntil={setValidUntil}
+              />
             </div>
           )}
           

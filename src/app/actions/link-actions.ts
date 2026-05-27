@@ -125,6 +125,9 @@ export async function updateLink(id: string, formData: FormData) {
   if (formData.has('embed_type')) {
     updateData.embed_type = formData.get('embed_type') as string || null
   }
+  if (formData.has('is_sticky_cta')) {
+    updateData.is_sticky_cta = formData.get('is_sticky_cta') === 'on' || formData.get('is_sticky_cta') === 'true'
+  }
 
   // Validate with Zod before DB write
   const validated = updateLinkSchema.safeParse(updateData)

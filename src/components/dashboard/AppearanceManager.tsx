@@ -84,6 +84,7 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
   const [isTextColorPickerOpen, setIsTextColorPickerOpen] = useState(false)
   const [themeStyle, setThemeStyle] = useState(profile?.theme_style || 'solid')
   const [buttonHoverEffect, setButtonHoverEffect] = useState(profile?.button_hover_effect || 'none')
+  const [layoutType, setLayoutType] = useState(profile?.layout_type || 'list')
 
   const bannerInputRef = useRef<HTMLInputElement>(null)
 
@@ -175,7 +176,8 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
         button_style: theme.button_style,
         font_family: theme.font_family,
         theme_style: themeStyle,
-        button_hover_effect: buttonHoverEffect
+        button_hover_effect: buttonHoverEffect,
+        layout_type: layoutType
       }
     }))
     
@@ -346,12 +348,13 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
           link_spacing: linkSpacing,
           avatar_size: avatarSize,
           theme_style: themeStyle,
-          button_hover_effect: buttonHoverEffect
+          button_hover_effect: buttonHoverEffect,
+          layout_type: layoutType
         }
       }))
     }, 50)
     return () => clearTimeout(timer)
-  }, [buttonShape, buttonStyle, fontFamily, textColor, socialStyle, profileAlign, avatarShape, bannerUrl, linkSpacing, avatarSize, themeStyle, buttonHoverEffect])
+  }, [buttonShape, buttonStyle, fontFamily, textColor, socialStyle, profileAlign, avatarShape, bannerUrl, linkSpacing, avatarSize, themeStyle, buttonHoverEffect, layoutType])
 
   const handleSocialChange = (key: string, val: string) => {
     setSocialLinks(prev => ({
@@ -426,6 +429,7 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
     formData.set('bg_video_url', bgVideoUrl)
     formData.set('theme_style', themeStyle)
     formData.set('button_hover_effect', buttonHoverEffect)
+    formData.set('layout_type', layoutType)
 
     const result = await updateAppearance(formData)
     if (result.error) {
@@ -973,6 +977,33 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
                             onClick={() => setProfileAlign(item.val)}
                             className={`h-12 flex items-center justify-center gap-2 rounded-xl border-2 cursor-pointer transition-all ${
                               profileAlign === item.val
+                                ? 'border-brand-pink bg-brand-pink/10 text-white font-bold'
+                                : 'border-white/10 bg-white/5 text-zinc-400 hover:border-white/20'
+                            }`}
+                          >
+                            <Icon className="w-4 h-4 shrink-0" />
+                            <span className="text-xs">{item.label}</span>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Layout Type */}
+                  <div className="space-y-2">
+                    <Label className="text-zinc-400 text-xs">Link Layout Type</Label>
+                    <div className="grid grid-cols-2 gap-2">
+                      {[
+                        { val: 'list', label: 'List View', icon: AlignCenter },
+                        { val: 'grid', label: 'Grid 2-Column', icon: LayoutGrid }
+                      ].map((item) => {
+                        const Icon = item.icon
+                        return (
+                          <div
+                            key={item.val}
+                            onClick={() => setLayoutType(item.val)}
+                            className={`h-12 flex items-center justify-center gap-2 rounded-xl border-2 cursor-pointer transition-all ${
+                              layoutType === item.val
                                 ? 'border-brand-pink bg-brand-pink/10 text-white font-bold'
                                 : 'border-white/10 bg-white/5 text-zinc-400 hover:border-white/20'
                             }`}

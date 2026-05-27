@@ -196,9 +196,11 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
               </div>
             )}
  
-            <div className={`w-full ${
-              profile?.link_spacing === 'compact' ? 'space-y-2' : 
-              profile?.link_spacing === 'relaxed' ? 'space-y-4' : 'space-y-3'
+            <div className={`w-full pb-20 ${
+              profile?.layout_type === 'grid' 
+                ? 'grid grid-cols-2 gap-3' 
+                : profile?.link_spacing === 'compact' ? 'space-y-2' : 
+                  profile?.link_spacing === 'relaxed' ? 'space-y-4' : 'space-y-3'
             }`}>
               {(() => {
                 const now = new Date()
@@ -214,12 +216,15 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
                   }
                   return true
                 })
-                if (activeLinks.length > 0) {
-                  return activeLinks.map(link => {
+                
+                const normalLinks = activeLinks.filter(l => !(l.is_sticky_cta && l.link_type === 'link'))
+                const stickyLinks = activeLinks.filter(l => l.is_sticky_cta && l.link_type === 'link')
+                
+                const renderLink = (link: Link) => {
                     // Render Section Header in Live Preview
                     if (link.link_type === 'header') {
                       return (
-                        <div key={link.id} className="w-full text-center py-2 mt-4 first:mt-1 select-none">
+                        <div key={link.id} className={`w-full text-center py-2 mt-4 first:mt-1 select-none ${profile?.layout_type === 'grid' ? 'col-span-2' : ''}`}>
                           <h3 
                             style={{ color: link.text_color || undefined }} 
                             className="text-xs font-extrabold tracking-wider uppercase text-white/95 drop-shadow-md cursor-default px-2"
@@ -235,7 +240,7 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
                     if (link.link_type === 'carousel') {
                       const images = link.link_images || link.images || []
                       return (
-                        <div key={link.id} className="w-full space-y-2 py-1 select-none pointer-events-auto">
+                        <div key={link.id} className={`w-full space-y-2 py-1 select-none pointer-events-auto ${profile?.layout_type === 'grid' ? 'col-span-2' : ''}`}>
                           {link.title && (
                             <h4 className="text-[10px] font-extrabold text-white/80 uppercase tracking-wider px-1">
                               🖼️ {link.title}
@@ -271,7 +276,7 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
                       const embedInfo = parseEmbedUrl(link.url, true)
                       if (embedInfo) {
                         return (
-                          <div key={link.id} className="w-full rounded-xl overflow-hidden border border-white/10 bg-zinc-900/40 relative shadow-sm">
+                          <div key={link.id} className={`w-full rounded-xl overflow-hidden border border-white/10 bg-zinc-900/40 relative shadow-sm ${profile?.layout_type === 'grid' ? 'col-span-2' : ''}`}>
                             <iframe
                               width="100%"
                               height={embedInfo.height}
@@ -459,12 +464,18 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
                         </div>
                       </div>
                     )
-                  })
                 }
+
                 return (
                   <>
-                    <div className="h-12 w-full bg-white/5 border border-white/10 rounded-2xl animate-pulse"></div>
-                    <div className="h-12 w-full bg-white/5 border border-white/10 rounded-2xl animate-pulse"></div>
+                    {normalLinks.length > 0 && normalLinks.map(renderLink)}
+                    
+                    {/* Sticky CTA container */}
+                    {stickyLinks.length > 0 && (
+                      <div className="absolute bottom-6 left-0 right-0 px-4 z-50 flex flex-col gap-2">
+                        {stickyLinks.map(renderLink)}
+                      </div>
+                    )}
                   </>
                 )
               })()}

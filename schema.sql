@@ -23,6 +23,7 @@ CREATE TABLE public.profiles (
     font_family VARCHAR(50) DEFAULT 'font-sans-theme',
     theme_style VARCHAR(20) DEFAULT 'solid',
     button_hover_effect VARCHAR(20) DEFAULT 'none',
+    layout_type VARCHAR(20) DEFAULT 'list',
     show_branding BOOLEAN DEFAULT true,
     seo_title VARCHAR(255),
     seo_description TEXT,
@@ -378,3 +379,12 @@ $$;
 -- Note: To run this automatically, enable pg_cron in Supabase Dashboard 
 -- under Database -> Extensions, then run the following in SQL Editor:
 -- SELECT cron.schedule('delete_old_analytics_job', '0 0 * * *', 'SELECT public.delete_old_analytics();');
+
+-- ==========================================
+-- PHASE 5: Advanced Options (Visual & Layout)
+-- ==========================================
+ALTER TABLE public.profiles 
+ADD COLUMN IF NOT EXISTS layout_type VARCHAR(20) DEFAULT 'list';
+
+ALTER TABLE public.links
+ADD COLUMN IF NOT EXISTS is_sticky_cta BOOLEAN DEFAULT false;

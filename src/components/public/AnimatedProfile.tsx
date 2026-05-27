@@ -14,8 +14,9 @@ import {
   FaEnvelope 
 } from 'react-icons/fa'
 import { FaXTwitter } from 'react-icons/fa6'
-import { Zap } from 'lucide-react'
+import { Zap, Sun, Moon } from 'lucide-react'
 import { toast } from 'sonner'
+import { useState, useEffect } from 'react'
 
 const socialsIconMap: Record<string, any> = {
   instagram: FaInstagram,
@@ -30,7 +31,45 @@ const socialsIconMap: Record<string, any> = {
 
 import { Profile, Link } from '@/types'
 
-export function AnimatedProfile({ profile, links, bgClass, bgStyle }: { profile: Profile, links: Link[], bgClass: string, bgStyle: React.CSSProperties }) {
+export function AnimatedProfile({ profile, links, bgClass: defaultBgClass, bgStyle: defaultBgStyle }: { profile: Profile, links: Link[], bgClass: string, bgStyle: React.CSSProperties }) {
+  const [visitorTheme, setVisitorTheme] = useState<'system' | 'light' | 'dark'>('system')
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+    const saved = localStorage.getItem('branch_visitor_theme')
+    if (saved === 'light' || saved === 'dark') {
+      setVisitorTheme(saved)
+    }
+  }, [])
+
+  const toggleTheme = () => {
+    let newTheme: 'light' | 'dark' = 'dark'
+    if (visitorTheme === 'dark') newTheme = 'light'
+    else if (visitorTheme === 'light') newTheme = 'dark'
+    else {
+      // If system, switch to the opposite of current system preference
+      const isSystemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+      newTheme = isSystemDark ? 'light' : 'dark'
+    }
+    
+    setVisitorTheme(newTheme)
+    localStorage.setItem('branch_visitor_theme', newTheme)
+  }
+
+  let bgStyle = { ...defaultBgStyle }
+  let currentTextColor = profile?.text_color || '#ffffff'
+
+  if (mounted && visitorTheme !== 'system') {
+    if (visitorTheme === 'light') {
+      bgStyle = { backgroundColor: '#f4f4f5' } // zinc-100
+      currentTextColor = '#18181b' // zinc-900
+    } else if (visitorTheme === 'dark') {
+      bgStyle = { backgroundColor: '#09090b' } // zinc-950
+      currentTextColor = '#ffffff'
+    }
+  }
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -138,7 +177,7 @@ export function AnimatedProfile({ profile, links, bgClass, bgStyle }: { profile:
         style={bgStyle}
       >
         {/* Background Video loop (Muted, AutoPlay) */}
-        {profile?.bg_type === 'video' && profile?.bg_video_url && (
+        {profile?.bg_type === 'video' && profile?.bg_video_url && mounted && visitorTheme === 'system' && (
           <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
             <video 
               src={profile.bg_video_url} 
@@ -159,7 +198,7 @@ export function AnimatedProfile({ profile, links, bgClass, bgStyle }: { profile:
         )}
 
         {/* Dark Overlay */}
-        {profile.bg_overlay_opacity > 0 && (
+        {profile.bg_overlay_opacity > 0 && mounted && visitorTheme === 'system' && (
           <div 
             className="absolute inset-0 bg-black pointer-events-none z-0" 
             style={{ opacity: profile.bg_overlay_opacity / 100 }}
@@ -171,8 +210,22 @@ export function AnimatedProfile({ profile, links, bgClass, bgStyle }: { profile:
           <div className="w-9 h-9 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white/90 border border-white/10">
             <Zap className="w-4 h-4 text-white" />
           </div>
-          <button 
-            onClick={() => {
+          <div className="flex gap-2">
+            {mounted && (
+              <button 
+                onClick={toggleTheme}
+                className="w-9 h-9 rounded-full bg-black/20 backdrop-blur-md flex items-center justify-center text-white/90 hover:text-white border border-white/20 transition-all active:scale-95 shadow-sm"
+                title="Toggle Theme"
+              >
+                {visitorTheme === 'dark' || (visitorTheme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches) ? (
+                  <Moon className="w-4 h-4" />
+                ) : (
+                  <Sun className="w-4 h-4 text-white" />
+                )}
+              </button>
+            )}
+            <button 
+              onClick={() => {
               if (navigator.share) {
                 navigator.share({
                   title: profile.full_name || `@${profile.username}`,
@@ -184,10 +237,11 @@ export function AnimatedProfile({ profile, links, bgClass, bgStyle }: { profile:
                 toast.success('Profile link copied!');
               }
             }}
-            className="w-9 h-9 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white/90 hover:text-white border border-white/10 transition-all active:scale-95"
+            className="w-9 h-9 rounded-full bg-black/20 backdrop-blur-md flex items-center justify-center text-white/90 hover:text-white border border-white/20 transition-all active:scale-95 shadow-sm"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-share"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" x2="12" y1="2" y2="15"/></svg>
           </button>
+          </div>
         </div>
 
         {/* Analytics Tracking */}
@@ -203,7 +257,7 @@ export function AnimatedProfile({ profile, links, bgClass, bgStyle }: { profile:
           } ${
             profile?.theme_style === 'glass' ? 'p-6 sm:p-10 rounded-3xl backdrop-blur-2xl bg-white/5 border border-white/20 shadow-2xl max-w-lg mx-auto' : ''
           } ${profile?.banner_url && profile?.theme_style !== 'glass' ? 'pt-12' : ''}`}
-          style={{ color: profile?.text_color || '#ffffff' }}
+          style={{ color: currentTextColor }}
         >
           {/* Avatar */}
           <motion.div 
@@ -231,7 +285,7 @@ export function AnimatedProfile({ profile, links, bgClass, bgStyle }: { profile:
           {/* Profile Info */}
           <motion.h1 
             variants={titleVariants} 
-            style={{ color: profile?.text_color || '#ffffff' }}
+            style={{ color: currentTextColor }}
             className={`text-3xl font-extrabold mb-2 drop-shadow-md w-full ${profile?.profile_align === 'left' ? 'text-left' : 'text-center'}`}
           >
             {profile.full_name || `@${profile.username}`}
@@ -239,7 +293,7 @@ export function AnimatedProfile({ profile, links, bgClass, bgStyle }: { profile:
           {profile.bio && (
             <motion.p 
               variants={titleVariants} 
-              style={{ color: (profile?.text_color || '#ffffff') + 'cc' }}
+              style={{ color: currentTextColor + 'cc' }}
               className={`mb-10 max-w-md drop-shadow-sm text-lg w-full ${profile?.profile_align === 'left' ? 'text-left' : 'text-center'}`}
             >
               {profile.bio}
@@ -272,7 +326,7 @@ export function AnimatedProfile({ profile, links, bgClass, bgStyle }: { profile:
                       profile?.social_style === 'minimal' ? 'bg-transparent border-0 text-white shadow-none' :
                       'rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white'
                     }`}
-                    style={{ color: profile?.text_color || '#ffffff' }}
+                    style={{ color: currentTextColor, borderColor: `${currentTextColor}33` }}
                   >
                     <IconComponent size={20} />
                   </motion.a>
@@ -284,16 +338,46 @@ export function AnimatedProfile({ profile, links, bgClass, bgStyle }: { profile:
           {/* Links */}
           <motion.div 
             variants={linkWrapperVariants} 
-            className={`w-full max-w-md ${
-              profile?.link_spacing === 'compact' ? 'space-y-2.5' : 
-              profile?.link_spacing === 'relaxed' ? 'space-y-5.5' : 'space-y-4'
+            className={`w-full max-w-md pb-24 ${
+              profile?.layout_type === 'grid' 
+                ? 'grid grid-cols-2 gap-4' 
+                : profile?.link_spacing === 'compact' ? 'space-y-2.5' : 
+                  profile?.link_spacing === 'relaxed' ? 'space-y-5.5' : 'space-y-4'
             }`}
           >
-            {links?.map((link) => (
-              <motion.div key={link.id} variants={linkVariants} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                <LinkButton link={link} profileId={profile.id} profile={profile} />
-              </motion.div>
-            ))}
+            {(() => {
+              const normalLinks = links?.filter(l => !(l.is_sticky_cta && l.link_type === 'link')) || []
+              const stickyLinks = links?.filter(l => l.is_sticky_cta && l.link_type === 'link') || []
+              
+              const renderLink = (link: Link) => (
+                <motion.div 
+                  key={link.id} 
+                  variants={linkVariants} 
+                  whileHover={{ scale: 1.02 }} 
+                  whileTap={{ scale: 0.98 }}
+                  className={profile?.layout_type === 'grid' && (link.link_type === 'header' || link.link_type === 'carousel' || link.is_embed) ? 'col-span-2' : ''}
+                >
+                  <LinkButton link={link} profileId={profile.id} profile={{...profile, text_color: currentTextColor}} visitorTheme={visitorTheme} />
+                </motion.div>
+              )
+
+              return (
+                <>
+                  {normalLinks.map(renderLink)}
+                  
+                  {/* Sticky CTA container */}
+                  {stickyLinks.length > 0 && (
+                    <div className="fixed bottom-6 left-0 right-0 px-4 z-50 flex flex-col gap-3 max-w-md mx-auto pointer-events-none">
+                      {stickyLinks.map(link => (
+                        <div key={link.id} className="pointer-events-auto shadow-2xl">
+                          <LinkButton link={link} profileId={profile.id} profile={{...profile, text_color: currentTextColor}} visitorTheme={visitorTheme} />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </>
+              )
+            })()}
           </motion.div>
 
           {/* Footer branding */}

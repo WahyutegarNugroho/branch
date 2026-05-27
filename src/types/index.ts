@@ -14,6 +14,7 @@ export interface Profile {
   font_family?: string
   theme_style?: string
   button_hover_effect?: string
+  layout_type?: string
   social_links?: Record<string, string> | null
   show_branding?: boolean
   created_at: string
@@ -58,6 +59,7 @@ export interface Link {
   animation?: string | null
   spotlight_color?: string | null
   link_images?: LinkImage[]
+  is_sticky_cta?: boolean
   images?: LinkImage[]
 }
 

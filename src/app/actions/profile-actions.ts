@@ -42,6 +42,7 @@ export async function updateAppearance(formData: FormData) {
     link_spacing: formData.get('link_spacing') as string,
     avatar_size: formData.get('avatar_size') as string,
     bg_video_url: formData.get('bg_video_url') as string || null,
+    layout_type: formData.get('layout_type') as string,
   }
 
   const validated = updateAppearanceSchema.safeParse(raw)

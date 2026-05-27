@@ -22,6 +22,8 @@ export const linkSpacingEnum = z.enum(['compact', 'normal', 'relaxed'])
 
 export const avatarSizeEnum = z.enum(['small', 'medium', 'large'])
 
+export const layoutTypeEnum = z.enum(['list', 'grid'])
+
 export const linkTypeEnum = z.enum(['link', 'header', 'carousel'])
 
 export const animationEnum = z.enum(['none', 'pulse', 'bounce', 'shake', 'wobble', 'glow'])
@@ -52,6 +54,7 @@ export const updateLinkSchema = z.object({
   animation: z.string().nullable().optional(),
   valid_from: z.string().nullable().optional(),
   valid_until: z.string().nullable().optional(),
+  is_sticky_cta: z.boolean().default(false),
 })
 
 export const updateAppearanceSchema = z.object({
@@ -70,6 +73,7 @@ export const updateAppearanceSchema = z.object({
   link_spacing: linkSpacingEnum.default('normal'),
   avatar_size: avatarSizeEnum.default('medium'),
   bg_video_url: z.string().max(2048).nullable().optional(),
+  layout_type: layoutTypeEnum.default('list'),
 })
 
 export const updateProfileInfoSchema = z.object({

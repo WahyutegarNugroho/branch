@@ -7,7 +7,7 @@ import { parseEmbedUrl } from '@/lib/embed-utils'
 
 import { Profile, Link } from '@/types'
 
-export function LinkButton({ link, profileId, profile }: { link: Link, profileId: string, profile?: Profile }) {
+export function LinkButton({ link, profileId, profile, visitorTheme }: { link: Link, profileId: string, profile?: Profile, visitorTheme?: 'system' | 'light' | 'dark' }) {
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     // Extract UTMs from current URL query string
     let utm_source = null
@@ -139,22 +139,29 @@ export function LinkButton({ link, profileId, profile }: { link: Link, profileId
   }
 
   const textClr = link.text_color || profile?.text_color || '#ffffff'
-  buttonStyle.color = textClr
+  let buttonTextColor = textClr
+  if (visitorTheme === 'light') buttonTextColor = '#18181b'
+  if (visitorTheme === 'dark') buttonTextColor = '#ffffff'
+  
+  buttonStyle.color = buttonTextColor
   if (link.text_color) {
     buttonStyle.borderColor = `${link.text_color}33` // 20% opacity hex
   } else if (profile?.text_color) {
     buttonStyle.borderColor = `${profile.text_color}33`
   }
+  if (visitorTheme === 'light' || visitorTheme === 'dark') {
+    buttonStyle.borderColor = `${buttonTextColor}33`
+  }
 
   let finalIconColor = matchedPlatform?.color || '#ffffff'
   if (link.icon_color) {
     if (link.icon_color === 'text') {
-      finalIconColor = textClr
+      finalIconColor = buttonTextColor
     } else {
       finalIconColor = link.icon_color
     }
   } else {
-    finalIconColor = textClr
+    finalIconColor = buttonTextColor
   }
 
   const shapeClass = profile?.button_shape || 'rounded-2xl'
