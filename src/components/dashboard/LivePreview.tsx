@@ -337,7 +337,11 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
                       }
                     }
 
-
+                    return (
+                      <div key={link.id}>
+                        <LinkButton link={link} profileId={profile?.id || ''} profile={profile || undefined} isPreview={true} />
+                      </div>
+                    )
                 }
 
                 return (
