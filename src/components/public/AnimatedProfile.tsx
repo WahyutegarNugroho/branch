@@ -39,43 +39,8 @@ const socialsIconMap: Record<string, any> = {
 import { Profile, Link } from '@/types'
 
 export function AnimatedProfile({ profile, links, bgClass: defaultBgClass, bgStyle: defaultBgStyle }: { profile: Profile, links: Link[], bgClass: string, bgStyle: React.CSSProperties }) {
-  const [visitorTheme, setVisitorTheme] = useState<'system' | 'light' | 'dark'>('system')
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-    const saved = localStorage.getItem('branch_visitor_theme')
-    if (saved === 'light' || saved === 'dark') {
-      setVisitorTheme(saved)
-    }
-  }, [])
-
-  const toggleTheme = () => {
-    let newTheme: 'light' | 'dark' = 'dark'
-    if (visitorTheme === 'dark') newTheme = 'light'
-    else if (visitorTheme === 'light') newTheme = 'dark'
-    else {
-      // If system, switch to the opposite of current system preference
-      const isSystemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-      newTheme = isSystemDark ? 'light' : 'dark'
-    }
-    
-    setVisitorTheme(newTheme)
-    localStorage.setItem('branch_visitor_theme', newTheme)
-  }
-
-  let bgStyle = { ...defaultBgStyle }
-  let currentTextColor = profile?.text_color || '#ffffff'
-
-  if (mounted && visitorTheme !== 'system') {
-    if (visitorTheme === 'light') {
-      bgStyle = { backgroundColor: '#f4f4f5' } // zinc-100
-      currentTextColor = '#18181b' // zinc-900
-    } else if (visitorTheme === 'dark') {
-      bgStyle = { backgroundColor: '#09090b' } // zinc-950
-      currentTextColor = '#ffffff'
-    }
-  }
+  const currentTextColor = profile?.text_color || '#ffffff'
+  const bgStyle = { ...defaultBgStyle }
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -185,7 +150,7 @@ export function AnimatedProfile({ profile, links, bgClass: defaultBgClass, bgSty
         style={bgStyle}
       >
         {/* Background Video loop (Muted, AutoPlay) */}
-        {profile?.bg_type === 'video' && profile?.bg_video_url && mounted && visitorTheme === 'system' && (
+        {profile?.bg_type === 'video' && profile?.bg_video_url && (
           <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
             <video 
               src={profile.bg_video_url} 
@@ -215,7 +180,7 @@ export function AnimatedProfile({ profile, links, bgClass: defaultBgClass, bgSty
         )}
 
         {/* Dark Overlay */}
-        {profile.bg_overlay_opacity > 0 && mounted && visitorTheme === 'system' && (
+        {profile.bg_overlay_opacity > 0 && (
           <div 
             className="absolute inset-0 bg-black pointer-events-none z-0" 
             style={{ opacity: profile.bg_overlay_opacity / 100 }}
@@ -228,19 +193,6 @@ export function AnimatedProfile({ profile, links, bgClass: defaultBgClass, bgSty
             <Zap className="w-4 h-4 text-white" />
           </div>
           <div className="flex gap-2">
-            {mounted && !profile.theme_lock && (
-              <button 
-                onClick={toggleTheme}
-                className="w-9 h-9 rounded-full bg-black/20 backdrop-blur-md flex items-center justify-center text-white/90 hover:text-white border border-white/20 transition-all active:scale-95 shadow-sm"
-                title="Toggle Theme"
-              >
-                {visitorTheme === 'dark' || (visitorTheme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches) ? (
-                  <Moon className="w-4 h-4" />
-                ) : (
-                  <Sun className="w-4 h-4 text-white" />
-                )}
-              </button>
-            )}
             <button 
               onClick={() => {
               if (navigator.share) {
@@ -415,7 +367,7 @@ export function AnimatedProfile({ profile, links, bgClass: defaultBgClass, bgSty
                   whileTap={{ scale: 0.98 }}
                   className={profile?.layout_type === 'grid' && (link.link_type === 'header' || link.link_type === 'carousel' || link.is_embed) ? 'col-span-2' : ''}
                 >
-                  <LinkButton link={link} profileId={profile.id} profile={{...profile, text_color: currentTextColor}} visitorTheme={visitorTheme} />
+                  <LinkButton link={link} profileId={profile.id} profile={{...profile, text_color: currentTextColor}} />
                 </motion.div>
               )
 
@@ -428,7 +380,7 @@ export function AnimatedProfile({ profile, links, bgClass: defaultBgClass, bgSty
                     <div className="fixed bottom-6 left-0 right-0 px-4 z-50 flex flex-col gap-3 max-w-md mx-auto pointer-events-none">
                       {stickyLinks.map(link => (
                         <div key={link.id} className="pointer-events-auto shadow-2xl">
-                          <LinkButton link={link} profileId={profile.id} profile={{...profile, text_color: currentTextColor}} visitorTheme={visitorTheme} />
+                          <LinkButton link={link} profileId={profile.id} profile={{...profile, text_color: currentTextColor}} />
                         </div>
                       ))}
                     </div>

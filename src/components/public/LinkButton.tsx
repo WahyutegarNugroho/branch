@@ -7,7 +7,7 @@ import { parseEmbedUrl } from '@/lib/embed-utils'
 
 import { Profile, Link } from '@/types'
 
-export function LinkButton({ link, profileId, profile, visitorTheme, isPreview = false }: { link: Link, profileId: string, profile?: Profile, visitorTheme?: 'system' | 'light' | 'dark', isPreview?: boolean }) {
+export function LinkButton({ link, profileId, profile, isPreview = false }: { link: Link, profileId: string, profile?: Profile, isPreview?: boolean }) {
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (isPreview) {
       e.preventDefault()
@@ -144,17 +144,12 @@ export function LinkButton({ link, profileId, profile, visitorTheme, isPreview =
 
   const textClr = link.text_color || profile?.text_color || '#ffffff'
   let buttonTextColor = textClr
-  if (visitorTheme === 'light') buttonTextColor = '#18181b'
-  if (visitorTheme === 'dark') buttonTextColor = '#ffffff'
   
   buttonStyle.color = buttonTextColor
   if (link.text_color) {
     buttonStyle.borderColor = `${link.text_color}33` // 20% opacity hex
   } else if (profile?.text_color) {
     buttonStyle.borderColor = `${profile.text_color}33`
-  }
-  if (visitorTheme === 'light' || visitorTheme === 'dark') {
-    buttonStyle.borderColor = `${buttonTextColor}33`
   }
 
   let finalIconColor = matchedPlatform?.color || '#ffffff'
