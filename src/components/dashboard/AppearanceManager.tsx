@@ -1200,66 +1200,6 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
                       />
                     </div>
                   </div>
-
-                  {/* Background Animation */}
-                  <div className="space-y-2">
-                    <Label className="text-zinc-400 text-xs">Background Animation</Label>
-                    <div className="grid grid-cols-4 gap-1">
-                      {[
-                        { val: 'none', label: 'None' },
-                        { val: 'aurora', label: 'Aurora' },
-                        { val: 'particles', label: 'Particles' },
-                        { val: 'snowfall', label: 'Snowfall' }
-                      ].map((item) => (
-                        <div
-                          key={item.val}
-                          onClick={() => setBgAnimation(item.val)}
-                          className={`h-10 flex items-center justify-center rounded-xl border-2 cursor-pointer transition-all ${
-                            bgAnimation === item.val
-                              ? 'border-brand-pink bg-brand-pink/10 text-white font-semibold'
-                              : 'border-white/10 bg-white/5 text-zinc-400 hover:border-white/20'
-                          }`}
-                        >
-                          <span className="text-[11px]">{item.label}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Social Placement */}
-                  <div className="space-y-2">
-                    <Label className="text-zinc-400 text-xs">Social Placement</Label>
-                    <div className="grid grid-cols-2 gap-1">
-                      {[
-                        { val: 'top', label: 'Top (Default)' },
-                        { val: 'bottom', label: 'Bottom' }
-                      ].map((item) => (
-                        <div
-                          key={item.val}
-                          onClick={() => setSocialPlacement(item.val)}
-                          className={`h-10 flex items-center justify-center rounded-xl border-2 cursor-pointer transition-all ${
-                            socialPlacement === item.val
-                              ? 'border-brand-pink bg-brand-pink/10 text-white font-semibold'
-                              : 'border-white/10 bg-white/5 text-zinc-400 hover:border-white/20'
-                          }`}
-                        >
-                          <span className="text-[11px]">{item.label}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Theme Lock */}
-                  <div className="space-y-2">
-                    <Label className="text-zinc-400 text-xs">Global Options</Label>
-                    <div className="flex items-center gap-4">
-                      <div className="flex items-center gap-2">
-                        <Switch checked={themeLock} onCheckedChange={setThemeLock} />
-                        <span className="text-xs text-zinc-300">Lock Theme (Hide Visitor Theme Toggle)</span>
-                      </div>
-                    </div>
-                  </div>
-
                   {/* Social Icons Style */}
                   <div className="space-y-2">
                     <Label className="text-zinc-400 text-xs">Social Icon Border Style</Label>
