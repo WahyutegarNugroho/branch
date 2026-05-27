@@ -1208,7 +1208,7 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
                         { val: 'circle', label: 'Circle' },
                         { val: 'outline', label: 'Outline' },
                         { val: 'square', label: 'Square' },
-                        { val: 'none', label: 'No Border' }
+                        { val: 'minimal', label: 'No Border' }
                       ].map((item) => (
                         <div
                           key={item.val}
