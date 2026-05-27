@@ -111,7 +111,11 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
 
           {profile?.bg_animation === 'aurora' && <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-brand-pink/20 via-transparent to-transparent pointer-events-none z-0 animate-pulse" />}
           {profile?.bg_animation === 'particles' && <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent pointer-events-none z-0" style={{ backgroundImage: 'radial-gradient(circle, #ffffff 1px, transparent 1px)', backgroundSize: '20px 20px', opacity: 0.3 }} />}
-          {profile?.bg_animation === 'snowfall' && <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-40 pointer-events-none z-0 mix-blend-screen" />}
+          {profile?.bg_animation === 'snowfall' && <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-40 pointer-events-none z-0 mix-blend-screen animate-pulse-slow" />}
+          {profile?.bg_animation === 'stars' && <div className="absolute inset-0 pointer-events-none z-0 mix-blend-screen opacity-50" style={{ backgroundImage: 'radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)), radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)), radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0)), radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0)), radial-gradient(2px 2px at 130px 80px, #fff, rgba(0,0,0,0)), radial-gradient(2px 2px at 160px 120px, #ddd, rgba(0,0,0,0))', backgroundSize: '200px 200px', animation: 'pulseSlow 4s infinite alternate, bgMoveSlow 20s linear infinite' }} />}
+          {profile?.bg_animation === 'matrix' && <div className="absolute inset-0 pointer-events-none z-0 mix-blend-screen opacity-20" style={{ backgroundImage: 'repeating-linear-gradient(0deg, rgba(34, 197, 94, 0.2), rgba(34, 197, 94, 0.2) 1px, transparent 1px, transparent 2px)', backgroundSize: '100% 4px', animation: 'bgMove 10s linear infinite' }} />}
+          {profile?.bg_animation === 'confetti' && <div className="absolute inset-0 pointer-events-none z-0 opacity-30" style={{ backgroundImage: 'radial-gradient(4px 4px at 10% 20%, #ff0055, rgba(0,0,0,0)), radial-gradient(4px 4px at 30% 60%, #00ffaa, rgba(0,0,0,0)), radial-gradient(4px 4px at 50% 40%, #ffaa00, rgba(0,0,0,0)), radial-gradient(4px 4px at 80% 80%, #00aaff, rgba(0,0,0,0))', backgroundSize: '100px 100px', animation: 'bounceSlow 3s infinite alternate, bgMoveSlow 15s linear infinite' }} />}
+          {profile?.bg_animation === 'bokeh' && <div className="absolute inset-0 pointer-events-none z-0 opacity-40 mix-blend-screen blur-[8px]" style={{ backgroundImage: 'radial-gradient(circle at 20% 30%, rgba(236,72,153,0.4) 0%, transparent 40%), radial-gradient(circle at 80% 60%, rgba(249,115,22,0.4) 0%, transparent 40%)', animation: 'pulseSlow 5s infinite alternate, bgMove 20s ease-in-out infinite' }} />}
 
           {profile?.banner_url && (
             <div className="absolute top-0 inset-x-0 h-24 w-full overflow-hidden border-b border-white/10 z-0">
@@ -141,16 +145,19 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
               } : {})
             }}
           >
-            {profile?.avatar_url ? (
-              <div className={`relative flex items-center justify-center ${profile?.avatar_frame === 'gradient-ring' ? 'p-1 rounded-full bg-gradient-to-tr from-brand-pink to-brand-orange shadow-[0_0_15px_rgba(236,72,153,0.5)]' : profile?.avatar_frame === 'neon-glow' ? 'p-0.5 rounded-full bg-cyan-400 shadow-[0_0_20px_rgba(34,211,238,0.8)]' : ''} mb-4 ${profile?.banner_url ? 'mt-4 border-4 border-zinc-950 rounded-full' : ''}`}>
+            {(() => {
+              const avatarShapeClass = profile?.avatar_shape === 'rounded' ? 'rounded-2xl' : profile?.avatar_shape === 'hexagon' ? '' : 'rounded-full'
+              const avatarClipPath = profile?.avatar_shape === 'hexagon' ? 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' : undefined
+              return profile?.avatar_url ? (
+              <div 
+                className={`relative flex items-center justify-center ${profile?.avatar_frame === 'gradient-ring' ? 'p-1 bg-gradient-to-tr from-brand-pink to-brand-orange shadow-[0_0_15px_rgba(236,72,153,0.5)]' : profile?.avatar_frame === 'neon-glow' ? 'p-0.5 bg-cyan-400 shadow-[0_0_20px_rgba(34,211,238,0.8)]' : ''} mb-4 ${profile?.banner_url ? 'mt-4 border-4 border-zinc-950 bg-zinc-950' : ''} ${avatarShapeClass}`}
+                style={{ clipPath: avatarClipPath }}
+              >
                 <div className={`relative border-2 border-white/20 shadow-lg ${
-                  profile?.avatar_shape === 'rounded' ? 'rounded-2xl' : 
-                  profile?.avatar_shape === 'hexagon' ? '' : 'rounded-full'
-                } ${
                   profile?.avatar_size === 'small' ? 'w-16 h-16' : 
                   profile?.avatar_size === 'large' ? 'w-28 h-28' : 'w-24 h-24'
-                } overflow-hidden`}
-                  style={{ clipPath: profile?.avatar_shape === 'hexagon' ? 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' : undefined }}
+                } overflow-hidden ${avatarShapeClass}`}
+                  style={{ clipPath: avatarClipPath }}
                 >
                 <Image 
                   src={profile.avatar_url} 
@@ -162,21 +169,22 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
               </div>
             </div>
             ) : (
-              <div className={`relative flex items-center justify-center ${profile?.avatar_frame === 'gradient-ring' ? 'p-1 rounded-full bg-gradient-to-tr from-brand-pink to-brand-orange shadow-[0_0_15px_rgba(236,72,153,0.5)]' : profile?.avatar_frame === 'neon-glow' ? 'p-0.5 rounded-full bg-cyan-400 shadow-[0_0_20px_rgba(34,211,238,0.8)]' : ''} mb-4 ${profile?.banner_url ? 'mt-4 border-4 border-zinc-950 rounded-full' : ''}`}>
+              <div 
+                className={`relative flex items-center justify-center ${profile?.avatar_frame === 'gradient-ring' ? 'p-1 bg-gradient-to-tr from-brand-pink to-brand-orange shadow-[0_0_15px_rgba(236,72,153,0.5)]' : profile?.avatar_frame === 'neon-glow' ? 'p-0.5 bg-cyan-400 shadow-[0_0_20px_rgba(34,211,238,0.8)]' : ''} mb-4 ${profile?.banner_url ? 'mt-4 border-4 border-zinc-950 bg-zinc-950' : ''} ${avatarShapeClass}`}
+                style={{ clipPath: avatarClipPath }}
+              >
                 <div 
                   className={`bg-zinc-800 flex items-center justify-center text-white text-3xl font-bold border-2 border-white/20 shadow-lg ${
-                    profile?.avatar_shape === 'rounded' ? 'rounded-2xl' : 
-                    profile?.avatar_shape === 'hexagon' ? '' : 'rounded-full'
-                  } ${
                     profile?.avatar_size === 'small' ? 'w-16 h-16' : 
                     profile?.avatar_size === 'large' ? 'w-28 h-28' : 'w-24 h-24'
-                  }`}
-                  style={{ clipPath: profile?.avatar_shape === 'hexagon' ? 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' : undefined }}
+                  } ${avatarShapeClass}`}
+                  style={{ clipPath: avatarClipPath }}
                 >
                 {profile?.username?.charAt(0).toUpperCase() || 'B'}
                 </div>
               </div>
-            )}
+            )
+            })()}
             
             <h2 style={{ color: profile?.text_color || '#ffffff' }} className="font-bold text-lg mb-1 drop-shadow-md text-center">
               {profile?.full_name || `@${profile?.username || 'username'}`}
@@ -349,13 +357,21 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
                       finalIconColor = textClr
                     }
 
-                    const shapeClass = profile?.button_shape || 'rounded-2xl'
+                    let shapeClass = profile?.button_shape || 'rounded-2xl'
+                    if (['cut-corners', 'leaf', 'hexagon', 'diamond'].includes(shapeClass)) {
+                      shapeClass = `shape-${shapeClass} rounded-none`
+                    }
+
                     const styleVal = profile?.button_style || 'soft'
                     const hoverEffect = profile?.button_hover_effect || 'none'
                     let hoverClass = ""
                     if (hoverEffect === 'scale') hoverClass = " hover:scale-[1.03] transition-transform"
                     if (hoverEffect === 'lift') hoverClass = " hover:-translate-y-1 hover:shadow-xl transition-all"
                     if (hoverEffect === 'glow') hoverClass = " hover:shadow-[0_0_20px_rgba(255,255,255,0.4)] transition-shadow"
+                    if (hoverEffect === 'wobble') hoverClass = " hover:animate-wobble-quick"
+                    if (hoverEffect === 'pulse') hoverClass = " hover:animate-pulse-slow"
+                    if (hoverEffect === 'shine') hoverClass = " hover-shine-effect"
+                    if (hoverEffect === 'glitch') hoverClass = " hover-glitch-effect"
                     
                     let baseBtnClass = "group flex items-center justify-center w-full py-3 px-4 text-white text-sm font-semibold pointer-events-none relative overflow-hidden " + shapeClass + hoverClass
                     let baseBtnClassNear = "group flex items-center justify-center gap-2 w-full py-3 px-4 text-white text-sm font-semibold pointer-events-none relative overflow-hidden " + shapeClass + hoverClass
@@ -381,6 +397,12 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
                     } else if (styleVal === 'neon') {
                       baseBtnClass += " bg-transparent border-2 border-[currentColor] shadow-[0_0_10px_currentColor,inset_0_0_10px_currentColor]"
                       baseBtnClassNear += " bg-transparent border-2 border-[currentColor] shadow-[0_0_10px_currentColor,inset_0_0_10px_currentColor]"
+                    } else if (styleVal === 'brutalism') {
+                      baseBtnClass += " bg-zinc-900 border-2 border-white/80 shadow-[4px_4px_0px_rgba(255,255,255,0.8)]"
+                      baseBtnClassNear += " bg-zinc-900 border-2 border-white/80 shadow-[4px_4px_0px_rgba(255,255,255,0.8)]"
+                    } else if (styleVal === 'claymorphism') {
+                      baseBtnClass += " bg-white/10 shadow-[inset_-4px_-4px_10px_rgba(0,0,0,0.5),inset_4px_4px_10px_rgba(255,255,255,0.3),8px_8px_16px_rgba(0,0,0,0.4)] border border-transparent rounded-3xl"
+                      baseBtnClassNear += " bg-white/10 shadow-[inset_-4px_-4px_10px_rgba(0,0,0,0.5),inset_4px_4px_10px_rgba(255,255,255,0.3),8px_8px_16px_rgba(0,0,0,0.4)] border border-transparent rounded-3xl"
                     }
 
                     // Spotlight / Priority support

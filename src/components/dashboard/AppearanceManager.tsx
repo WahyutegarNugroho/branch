@@ -997,7 +997,11 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
                     { val: 'font-handwriting', label: 'Caveat Hand', preview: 'Abc' },
                     { val: 'font-comic', label: 'Comic Neue', preview: 'Abc' },
                     { val: 'font-elegant', label: 'Playfair', preview: 'Abc' },
-                    { val: 'font-pixel', label: '8-Bit Pixel', preview: 'Abc' }
+                    { val: 'font-pixel', label: '8-Bit Pixel', preview: 'Abc' },
+                    { val: 'font-space', label: 'Space Grotesk', preview: 'Abc' },
+                    { val: 'font-bebas', label: 'Bebas Neue', preview: 'Abc' },
+                    { val: 'font-righteous', label: 'Righteous', preview: 'Abc' },
+                    { val: 'font-dancing', label: 'Dancing Script', preview: 'Abc' }
                   ].map((font) => (
                     <div 
                       key={font.val} 

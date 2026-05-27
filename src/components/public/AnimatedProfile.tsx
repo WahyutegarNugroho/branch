@@ -277,20 +277,25 @@ export function AnimatedProfile({ profile, links, bgClass: defaultBgClass, bgSty
           }}
         >
           {/* Avatar */}
-          <div className={`relative flex justify-center ${profile?.avatar_frame === 'gradient-ring' ? 'p-1.5 rounded-full bg-gradient-to-tr from-brand-pink to-brand-orange shadow-[0_0_20px_rgba(236,72,153,0.5)]' : profile?.avatar_frame === 'neon-glow' ? 'p-1 rounded-full bg-cyan-400 shadow-[0_0_25px_rgba(34,211,238,0.8)]' : ''} mb-6 ${profile?.banner_url ? 'mt-6 border-4 border-zinc-950 rounded-full bg-zinc-950' : ''}`}>
-            <motion.div 
-              variants={avatarVariants} 
-              className={`relative overflow-hidden shadow-2xl backdrop-blur-sm border-4 ${
-              profile.avatar_url ? 'border-white/20' : 'border-white/10'
-            } ${
-              profile?.avatar_shape === 'rounded' ? 'rounded-2xl' : 
-              profile?.avatar_shape === 'hexagon' ? '' : 'rounded-full'
-            } ${
-              profile?.avatar_size === 'small' ? 'w-20 h-20' : 
-              profile?.avatar_size === 'large' ? 'w-36 h-36' : 'w-28 h-28'
-            } ${profile?.banner_url ? 'mt-6 border-zinc-900 shadow-xl' : ''}`}
-            style={{ clipPath: profile?.avatar_shape === 'hexagon' ? 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' : undefined }}
-          >
+          {(() => {
+            const avatarShapeClass = profile?.avatar_shape === 'rounded' ? 'rounded-2xl' : profile?.avatar_shape === 'hexagon' ? '' : 'rounded-full'
+            const avatarClipPath = profile?.avatar_shape === 'hexagon' ? 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' : undefined
+            
+            return (
+              <div 
+                className={`relative flex justify-center ${profile?.avatar_frame === 'gradient-ring' ? 'p-1.5 bg-gradient-to-tr from-brand-pink to-brand-orange shadow-[0_0_20px_rgba(236,72,153,0.5)]' : profile?.avatar_frame === 'neon-glow' ? 'p-1 bg-cyan-400 shadow-[0_0_25px_rgba(34,211,238,0.8)]' : ''} mb-6 ${profile?.banner_url ? 'mt-6 border-4 border-zinc-950 bg-zinc-950' : ''} ${avatarShapeClass}`}
+                style={{ clipPath: avatarClipPath }}
+              >
+                <motion.div 
+                  variants={avatarVariants} 
+                  className={`relative overflow-hidden shadow-2xl backdrop-blur-sm border-4 ${
+                  profile.avatar_url ? 'border-white/20' : 'border-white/10'
+                } ${avatarShapeClass} ${
+                  profile?.avatar_size === 'small' ? 'w-20 h-20' : 
+                  profile?.avatar_size === 'large' ? 'w-36 h-36' : 'w-28 h-28'
+                } ${profile?.banner_url ? 'mt-6 border-zinc-900 shadow-xl' : ''}`}
+                style={{ clipPath: avatarClipPath }}
+              >
             {profile.avatar_url ? (
               <Image src={profile.avatar_url} alt={profile.full_name ?? ''} fill className="object-cover" sizes="144px" />
             ) : (
@@ -298,8 +303,10 @@ export function AnimatedProfile({ profile, links, bgClass: defaultBgClass, bgSty
                 {profile.username.charAt(0).toUpperCase()}
               </div>
             )}
-            </motion.div>
-          </div>
+              </motion.div>
+            </div>
+            )
+          })()}
 
           {/* Profile Info */}
           <motion.h1 

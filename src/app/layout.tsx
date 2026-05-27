@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Outfit, JetBrains_Mono, Caveat, Comic_Neue, Playfair_Display, Press_Start_2P } from "next/font/google";
+import { Inter, Outfit, JetBrains_Mono, Caveat, Comic_Neue, Playfair_Display, Press_Start_2P, Space_Grotesk, Bebas_Neue, Righteous, Dancing_Script } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
@@ -39,6 +39,28 @@ const pressStart2p = Press_Start_2P({
   subsets: ["latin"],
 });
 
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space",
+  subsets: ["latin"],
+});
+
+const bebasNeue = Bebas_Neue({
+  variable: "--font-bebas",
+  weight: "400",
+  subsets: ["latin"],
+});
+
+const righteous = Righteous({
+  variable: "--font-righteous",
+  weight: "400",
+  subsets: ["latin"],
+});
+
+const dancingScript = Dancing_Script({
+  variable: "--font-dancing",
+  subsets: ["latin"],
+});
+
 export const metadata: Metadata = {
   title: {
     default: "Branch - One Link to Power Your Entire Digital Presence",
@@ -70,7 +92,7 @@ export default function RootLayout({
   return (
       <html
         lang="en"
-        className={`${inter.variable} ${outfit.variable} ${jetbrainsMono.variable} ${caveat.variable} ${comicNeue.variable} ${playfairDisplay.variable} ${pressStart2p.variable} h-full antialiased`}
+        className={`${inter.variable} ${outfit.variable} ${jetbrainsMono.variable} ${caveat.variable} ${comicNeue.variable} ${playfairDisplay.variable} ${pressStart2p.variable} ${spaceGrotesk.variable} ${bebasNeue.variable} ${righteous.variable} ${dancingScript.variable} h-full antialiased`}
       >
       <body className="min-h-full flex flex-col">
         {children}
