@@ -10,6 +10,14 @@
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
   --font-heading: var(--font-display);
+  --font-handwriting: var(--font-handwriting);
+  --font-comic: var(--font-comic);
+  --font-elegant: var(--font-elegant);
+  --font-pixel: var(--font-pixel);
+  --font-space: var(--font-space);
+  --font-bebas: var(--font-bebas);
+  --font-righteous: var(--font-righteous);
+  --font-dancing: var(--font-dancing);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);

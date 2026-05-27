@@ -74,10 +74,16 @@ export const updateAppearanceSchema = z.object({
   avatar_size: avatarSizeEnum.default('medium'),
   bg_video_url: z.string().max(2048).nullable().optional(),
   layout_type: layoutTypeEnum.default('list'),
+  theme_style: z.string().nullable().optional(),
+  button_hover_effect: z.string().nullable().optional(),
+  social_placement: z.string().nullable().optional(),
+  theme_lock: z.boolean().default(false).optional(),
   glass_blur: z.coerce.number().int().min(0).max(50).default(10).optional(),
   glass_opacity: z.coerce.number().int().min(0).max(100).default(20).optional(),
   bg_animation: z.string().nullable().optional(),
   bg_animation_config: z.any().nullable().optional(),
+  avatar_frame: z.string().nullable().optional(),
+  avatar_frame_config: z.any().nullable().optional(),
 })
 
 export const updateProfileInfoSchema = z.object({

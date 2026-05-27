@@ -288,10 +288,26 @@ export function AnimatedProfile({ profile, links, bgClass: defaultBgClass, bgSty
             const avatarShapeClass = profile?.avatar_shape === 'rounded' ? 'rounded-2xl' : profile?.avatar_shape === 'hexagon' ? '' : 'rounded-full'
             const avatarClipPath = profile?.avatar_shape === 'hexagon' ? 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' : undefined
             
+            const frameColor1 = profile?.avatar_frame_config?.color1 || (profile?.avatar_frame === 'gradient-ring' ? '#ec4899' : '#22d3ee')
+            const frameColor2 = profile?.avatar_frame_config?.color2 || '#f97316'
+            
+            let frameClass = ''
+            let frameStyle: React.CSSProperties = { clipPath: avatarClipPath }
+            
+            if (profile?.avatar_frame === 'gradient-ring') {
+              frameClass = 'p-1.5'
+              frameStyle.background = `linear-gradient(to top right, ${frameColor1}, ${frameColor2})`
+              frameStyle.boxShadow = `0 0 20px ${frameColor1}80`
+            } else if (profile?.avatar_frame === 'neon-glow') {
+              frameClass = 'p-1'
+              frameStyle.backgroundColor = frameColor1
+              frameStyle.boxShadow = `0 0 25px ${frameColor1}cc`
+            }
+            
             return (
               <div 
-                className={`relative flex justify-center ${profile?.avatar_frame === 'gradient-ring' ? 'p-1.5 bg-gradient-to-tr from-brand-pink to-brand-orange shadow-[0_0_20px_rgba(236,72,153,0.5)]' : profile?.avatar_frame === 'neon-glow' ? 'p-1 bg-cyan-400 shadow-[0_0_25px_rgba(34,211,238,0.8)]' : ''} mb-6 ${profile?.banner_url ? 'mt-6 border-4 border-zinc-950 bg-zinc-950' : ''} ${avatarShapeClass}`}
-                style={{ clipPath: avatarClipPath }}
+                className={`relative flex justify-center ${frameClass} mb-6 ${profile?.banner_url ? 'mt-6 border-4 border-zinc-950 bg-zinc-950' : ''} ${avatarShapeClass}`}
+                style={frameStyle}
               >
                 <motion.div 
                   variants={avatarVariants} 

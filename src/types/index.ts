@@ -36,6 +36,7 @@ export interface Profile {
   bg_animation?: string | null
   bg_animation_config?: any | null
   avatar_frame?: string | null
+  avatar_frame_config?: any | null
   social_placement?: string | null
   theme_lock?: boolean
   glass_blur?: number

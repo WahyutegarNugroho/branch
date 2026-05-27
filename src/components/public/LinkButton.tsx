@@ -7,8 +7,12 @@ import { parseEmbedUrl } from '@/lib/embed-utils'
 
 import { Profile, Link } from '@/types'
 
-export function LinkButton({ link, profileId, profile, visitorTheme }: { link: Link, profileId: string, profile?: Profile, visitorTheme?: 'system' | 'light' | 'dark' }) {
+export function LinkButton({ link, profileId, profile, visitorTheme, isPreview = false }: { link: Link, profileId: string, profile?: Profile, visitorTheme?: 'system' | 'light' | 'dark', isPreview?: boolean }) {
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (isPreview) {
+      e.preventDefault()
+      return
+    }
     // Extract UTMs from current URL query string
     let utm_source = null
     let utm_medium = null
@@ -165,6 +169,8 @@ export function LinkButton({ link, profileId, profile, visitorTheme }: { link: L
   }
 
   let shapeClass = profile?.button_shape || 'rounded-2xl'
+  const isClippedShape = ['cut-corners', 'hexagon', 'diamond'].includes(shapeClass)
+  
   if (['cut-corners', 'leaf', 'hexagon', 'diamond'].includes(shapeClass)) {
     shapeClass = `shape-${shapeClass} rounded-none`
   }
@@ -179,26 +185,47 @@ export function LinkButton({ link, profileId, profile, visitorTheme }: { link: L
   if (hoverEffect === 'pulse') hoverClass = " hover:animate-pulse-slow"
   if (hoverEffect === 'shine') hoverClass = " hover-shine-effect"
   if (hoverEffect === 'glitch') hoverClass = " hover-glitch-effect"
+
+  let wrapperClass = `group w-full relative block transition-all ${hoverClass}`
+  let wrapperStyle: React.CSSProperties = {}
   
-  let baseBtnClass = "group flex items-center justify-center w-full py-4 px-6 text-white font-semibold transition-all relative overflow-hidden " + shapeClass + hoverClass
+  let baseBtnClass = `flex items-center justify-center w-full py-4 px-6 text-white font-semibold transition-all overflow-hidden ${shapeClass}`
+  
   if (styleVal === 'fill') {
-    baseBtnClass += " bg-white/10 border border-white/10 hover:bg-white/20 hover:border-white/20"
+    baseBtnClass += " bg-white/10 hover:bg-white/20"
+    if (!isClippedShape) baseBtnClass += " border border-white/10 hover:border-white/20"
+    else wrapperClass += " drop-shadow-[0_0_1px_rgba(255,255,255,0.3)]"
   } else if (styleVal === 'outline') {
-    baseBtnClass += " bg-transparent border border-white/20 hover:border-white/40"
+    baseBtnClass += " bg-transparent"
+    if (!isClippedShape) baseBtnClass += " border border-white/20 hover:border-white/40"
+    else wrapperClass += " drop-shadow-[0_0_1px_rgba(255,255,255,0.4)]"
   } else if (styleVal === 'soft') {
-    baseBtnClass += " bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 backdrop-blur-md shadow-sm"
+    baseBtnClass += " bg-white/5 hover:bg-white/10 backdrop-blur-md"
+    if (!isClippedShape) baseBtnClass += " border border-white/10 hover:border-white/20 shadow-sm"
+    else wrapperClass += " drop-shadow-sm drop-shadow-[0_0_1px_rgba(255,255,255,0.2)]"
   } else if (styleVal === 'shadow') {
-    baseBtnClass += " bg-white/10 hover:bg-white/20 border border-white/15 shadow-[0_8px_30px_rgba(0,0,0,0.3)] hover:shadow-[0_0_25px_rgba(255,255,255,0.15)]"
+    baseBtnClass += " bg-white/10 hover:bg-white/20"
+    if (!isClippedShape) baseBtnClass += " border border-white/15 shadow-[0_8px_30px_rgba(0,0,0,0.3)] hover:shadow-[0_0_25px_rgba(255,255,255,0.15)]"
+    else wrapperClass += " drop-shadow-[0_8px_15px_rgba(0,0,0,0.4)] drop-shadow-[0_0_1px_rgba(255,255,255,0.2)]"
   } else if (styleVal === 'neumorphism') {
     baseBtnClass += " bg-white/10 shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),inset_-3px_-3px_7px_rgba(0,0,0,0.5),3px_3px_6px_rgba(0,0,0,0.4)] hover:shadow-[inset_1px_1px_3px_rgba(255,255,255,0.2),inset_-2px_-2px_5px_rgba(0,0,0,0.5),1px_1px_3px_rgba(0,0,0,0.4)] border border-transparent"
+    if (isClippedShape) wrapperClass += " drop-shadow-[3px_3px_5px_rgba(0,0,0,0.5)]"
   } else if (styleVal === 'glassmorphism') {
-    baseBtnClass += " bg-white/5 backdrop-blur-2xl border-t border-l border-white/20 border-r border-b border-white/5 shadow-[0_4px_30px_rgba(0,0,0,0.1)] hover:bg-white/10"
+    baseBtnClass += " bg-white/5 backdrop-blur-2xl hover:bg-white/10"
+    if (!isClippedShape) baseBtnClass += " border-t border-l border-white/20 border-r border-b border-white/5 shadow-[0_4px_30px_rgba(0,0,0,0.1)]"
+    else wrapperClass += " drop-shadow-[0_4px_15px_rgba(0,0,0,0.2)] drop-shadow-[0_0_1px_rgba(255,255,255,0.2)]"
   } else if (styleVal === 'neon') {
-    baseBtnClass += " bg-transparent border-2 border-[currentColor] shadow-[0_0_10px_currentColor,inset_0_0_10px_currentColor] hover:shadow-[0_0_20px_currentColor,inset_0_0_20px_currentColor] hover:bg-white/5"
+    baseBtnClass += " bg-transparent shadow-[inset_0_0_10px_currentColor] hover:bg-white/5"
+    if (!isClippedShape) baseBtnClass += " border-2 border-[currentColor] shadow-[0_0_10px_currentColor,inset_0_0_10px_currentColor] hover:shadow-[0_0_20px_currentColor,inset_0_0_20px_currentColor]"
+    else wrapperStyle.filter = `drop-shadow(0 0 8px ${finalIconColor}) drop-shadow(0 0 1px ${finalIconColor})`
   } else if (styleVal === 'brutalism') {
-    baseBtnClass += " bg-zinc-900 border-2 border-white/80 shadow-[4px_4px_0px_rgba(255,255,255,0.8)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_rgba(255,255,255,0.8)] transition-all"
+    baseBtnClass += " bg-zinc-900 transition-all"
+    if (!isClippedShape) baseBtnClass += " border-2 border-white/80 shadow-[4px_4px_0px_rgba(255,255,255,0.8)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_rgba(255,255,255,0.8)]"
+    else wrapperClass += " drop-shadow-[3px_3px_0_rgba(255,255,255,0.8)] drop-shadow-[0_0_1px_rgba(255,255,255,0.8)]"
   } else if (styleVal === 'claymorphism') {
-    baseBtnClass += " bg-white/10 shadow-[inset_-4px_-4px_10px_rgba(0,0,0,0.5),inset_4px_4px_10px_rgba(255,255,255,0.3),8px_8px_16px_rgba(0,0,0,0.4)] border border-transparent rounded-3xl"
+    baseBtnClass += " bg-white/10 shadow-[inset_-4px_-4px_10px_rgba(0,0,0,0.5),inset_4px_4px_10px_rgba(255,255,255,0.3)] border border-transparent"
+    if (!isClippedShape) baseBtnClass += " shadow-[inset_-4px_-4px_10px_rgba(0,0,0,0.5),inset_4px_4px_10px_rgba(255,255,255,0.3),8px_8px_16px_rgba(0,0,0,0.4)] rounded-3xl"
+    else wrapperClass += " drop-shadow-[6px_6px_12px_rgba(0,0,0,0.4)]"
   }
 
   // Spotlight / Priority support
@@ -221,7 +248,12 @@ export function LinkButton({ link, profileId, profile, visitorTheme }: { link: L
       }
     }
     ;(buttonStyle as any)['--spotlight-color-rgba'] = `rgba(${r}, ${g}, ${b}, 0.5)`
-    spotlightClass = " spotlight-active"
+    
+    if (isClippedShape) {
+       wrapperStyle.filter = (wrapperStyle.filter ? wrapperStyle.filter + " " : "") + `drop-shadow(0 0 15px rgba(${r}, ${g}, ${b}, 0.8))`
+    } else {
+       spotlightClass = " spotlight-active"
+    }
   }
 
   // Animation Effects support — use inline styles to bypass Turbopack CSS purging
@@ -233,7 +265,7 @@ export function LinkButton({ link, profileId, profile, visitorTheme }: { link: L
     glow: 'glowPulse 2s infinite ease-in-out',
   }
   if (link.animation && link.animation !== 'none' && animationMap[link.animation]) {
-    buttonStyle.animation = animationMap[link.animation]
+    wrapperStyle.animation = animationMap[link.animation]
   }
 
   const extraClasses = ` ${spotlightClass}`
@@ -241,112 +273,78 @@ export function LinkButton({ link, profileId, profile, visitorTheme }: { link: L
 
   if (!hasGraphic) {
     return (
-      <a
-        href={link.url}
-        onClick={handleClick}
-        target="_blank"
-        rel="noopener noreferrer"
-        style={buttonStyle}
-        className={baseBtnClass}
-      >
-        <span className="z-10">{link.title}</span>
-      </a>
+      <div className={wrapperClass} style={wrapperStyle}>
+        <a
+          href={link.url}
+          onClick={handleClick}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={buttonStyle}
+          className={baseBtnClass}
+        >
+          <span className="z-10">{link.title}</span>
+        </a>
+      </div>
     )
   }
 
-  let baseBtnClassNear = "group flex items-center justify-center gap-2.5 w-full py-4 px-6 text-white font-semibold transition-all relative overflow-hidden " + shapeClass + hoverClass
-  if (styleVal === 'fill') {
-    baseBtnClassNear += " bg-white/10 border border-white/10 hover:bg-white/20 hover:border-white/20"
-  } else if (styleVal === 'outline') {
-    baseBtnClassNear += " bg-transparent border border-white/20 hover:border-white/40"
-  } else if (styleVal === 'soft') {
-    baseBtnClassNear += " bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 backdrop-blur-md shadow-sm"
-  } else if (styleVal === 'shadow') {
-    baseBtnClassNear += " bg-white/10 hover:bg-white/20 border border-white/15 shadow-[0_8px_30px_rgba(0,0,0,0.3)] hover:shadow-[0_0_25px_rgba(255,255,255,0.15)]"
-  } else if (styleVal === 'neumorphism') {
-    baseBtnClassNear += " bg-white/10 shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),inset_-3px_-3px_7px_rgba(0,0,0,0.5),3px_3px_6px_rgba(0,0,0,0.4)] hover:shadow-[inset_1px_1px_3px_rgba(255,255,255,0.2),inset_-2px_-2px_5px_rgba(0,0,0,0.5),1px_1px_3px_rgba(0,0,0,0.4)] border border-transparent"
-  } else if (styleVal === 'glassmorphism') {
-    baseBtnClassNear += " bg-white/5 backdrop-blur-2xl border-t border-l border-white/20 border-r border-b border-white/5 shadow-[0_4px_30px_rgba(0,0,0,0.1)] hover:bg-white/10"
-  } else if (styleVal === 'neon') {
-    baseBtnClassNear += " bg-transparent border-2 border-[currentColor] shadow-[0_0_10px_currentColor,inset_0_0_10px_currentColor] hover:shadow-[0_0_20px_currentColor,inset_0_0_20px_currentColor] hover:bg-white/5"
-  } else if (styleVal === 'brutalism') {
-    baseBtnClassNear += " bg-zinc-900 border-2 border-white/80 shadow-[4px_4px_0px_rgba(255,255,255,0.8)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_rgba(255,255,255,0.8)] transition-all"
-  } else if (styleVal === 'claymorphism') {
-    baseBtnClassNear += " bg-white/10 shadow-[inset_-4px_-4px_10px_rgba(0,0,0,0.5),inset_4px_4px_10px_rgba(255,255,255,0.3),8px_8px_16px_rgba(0,0,0,0.4)] border border-transparent rounded-3xl"
-  }
-  baseBtnClassNear += extraClasses
+  let baseBtnClassNear = baseBtnClass.replace('justify-center w-full', 'justify-center gap-2.5 w-full')
 
   if (isLeftNear || isRightNear) {
     return (
+      <div className={wrapperClass} style={wrapperStyle}>
+        <a
+          href={link.url}
+          onClick={handleClick}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={buttonStyle}
+          className={baseBtnClassNear}
+        >
+          <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity" style={{ backgroundColor: matchedPlatform?.color || '#ffffff' }} />
+          
+          {isLeftNear && (
+            ThumbnailImg ? ThumbnailImg : (PlatformIcon && <PlatformIcon size={24} color={finalIconColor} className="group-hover:scale-110 transition-transform drop-shadow-sm z-10 shrink-0" />)
+          )}
+          
+          <span className="z-10 text-center">{link.title}</span>
+          
+          {isRightNear && (
+            ThumbnailImg ? ThumbnailImg : (PlatformIcon && <PlatformIcon size={24} color={finalIconColor} className="group-hover:scale-110 transition-transform drop-shadow-sm z-10 shrink-0" />)
+          )}
+        </a>
+      </div>
+    )
+  }
+
+  let baseBtnClassBetween = baseBtnClass.replace('justify-center w-full', 'justify-between w-full')
+
+  return (
+    <div className={wrapperClass} style={wrapperStyle}>
       <a
         href={link.url}
         onClick={handleClick}
         target="_blank"
         rel="noopener noreferrer"
         style={buttonStyle}
-        className={baseBtnClassNear}
+        className={baseBtnClassBetween}
       >
         <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity" style={{ backgroundColor: matchedPlatform?.color || '#ffffff' }} />
         
-        {isLeftNear && (
-          ThumbnailImg ? ThumbnailImg : (PlatformIcon && <PlatformIcon size={24} color={finalIconColor} className="group-hover:scale-110 transition-transform drop-shadow-sm z-10 shrink-0" />)
-        )}
+        <div className={`w-10 flex items-center shrink-0 z-10 ${isRightFar ? 'justify-end' : 'justify-start'}`}>
+          {isLeftFar && (
+            ThumbnailImg ? ThumbnailImg : (PlatformIcon && <PlatformIcon size={24} color={finalIconColor} className="group-hover:scale-110 transition-transform drop-shadow-sm" />)
+          )}
+        </div>
         
-        <span className="z-10 text-center">{link.title}</span>
+        <span className="flex-1 text-center z-10">{link.title}</span>
         
-        {isRightNear && (
-          ThumbnailImg ? ThumbnailImg : (PlatformIcon && <PlatformIcon size={24} color={finalIconColor} className="group-hover:scale-110 transition-transform drop-shadow-sm z-10 shrink-0" />)
-        )}
+        <div className={`w-10 flex items-center shrink-0 z-10 ${isRightFar ? 'justify-end' : 'justify-start'}`}>
+          {isRightFar && (
+            ThumbnailImg ? ThumbnailImg : (PlatformIcon && <PlatformIcon size={24} color={finalIconColor} className="group-hover:scale-110 transition-transform drop-shadow-sm" />)
+          )}
+        </div>
       </a>
-    )
-  }
-
-  let baseBtnClassBetween = "group flex items-center justify-between w-full py-4 px-6 text-white font-semibold transition-all relative overflow-hidden " + shapeClass + hoverClass
-  if (styleVal === 'fill') {
-    baseBtnClassBetween += " bg-white/10 border border-white/10 hover:bg-white/20 hover:border-white/20"
-  } else if (styleVal === 'outline') {
-    baseBtnClassBetween += " bg-transparent border border-white/20 hover:border-white/40"
-  } else if (styleVal === 'soft') {
-    baseBtnClassBetween += " bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 backdrop-blur-md shadow-sm"
-  } else if (styleVal === 'shadow') {
-    baseBtnClassBetween += " bg-white/10 hover:bg-white/20 border border-white/15 shadow-[0_8px_30px_rgba(0,0,0,0.3)] hover:shadow-[0_0_25px_rgba(255,255,255,0.15)]"
-  } else if (styleVal === 'neumorphism') {
-    baseBtnClassBetween += " bg-white/10 shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),inset_-3px_-3px_7px_rgba(0,0,0,0.5),3px_3px_6px_rgba(0,0,0,0.4)] hover:shadow-[inset_1px_1px_3px_rgba(255,255,255,0.2),inset_-2px_-2px_5px_rgba(0,0,0,0.5),1px_1px_3px_rgba(0,0,0,0.4)] border border-transparent"
-  } else if (styleVal === 'glassmorphism') {
-    baseBtnClassBetween += " bg-white/5 backdrop-blur-2xl border-t border-l border-white/20 border-r border-b border-white/5 shadow-[0_4px_30px_rgba(0,0,0,0.1)] hover:bg-white/10"
-  } else if (styleVal === 'neon') {
-    baseBtnClassBetween += " bg-transparent border-2 border-[currentColor] shadow-[0_0_10px_currentColor,inset_0_0_10px_currentColor] hover:shadow-[0_0_20px_currentColor,inset_0_0_20px_currentColor] hover:bg-white/5"
-  } else if (styleVal === 'brutalism') {
-    baseBtnClassBetween += " bg-zinc-900 border-2 border-white/80 shadow-[4px_4px_0px_rgba(255,255,255,0.8)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_rgba(255,255,255,0.8)] transition-all"
-  } else if (styleVal === 'claymorphism') {
-    baseBtnClassBetween += " bg-white/10 shadow-[inset_-4px_-4px_10px_rgba(0,0,0,0.5),inset_4px_4px_10px_rgba(255,255,255,0.3),8px_8px_16px_rgba(0,0,0,0.4)] border border-transparent rounded-3xl"
-  }
-  baseBtnClassBetween += extraClasses
-
-  return (
-    <a
-      href={link.url}
-      onClick={handleClick}
-      target="_blank"
-      rel="noopener noreferrer"
-      style={buttonStyle}
-      className={baseBtnClassBetween}
-    >
-      <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity" style={{ backgroundColor: matchedPlatform?.color || '#ffffff' }} />
-      
-      <div className={`w-8 flex items-center shrink-0 z-10 ${isRightFar ? 'justify-end' : 'justify-start'}`}>
-        {isLeftFar && (
-          ThumbnailImg ? ThumbnailImg : (PlatformIcon && <PlatformIcon size={24} color={finalIconColor} className="group-hover:scale-110 transition-transform drop-shadow-sm" />)
-        )}
-      </div>
-      
-      <span className="flex-1 text-center z-10">{link.title}</span>
-      
-      <div className={`w-8 flex items-center shrink-0 z-10 ${isRightFar ? 'justify-end' : 'justify-start'}`}>
-        {isRightFar && (
-          ThumbnailImg ? ThumbnailImg : (PlatformIcon && <PlatformIcon size={24} color={finalIconColor} className="group-hover:scale-110 transition-transform drop-shadow-sm" />)
-        )}
-      </div>
-    </a>
+    </div>
   )
 }

@@ -1,6 +1,7 @@
 'use client'
 
 import Image from 'next/image'
+import { LinkButton } from '@/components/public/LinkButton'
 import AuroraBackground from '@/components/backgrounds/AuroraBackground'
 import SnowfallBackground from '@/components/backgrounds/SnowfallBackground'
 import MatrixBackground from '@/components/backgrounds/MatrixBackground'
@@ -154,10 +155,26 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
             {(() => {
               const avatarShapeClass = profile?.avatar_shape === 'rounded' ? 'rounded-2xl' : profile?.avatar_shape === 'hexagon' ? '' : 'rounded-full'
               const avatarClipPath = profile?.avatar_shape === 'hexagon' ? 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' : undefined
+              const frameColor1 = profile?.avatar_frame_config?.color1 || (profile?.avatar_frame === 'gradient-ring' ? '#ec4899' : '#22d3ee')
+              const frameColor2 = profile?.avatar_frame_config?.color2 || '#f97316'
+              
+              let frameClass = ''
+              let frameStyle: React.CSSProperties = { clipPath: avatarClipPath }
+              
+              if (profile?.avatar_frame === 'gradient-ring') {
+                frameClass = 'p-1'
+                frameStyle.background = `linear-gradient(to top right, ${frameColor1}, ${frameColor2})`
+                frameStyle.boxShadow = `0 0 15px ${frameColor1}80`
+              } else if (profile?.avatar_frame === 'neon-glow') {
+                frameClass = 'p-0.5'
+                frameStyle.backgroundColor = frameColor1
+                frameStyle.boxShadow = `0 0 20px ${frameColor1}cc`
+              }
+
               return profile?.avatar_url ? (
               <div 
-                className={`relative flex items-center justify-center ${profile?.avatar_frame === 'gradient-ring' ? 'p-1 bg-gradient-to-tr from-brand-pink to-brand-orange shadow-[0_0_15px_rgba(236,72,153,0.5)]' : profile?.avatar_frame === 'neon-glow' ? 'p-0.5 bg-cyan-400 shadow-[0_0_20px_rgba(34,211,238,0.8)]' : ''} mb-4 ${profile?.banner_url ? 'mt-4 border-4 border-zinc-950 bg-zinc-950' : ''} ${avatarShapeClass}`}
-                style={{ clipPath: avatarClipPath }}
+                className={`relative flex items-center justify-center ${frameClass} mb-4 ${profile?.banner_url ? 'mt-4 border-4 border-zinc-950 bg-zinc-950' : ''} ${avatarShapeClass}`}
+                style={frameStyle}
               >
                 <div className={`relative border-2 border-white/20 shadow-lg ${
                   profile?.avatar_size === 'small' ? 'w-16 h-16' : 
@@ -176,8 +193,8 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
             </div>
             ) : (
               <div 
-                className={`relative flex items-center justify-center ${profile?.avatar_frame === 'gradient-ring' ? 'p-1 bg-gradient-to-tr from-brand-pink to-brand-orange shadow-[0_0_15px_rgba(236,72,153,0.5)]' : profile?.avatar_frame === 'neon-glow' ? 'p-0.5 bg-cyan-400 shadow-[0_0_20px_rgba(34,211,238,0.8)]' : ''} mb-4 ${profile?.banner_url ? 'mt-4 border-4 border-zinc-950 bg-zinc-950' : ''} ${avatarShapeClass}`}
-                style={{ clipPath: avatarClipPath }}
+                className={`relative flex items-center justify-center ${frameClass} mb-4 ${profile?.banner_url ? 'mt-4 border-4 border-zinc-950 bg-zinc-950' : ''} ${avatarShapeClass}`}
+                style={frameStyle}
               >
                 <div 
                   className={`bg-zinc-800 flex items-center justify-center text-white text-3xl font-bold border-2 border-white/20 shadow-lg ${
@@ -320,210 +337,7 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
                       }
                     }
 
-                    const matchedPlatform = getPlatformByName(link.title)
-                    const PlatformIcon = link.show_icon !== false ? matchedPlatform?.icon : null
-                    
-                    const ThumbnailImg = link.thumbnail_url ? (
-                      <div className="w-5 h-5 rounded-full overflow-hidden border border-white/20 shadow-inner flex items-center justify-center shrink-0 z-10 relative">
-                        <Image src={link.thumbnail_url} alt="" fill className="object-cover" sizes="20px" />
-                      </div>
-                    ) : null
 
-                    const hasGraphic = !!ThumbnailImg || !!PlatformIcon
-                    const pos = link.icon_position || 'left_far'
-                    const isLeftFar = pos === 'left' || pos === 'left_far'
-                    const isRightFar = pos === 'right' || pos === 'right_far'
-                    const isLeftNear = pos === 'left_near'
-                    const isRightNear = pos === 'right_near'
-
-                    const buttonStyle: React.CSSProperties = {}
-                    if (link.bg_color) {
-                      const opacity = typeof link.bg_opacity === 'number' ? link.bg_opacity : 100
-                      buttonStyle.backgroundColor = hexToRgba(link.bg_color, opacity)
-                    } else if (typeof link.bg_opacity === 'number') {
-                      buttonStyle.backgroundColor = `rgba(255, 255, 255, ${link.bg_opacity / 100})`
-                    }
-
-                    const textClr = link.text_color || profile?.text_color || '#ffffff'
-                    buttonStyle.color = textClr
-                    if (link.text_color) {
-                      buttonStyle.borderColor = `${link.text_color}33` // 20% opacity hex
-                    } else if (profile?.text_color) {
-                      buttonStyle.borderColor = `${profile.text_color}33`
-                    }
-
-                    let finalIconColor = matchedPlatform?.color || '#ffffff'
-                    if (link.icon_color) {
-                      if (link.icon_color === 'text') {
-                        finalIconColor = textClr
-                      } else {
-                        finalIconColor = link.icon_color
-                      }
-                    } else {
-                      finalIconColor = textClr
-                    }
-
-                    let shapeClass = profile?.button_shape || 'rounded-2xl'
-                    if (['cut-corners', 'leaf', 'hexagon', 'diamond'].includes(shapeClass)) {
-                      shapeClass = `shape-${shapeClass} rounded-none`
-                    }
-
-                    const styleVal = profile?.button_style || 'soft'
-                    const hoverEffect = profile?.button_hover_effect || 'none'
-                    let hoverClass = ""
-                    if (hoverEffect === 'scale') hoverClass = " hover:scale-[1.03] transition-transform"
-                    if (hoverEffect === 'lift') hoverClass = " hover:-translate-y-1 hover:shadow-xl transition-all"
-                    if (hoverEffect === 'glow') hoverClass = " hover:shadow-[0_0_20px_rgba(255,255,255,0.4)] transition-shadow"
-                    if (hoverEffect === 'wobble') hoverClass = " hover:animate-wobble-quick"
-                    if (hoverEffect === 'pulse') hoverClass = " hover:animate-pulse-slow"
-                    if (hoverEffect === 'shine') hoverClass = " hover-shine-effect"
-                    if (hoverEffect === 'glitch') hoverClass = " hover-glitch-effect"
-                    
-                    let baseBtnClass = "group flex items-center justify-center w-full py-3 px-4 text-white text-sm font-semibold pointer-events-none relative overflow-hidden " + shapeClass + hoverClass
-                    let baseBtnClassNear = "group flex items-center justify-center gap-2 w-full py-3 px-4 text-white text-sm font-semibold pointer-events-none relative overflow-hidden " + shapeClass + hoverClass
-                    
-                    if (styleVal === 'fill') {
-                      baseBtnClass += " bg-white/15 border border-white/10 shadow-sm"
-                      baseBtnClassNear += " bg-white/15 border border-white/10 shadow-sm"
-                    } else if (styleVal === 'outline') {
-                      baseBtnClass += " bg-transparent border border-white/20"
-                      baseBtnClassNear += " bg-transparent border border-white/20"
-                    } else if (styleVal === 'soft') {
-                      baseBtnClass += " bg-white/5 border border-white/10 backdrop-blur-md shadow-sm"
-                      baseBtnClassNear += " bg-white/5 border border-white/10 backdrop-blur-md shadow-sm"
-                    } else if (styleVal === 'shadow') {
-                      baseBtnClass += " bg-white/15 border border-white/15 shadow-[0_4px_15px_rgba(0,0,0,0.3)]"
-                      baseBtnClassNear += " bg-white/15 border border-white/15 shadow-[0_4px_15px_rgba(0,0,0,0.3)]"
-                    } else if (styleVal === 'neumorphism') {
-                      baseBtnClass += " bg-white/10 shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),inset_-3px_-3px_7px_rgba(0,0,0,0.5),3px_3px_6px_rgba(0,0,0,0.4)] border border-transparent"
-                      baseBtnClassNear += " bg-white/10 shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),inset_-3px_-3px_7px_rgba(0,0,0,0.5),3px_3px_6px_rgba(0,0,0,0.4)] border border-transparent"
-                    } else if (styleVal === 'glassmorphism') {
-                      baseBtnClass += " bg-white/5 backdrop-blur-2xl border-t border-l border-white/20 border-r border-b border-white/5 shadow-[0_4px_30px_rgba(0,0,0,0.1)]"
-                      baseBtnClassNear += " bg-white/5 backdrop-blur-2xl border-t border-l border-white/20 border-r border-b border-white/5 shadow-[0_4px_30px_rgba(0,0,0,0.1)]"
-                    } else if (styleVal === 'neon') {
-                      baseBtnClass += " bg-transparent border-2 border-[currentColor] shadow-[0_0_10px_currentColor,inset_0_0_10px_currentColor]"
-                      baseBtnClassNear += " bg-transparent border-2 border-[currentColor] shadow-[0_0_10px_currentColor,inset_0_0_10px_currentColor]"
-                    } else if (styleVal === 'brutalism') {
-                      baseBtnClass += " bg-zinc-900 border-2 border-white/80 shadow-[4px_4px_0px_rgba(255,255,255,0.8)]"
-                      baseBtnClassNear += " bg-zinc-900 border-2 border-white/80 shadow-[4px_4px_0px_rgba(255,255,255,0.8)]"
-                    } else if (styleVal === 'claymorphism') {
-                      baseBtnClass += " bg-white/10 shadow-[inset_-4px_-4px_10px_rgba(0,0,0,0.5),inset_4px_4px_10px_rgba(255,255,255,0.3),8px_8px_16px_rgba(0,0,0,0.4)] border border-transparent rounded-3xl"
-                      baseBtnClassNear += " bg-white/10 shadow-[inset_-4px_-4px_10px_rgba(0,0,0,0.5),inset_4px_4px_10px_rgba(255,255,255,0.3),8px_8px_16px_rgba(0,0,0,0.4)] border border-transparent rounded-3xl"
-                    }
-
-                    // Spotlight / Priority support
-                    let spotlightClass = ""
-                    if (link.is_spotlight) {
-                      const spotClr = link.spotlight_color || '#ec4899'
-                      ;(buttonStyle as any)['--spotlight-color'] = spotClr
-                      
-                      let r = 236, g = 72, b = 153
-                      if (spotClr.startsWith('#')) {
-                        const cleanHex = spotClr.slice(1)
-                        if (cleanHex.length === 6) {
-                          r = parseInt(cleanHex.slice(0, 2), 16)
-                          g = parseInt(cleanHex.slice(2, 4), 16)
-                          b = parseInt(cleanHex.slice(4, 6), 16)
-                        } else if (cleanHex.length === 3) {
-                          r = parseInt(cleanHex[0] + cleanHex[0], 16)
-                          g = parseInt(cleanHex[1] + cleanHex[1], 16)
-                          b = parseInt(cleanHex[2] + cleanHex[2], 16)
-                        }
-                      }
-                      ;(buttonStyle as any)['--spotlight-color-rgba'] = `rgba(${r}, ${g}, ${b}, 0.5)`
-                      spotlightClass = " spotlight-active"
-                    }
-
-                    // Animation Effects support — use inline styles to bypass Turbopack CSS purging
-                    const animationMap: Record<string, string> = {
-                      pulse: 'pulseSlow 2.5s infinite ease-in-out',
-                      bounce: 'bounceSlow 2s infinite ease-in-out',
-                      shake: 'shakeQuick 2.5s infinite ease-in-out',
-                      wobble: 'wobbleQuick 2.5s infinite ease-in-out',
-                      glow: 'glowPulse 2s infinite ease-in-out',
-                    }
-                    if (link.animation && link.animation !== 'none' && animationMap[link.animation]) {
-                      buttonStyle.animation = animationMap[link.animation]
-                    }
-
-                    const extraClasses = ` ${spotlightClass}`
-                    baseBtnClass += extraClasses
-
-                    if (!hasGraphic) {
-                      return (
-                        <div 
-                          key={link.id} 
-                          style={buttonStyle}
-                          className={baseBtnClass}
-                        >
-                          <span className="z-10 truncate max-w-[160px]">{link.title}</span>
-                        </div>
-                      )
-                    }
-
-                    if (isLeftNear || isRightNear) {
-                      return (
-                        <div 
-                          key={link.id} 
-                          style={buttonStyle}
-                          className={baseBtnClass + " gap-2"}
-                        >
-                          <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity" style={{ backgroundColor: matchedPlatform?.color || '#ffffff' }} />
-                          
-                          {isLeftNear && (
-                            ThumbnailImg ? ThumbnailImg : (PlatformIcon && <PlatformIcon size={18} color={finalIconColor} className="drop-shadow-sm z-10 shrink-0" />)
-                          )}
-                          
-                          <span className="z-10 text-center truncate max-w-[160px]">{link.title}</span>
-                          
-                          {isRightNear && (
-                            ThumbnailImg ? ThumbnailImg : (PlatformIcon && <PlatformIcon size={18} color={finalIconColor} className="drop-shadow-sm z-10 shrink-0" />)
-                          )}
-                        </div>
-                      )
-                    }
-
-                    let baseBtnClassBetween = "group flex items-center justify-between w-full py-3 px-4 text-white text-sm font-semibold pointer-events-none relative overflow-hidden " + shapeClass + hoverClass
-                    if (styleVal === 'fill') {
-                      baseBtnClassBetween += " bg-white/15 border border-white/10 shadow-sm"
-                    } else if (styleVal === 'outline') {
-                      baseBtnClassBetween += " bg-transparent border border-white/20"
-                    } else if (styleVal === 'soft') {
-                      baseBtnClassBetween += " bg-white/5 border border-white/10 backdrop-blur-md shadow-sm"
-                    } else if (styleVal === 'shadow') {
-                      baseBtnClassBetween += " bg-white/15 border border-white/15 shadow-[0_4px_15px_rgba(0,0,0,0.3)]"
-                    } else if (styleVal === 'neumorphism') {
-                      baseBtnClassBetween += " bg-white/10 shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),inset_-3px_-3px_7px_rgba(0,0,0,0.5),3px_3px_6px_rgba(0,0,0,0.4)] border border-transparent"
-                    } else if (styleVal === 'glassmorphism') {
-                      baseBtnClassBetween += " bg-white/5 backdrop-blur-2xl border-t border-l border-white/20 border-r border-b border-white/5 shadow-[0_4px_30px_rgba(0,0,0,0.1)]"
-                    } else if (styleVal === 'neon') {
-                      baseBtnClassBetween += " bg-transparent border-2 border-[currentColor] shadow-[0_0_10px_currentColor,inset_0_0_10px_currentColor]"
-                    }
-                    baseBtnClassBetween += extraClasses
-
-                    return (
-                      <div 
-                        key={link.id} 
-                        style={buttonStyle}
-                        className={baseBtnClassBetween}
-                      >
-                        <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity" style={{ backgroundColor: matchedPlatform?.color || '#ffffff' }} />
-                        
-                        <div className={`w-6 flex items-center shrink-0 z-10 ${isRightFar ? 'justify-end' : 'justify-start'}`}>
-                          {isLeftFar && (
-                            ThumbnailImg ? ThumbnailImg : (PlatformIcon && <PlatformIcon size={18} color={finalIconColor} className="drop-shadow-sm" />)
-                          )}
-                        </div>
-                        
-                        <span className="flex-1 text-center z-10 truncate max-w-[160px]">{link.title}</span>
-                        
-                        <div className={`w-6 flex items-center shrink-0 z-10 ${isRightFar ? 'justify-end' : 'justify-start'}`}>
-                          {isRightFar && (
-                            ThumbnailImg ? ThumbnailImg : (PlatformIcon && <PlatformIcon size={18} color={finalIconColor} className="drop-shadow-sm" />)
-                          )}
-                        </div>
-                      </div>
-                    )
                 }
 
                 return (

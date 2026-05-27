@@ -88,6 +88,7 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
   const [bgAnimation, setBgAnimation] = useState(profile?.bg_animation || 'none')
   const [bgAnimationConfig, setBgAnimationConfig] = useState<any>(profile?.bg_animation_config || {})
   const [avatarFrame, setAvatarFrame] = useState(profile?.avatar_frame || 'none')
+  const [avatarFrameConfig, setAvatarFrameConfig] = useState<any>(profile?.avatar_frame_config || {})
   const [socialPlacement, setSocialPlacement] = useState(profile?.social_placement || 'top')
   const [themeLock, setThemeLock] = useState(profile?.theme_lock || false)
   const [glassBlur, setGlassBlur] = useState<number[]>([profile?.glass_blur ?? 10])
@@ -167,6 +168,7 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
           bg_animation: bgAnimation,
           bg_animation_config: next,
           avatar_frame: avatarFrame,
+          avatar_frame_config: avatarFrameConfig,
           social_placement: socialPlacement,
           theme_lock: themeLock,
           glass_blur: glassBlur[0],
@@ -219,6 +221,7 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
         bg_animation: bgAnimation,
         bg_animation_config: bgAnimationConfig,
         avatar_frame: avatarFrame,
+        avatar_frame_config: avatarFrameConfig,
         social_placement: socialPlacement,
         theme_lock: themeLock,
         glass_blur: glassBlur[0],
@@ -398,6 +401,7 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
           bg_animation: bgAnimation,
           bg_animation_config: bgAnimationConfig,
           avatar_frame: avatarFrame,
+          avatar_frame_config: avatarFrameConfig,
           social_placement: socialPlacement,
           theme_lock: themeLock,
           glass_blur: glassBlur[0],
@@ -406,7 +410,7 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
       }))
     }, 50)
     return () => clearTimeout(timer)
-  }, [buttonShape, buttonStyle, fontFamily, textColor, socialStyle, profileAlign, avatarShape, bannerUrl, linkSpacing, avatarSize, themeStyle, buttonHoverEffect, layoutType, bgAnimation, avatarFrame, socialPlacement, themeLock, glassBlur, glassOpacity])
+  }, [buttonShape, buttonStyle, fontFamily, textColor, socialStyle, profileAlign, avatarShape, bannerUrl, linkSpacing, avatarSize, themeStyle, buttonHoverEffect, layoutType, bgAnimation, avatarFrame, avatarFrameConfig, socialPlacement, themeLock, glassBlur, glassOpacity])
 
   const handleSocialChange = (key: string, val: string) => {
     setSocialLinks(prev => ({
@@ -485,6 +489,7 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
     formData.set('bg_animation', bgAnimation)
     formData.set('bg_animation_config', JSON.stringify(bgAnimationConfig))
     formData.set('avatar_frame', avatarFrame)
+    formData.set('avatar_frame_config', JSON.stringify(avatarFrameConfig))
     formData.set('social_placement', socialPlacement)
     formData.set('theme_lock', themeLock ? 'true' : 'false')
     formData.set('glass_blur', glassBlur[0].toString())
@@ -1407,6 +1412,38 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
                         </div>
                       ))}
                     </div>
+                    
+                    {avatarFrame !== 'none' && (
+                      <div className="mt-3 space-y-2 animate-in fade-in zoom-in duration-300">
+                        <Label className="text-zinc-400 text-[10px] uppercase tracking-wider">Frame Colors</Label>
+                        <div className="flex items-center gap-2">
+                          <div className="flex-1 flex flex-col gap-1">
+                            <Label className="text-zinc-500 text-[9px]">Color 1</Label>
+                            <div className="relative">
+                              <input
+                                type="color"
+                                value={avatarFrameConfig?.color1 || (avatarFrame === 'gradient-ring' ? '#ec4899' : '#22d3ee')}
+                                onChange={(e) => setAvatarFrameConfig({ ...avatarFrameConfig, color1: e.target.value })}
+                                className="w-full h-8 rounded-lg cursor-pointer bg-zinc-800 border border-white/10 p-0"
+                              />
+                            </div>
+                          </div>
+                          {avatarFrame === 'gradient-ring' && (
+                            <div className="flex-1 flex flex-col gap-1">
+                              <Label className="text-zinc-500 text-[9px]">Color 2</Label>
+                              <div className="relative">
+                                <input
+                                  type="color"
+                                  value={avatarFrameConfig?.color2 || '#f97316'}
+                                  onChange={(e) => setAvatarFrameConfig({ ...avatarFrameConfig, color2: e.target.value })}
+                                  className="w-full h-8 rounded-lg cursor-pointer bg-zinc-800 border border-white/10 p-0"
+                                />
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   {/* Avatar Size */}

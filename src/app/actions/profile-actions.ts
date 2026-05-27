@@ -42,9 +42,17 @@ export async function updateAppearance(formData: FormData) {
     link_spacing: formData.get('link_spacing') as string,
     avatar_size: formData.get('avatar_size') as string,
     bg_video_url: formData.get('bg_video_url') as string || null,
+    theme_style: formData.get('theme_style') as string || null,
+    button_hover_effect: formData.get('button_hover_effect') as string || null,
     layout_type: formData.get('layout_type') as string,
     bg_animation: formData.get('bg_animation') as string || null,
     bg_animation_config: formData.get('bg_animation_config') ? JSON.parse(formData.get('bg_animation_config') as string) : null,
+    avatar_frame: formData.get('avatar_frame') as string || null,
+    avatar_frame_config: formData.get('avatar_frame_config') ? JSON.parse(formData.get('avatar_frame_config') as string) : null,
+    social_placement: formData.get('social_placement') as string || null,
+    theme_lock: formData.get('theme_lock') === 'true',
+    glass_blur: formData.get('glass_blur') ? parseInt(formData.get('glass_blur') as string, 10) : undefined,
+    glass_opacity: formData.get('glass_opacity') ? parseInt(formData.get('glass_opacity') as string, 10) : undefined,
   }
 
   const validated = updateAppearanceSchema.safeParse(raw)
