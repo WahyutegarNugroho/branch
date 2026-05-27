@@ -26,13 +26,16 @@ const colorSets = [
   ]
 ]
 
-export default function AuroraBackground() {
+export default function AuroraBackground({ config = {} }: { config?: any }) {
   const containerRef = useRef<HTMLDivElement>(null)
+  
+  const themeIndex = typeof config?.theme === 'number' ? config.theme : 0
+  const speed = typeof config?.speed === 'number' ? config.speed : 1
 
   useEffect(() => {
     if (!containerRef.current) return
     const container = containerRef.current
-    let currentColorSet = 0
+    let currentColorSet = themeIndex % colorSets.length
     const auroras: HTMLDivElement[] = []
     let animationFrames: number[] = []
     let intervalId: NodeJS.Timeout
@@ -59,16 +62,16 @@ export default function AuroraBackground() {
     function animateAurora(element: HTMLDivElement, index: number) {
       let x = Math.random() * 100
       let y = Math.random() * 100
-      let xSpeed = (Math.random() - 0.5) * 0.1
-      let ySpeed = (Math.random() - 0.5) * 0.1
+      let xSpeed = (Math.random() - 0.5) * 0.1 * speed
+      let ySpeed = (Math.random() - 0.5) * 0.1 * speed
 
       function update() {
         x += xSpeed
         y += ySpeed
 
-        if (Math.random() < 0.005) {
-          xSpeed = (Math.random() - 0.5) * 0.1
-          ySpeed = (Math.random() - 0.5) * 0.1
+        if (Math.random() < 0.005 * speed) {
+          xSpeed = (Math.random() - 0.5) * 0.1 * speed
+          ySpeed = (Math.random() - 0.5) * 0.1 * speed
         }
 
         if (x > 120) x = -20
@@ -77,7 +80,7 @@ export default function AuroraBackground() {
         if (y < -20) y = 120
 
         const parallaxFactor = 0.5 + (index * 0.1)
-        element.style.transform = `translate(${x * parallaxFactor}%, ${y * parallaxFactor}%) scale(${1 + Math.sin(Date.now() * 0.001 * (index + 1)) * 0.2})`
+        element.style.transform = `translate(${x * parallaxFactor}%, ${y * parallaxFactor}%) scale(${1 + Math.sin(Date.now() * 0.001 * speed * (index + 1)) * 0.2})`
 
         const frame = requestAnimationFrame(update)
         animationFrames[index] = frame
@@ -99,14 +102,14 @@ export default function AuroraBackground() {
           }
         })
       }, 800)
-    }, 15000)
+    }, 15000 / speed)
 
     return () => {
       clearInterval(intervalId)
       animationFrames.forEach(frame => cancelAnimationFrame(frame))
       if (container) container.innerHTML = ''
     }
-  }, [])
+  }, [speed, themeIndex])
 
   return (
     <div 

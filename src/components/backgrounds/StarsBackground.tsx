@@ -2,8 +2,11 @@
 
 import React, { useEffect, useRef } from 'react'
 
-export default function StarsBackground() {
+export default function StarsBackground({ config = {} }: { config?: any }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  
+  const numStars = typeof config?.starCount === 'number' ? config.starCount : 200
+  const speed = typeof config?.speed === 'number' ? config.speed : 1
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -15,15 +18,14 @@ export default function StarsBackground() {
     let height = canvas.height = window.innerHeight
 
     const stars: any[] = []
-    const numStars = 200
 
     for (let i = 0; i < numStars; i++) {
       stars.push({
         x: Math.random() * width,
         y: Math.random() * height,
         r: Math.random() * 1.5,
-        dx: (Math.random() - 0.5) * 0.2,
-        dy: (Math.random() - 0.5) * 0.2 + 0.1, // Slight drift downward
+        dx: (Math.random() - 0.5) * 0.2 * speed,
+        dy: ((Math.random() - 0.5) * 0.2 + 0.1) * speed,
         alpha: Math.random(),
         deltaAlpha: (Math.random() - 0.5) * 0.02
       })
@@ -67,7 +69,7 @@ export default function StarsBackground() {
       window.removeEventListener('resize', handleResize)
       cancelAnimationFrame(animationFrameId)
     }
-  }, [])
+  }, [numStars, speed])
 
   return (
     <canvas 

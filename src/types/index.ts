@@ -34,6 +34,7 @@ export interface Profile {
   avatar_size?: string | null
   bg_video_url?: string | null
   bg_animation?: string | null
+  bg_animation_config?: any | null
   avatar_frame?: string | null
   social_placement?: string | null
   theme_lock?: boolean

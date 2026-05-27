@@ -2,8 +2,12 @@
 
 import React, { useEffect, useRef } from 'react'
 
-export default function MatrixBackground() {
+export default function MatrixBackground({ config = {} }: { config?: any }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  
+  const matrixColor = config?.color || '#0F0'
+  const fontSize = typeof config?.fontSize === 'number' ? config.fontSize : 14
+  const speed = typeof config?.speed === 'number' ? config.speed : 1
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -15,7 +19,6 @@ export default function MatrixBackground() {
     let height = canvas.height = window.innerHeight
 
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*'.split('')
-    const fontSize = 14
     const columns = width / fontSize
     const drops: number[] = []
 
@@ -29,7 +32,8 @@ export default function MatrixBackground() {
     function draw(time: number) {
       animationFrameId = requestAnimationFrame(draw)
 
-      if (time - lastDrawTime < 50) return // Throttling to approx 20fps for matrix effect
+      const throttleTime = 50 / speed
+      if (time - lastDrawTime < throttleTime) return 
       lastDrawTime = time
 
       if (!ctx || !canvas) return
@@ -37,7 +41,7 @@ export default function MatrixBackground() {
       ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'
       ctx.fillRect(0, 0, width, height)
 
-      ctx.fillStyle = '#0F0'
+      ctx.fillStyle = matrixColor
       ctx.font = fontSize + 'px monospace'
 
       for (let i = 0; i < drops.length; i++) {
@@ -68,7 +72,7 @@ export default function MatrixBackground() {
       window.removeEventListener('resize', handleResize)
       cancelAnimationFrame(animationFrameId)
     }
-  }, [])
+  }, [matrixColor, fontSize, speed])
 
   return (
     <div className="absolute inset-0 pointer-events-none z-0 mix-blend-screen opacity-50">

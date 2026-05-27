@@ -2,8 +2,12 @@
 
 import React, { useEffect, useRef } from 'react'
 
-export default function SnowfallBackground() {
+export default function SnowfallBackground({ config = {} }: { config?: any }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  
+  const flakeCount = typeof config?.flakeCount === 'number' ? config.flakeCount : 100
+  const speed = typeof config?.speed === 'number' ? config.speed : 1
+  const wind = config?.wind || 'right'
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -15,7 +19,6 @@ export default function SnowfallBackground() {
     let height = canvas.height = window.innerHeight
 
     const flakes: any[] = []
-    const flakeCount = 100
 
     for (let i = 0; i < flakeCount; i++) {
       flakes.push({
@@ -44,11 +47,17 @@ export default function SnowfallBackground() {
       }
       ctx.fill()
 
-      angle += 0.01
+      angle += 0.01 * speed
       for (let i = 0; i < flakeCount; i++) {
         const f = flakes[i]
-        f.y += Math.cos(angle + f.d) + 1 + f.r / 2
-        f.x += Math.sin(angle) * 2
+        f.y += (Math.cos(angle + f.d) + 1 + f.r / 2) * speed
+        
+        let windFactor = Math.sin(angle) * 2
+        if (wind === 'left') windFactor = -Math.abs(windFactor) - 1
+        if (wind === 'right') windFactor = Math.abs(windFactor) + 1
+        if (wind === 'none') windFactor = 0
+        
+        f.x += windFactor * speed
 
         if (f.x > width + 5 || f.x < -5 || f.y > height) {
           if (i % 3 > 0) {
@@ -79,7 +88,7 @@ export default function SnowfallBackground() {
       window.removeEventListener('resize', handleResize)
       cancelAnimationFrame(animationFrameId)
     }
-  }, [])
+  }, [flakeCount, speed, wind])
 
   return (
     <canvas 

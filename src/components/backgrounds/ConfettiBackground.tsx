@@ -2,8 +2,11 @@
 
 import React, { useEffect, useRef } from 'react'
 
-export default function ConfettiBackground() {
+export default function ConfettiBackground({ config = {} }: { config?: any }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  
+  const confettiCount = typeof config?.confettiCount === 'number' ? config.confettiCount : 150
+  const speed = typeof config?.speed === 'number' ? config.speed : 1
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -14,7 +17,6 @@ export default function ConfettiBackground() {
     let width = canvas.width = window.innerWidth
     let height = canvas.height = window.innerHeight
 
-    const confettiCount = 150
     const confetti: any[] = []
     const colors = ['#fce18a', '#ff726d', '#b48def', '#f4306d', '#00ffaa']
 
@@ -39,9 +41,9 @@ export default function ConfettiBackground() {
       ctx.clearRect(0, 0, width, height)
 
       confetti.forEach((c) => {
-        c.tiltAngle += c.tiltAngleInc
-        c.y += (Math.cos(c.tiltAngle) + c.dy + c.r / 2) / 2
-        c.x += Math.sin(c.tiltAngle) * 2
+        c.tiltAngle += c.tiltAngleInc * speed
+        c.y += ((Math.cos(c.tiltAngle) + c.dy + c.r / 2) / 2) * speed
+        c.x += Math.sin(c.tiltAngle) * 2 * speed
 
         if (c.y > height) {
           c.x = Math.random() * width
@@ -73,7 +75,7 @@ export default function ConfettiBackground() {
       window.removeEventListener('resize', handleResize)
       cancelAnimationFrame(animationFrameId)
     }
-  }, [])
+  }, [confettiCount, speed])
 
   return (
     <canvas 

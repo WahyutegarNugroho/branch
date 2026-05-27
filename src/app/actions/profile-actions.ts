@@ -43,6 +43,8 @@ export async function updateAppearance(formData: FormData) {
     avatar_size: formData.get('avatar_size') as string,
     bg_video_url: formData.get('bg_video_url') as string || null,
     layout_type: formData.get('layout_type') as string,
+    bg_animation: formData.get('bg_animation') as string || null,
+    bg_animation_config: formData.get('bg_animation_config') ? JSON.parse(formData.get('bg_animation_config') as string) : null,
   }
 
   const validated = updateAppearanceSchema.safeParse(raw)

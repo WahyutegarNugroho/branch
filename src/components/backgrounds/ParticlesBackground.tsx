@@ -2,8 +2,12 @@
 
 import React, { useEffect, useRef } from 'react'
 
-export default function ParticlesBackground() {
+export default function ParticlesBackground({ config = {} }: { config?: any }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  
+  const density = typeof config?.density === 'number' ? config.density : 10000
+  const linkDistance = typeof config?.linkDistance === 'number' ? config.linkDistance : 120
+  const speed = typeof config?.speed === 'number' ? config.speed : 1
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -15,14 +19,14 @@ export default function ParticlesBackground() {
     let height = canvas.height = window.innerHeight
 
     const particles: any[] = []
-    const particleCount = Math.floor((width * height) / 10000)
+    const particleCount = Math.floor((width * height) / density)
 
     for (let i = 0; i < particleCount; i++) {
       particles.push({
         x: Math.random() * width,
         y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 1,
-        vy: (Math.random() - 0.5) * 1,
+        vx: (Math.random() - 0.5) * 1 * speed,
+        vy: (Math.random() - 0.5) * 1 * speed,
         radius: Math.random() * 2 + 1
       })
     }
@@ -53,11 +57,11 @@ export default function ParticlesBackground() {
           const dy = p.y - p2.y
           const distance = Math.sqrt(dx * dx + dy * dy)
 
-          if (distance < 120) {
+          if (distance < linkDistance) {
             ctx.beginPath()
             ctx.moveTo(p.x, p.y)
             ctx.lineTo(p2.x, p2.y)
-            ctx.strokeStyle = `rgba(255, 255, 255, ${0.2 - distance / 600})`
+            ctx.strokeStyle = `rgba(255, 255, 255, ${0.2 - distance / (linkDistance * 5)})`
             ctx.lineWidth = 1
             ctx.stroke()
           }
@@ -80,7 +84,7 @@ export default function ParticlesBackground() {
       window.removeEventListener('resize', handleResize)
       cancelAnimationFrame(animationFrameId)
     }
-  }, [])
+  }, [density, linkDistance, speed])
 
   return (
     <canvas 

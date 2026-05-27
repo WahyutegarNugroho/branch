@@ -199,12 +199,12 @@ export function AnimatedProfile({ profile, links, bgClass: defaultBgClass, bgSty
         )}
 
         {/* Live Background Animations */}
-        {profile?.bg_animation === 'aurora' && <AuroraBackground />}
-        {profile?.bg_animation === 'particles' && <ParticlesBackground />}
-        {profile?.bg_animation === 'snowfall' && <SnowfallBackground />}
-        {profile?.bg_animation === 'stars' && <StarsBackground />}
-        {profile?.bg_animation === 'matrix' && <MatrixBackground />}
-        {profile?.bg_animation === 'confetti' && <ConfettiBackground />}
+        {profile?.bg_animation === 'aurora' && <AuroraBackground config={profile?.bg_animation_config} />}
+        {profile?.bg_animation === 'particles' && <ParticlesBackground config={profile?.bg_animation_config} />}
+        {profile?.bg_animation === 'snowfall' && <SnowfallBackground config={profile?.bg_animation_config} />}
+        {profile?.bg_animation === 'stars' && <StarsBackground config={profile?.bg_animation_config} />}
+        {profile?.bg_animation === 'matrix' && <MatrixBackground config={profile?.bg_animation_config} />}
+        {profile?.bg_animation === 'confetti' && <ConfettiBackground config={profile?.bg_animation_config} />}
         {profile?.bg_animation === 'bokeh' && <div className="absolute inset-0 pointer-events-none z-0 opacity-40 mix-blend-screen blur-[8px]" style={{ backgroundImage: 'radial-gradient(circle at 20% 30%, rgba(236,72,153,0.4) 0%, transparent 40%), radial-gradient(circle at 80% 60%, rgba(249,115,22,0.4) 0%, transparent 40%)', animation: 'pulseSlow 5s infinite alternate, bgMove 20s ease-in-out infinite' }} />}
 
         {/* Hero Banner header overlay */}

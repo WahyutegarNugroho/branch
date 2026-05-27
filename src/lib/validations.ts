@@ -76,6 +76,8 @@ export const updateAppearanceSchema = z.object({
   layout_type: layoutTypeEnum.default('list'),
   glass_blur: z.coerce.number().int().min(0).max(50).default(10).optional(),
   glass_opacity: z.coerce.number().int().min(0).max(100).default(20).optional(),
+  bg_animation: z.string().nullable().optional(),
+  bg_animation_config: z.any().nullable().optional(),
 })
 
 export const updateProfileInfoSchema = z.object({
