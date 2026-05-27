@@ -18,52 +18,64 @@ import {
   ShieldAlert
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import AuroraBackground from '@/components/backgrounds/AuroraBackground'
+import MatrixBackground from '@/components/backgrounds/MatrixBackground'
+import ConfettiBackground from '@/components/backgrounds/ConfettiBackground'
+import ParticlesBackground from '@/components/backgrounds/ParticlesBackground'
 
 const demoThemes = {
-  dark: {
-    name: 'Minimal Dark',
-    bg: 'bg-zinc-950',
-    bgColor: '#09090b',
-    btnShape: 'rounded-2xl',
-    btnStyle: 'bg-white/5 border border-white/10 text-white hover:bg-white/10 backdrop-blur-md',
-    font: 'font-sans',
-    textColor: 'text-white',
-    badge: 'bg-white/10 text-white/80'
-  },
-  sunset: {
-    name: 'Sunset Glow',
-    bg: 'bg-gradient-to-br from-pink-500 to-orange-500',
-    bgColor: 'linear-gradient(to bottom, #ec4899, #f97316)',
+  aurora: {
+    name: 'Aurora Glass',
+    bgClass: 'bg-zinc-950',
+    animation: 'aurora',
     btnShape: 'rounded-full',
-    btnStyle: 'bg-white text-zinc-900 border-0 shadow-lg font-bold',
-    font: 'font-sans',
+    btnStyle: 'bg-white/5 border-t border-l border-white/20 border-r border-b border-white/5 backdrop-blur-2xl shadow-[0_4px_30px_rgba(0,0,0,0.1)] hover:bg-white/10 hover:-translate-y-1 hover:drop-shadow-xl text-white',
+    font: 'font-righteous',
     textColor: 'text-white',
-    badge: 'bg-white/20 text-white'
+    badge: 'bg-white/10 text-white border border-white/20 backdrop-blur-md',
+    avatarFrame: 'p-1 bg-gradient-to-tr from-pink-500 to-orange-500 shadow-[0_0_20px_rgba(236,72,153,0.5)] rounded-full',
+    avatarShape: 'rounded-full'
   },
-  forest: {
-    name: 'Forest Breeze',
-    bg: 'bg-gradient-to-br from-teal-800 to-teal-500',
-    bgColor: 'linear-gradient(to bottom, #115e59, #14b8a6)',
-    btnShape: 'rounded-lg',
-    btnStyle: 'bg-transparent border-2 border-white/40 text-white hover:border-white font-bold',
-    font: 'font-sans',
-    textColor: 'text-teal-50',
-    badge: 'bg-teal-950/40 text-teal-200'
+  cyberpunk: {
+    name: 'Cyberpunk Matrix',
+    bgClass: 'bg-zinc-950',
+    animation: 'matrix',
+    btnShape: 'shape-hexagon rounded-none',
+    btnStyle: 'bg-transparent border-2 border-green-500 text-green-400 shadow-[0_0_10px_#22c55e,inset_0_0_10px_#22c55e] hover:shadow-[0_0_20px_#22c55e,inset_0_0_20px_#22c55e] hover:bg-green-500/10 hover-glitch-effect',
+    font: 'font-space',
+    textColor: 'text-green-400',
+    badge: 'bg-black text-green-400 border border-green-500 shadow-[0_0_10px_#22c55e]',
+    avatarFrame: 'p-1 bg-green-500 shadow-[0_0_25px_rgba(34,197,94,0.8)]',
+    avatarShape: 'shape-hexagon rounded-none'
   },
-  retro: {
-    name: 'Neo Retro',
-    bg: 'bg-yellow-400',
-    bgColor: '#facc15',
-    btnShape: 'rounded-none',
-    btnStyle: 'bg-black border-2 border-black text-yellow-400 hover:bg-neutral-900 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] font-extrabold',
+  confetti: {
+    name: 'Playful Clay',
+    bgClass: 'bg-indigo-500',
+    animation: 'confetti',
+    btnShape: 'shape-leaf rounded-none',
+    btnStyle: 'bg-white/20 shadow-[inset_-4px_-4px_10px_rgba(0,0,0,0.5),inset_4px_4px_10px_rgba(255,255,255,0.4),8px_8px_16px_rgba(0,0,0,0.3)] border border-transparent text-white hover-wobble-effect',
+    font: 'font-dancing',
+    textColor: 'text-white',
+    badge: 'bg-white/20 text-white shadow-inner backdrop-blur-md',
+    avatarFrame: 'p-1.5 bg-gradient-to-br from-yellow-300 to-pink-400 rounded-2xl',
+    avatarShape: 'rounded-2xl'
+  },
+  brutalist: {
+    name: 'Minimal Brutalist',
+    bgClass: 'bg-yellow-400',
+    animation: 'none',
+    btnShape: 'shape-cut-corners rounded-none',
+    btnStyle: 'bg-zinc-900 border-2 border-zinc-900 text-yellow-400 shadow-[4px_4px_0px_rgba(24acc15,0.8)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_rgba(24acc15,0.8)]',
     font: 'font-mono',
-    textColor: 'text-black',
-    badge: 'bg-black text-yellow-400 border border-black'
+    textColor: 'text-zinc-900',
+    badge: 'bg-zinc-900 text-yellow-400 border-2 border-zinc-900',
+    avatarFrame: 'border-4 border-zinc-900',
+    avatarShape: 'shape-cut-corners rounded-none'
   }
 }
 
 export default function LandingPage() {
-  const [activeTheme, setActiveTheme] = useState<keyof typeof demoThemes>('dark')
+  const [activeTheme, setActiveTheme] = useState<keyof typeof demoThemes>('aurora')
 
   const currentTheme = demoThemes[activeTheme]
 
@@ -206,20 +218,28 @@ export default function LandingPage() {
               </div>
 
               {/* Smartphone Inner Screen */}
-              <div className={`flex-1 w-full flex flex-col items-center pt-16 px-4 relative overflow-hidden transition-all duration-500 ${currentTheme.bg}`}>
-                {/* Background overlay if retro or specific theme needs it */}
-                <div className="absolute inset-0 bg-black/10 pointer-events-none" />
+              <div className={`flex-1 w-full flex flex-col items-center pt-16 px-4 relative overflow-hidden transition-all duration-500 ${currentTheme.bgClass} ${currentTheme.font}`}>
+                
+                {/* Live Background Components */}
+                {currentTheme.animation === 'aurora' && <AuroraBackground config={{ speed: 20 }} />}
+                {currentTheme.animation === 'matrix' && <MatrixBackground config={{ density: 50, speed: 20 }} />}
+                {currentTheme.animation === 'confetti' && <ConfettiBackground config={{ speed: 10, amount: 40 }} />}
+                
+                <div className="absolute inset-0 bg-black/10 pointer-events-none z-0" />
 
                 {/* Profile Avatar */}
                 <div className="relative z-10 w-full flex flex-col items-center select-none">
-                  <div className="w-20 h-20 rounded-full mb-3 object-cover border-2 border-white/20 shadow-lg bg-zinc-800 flex items-center justify-center text-white font-extrabold text-2xl bg-gradient-to-tr from-brand-pink to-brand-orange">
-                    JD
+                  
+                  <div className={`relative flex items-center justify-center mb-3 ${currentTheme.avatarFrame} ${currentTheme.avatarShape}`}>
+                    <div className={`w-20 h-20 bg-zinc-800 flex items-center justify-center text-white font-extrabold text-2xl bg-gradient-to-tr from-brand-pink to-brand-orange shadow-inner overflow-hidden ${currentTheme.avatarShape}`}>
+                      JD
+                    </div>
                   </div>
 
-                  <h4 className={`font-display-theme font-black text-base mb-1 drop-shadow-sm ${currentTheme.textColor}`}>
+                  <h4 className={`font-display-theme font-black text-lg mb-1 drop-shadow-sm ${currentTheme.textColor}`}>
                     Jane Doe
                   </h4>
-                  <p className={`text-xs text-center mb-5 max-w-[200px] opacity-90 drop-shadow-sm ${currentTheme.textColor}`}>
+                  <p className={`text-sm text-center mb-5 max-w-[200px] opacity-90 drop-shadow-sm font-semibold ${currentTheme.textColor}`}>
                     Digital Artist & Designer creating custom branding systems.
                   </p>
 
@@ -228,18 +248,18 @@ export default function LandingPage() {
                     <span className={`text-[10px] font-black tracking-widest uppercase opacity-95 ${currentTheme.textColor}`}>
                       My Portfolios
                     </span>
-                    <div className="h-[1.5px] w-8 mx-auto bg-white/30 mt-1" />
+                    <div className={`h-[2px] w-12 mx-auto mt-1 ${activeTheme === 'brutalist' ? 'bg-zinc-900' : 'bg-current opacity-30'}`} />
                   </div>
 
                   {/* Dynamic Buttons conforming to shape and style */}
-                  <div className="w-full space-y-2.5 mt-4">
-                    <div className={`w-full py-3.5 px-4 text-xs font-bold transition-all text-center flex items-center justify-between ${currentTheme.btnShape} ${currentTheme.btnStyle}`}>
-                      <div className="w-4 h-4 rounded-full bg-white/20" />
+                  <div className="w-full space-y-3 mt-4 group">
+                    <div className={`w-full py-4 px-4 text-xs font-extrabold transition-all text-center flex items-center justify-between cursor-pointer ${currentTheme.btnShape} ${currentTheme.btnStyle}`}>
+                      <div className="w-4 h-4 rounded-full bg-current opacity-20" />
                       <span>Explore Art Portfolio</span>
                       <div className="w-4" />
                     </div>
-                    <div className={`w-full py-3.5 px-4 text-xs font-bold transition-all text-center flex items-center justify-between ${currentTheme.btnShape} ${currentTheme.btnStyle}`}>
-                      <div className="w-4 h-4 rounded-full bg-white/20" />
+                    <div className={`w-full py-4 px-4 text-xs font-extrabold transition-all text-center flex items-center justify-between cursor-pointer ${currentTheme.btnShape} ${currentTheme.btnStyle}`}>
+                      <div className="w-4 h-4 rounded-full bg-current opacity-20" />
                       <span>Latest YouTube Vlog</span>
                       <div className="w-4" />
                     </div>
@@ -278,66 +298,81 @@ export default function LandingPage() {
             {/* Theme Customizer Card */}
             <motion.div 
               whileHover={{ y: -5 }}
-              className="col-span-1 md:col-span-2 p-8 rounded-3xl bg-zinc-900/40 border border-white/10 backdrop-blur-md flex flex-col justify-between"
+              className="col-span-1 md:col-span-2 p-8 rounded-3xl bg-zinc-900/40 border border-white/10 backdrop-blur-md flex flex-col justify-between overflow-hidden relative group"
             >
-              <div>
-                <Palette className="w-10 h-10 text-brand-pink mb-6" />
-                <h3 className="text-2xl font-display-theme font-bold mb-2">Preset Themes Gallery</h3>
+              <div className="absolute inset-0 bg-gradient-to-br from-brand-pink/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="relative z-10">
+                <Sparkles className="w-10 h-10 text-brand-pink mb-6" />
+                <h3 className="text-2xl font-display-theme font-bold mb-2">Dynamic Live Backgrounds</h3>
                 <p className="text-zinc-400 max-w-md text-sm leading-relaxed">
-                  Choose from a gallery of professional themes, mesh gradients, solid colors, or custom images with dark overlay opacity. Instantly adjust button shapes to rounded, square, pill, or soft shadow.
+                  Go beyond static colors. Bring your profile to life with interactive WebGL animations including Aurora, Matrix, Snowfall, Particles, Bokeh, Confetti, and even full Video backgrounds.
                 </p>
               </div>
-              <div className="mt-8 grid grid-cols-4 gap-2 font-display-theme">
-                <div className="h-10 bg-zinc-950 border border-white/10 rounded-lg flex items-center justify-center text-[10px] text-zinc-500 font-bold">Minimal</div>
-                <div className="h-10 bg-gradient-to-tr from-pink-500 to-orange-500 rounded-lg flex items-center justify-center text-[10px] text-white font-bold">Sunset</div>
-                <div className="h-10 bg-gradient-to-tr from-teal-800 to-teal-500 rounded-lg flex items-center justify-center text-[10px] text-white font-bold">Forest</div>
-                <div className="h-10 bg-yellow-400 rounded-lg flex items-center justify-center text-[10px] text-zinc-950 font-bold">Retro</div>
-              </div>
-            </motion.div>
-
-            {/* QR Code sharing */}
-            <motion.div 
-              whileHover={{ y: -5 }}
-              className="col-span-1 p-8 rounded-3xl bg-zinc-900/40 border border-white/10 backdrop-blur-md flex flex-col justify-between"
-            >
-              <div>
-                <QrCode className="w-10 h-10 text-brand-orange mb-6" />
-                <h3 className="text-2xl font-display-theme font-bold mb-2">QR Code & Share</h3>
-                <p className="text-zinc-400 text-sm leading-relaxed">
-                  Share your profile offline using dynamic QR codes with instant high-resolution PNG download.
-                </p>
-              </div>
-              <div className="mt-8 flex justify-center">
-                <div className="p-3 bg-white rounded-2xl border border-white/10 shadow-lg">
-                  <div className="w-20 h-20 bg-zinc-900 rounded-lg flex items-center justify-center text-white text-[9px] font-bold">QR CODE</div>
+              <div className="mt-8 grid grid-cols-3 gap-2 font-display-theme relative z-10">
+                <div className="h-12 bg-zinc-950 border border-white/10 rounded-xl flex items-center justify-center text-xs text-white font-bold relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-r from-pink-500/20 to-orange-500/20 blur-md" />
+                  <span className="relative z-10">Aurora</span>
+                </div>
+                <div className="h-12 bg-zinc-950 border border-green-500/30 rounded-xl flex items-center justify-center text-xs text-green-400 font-bold relative overflow-hidden">
+                  <div className="absolute inset-0 bg-green-500/10" />
+                  <span className="relative z-10">Matrix</span>
+                </div>
+                <div className="h-12 bg-zinc-950 border border-blue-500/30 rounded-xl flex items-center justify-center text-xs text-blue-300 font-bold relative overflow-hidden">
+                  <span className="relative z-10">Snowfall</span>
                 </div>
               </div>
             </motion.div>
 
-            {/* Section Headers & Sectioning */}
+            {/* Avatar Frames & Shapes */}
             <motion.div 
               whileHover={{ y: -5 }}
-              className="col-span-1 p-8 rounded-3xl bg-zinc-900/40 border border-white/10 backdrop-blur-md flex flex-col justify-between"
+              className="col-span-1 p-8 rounded-3xl bg-zinc-900/40 border border-white/10 backdrop-blur-md flex flex-col justify-between relative group"
             >
-              <div>
-                <LayoutTemplate className="w-10 h-10 text-brand-orange mb-6" />
-                <h3 className="text-2xl font-display-theme font-bold mb-2">Section Headers</h3>
+              <div className="absolute inset-0 bg-gradient-to-bl from-brand-orange/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="relative z-10">
+                <Palette className="w-10 h-10 text-brand-orange mb-6" />
+                <h3 className="text-2xl font-display-theme font-bold mb-2">Avatar Frames</h3>
                 <p className="text-zinc-400 text-sm leading-relaxed">
-                  Group your links into separate categories using elegant Section Dividers & Headers to enhance profile navigation.
+                  Make your profile picture stand out with animated Gradient Rings, Neon Glows, or custom Hexagon shapes.
                 </p>
+              </div>
+              <div className="mt-8 flex justify-center relative z-10">
+                <div className="w-16 h-16 rounded-full p-1 bg-gradient-to-tr from-pink-500 to-orange-500 shadow-[0_0_20px_rgba(236,72,153,0.3)]">
+                  <div className="w-full h-full bg-zinc-800 rounded-full border-2 border-zinc-950" />
+                </div>
               </div>
             </motion.div>
 
-            {/* Remove Branding white-label */}
+            {/* Premium Button Styles */}
+            <motion.div 
+              whileHover={{ y: -5 }}
+              className="col-span-1 md:col-span-3 p-8 rounded-3xl bg-zinc-900/40 border border-white/10 backdrop-blur-md flex flex-col md:flex-row items-center justify-between gap-6 overflow-hidden relative group"
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="flex-1 relative z-10">
+                <LayoutTemplate className="w-10 h-10 text-emerald-400 mb-6" />
+                <h3 className="text-2xl font-display-theme font-bold mb-2">Advanced Button Customization</h3>
+                <p className="text-zinc-400 text-sm leading-relaxed max-w-xl">
+                  Ditch the boring buttons. We offer <strong>Glassmorphism</strong>, <strong>Neumorphism</strong>, <strong>Claymorphism</strong>, and <strong>Brutalism</strong>. Pair them with unique shapes like Leaves or Cut-Corners, and add interactive hover micro-animations (Glitch, Wobble, Lift).
+                </p>
+              </div>
+              <div className="flex-1 flex flex-col gap-3 w-full md:w-auto relative z-10">
+                <div className="py-3 px-6 rounded-full bg-white/5 border-t border-l border-white/20 border-r border-b border-white/5 backdrop-blur-md text-white text-sm font-bold text-center shadow-lg">Glassmorphism</div>
+                <div className="py-3 px-6 shape-cut-corners bg-zinc-900 border-2 border-emerald-500 text-emerald-400 shadow-[4px_4px_0px_#10b981] text-sm font-black text-center">Neo-Brutalism</div>
+                <div className="py-3 px-6 rounded-2xl bg-zinc-800 shadow-[inset_-4px_-4px_10px_rgba(0,0,0,0.5),inset_4px_4px_10px_rgba(255,255,255,0.1)] text-white text-sm font-bold text-center">Neumorphism</div>
+              </div>
+            </motion.div>
+            
+            {/* Spotlight & Embeds */}
             <motion.div 
               whileHover={{ y: -5 }}
               className="col-span-1 md:col-span-2 p-8 rounded-3xl bg-zinc-900/40 border border-white/10 backdrop-blur-md flex flex-col justify-between"
             >
               <div>
-                <Eye className="w-10 h-10 text-emerald-400 mb-6" />
-                <h3 className="text-2xl font-display-theme font-bold mb-2">White-label Branding</h3>
+                <Eye className="w-10 h-10 text-brand-pink mb-6" />
+                <h3 className="text-2xl font-display-theme font-bold mb-2">Spotlight & Embeds</h3>
                 <p className="text-zinc-400 max-w-md text-sm leading-relaxed">
-                  Get full control over your brand. Remove "Powered by Branch" branding at the bottom of public profile pages for a professional, independent look.
+                  Embed YouTube videos, Spotify tracks, and Image Carousels directly into your link-in-bio. Use the Spotlight feature to make your most important links pulse and glow.
                 </p>
               </div>
             </motion.div>
@@ -345,13 +380,13 @@ export default function LandingPage() {
             {/* Deep Analytics */}
             <motion.div 
               whileHover={{ y: -5 }}
-              className="col-span-1 md:col-span-3 p-8 rounded-3xl bg-zinc-900/40 border border-white/10 backdrop-blur-md flex flex-col md:flex-row items-center justify-between gap-6"
+              className="col-span-1 p-8 rounded-3xl bg-zinc-900/40 border border-white/10 backdrop-blur-md flex flex-col justify-between"
             >
-              <div className="flex-1">
-                <BarChart3 className="w-10 h-10 text-brand-pink mb-6" />
+              <div>
+                <BarChart3 className="w-10 h-10 text-brand-orange mb-6" />
                 <h3 className="text-2xl font-display-theme font-bold mb-2">Deep Analytics</h3>
-                <p className="text-zinc-400 text-sm leading-relaxed max-w-xl">
-                  Monitor total visits, individual link clicks, visitor devices, and referring sites (referrer) in real time. Use insights to grow your business reach.
+                <p className="text-zinc-400 text-sm leading-relaxed">
+                  Monitor visits, individual clicks, and referrer data in real time to grow your audience.
                 </p>
               </div>
             </motion.div>
