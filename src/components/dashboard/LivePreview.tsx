@@ -1,6 +1,12 @@
 'use client'
 
 import Image from 'next/image'
+import AuroraBackground from '@/components/backgrounds/AuroraBackground'
+import SnowfallBackground from '@/components/backgrounds/SnowfallBackground'
+import MatrixBackground from '@/components/backgrounds/MatrixBackground'
+import StarsBackground from '@/components/backgrounds/StarsBackground'
+import ConfettiBackground from '@/components/backgrounds/ConfettiBackground'
+import ParticlesBackground from '@/components/backgrounds/ParticlesBackground'
 import { useState, useEffect } from 'react'
 import { 
   FaInstagram, 
@@ -109,12 +115,12 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
             </div>
           )}
 
-          {profile?.bg_animation === 'aurora' && <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-brand-pink/20 via-transparent to-transparent pointer-events-none z-0 animate-pulse" />}
-          {profile?.bg_animation === 'particles' && <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent pointer-events-none z-0" style={{ backgroundImage: 'radial-gradient(circle, #ffffff 1px, transparent 1px)', backgroundSize: '20px 20px', opacity: 0.3 }} />}
-          {profile?.bg_animation === 'snowfall' && <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-40 pointer-events-none z-0 mix-blend-screen animate-pulse-slow" />}
-          {profile?.bg_animation === 'stars' && <div className="absolute inset-0 pointer-events-none z-0 mix-blend-screen opacity-50" style={{ backgroundImage: 'radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)), radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)), radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0)), radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0)), radial-gradient(2px 2px at 130px 80px, #fff, rgba(0,0,0,0)), radial-gradient(2px 2px at 160px 120px, #ddd, rgba(0,0,0,0))', backgroundSize: '200px 200px', animation: 'pulseSlow 4s infinite alternate, bgMoveSlow 20s linear infinite' }} />}
-          {profile?.bg_animation === 'matrix' && <div className="absolute inset-0 pointer-events-none z-0 mix-blend-screen opacity-20" style={{ backgroundImage: 'repeating-linear-gradient(0deg, rgba(34, 197, 94, 0.2), rgba(34, 197, 94, 0.2) 1px, transparent 1px, transparent 2px)', backgroundSize: '100% 4px', animation: 'bgMove 10s linear infinite' }} />}
-          {profile?.bg_animation === 'confetti' && <div className="absolute inset-0 pointer-events-none z-0 opacity-30" style={{ backgroundImage: 'radial-gradient(4px 4px at 10% 20%, #ff0055, rgba(0,0,0,0)), radial-gradient(4px 4px at 30% 60%, #00ffaa, rgba(0,0,0,0)), radial-gradient(4px 4px at 50% 40%, #ffaa00, rgba(0,0,0,0)), radial-gradient(4px 4px at 80% 80%, #00aaff, rgba(0,0,0,0))', backgroundSize: '100px 100px', animation: 'bounceSlow 3s infinite alternate, bgMoveSlow 15s linear infinite' }} />}
+          {profile?.bg_animation === 'aurora' && <AuroraBackground />}
+          {profile?.bg_animation === 'particles' && <ParticlesBackground />}
+          {profile?.bg_animation === 'snowfall' && <SnowfallBackground />}
+          {profile?.bg_animation === 'stars' && <StarsBackground />}
+          {profile?.bg_animation === 'matrix' && <MatrixBackground />}
+          {profile?.bg_animation === 'confetti' && <ConfettiBackground />}
           {profile?.bg_animation === 'bokeh' && <div className="absolute inset-0 pointer-events-none z-0 opacity-40 mix-blend-screen blur-[8px]" style={{ backgroundImage: 'radial-gradient(circle at 20% 30%, rgba(236,72,153,0.4) 0%, transparent 40%), radial-gradient(circle at 80% 60%, rgba(249,115,22,0.4) 0%, transparent 40%)', animation: 'pulseSlow 5s infinite alternate, bgMove 20s ease-in-out infinite' }} />}
 
           {profile?.banner_url && (
