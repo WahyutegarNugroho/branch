@@ -181,6 +181,12 @@ export function LinkButton({ link, profileId, profile, visitorTheme }: { link: L
     baseBtnClass += " bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 backdrop-blur-md shadow-sm"
   } else if (styleVal === 'shadow') {
     baseBtnClass += " bg-white/10 hover:bg-white/20 border border-white/15 shadow-[0_8px_30px_rgba(0,0,0,0.3)] hover:shadow-[0_0_25px_rgba(255,255,255,0.15)]"
+  } else if (styleVal === 'neumorphism') {
+    baseBtnClass += " bg-white/10 shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),inset_-3px_-3px_7px_rgba(0,0,0,0.5),3px_3px_6px_rgba(0,0,0,0.4)] hover:shadow-[inset_1px_1px_3px_rgba(255,255,255,0.2),inset_-2px_-2px_5px_rgba(0,0,0,0.5),1px_1px_3px_rgba(0,0,0,0.4)] border border-transparent"
+  } else if (styleVal === 'glassmorphism') {
+    baseBtnClass += " bg-white/5 backdrop-blur-2xl border-t border-l border-white/20 border-r border-b border-white/5 shadow-[0_4px_30px_rgba(0,0,0,0.1)] hover:bg-white/10"
+  } else if (styleVal === 'neon') {
+    baseBtnClass += " bg-transparent border-2 border-[currentColor] shadow-[0_0_10px_currentColor,inset_0_0_10px_currentColor] hover:shadow-[0_0_20px_currentColor,inset_0_0_20px_currentColor] hover:bg-white/5"
   }
 
   // Spotlight / Priority support
@@ -245,6 +251,12 @@ export function LinkButton({ link, profileId, profile, visitorTheme }: { link: L
     baseBtnClassNear += " bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 backdrop-blur-md shadow-sm"
   } else if (styleVal === 'shadow') {
     baseBtnClassNear += " bg-white/10 hover:bg-white/20 border border-white/15 shadow-[0_8px_30px_rgba(0,0,0,0.3)] hover:shadow-[0_0_25px_rgba(255,255,255,0.15)]"
+  } else if (styleVal === 'neumorphism') {
+    baseBtnClassNear += " bg-white/10 shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),inset_-3px_-3px_7px_rgba(0,0,0,0.5),3px_3px_6px_rgba(0,0,0,0.4)] hover:shadow-[inset_1px_1px_3px_rgba(255,255,255,0.2),inset_-2px_-2px_5px_rgba(0,0,0,0.5),1px_1px_3px_rgba(0,0,0,0.4)] border border-transparent"
+  } else if (styleVal === 'glassmorphism') {
+    baseBtnClassNear += " bg-white/5 backdrop-blur-2xl border-t border-l border-white/20 border-r border-b border-white/5 shadow-[0_4px_30px_rgba(0,0,0,0.1)] hover:bg-white/10"
+  } else if (styleVal === 'neon') {
+    baseBtnClassNear += " bg-transparent border-2 border-[currentColor] shadow-[0_0_10px_currentColor,inset_0_0_10px_currentColor] hover:shadow-[0_0_20px_currentColor,inset_0_0_20px_currentColor] hover:bg-white/5"
   }
   baseBtnClassNear += extraClasses
 
@@ -282,6 +294,12 @@ export function LinkButton({ link, profileId, profile, visitorTheme }: { link: L
     baseBtnClassBetween += " bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 backdrop-blur-md shadow-sm"
   } else if (styleVal === 'shadow') {
     baseBtnClassBetween += " bg-white/10 hover:bg-white/20 border border-white/15 shadow-[0_8px_30px_rgba(0,0,0,0.3)] hover:shadow-[0_0_25px_rgba(255,255,255,0.15)]"
+  } else if (styleVal === 'neumorphism') {
+    baseBtnClassBetween += " bg-white/10 shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),inset_-3px_-3px_7px_rgba(0,0,0,0.5),3px_3px_6px_rgba(0,0,0,0.4)] hover:shadow-[inset_1px_1px_3px_rgba(255,255,255,0.2),inset_-2px_-2px_5px_rgba(0,0,0,0.5),1px_1px_3px_rgba(0,0,0,0.4)] border border-transparent"
+  } else if (styleVal === 'glassmorphism') {
+    baseBtnClassBetween += " bg-white/5 backdrop-blur-2xl border-t border-l border-white/20 border-r border-b border-white/5 shadow-[0_4px_30px_rgba(0,0,0,0.1)] hover:bg-white/10"
+  } else if (styleVal === 'neon') {
+    baseBtnClassBetween += " bg-transparent border-2 border-[currentColor] shadow-[0_0_10px_currentColor,inset_0_0_10px_currentColor] hover:shadow-[0_0_20px_currentColor,inset_0_0_20px_currentColor] hover:bg-white/5"
   }
   baseBtnClassBetween += extraClasses
 

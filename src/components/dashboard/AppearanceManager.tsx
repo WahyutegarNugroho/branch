@@ -85,6 +85,10 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
   const [themeStyle, setThemeStyle] = useState(profile?.theme_style || 'solid')
   const [buttonHoverEffect, setButtonHoverEffect] = useState(profile?.button_hover_effect || 'none')
   const [layoutType, setLayoutType] = useState(profile?.layout_type || 'list')
+  const [bgAnimation, setBgAnimation] = useState(profile?.bg_animation || 'none')
+  const [avatarFrame, setAvatarFrame] = useState(profile?.avatar_frame || 'none')
+  const [socialPlacement, setSocialPlacement] = useState(profile?.social_placement || 'top')
+  const [themeLock, setThemeLock] = useState(profile?.theme_lock || false)
 
   const bannerInputRef = useRef<HTMLInputElement>(null)
 
@@ -177,7 +181,11 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
         font_family: theme.font_family,
         theme_style: themeStyle,
         button_hover_effect: buttonHoverEffect,
-        layout_type: layoutType
+        layout_type: layoutType,
+        bg_animation: bgAnimation,
+        avatar_frame: avatarFrame,
+        social_placement: socialPlacement,
+        theme_lock: themeLock
       }
     }))
     
@@ -349,12 +357,16 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
           avatar_size: avatarSize,
           theme_style: themeStyle,
           button_hover_effect: buttonHoverEffect,
-          layout_type: layoutType
+          layout_type: layoutType,
+          bg_animation: bgAnimation,
+          avatar_frame: avatarFrame,
+          social_placement: socialPlacement,
+          theme_lock: themeLock
         }
       }))
     }, 50)
     return () => clearTimeout(timer)
-  }, [buttonShape, buttonStyle, fontFamily, textColor, socialStyle, profileAlign, avatarShape, bannerUrl, linkSpacing, avatarSize, themeStyle, buttonHoverEffect, layoutType])
+  }, [buttonShape, buttonStyle, fontFamily, textColor, socialStyle, profileAlign, avatarShape, bannerUrl, linkSpacing, avatarSize, themeStyle, buttonHoverEffect, layoutType, bgAnimation, avatarFrame, socialPlacement, themeLock])
 
   const handleSocialChange = (key: string, val: string) => {
     setSocialLinks(prev => ({
@@ -430,6 +442,10 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
     formData.set('theme_style', themeStyle)
     formData.set('button_hover_effect', buttonHoverEffect)
     formData.set('layout_type', layoutType)
+    formData.set('bg_animation', bgAnimation)
+    formData.set('avatar_frame', avatarFrame)
+    formData.set('social_placement', socialPlacement)
+    formData.set('theme_lock', themeLock ? 'true' : 'false')
 
     const result = await updateAppearance(formData)
     if (result.error) {
@@ -808,6 +824,28 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
               <p className="text-sm text-zinc-400">Useful to make text readable on bright custom images.</p>
             </div>
 
+            {/* Live Background Animation */}
+            <div className="space-y-3 pt-4 border-t border-white/5">
+              <Label className="text-zinc-300 font-bold text-sm">Background Animation</Label>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                {[
+                  { val: 'none', label: 'None' },
+                  { val: 'aurora', label: 'Aurora Waves' },
+                  { val: 'particles', label: 'Particles' },
+                  { val: 'snowfall', label: 'Snowfall' }
+                ].map((anim) => (
+                  <div 
+                    key={anim.val} 
+                    onClick={() => setBgAnimation(anim.val)} 
+                    className={`h-12 flex items-center justify-center rounded-xl border-2 cursor-pointer transition-all ${bgAnimation === anim.val ? 'border-brand-pink bg-brand-pink/10 text-white font-bold' : 'border-white/10 bg-white/5 text-zinc-400 hover:border-white/20'}`}
+                  >
+                    <span className="text-xs">{anim.label}</span>
+                  </div>
+                ))}
+                <input type="hidden" name="bg_animation" value={bgAnimation} />
+              </div>
+            </div>
+
             {/* Button Shapes & Styles Theme */}
             <div className="space-y-6 pt-6 border-t border-white/5">
               <div className="space-y-3">
@@ -838,7 +876,10 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
                     { val: 'fill', label: 'Filled' },
                     { val: 'outline', label: 'Outline' },
                     { val: 'soft', label: 'Soft' },
-                    { val: 'shadow', label: 'Shadow' }
+                    { val: 'shadow', label: 'Shadow' },
+                    { val: 'neumorphism', label: 'Neumorphism' },
+                    { val: 'glassmorphism', label: 'Glassmorphism' },
+                    { val: 'neon', label: 'Neon Glow' }
                   ].map((style) => (
                     <div 
                       key={style.val} 
@@ -862,6 +903,18 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
                 </Label>
                 <p className="text-xs text-zinc-500">Enable frosted glass effect for links and containers. Works best with image backgrounds.</p>
                 <input type="hidden" name="theme_style" value={themeStyle} />
+              </div>
+
+              <div className="space-y-3 pt-4 border-t border-white/5">
+                <Label className="text-zinc-300 font-bold text-sm flex items-center justify-between">
+                  <span>Force Lock Theme</span>
+                  <Switch 
+                    checked={themeLock} 
+                    onCheckedChange={(checked) => setThemeLock(checked)} 
+                  />
+                </Label>
+                <p className="text-xs text-zinc-500">If enabled, visitors will NOT be able to toggle Dark/Light mode on your public profile. It will lock to your exact custom styling.</p>
+                <input type="hidden" name="theme_lock" value={themeLock ? 'true' : 'false'} />
               </div>
 
               <div className="space-y-3 pt-4 border-t border-white/5">
@@ -1024,7 +1077,7 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
                   <Sliders className="w-4 h-4 text-brand-orange" /> Spacing & Custom Elements
                 </h3>
                 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                   {/* Avatar Shape */}
                   <div className="space-y-2">
                     <Label className="text-zinc-400 text-xs">Avatar Shape</Label>
@@ -1039,6 +1092,30 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
                           onClick={() => setAvatarShape(item.val)}
                           className={`h-10 flex items-center justify-center rounded-xl border-2 cursor-pointer transition-all ${
                             avatarShape === item.val
+                              ? 'border-brand-pink bg-brand-pink/10 text-white font-semibold'
+                              : 'border-white/10 bg-white/5 text-zinc-400 hover:border-white/20'
+                          }`}
+                        >
+                          <span className="text-[11px]">{item.label}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Avatar Frame */}
+                  <div className="space-y-2">
+                    <Label className="text-zinc-400 text-xs">Avatar Frame</Label>
+                    <div className="grid grid-cols-3 gap-1">
+                      {[
+                        { val: 'none', label: 'None' },
+                        { val: 'gradient-ring', label: 'Gradient' },
+                        { val: 'neon-glow', label: 'Neon' }
+                      ].map((item) => (
+                        <div
+                          key={item.val}
+                          onClick={() => setAvatarFrame(item.val)}
+                          className={`h-10 flex items-center justify-center rounded-xl border-2 cursor-pointer transition-all ${
+                            avatarFrame === item.val
                               ? 'border-brand-pink bg-brand-pink/10 text-white font-semibold'
                               : 'border-white/10 bg-white/5 text-zinc-400 hover:border-white/20'
                           }`}
@@ -1124,6 +1201,65 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
                     </div>
                   </div>
 
+                  {/* Background Animation */}
+                  <div className="space-y-2">
+                    <Label className="text-zinc-400 text-xs">Background Animation</Label>
+                    <div className="grid grid-cols-4 gap-1">
+                      {[
+                        { val: 'none', label: 'None' },
+                        { val: 'aurora', label: 'Aurora' },
+                        { val: 'particles', label: 'Particles' },
+                        { val: 'snowfall', label: 'Snowfall' }
+                      ].map((item) => (
+                        <div
+                          key={item.val}
+                          onClick={() => setBgAnimation(item.val)}
+                          className={`h-10 flex items-center justify-center rounded-xl border-2 cursor-pointer transition-all ${
+                            bgAnimation === item.val
+                              ? 'border-brand-pink bg-brand-pink/10 text-white font-semibold'
+                              : 'border-white/10 bg-white/5 text-zinc-400 hover:border-white/20'
+                          }`}
+                        >
+                          <span className="text-[11px]">{item.label}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Social Placement */}
+                  <div className="space-y-2">
+                    <Label className="text-zinc-400 text-xs">Social Placement</Label>
+                    <div className="grid grid-cols-2 gap-1">
+                      {[
+                        { val: 'top', label: 'Top (Default)' },
+                        { val: 'bottom', label: 'Bottom' }
+                      ].map((item) => (
+                        <div
+                          key={item.val}
+                          onClick={() => setSocialPlacement(item.val)}
+                          className={`h-10 flex items-center justify-center rounded-xl border-2 cursor-pointer transition-all ${
+                            socialPlacement === item.val
+                              ? 'border-brand-pink bg-brand-pink/10 text-white font-semibold'
+                              : 'border-white/10 bg-white/5 text-zinc-400 hover:border-white/20'
+                          }`}
+                        >
+                          <span className="text-[11px]">{item.label}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Theme Lock */}
+                  <div className="space-y-2">
+                    <Label className="text-zinc-400 text-xs">Global Options</Label>
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-2">
+                        <Switch checked={themeLock} onCheckedChange={setThemeLock} />
+                        <span className="text-xs text-zinc-300">Lock Theme (Hide Visitor Theme Toggle)</span>
+                      </div>
+                    </div>
+                  </div>
+
                   {/* Social Icons Style */}
                   <div className="space-y-2">
                     <Label className="text-zinc-400 text-xs">Social Icon Border Style</Label>
@@ -1132,13 +1268,36 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
                         { val: 'circle', label: 'Circle' },
                         { val: 'outline', label: 'Outline' },
                         { val: 'square', label: 'Square' },
-                        { val: 'minimal', label: 'Minimal' }
+                        { val: 'none', label: 'No Border' }
                       ].map((item) => (
                         <div
                           key={item.val}
                           onClick={() => setSocialStyle(item.val)}
-                          className={`h-12 flex items-center justify-center rounded-xl border-2 cursor-pointer transition-all ${
+                          className={`h-10 flex items-center justify-center rounded-xl border-2 cursor-pointer transition-all ${
                             socialStyle === item.val
+                              ? 'border-brand-pink bg-brand-pink/10 text-white font-semibold'
+                              : 'border-white/10 bg-white/5 text-zinc-400 hover:border-white/20'
+                          }`}
+                        >
+                          <span className="text-[11px]">{item.label}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Social Placement */}
+                  <div className="space-y-2">
+                    <Label className="text-zinc-400 text-xs">Social Links Placement</Label>
+                    <div className="grid grid-cols-2 gap-1">
+                      {[
+                        { val: 'top', label: 'Top (Under Bio)' },
+                        { val: 'bottom', label: 'Bottom (Footer)' }
+                      ].map((item) => (
+                        <div
+                          key={item.val}
+                          onClick={() => setSocialPlacement(item.val)}
+                          className={`h-10 flex items-center justify-center rounded-xl border-2 cursor-pointer transition-all ${
+                            socialPlacement === item.val
                               ? 'border-brand-pink bg-brand-pink/10 text-white font-semibold'
                               : 'border-white/10 bg-white/5 text-zinc-400 hover:border-white/20'
                           }`}

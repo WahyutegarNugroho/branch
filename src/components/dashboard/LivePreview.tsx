@@ -109,6 +109,10 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
             </div>
           )}
 
+          {profile?.bg_animation === 'aurora' && <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-brand-pink/20 via-transparent to-transparent pointer-events-none z-0 animate-pulse" />}
+          {profile?.bg_animation === 'particles' && <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent pointer-events-none z-0" style={{ backgroundImage: 'radial-gradient(circle, #ffffff 1px, transparent 1px)', backgroundSize: '20px 20px', opacity: 0.3 }} />}
+          {profile?.bg_animation === 'snowfall' && <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-40 pointer-events-none z-0 mix-blend-screen" />}
+
           {profile?.banner_url && (
             <div className="absolute top-0 inset-x-0 h-24 w-full overflow-hidden border-b border-white/10 z-0">
               <Image src={profile.banner_url} alt="Banner" fill className="object-cover" sizes="340px" />
@@ -131,15 +135,16 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
             style={{ color: profile?.text_color || '#ffffff' }}
           >
             {profile?.avatar_url ? (
-              <div className={`relative border-2 border-white/20 shadow-lg ${
-                profile?.avatar_shape === 'rounded' ? 'rounded-2xl' : 
-                profile?.avatar_shape === 'hexagon' ? '' : 'rounded-full'
-              } ${
-                profile?.avatar_size === 'small' ? 'w-16 h-16' : 
-                profile?.avatar_size === 'large' ? 'w-28 h-28' : 'w-24 h-24'
-              } mb-4 ${profile?.banner_url ? 'mt-4 border-4 border-zinc-950' : ''}`}
-                style={{ clipPath: profile?.avatar_shape === 'hexagon' ? 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' : undefined }}
-              >
+              <div className={`relative flex items-center justify-center ${profile?.avatar_frame === 'gradient-ring' ? 'p-1 rounded-full bg-gradient-to-tr from-brand-pink to-brand-orange shadow-[0_0_15px_rgba(236,72,153,0.5)]' : profile?.avatar_frame === 'neon-glow' ? 'p-0.5 rounded-full bg-cyan-400 shadow-[0_0_20px_rgba(34,211,238,0.8)]' : ''} mb-4 ${profile?.banner_url ? 'mt-4 border-4 border-zinc-950 rounded-full' : ''}`}>
+                <div className={`relative border-2 border-white/20 shadow-lg ${
+                  profile?.avatar_shape === 'rounded' ? 'rounded-2xl' : 
+                  profile?.avatar_shape === 'hexagon' ? '' : 'rounded-full'
+                } ${
+                  profile?.avatar_size === 'small' ? 'w-16 h-16' : 
+                  profile?.avatar_size === 'large' ? 'w-28 h-28' : 'w-24 h-24'
+                } overflow-hidden`}
+                  style={{ clipPath: profile?.avatar_shape === 'hexagon' ? 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' : undefined }}
+                >
                 <Image 
                   src={profile.avatar_url} 
                   alt="Avatar" 
@@ -148,17 +153,21 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
                   sizes="112px"
                 />
               </div>
-            ) : (<div 
-                className={`bg-zinc-800 mb-4 flex items-center justify-center text-white text-3xl font-bold border-2 border-white/20 shadow-lg ${
-                  profile?.avatar_shape === 'rounded' ? 'rounded-2xl' : 
-                  profile?.avatar_shape === 'hexagon' ? '' : 'rounded-full'
-                } ${
-                  profile?.avatar_size === 'small' ? 'w-16 h-16' : 
-                  profile?.avatar_size === 'large' ? 'w-28 h-28' : 'w-24 h-24'
-                } ${profile?.banner_url ? 'mt-4 border-4 border-zinc-950' : ''}`}
-                style={{ clipPath: profile?.avatar_shape === 'hexagon' ? 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' : undefined }}
-              >
+            </div>
+            ) : (
+              <div className={`relative flex items-center justify-center ${profile?.avatar_frame === 'gradient-ring' ? 'p-1 rounded-full bg-gradient-to-tr from-brand-pink to-brand-orange shadow-[0_0_15px_rgba(236,72,153,0.5)]' : profile?.avatar_frame === 'neon-glow' ? 'p-0.5 rounded-full bg-cyan-400 shadow-[0_0_20px_rgba(34,211,238,0.8)]' : ''} mb-4 ${profile?.banner_url ? 'mt-4 border-4 border-zinc-950 rounded-full' : ''}`}>
+                <div 
+                  className={`bg-zinc-800 flex items-center justify-center text-white text-3xl font-bold border-2 border-white/20 shadow-lg ${
+                    profile?.avatar_shape === 'rounded' ? 'rounded-2xl' : 
+                    profile?.avatar_shape === 'hexagon' ? '' : 'rounded-full'
+                  } ${
+                    profile?.avatar_size === 'small' ? 'w-16 h-16' : 
+                    profile?.avatar_size === 'large' ? 'w-28 h-28' : 'w-24 h-24'
+                  }`}
+                  style={{ clipPath: profile?.avatar_shape === 'hexagon' ? 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' : undefined }}
+                >
                 {profile?.username?.charAt(0).toUpperCase() || 'B'}
+                </div>
               </div>
             )}
             
@@ -169,7 +178,7 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
               {profile?.bio || 'No bio yet.'}
             </p>
  
-            {profile?.social_links && typeof profile.social_links === 'object' && Object.keys(profile.social_links).length > 0 && (
+            {(!profile?.social_placement || profile?.social_placement === 'top') && profile?.social_links && typeof profile.social_links === 'object' && Object.keys(profile.social_links).length > 0 && (
               <div className="flex flex-wrap items-center justify-center gap-2.5 mb-6 z-10">
                 {Object.keys(profile.social_links).map((key) => {
                   const socialLinksRecord = profile.social_links as Record<string, string>
@@ -355,6 +364,16 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
                       baseBtnClassNear += " bg-white/5 border border-white/10 backdrop-blur-md shadow-sm"
                     } else if (styleVal === 'shadow') {
                       baseBtnClass += " bg-white/15 border border-white/15 shadow-[0_4px_15px_rgba(0,0,0,0.3)]"
+                      baseBtnClassNear += " bg-white/15 border border-white/15 shadow-[0_4px_15px_rgba(0,0,0,0.3)]"
+                    } else if (styleVal === 'neumorphism') {
+                      baseBtnClass += " bg-white/10 shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),inset_-3px_-3px_7px_rgba(0,0,0,0.5),3px_3px_6px_rgba(0,0,0,0.4)] border border-transparent"
+                      baseBtnClassNear += " bg-white/10 shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),inset_-3px_-3px_7px_rgba(0,0,0,0.5),3px_3px_6px_rgba(0,0,0,0.4)] border border-transparent"
+                    } else if (styleVal === 'glassmorphism') {
+                      baseBtnClass += " bg-white/5 backdrop-blur-2xl border-t border-l border-white/20 border-r border-b border-white/5 shadow-[0_4px_30px_rgba(0,0,0,0.1)]"
+                      baseBtnClassNear += " bg-white/5 backdrop-blur-2xl border-t border-l border-white/20 border-r border-b border-white/5 shadow-[0_4px_30px_rgba(0,0,0,0.1)]"
+                    } else if (styleVal === 'neon') {
+                      baseBtnClass += " bg-transparent border-2 border-[currentColor] shadow-[0_0_10px_currentColor,inset_0_0_10px_currentColor]"
+                      baseBtnClassNear += " bg-transparent border-2 border-[currentColor] shadow-[0_0_10px_currentColor,inset_0_0_10px_currentColor]"
                     }
 
                     // Spotlight / Priority support
@@ -438,6 +457,12 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
                       baseBtnClassBetween += " bg-white/5 border border-white/10 backdrop-blur-md shadow-sm"
                     } else if (styleVal === 'shadow') {
                       baseBtnClassBetween += " bg-white/15 border border-white/15 shadow-[0_4px_15px_rgba(0,0,0,0.3)]"
+                    } else if (styleVal === 'neumorphism') {
+                      baseBtnClassBetween += " bg-white/10 shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),inset_-3px_-3px_7px_rgba(0,0,0,0.5),3px_3px_6px_rgba(0,0,0,0.4)] border border-transparent"
+                    } else if (styleVal === 'glassmorphism') {
+                      baseBtnClassBetween += " bg-white/5 backdrop-blur-2xl border-t border-l border-white/20 border-r border-b border-white/5 shadow-[0_4px_30px_rgba(0,0,0,0.1)]"
+                    } else if (styleVal === 'neon') {
+                      baseBtnClassBetween += " bg-transparent border-2 border-[currentColor] shadow-[0_0_10px_currentColor,inset_0_0_10px_currentColor]"
                     }
                     baseBtnClassBetween += extraClasses
 
@@ -481,9 +506,36 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
               })()}
             </div>
             
+            {profile?.social_placement === 'bottom' && profile?.social_links && typeof profile.social_links === 'object' && Object.keys(profile.social_links).length > 0 && (
+              <div className="flex flex-wrap items-center justify-center gap-2.5 mt-8 mb-4 z-10 w-full">
+                {Object.keys(profile.social_links).map((key) => {
+                  const socialLinksRecord = profile.social_links as Record<string, string>
+                  const url = socialLinksRecord[key]
+                  if (!url) return null
+                  const IconComponent = socialsIconMap[key]
+                  if (!IconComponent) return null
+ 
+                  return (
+                    <div
+                      key={key}
+                      className={`w-7 h-7 flex items-center justify-center shadow-sm backdrop-blur-md ${
+                        profile?.social_style === 'outline' ? 'bg-transparent border border-white/30 text-white' :
+                        profile?.social_style === 'square' ? 'bg-white/5 border border-white/10 text-white rounded-lg' :
+                        profile?.social_style === 'minimal' ? 'bg-transparent border-0 text-white shadow-none' :
+                        'rounded-full bg-white/5 border border-white/10 text-white'
+                      }`}
+                      style={{ color: profile?.text_color || '#ffffff' }}
+                    >
+                      <IconComponent size={14} />
+                    </div>
+                  )
+                })}
+              </div>
+            )}
+
             {/* Live Preview Branding Pill */}
             {profile?.show_branding !== false && (
-              <div className="mt-12 mb-6">
+              <div className="mt-6 mb-6 flex justify-center w-full z-10">
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-white/40 text-[10px] font-semibold backdrop-blur-md">
                   <span>Powered by</span>
                   <div className="w-4 h-4 rounded bg-gradient-to-tr from-brand-pink to-brand-orange flex items-center justify-center">

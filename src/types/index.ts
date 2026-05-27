@@ -33,6 +33,10 @@ export interface Profile {
   link_spacing?: string | null
   avatar_size?: string | null
   bg_video_url?: string | null
+  bg_animation?: string | null
+  avatar_frame?: string | null
+  social_placement?: string | null
+  theme_lock?: boolean
 }
 
 export interface Link {

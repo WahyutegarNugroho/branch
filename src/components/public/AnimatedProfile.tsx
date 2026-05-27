@@ -190,6 +190,11 @@ export function AnimatedProfile({ profile, links, bgClass: defaultBgClass, bgSty
           </div>
         )}
 
+        {/* Live Background Animations */}
+        {profile?.bg_animation === 'aurora' && <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-brand-pink/20 via-transparent to-transparent pointer-events-none z-0 animate-pulse" />}
+        {profile?.bg_animation === 'particles' && <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent pointer-events-none z-0" style={{ backgroundImage: 'radial-gradient(circle, #ffffff 1px, transparent 1px)', backgroundSize: '20px 20px', opacity: 0.3 }} />}
+        {profile?.bg_animation === 'snowfall' && <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-40 pointer-events-none z-0 mix-blend-screen" />}
+
         {/* Hero Banner header overlay */}
         {profile?.banner_url && (
           <div className="absolute top-0 inset-x-0 h-32 w-full overflow-hidden border-b border-white/10 z-0">
@@ -211,7 +216,7 @@ export function AnimatedProfile({ profile, links, bgClass: defaultBgClass, bgSty
             <Zap className="w-4 h-4 text-white" />
           </div>
           <div className="flex gap-2">
-            {mounted && (
+            {mounted && !profile.theme_lock && (
               <button 
                 onClick={toggleTheme}
                 className="w-9 h-9 rounded-full bg-black/20 backdrop-blur-md flex items-center justify-center text-white/90 hover:text-white border border-white/20 transition-all active:scale-95 shadow-sm"
@@ -260,9 +265,10 @@ export function AnimatedProfile({ profile, links, bgClass: defaultBgClass, bgSty
           style={{ color: currentTextColor }}
         >
           {/* Avatar */}
-          <motion.div 
-            variants={avatarVariants} 
-            className={`relative overflow-hidden mb-6 shadow-2xl backdrop-blur-sm border-4 ${
+          <div className={`relative flex justify-center ${profile?.avatar_frame === 'gradient-ring' ? 'p-1.5 rounded-full bg-gradient-to-tr from-brand-pink to-brand-orange shadow-[0_0_20px_rgba(236,72,153,0.5)]' : profile?.avatar_frame === 'neon-glow' ? 'p-1 rounded-full bg-cyan-400 shadow-[0_0_25px_rgba(34,211,238,0.8)]' : ''} mb-6 ${profile?.banner_url ? 'mt-6 border-4 border-zinc-950 rounded-full bg-zinc-950' : ''}`}>
+            <motion.div 
+              variants={avatarVariants} 
+              className={`relative overflow-hidden shadow-2xl backdrop-blur-sm border-4 ${
               profile.avatar_url ? 'border-white/20' : 'border-white/10'
             } ${
               profile?.avatar_shape === 'rounded' ? 'rounded-2xl' : 
@@ -280,7 +286,8 @@ export function AnimatedProfile({ profile, links, bgClass: defaultBgClass, bgSty
                 {profile.username.charAt(0).toUpperCase()}
               </div>
             )}
-          </motion.div>
+            </motion.div>
+          </div>
 
           {/* Profile Info */}
           <motion.h1 
@@ -300,8 +307,8 @@ export function AnimatedProfile({ profile, links, bgClass: defaultBgClass, bgSty
             </motion.p>
           )}
 
-          {/* Social Icons Row */}
-          {profile.social_links && typeof profile.social_links === 'object' && Object.keys(profile.social_links).length > 0 && (
+          {/* Social Icons Row (Top Placement) */}
+          {(!profile?.social_placement || profile?.social_placement === 'top') && profile.social_links && typeof profile.social_links === 'object' && Object.keys(profile.social_links).length > 0 && (
             <motion.div 
               variants={socialRowVariants} 
               className={`flex flex-wrap gap-4 mb-8 z-10 w-full ${profile?.profile_align === 'left' ? 'justify-start' : 'justify-center'}`}
@@ -380,11 +387,48 @@ export function AnimatedProfile({ profile, links, bgClass: defaultBgClass, bgSty
             })()}
           </motion.div>
 
+          {/* Social Icons Row (Bottom Placement) */}
+          {profile?.social_placement === 'bottom' && profile.social_links && typeof profile.social_links === 'object' && Object.keys(profile.social_links).length > 0 && (
+            <motion.div 
+              variants={socialRowVariants} 
+              className={`flex flex-wrap gap-4 mt-8 mb-4 z-10 w-full justify-center`}
+            >
+              {Object.keys(profile.social_links).map((key) => {
+                const socialLinksRecord = profile.social_links as Record<string, string>
+                const url = socialLinksRecord[key]
+                if (!url) return null
+                const IconComponent = socialsIconMap[key]
+                if (!IconComponent) return null
+
+                return (
+                  <motion.a
+                    key={key}
+                    variants={socialIconVariants}
+                    href={url.startsWith('http') || url.startsWith('mailto:') || url.startsWith('tel:') ? url : `https://${url}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    whileHover={{ scale: 1.15, rotate: 5 }}
+                    whileTap={{ scale: 0.9 }}
+                    className={`w-12 h-12 flex items-center justify-center shadow-lg backdrop-blur-md transition-all ${
+                      profile?.social_style === 'outline' ? 'bg-transparent border-2 border-white/30 text-white hover:border-brand-pink hover:text-brand-pink' :
+                      profile?.social_style === 'square' ? 'bg-white/5 border border-white/10 text-white rounded-xl hover:bg-white/10' :
+                      profile?.social_style === 'minimal' ? 'bg-transparent border-0 text-white shadow-none hover:text-brand-pink hover:scale-125' :
+                      'rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10'
+                    }`}
+                    style={{ color: currentTextColor }}
+                  >
+                    <IconComponent size={22} className={profile?.social_style === 'minimal' ? 'drop-shadow-none' : 'drop-shadow-sm'} />
+                  </motion.a>
+                )
+              })}
+            </motion.div>
+          )}
+
           {/* Footer branding */}
           {profile.show_branding !== false && (
             <motion.div 
               variants={footerVariants}
-              className="mt-16 mb-8 z-10"
+              className="mt-8 mb-8 z-10"
             >
               <a 
                 href="/" 
