@@ -22,7 +22,7 @@ import {
 } from 'lucide-react'
 import { toast } from 'sonner'
 
-export function AnalyticsDashboard({ initialData }: { initialData: any }) {
+export function AnalyticsDashboard({ initialData }: { initialData: Awaited<ReturnType<typeof getAnalyticsStats>> }) {
   const [stats, setStats] = useState(initialData)
   const [filterType, setFilterType] = useState('7') // '7', '30', '90', 'custom'
   const [startDate, setStartDate] = useState('')
@@ -94,7 +94,7 @@ export function AnalyticsDashboard({ initialData }: { initialData: any }) {
       
       const csvRows = [headers.join(',')]
       
-      stats.rawRecords.forEach((row: any) => {
+      stats.rawRecords.forEach((row) => {
         const values = [
           row.id,
           row.created_at,
@@ -129,10 +129,10 @@ export function AnalyticsDashboard({ initialData }: { initialData: any }) {
     }
   }
 
-  const maxClicks = stats.linkClicks?.length > 0 ? Math.max(...stats.linkClicks.map((l: any) => l.clicks)) : 0
-  const maxReferrers = stats.topReferrers?.length > 0 ? Math.max(...stats.topReferrers.map((r: any) => r.count)) : 0
-  const maxCountries = stats.topCountries?.length > 0 ? Math.max(...stats.topCountries.map((c: any) => c.count)) : 0
-  const maxCities = stats.topCities?.length > 0 ? Math.max(...stats.topCities.map((c: any) => c.count)) : 0
+  const maxClicks = stats.linkClicks?.length > 0 ? Math.max(...stats.linkClicks.map((l) => l.clicks)) : 0
+  const maxReferrers = stats.topReferrers?.length > 0 ? Math.max(...stats.topReferrers.map((r) => r.count)) : 0
+  const maxCountries = stats.topCountries?.length > 0 ? Math.max(...stats.topCountries.map((c) => c.count)) : 0
+  const maxCities = stats.topCities?.length > 0 ? Math.max(...stats.topCities.map((c) => c.count)) : 0
 
   return (
     <div className="space-y-6 font-sans-theme">
@@ -258,7 +258,7 @@ export function AnalyticsDashboard({ initialData }: { initialData: any }) {
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    {stats.linkClicks.map((link: any) => {
+                    {stats.linkClicks.map((link) => {
                       const percent = maxClicks > 0 ? (link.clicks / maxClicks) * 100 : 0
                       return (
                         <div key={link.id} className="space-y-1">
@@ -297,7 +297,7 @@ export function AnalyticsDashboard({ initialData }: { initialData: any }) {
                   {(!stats.topCountries || stats.topCountries.length === 0) ? (
                     <p className="text-zinc-500 text-xs">No country data recorded.</p>
                   ) : (
-                    stats.topCountries.map((c: any) => {
+                    stats.topCountries.map((c) => {
                       const percent = maxCountries > 0 ? (c.count / maxCountries) * 100 : 0
                       return (
                         <div key={c.name} className="space-y-1">
@@ -322,7 +322,7 @@ export function AnalyticsDashboard({ initialData }: { initialData: any }) {
                   {(!stats.topCities || stats.topCities.length === 0) ? (
                     <p className="text-zinc-500 text-xs">No city data recorded.</p>
                   ) : (
-                    stats.topCities.map((c: any) => {
+                    stats.topCities.map((c) => {
                       const percent = maxCities > 0 ? (c.count / maxCities) * 100 : 0
                       return (
                         <div key={c.name} className="space-y-1">
@@ -357,7 +357,7 @@ export function AnalyticsDashboard({ initialData }: { initialData: any }) {
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    {stats.topReferrers.map((ref: any) => {
+                    {stats.topReferrers.map((ref) => {
                       const percent = maxReferrers > 0 ? (ref.count / maxReferrers) * 100 : 0
                       return (
                         <div key={ref.name} className="space-y-1">
@@ -400,7 +400,7 @@ export function AnalyticsDashboard({ initialData }: { initialData: any }) {
                     </div>
                   ) : (
                     <div className="space-y-4">
-                      {stats.devices.map((device: any) => {
+                      {stats.devices.map((device) => {
                         const isMobile = device.name === 'Mobile'
                         const DeviceIcon = isMobile ? Smartphone : Laptop
                         return (
@@ -451,7 +451,7 @@ export function AnalyticsDashboard({ initialData }: { initialData: any }) {
                           </tr>
                         </thead>
                         <tbody>
-                          {stats.utmCampaigns.map((utm: any) => (
+                          {stats.utmCampaigns.map((utm) => (
                             <tr key={utm.name} className="border-b border-white/5 text-zinc-200">
                               <td className="py-2.5 font-semibold flex items-center gap-1.5">
                                 <Compass className="w-3.5 h-3.5 text-zinc-500" />

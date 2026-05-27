@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { useState, useEffect } from 'react'
 import { 
   FaInstagram, 
@@ -13,6 +14,9 @@ import {
 import { FaXTwitter } from 'react-icons/fa6'
 import { Zap } from 'lucide-react'
 
+import { hexToRgba } from '@/lib/color-utils'
+import { parseEmbedUrl } from '@/lib/embed-utils'
+
 const socialsIconMap: Record<string, any> = {
   instagram: FaInstagram,
   twitter: FaXTwitter,
@@ -24,93 +28,8 @@ const socialsIconMap: Record<string, any> = {
   email: FaEnvelope,
 }
 
-function hexToRgba(hex: string, opacity: number) {
-  const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-  const fullHex = hex.replace(shorthandRegex, (_, r, g, b) => r + r + g + g + b + b);
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(fullHex);
-  if (!result) return 'rgba(255, 255, 255, 0.05)';
-  const r = parseInt(result[1], 16);
-  const g = parseInt(result[2], 16);
-  const b = parseInt(result[3], 16);
-  return `rgba(${r}, ${g}, ${b}, ${opacity / 100})`;
-}
-
-// Inline keyframes — injected via <style> tag to bypass Turbopack CSS tree-shaking
-const ANIMATION_KEYFRAMES = `
-@keyframes pulseSlow { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.025); } }
-@keyframes bounceSlow { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
-@keyframes shakeQuick { 0%, 75%, 100% { transform: translateX(0); } 80%, 90% { transform: translateX(-4px); } 85%, 95% { transform: translateX(4px); } }
-@keyframes wobbleQuick { 0%, 75%, 100% { transform: rotate(0deg); } 80%, 90% { transform: rotate(-2deg); } 85%, 95% { transform: rotate(2deg); } }
-@keyframes glowPulse { 0%, 100% { box-shadow: 0 0 5px rgba(236,72,153,0.4), 0 0 15px rgba(236,72,153,0.2); } 50% { box-shadow: 0 0 18px rgba(236,72,153,0.8), 0 0 30px rgba(236,72,153,0.4); } }
-`
-
-function parseEmbedUrl(url: string) {
-  try {
-    const cleanUrl = url.trim()
-
-    // 1. YouTube
-    if (cleanUrl.includes('youtube.com') || cleanUrl.includes('youtu.be')) {
-      let videoId = ''
-      if (cleanUrl.includes('youtu.be/')) {
-        videoId = cleanUrl.split('youtu.be/')[1]?.split('?')[0] || ''
-      } else if (cleanUrl.includes('youtube.com/shorts/')) {
-        videoId = cleanUrl.split('youtube.com/shorts/')[1]?.split('?')[0] || ''
-      } else if (cleanUrl.includes('youtube.com/watch')) {
-        videoId = new URLSearchParams(new URL(cleanUrl).search).get('v') || ''
-      } else if (cleanUrl.includes('youtube.com/embed/')) {
-        videoId = cleanUrl.split('youtube.com/embed/')[1]?.split('?')[0] || ''
-      }
-      if (videoId) {
-        return {
-          type: 'youtube',
-          embedUrl: `https://www.youtube.com/embed/${videoId}`,
-          height: 160
-        }
-      }
-    }
-
-    // 2. Spotify
-    if (cleanUrl.includes('open.spotify.com')) {
-      const parts = new URL(cleanUrl).pathname.split('/')
-      const type = parts[1]
-      const id = parts[2]
-      if (type && id) {
-        return {
-          type: 'spotify',
-          embedUrl: `https://open.spotify.com/embed/${type}/${id}`,
-          height: type === 'track' ? 80 : 160
-        }
-      }
-    }
-
-    // 3. SoundCloud
-    if (cleanUrl.includes('soundcloud.com')) {
-      return {
-        type: 'soundcloud',
-        embedUrl: `https://w.soundcloud.com/player/?url=${encodeURIComponent(cleanUrl)}&color=%23ff5500&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false`,
-        height: 120
-      }
-    }
-
-    // 4. TikTok
-    if (cleanUrl.includes('tiktok.com')) {
-      const match = cleanUrl.match(/video\/(\d+)/)
-      const videoId = match ? match[1] : ''
-      if (videoId) {
-        return {
-          type: 'tiktok',
-          embedUrl: `https://www.tiktok.com/embed/v2/${videoId}`,
-          height: 180
-        }
-      }
-    }
-  } catch (e) {
-    console.error('Error parsing embed URL:', e)
-  }
-  return null
-}
-
-import { Profile, Link } from '@/types'
+import { Profile, Link, LinkImage } from '@/types'
+import { getPlatformByName } from '@/utils/platforms'
 
 export function LivePreview({ profile: initialProfile, links }: { profile?: Profile | null, links?: Link[] }) {
   const [profile, setProfile] = useState(initialProfile)
@@ -126,17 +45,17 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
 
   useEffect(() => {
     const handleUpdate = (e: CustomEvent) => {
-      setProfile((prev: any) => ({ ...prev, ...e.detail }))
+      setProfile((prev: Profile | null | undefined) => ({ ...(prev || {}), ...e.detail } as Profile))
     }
-    window.addEventListener('profile-update' as any, handleUpdate)
+    window.addEventListener('profile-update' as unknown as string, handleUpdate as EventListener)
     return () => {
-      window.removeEventListener('profile-update' as any, handleUpdate)
+      window.removeEventListener('profile-update' as unknown as string, handleUpdate as EventListener)
     }
   }, [])
 
   useEffect(() => {
     const handleLinksUpdate = (e: CustomEvent) => {
-      setLocalLinks((prev: any[] | undefined) => {
+      setLocalLinks((prev: Link[] | undefined) => {
         if (!prev) return prev
         return prev.map(link => {
           if (link.id === e.detail.id) {
@@ -146,9 +65,9 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
         })
       })
     }
-    window.addEventListener('link-preview-update' as any, handleLinksUpdate)
+    window.addEventListener('link-preview-update' as unknown as string, handleLinksUpdate as EventListener)
     return () => {
-      window.removeEventListener('link-preview-update' as any, handleLinksUpdate)
+      window.removeEventListener('link-preview-update' as unknown as string, handleLinksUpdate as EventListener)
     }
   }, [])
 
@@ -168,8 +87,6 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
 
   return (
     <div className="flex h-[calc(100vh-64px)] items-center justify-center p-8 sticky top-16">
-      {/* Inject animation keyframes directly into DOM to bypass Turbopack tree-shaking */}
-      <style dangerouslySetInnerHTML={{ __html: ANIMATION_KEYFRAMES }} />
       {/* Smartphone Mockup with Tech Glow */}
       <div className="relative h-[700px] w-[340px] rounded-[3rem] border-[12px] border-zinc-900 bg-zinc-950 shadow-[0_0_50px_rgba(139,92,246,0.15)] overflow-hidden flex flex-col">
         {/* Dynamic Island / Notch */}
@@ -194,7 +111,7 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
 
           {profile?.banner_url && (
             <div className="absolute top-0 inset-x-0 h-24 w-full overflow-hidden border-b border-white/10 z-0">
-              <img src={profile.banner_url} alt="Banner" className="w-full h-full object-cover" />
+              <Image src={profile.banner_url} alt="Banner" fill className="object-cover" sizes="340px" />
             </div>
           )}
 
@@ -208,24 +125,30 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
           <div 
             className={`relative z-10 w-full flex flex-col ${
               profile?.profile_align === 'left' ? 'items-start text-left' : 'items-center text-center'
-            } ${profile?.font_family || 'font-sans-theme'} ${profile?.banner_url ? 'pt-8' : ''}`}
+            } ${
+              profile?.theme_style === 'glass' ? 'm-4 p-6 rounded-3xl backdrop-blur-xl bg-white/10 border border-white/20 shadow-2xl w-[calc(100%-2rem)] shrink-0' : 'h-full p-6'
+            } ${profile?.font_family || 'font-sans-theme'} ${profile?.banner_url && profile?.theme_style !== 'glass' ? 'pt-8' : ''}`}
             style={{ color: profile?.text_color || '#ffffff' }}
           >
             {profile?.avatar_url ? (
-              <img 
-                src={profile.avatar_url} 
-                alt="Avatar" 
-                className={`object-cover border-2 border-white/20 shadow-lg ${
-                  profile?.avatar_shape === 'rounded' ? 'rounded-2xl' : 
-                  profile?.avatar_shape === 'hexagon' ? '' : 'rounded-full'
-                } ${
-                  profile?.avatar_size === 'small' ? 'w-16 h-16' : 
-                  profile?.avatar_size === 'large' ? 'w-28 h-28' : 'w-24 h-24'
-                } mb-4 ${profile?.banner_url ? 'mt-4 border-4 border-zinc-950' : ''}`}
+              <div className={`relative border-2 border-white/20 shadow-lg ${
+                profile?.avatar_shape === 'rounded' ? 'rounded-2xl' : 
+                profile?.avatar_shape === 'hexagon' ? '' : 'rounded-full'
+              } ${
+                profile?.avatar_size === 'small' ? 'w-16 h-16' : 
+                profile?.avatar_size === 'large' ? 'w-28 h-28' : 'w-24 h-24'
+              } mb-4 ${profile?.banner_url ? 'mt-4 border-4 border-zinc-950' : ''}`}
                 style={{ clipPath: profile?.avatar_shape === 'hexagon' ? 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' : undefined }}
-              />
-            ) : (
-              <div 
+              >
+                <Image 
+                  src={profile.avatar_url} 
+                  alt="Avatar" 
+                  fill
+                  className="object-cover" 
+                  sizes="112px"
+                />
+              </div>
+            ) : (<div 
                 className={`bg-zinc-800 mb-4 flex items-center justify-center text-white text-3xl font-bold border-2 border-white/20 shadow-lg ${
                   profile?.avatar_shape === 'rounded' ? 'rounded-2xl' : 
                   profile?.avatar_shape === 'hexagon' ? '' : 'rounded-full'
@@ -324,16 +247,18 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
                                 No images in this gallery yet
                               </div>
                             ) : (
-                              images.map((img: any) => (
+                              images.map((img: LinkImage) => (
                                 <div 
                                   key={img.id} 
                                   className="w-[120px] h-[80px] rounded-xl overflow-hidden border border-white/10 shadow shrink-0 snap-center relative"
                                 >
-                                  <img 
-                                    src={img.image_url} 
-                                    alt="" 
-                                    className="w-full h-full object-cover" 
-                                  />
+                                <Image 
+                                  src={img.image_url} 
+                                  alt="" 
+                                  fill
+                                  className="object-cover" 
+                                  sizes="120px"
+                                />
                                 </div>
                               ))
                             )}
@@ -343,7 +268,7 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
                     }
 
                     if (link.is_embed) {
-                      const embedInfo = parseEmbedUrl(link.url)
+                      const embedInfo = parseEmbedUrl(link.url, true)
                       if (embedInfo) {
                         return (
                           <div key={link.id} className="w-full rounded-xl overflow-hidden border border-white/10 bg-zinc-900/40 relative shadow-sm">
@@ -360,13 +285,12 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
                       }
                     }
 
-                    const { getPlatformByName } = require('@/utils/platforms')
                     const matchedPlatform = getPlatformByName(link.title)
                     const PlatformIcon = link.show_icon !== false ? matchedPlatform?.icon : null
                     
                     const ThumbnailImg = link.thumbnail_url ? (
-                      <div className="w-5 h-5 rounded-full overflow-hidden border border-white/20 shadow-inner flex items-center justify-center shrink-0 z-10">
-                        <img src={link.thumbnail_url} alt="" className="w-full h-full object-cover" />
+                      <div className="w-5 h-5 rounded-full overflow-hidden border border-white/20 shadow-inner flex items-center justify-center shrink-0 z-10 relative">
+                        <Image src={link.thumbnail_url} alt="" fill className="object-cover" sizes="20px" />
                       </div>
                     ) : null
 
@@ -406,14 +330,24 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
 
                     const shapeClass = profile?.button_shape || 'rounded-2xl'
                     const styleVal = profile?.button_style || 'soft'
+                    const hoverEffect = profile?.button_hover_effect || 'none'
+                    let hoverClass = ""
+                    if (hoverEffect === 'scale') hoverClass = " hover:scale-[1.03] transition-transform"
+                    if (hoverEffect === 'lift') hoverClass = " hover:-translate-y-1 hover:shadow-xl transition-all"
+                    if (hoverEffect === 'glow') hoverClass = " hover:shadow-[0_0_20px_rgba(255,255,255,0.4)] transition-shadow"
                     
-                    let baseBtnClass = "group flex items-center justify-center w-full py-3 px-4 text-white text-sm font-semibold pointer-events-none relative overflow-hidden " + shapeClass
+                    let baseBtnClass = "group flex items-center justify-center w-full py-3 px-4 text-white text-sm font-semibold pointer-events-none relative overflow-hidden " + shapeClass + hoverClass
+                    let baseBtnClassNear = "group flex items-center justify-center gap-2 w-full py-3 px-4 text-white text-sm font-semibold pointer-events-none relative overflow-hidden " + shapeClass + hoverClass
+                    
                     if (styleVal === 'fill') {
                       baseBtnClass += " bg-white/15 border border-white/10 shadow-sm"
+                      baseBtnClassNear += " bg-white/15 border border-white/10 shadow-sm"
                     } else if (styleVal === 'outline') {
                       baseBtnClass += " bg-transparent border border-white/20"
+                      baseBtnClassNear += " bg-transparent border border-white/20"
                     } else if (styleVal === 'soft') {
                       baseBtnClass += " bg-white/5 border border-white/10 backdrop-blur-md shadow-sm"
+                      baseBtnClassNear += " bg-white/5 border border-white/10 backdrop-blur-md shadow-sm"
                     } else if (styleVal === 'shadow') {
                       baseBtnClass += " bg-white/15 border border-white/15 shadow-[0_4px_15px_rgba(0,0,0,0.3)]"
                     }
@@ -490,7 +424,7 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
                       )
                     }
 
-                    let baseBtnClassBetween = "group flex items-center justify-between w-full py-3 px-4 text-white text-sm font-semibold pointer-events-none relative overflow-hidden " + shapeClass
+                    let baseBtnClassBetween = "group flex items-center justify-between w-full py-3 px-4 text-white text-sm font-semibold pointer-events-none relative overflow-hidden " + shapeClass + hoverClass
                     if (styleVal === 'fill') {
                       baseBtnClassBetween += " bg-white/15 border border-white/10 shadow-sm"
                     } else if (styleVal === 'outline') {

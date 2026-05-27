@@ -1,92 +1,9 @@
 'use client'
 
+import Image from 'next/image'
 import { getPlatformByName } from '@/utils/platforms'
-
-function hexToRgba(hex: string, opacity: number) {
-  const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-  const fullHex = hex.replace(shorthandRegex, (_, r, g, b) => r + r + g + g + b + b);
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(fullHex);
-  if (!result) return 'rgba(255, 255, 255, 0.05)';
-  const r = parseInt(result[1], 16);
-  const g = parseInt(result[2], 16);
-  const b = parseInt(result[3], 16);
-  return `rgba(${r}, ${g}, ${b}, ${opacity / 100})`;
-}
-
-// Inline keyframes — injected via <style> tag to bypass Turbopack CSS tree-shaking
-const ANIMATION_KEYFRAMES = `
-@keyframes pulseSlow { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.025); } }
-@keyframes bounceSlow { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
-@keyframes shakeQuick { 0%, 75%, 100% { transform: translateX(0); } 80%, 90% { transform: translateX(-4px); } 85%, 95% { transform: translateX(4px); } }
-@keyframes wobbleQuick { 0%, 75%, 100% { transform: rotate(0deg); } 80%, 90% { transform: rotate(-2deg); } 85%, 95% { transform: rotate(2deg); } }
-@keyframes glowPulse { 0%, 100% { box-shadow: 0 0 5px rgba(236,72,153,0.4), 0 0 15px rgba(236,72,153,0.2); } 50% { box-shadow: 0 0 18px rgba(236,72,153,0.8), 0 0 30px rgba(236,72,153,0.4); } }
-`
-
-function parseEmbedUrl(url: string) {
-  try {
-    const cleanUrl = url.trim()
-
-    // 1. YouTube
-    if (cleanUrl.includes('youtube.com') || cleanUrl.includes('youtu.be')) {
-      let videoId = ''
-      if (cleanUrl.includes('youtu.be/')) {
-        videoId = cleanUrl.split('youtu.be/')[1]?.split('?')[0] || ''
-      } else if (cleanUrl.includes('youtube.com/shorts/')) {
-        videoId = cleanUrl.split('youtube.com/shorts/')[1]?.split('?')[0] || ''
-      } else if (cleanUrl.includes('youtube.com/watch')) {
-        videoId = new URLSearchParams(new URL(cleanUrl).search).get('v') || ''
-      } else if (cleanUrl.includes('youtube.com/embed/')) {
-        videoId = cleanUrl.split('youtube.com/embed/')[1]?.split('?')[0] || ''
-      }
-      if (videoId) {
-        return {
-          type: 'youtube',
-          embedUrl: `https://www.youtube.com/embed/${videoId}`,
-          height: 215
-        }
-      }
-    }
-
-    // 2. Spotify
-    if (cleanUrl.includes('open.spotify.com')) {
-      const parts = new URL(cleanUrl).pathname.split('/')
-      const type = parts[1] // 'track', 'playlist', 'album', 'artist'
-      const id = parts[2]
-      if (type && id) {
-        return {
-          type: 'spotify',
-          embedUrl: `https://open.spotify.com/embed/${type}/${id}`,
-          height: type === 'track' ? 80 : 352
-        }
-      }
-    }
-
-    // 3. SoundCloud
-    if (cleanUrl.includes('soundcloud.com')) {
-      return {
-        type: 'soundcloud',
-        embedUrl: `https://w.soundcloud.com/player/?url=${encodeURIComponent(cleanUrl)}&color=%23ff5500&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false`,
-        height: 166
-      }
-    }
-
-    // 4. TikTok
-    if (cleanUrl.includes('tiktok.com')) {
-      const match = cleanUrl.match(/video\/(\d+)/)
-      const videoId = match ? match[1] : ''
-      if (videoId) {
-        return {
-          type: 'tiktok',
-          embedUrl: `https://www.tiktok.com/embed/v2/${videoId}`,
-          height: 575
-        }
-      }
-    }
-  } catch (e) {
-    console.error('Error parsing embed URL:', e)
-  }
-  return null
-}
+import { hexToRgba } from '@/lib/color-utils'
+import { parseEmbedUrl } from '@/lib/embed-utils'
 
 import { Profile, Link } from '@/types'
 
@@ -159,10 +76,12 @@ export function LinkButton({ link, profileId, profile }: { link: Link, profileId
                   window.open(img.image_url, '_blank')
                 }}
               >
-                <img 
+                <Image 
                   src={img.image_url} 
                   alt="" 
-                  className="w-full h-full object-cover" 
+                  fill
+                  className="object-cover" 
+                  sizes="200px"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover/img:opacity-100 transition-opacity flex items-end p-2.5">
                   <span className="text-[9px] text-white/90 truncate font-semibold">Buka Gambar Penuh ↗</span>
@@ -199,8 +118,8 @@ export function LinkButton({ link, profileId, profile }: { link: Link, profileId
   const PlatformIcon = link.show_icon !== false ? matchedPlatform?.icon : null
   
   const ThumbnailImg = link.thumbnail_url ? (
-    <div className="w-7 h-7 rounded-full overflow-hidden border border-white/20 shadow-inner flex items-center justify-center shrink-0 z-10 group-hover:scale-105 transition-transform">
-      <img src={link.thumbnail_url} alt="" className="w-full h-full object-cover" />
+    <div className="w-7 h-7 rounded-full overflow-hidden border border-white/20 shadow-inner flex items-center justify-center shrink-0 z-10 group-hover:scale-105 transition-transform relative">
+      <Image src={link.thumbnail_url} alt="" fill className="object-cover" sizes="28px" />
     </div>
   ) : null
 
@@ -240,8 +159,13 @@ export function LinkButton({ link, profileId, profile }: { link: Link, profileId
 
   const shapeClass = profile?.button_shape || 'rounded-2xl'
   const styleVal = profile?.button_style || 'soft'
+  const hoverEffect = profile?.button_hover_effect || 'none'
+  let hoverClass = ""
+  if (hoverEffect === 'scale') hoverClass = " hover:scale-[1.03] transition-transform"
+  if (hoverEffect === 'lift') hoverClass = " hover:-translate-y-1 hover:shadow-xl transition-all"
+  if (hoverEffect === 'glow') hoverClass = " hover:shadow-[0_0_20px_rgba(255,255,255,0.4)] transition-shadow"
   
-  let baseBtnClass = "group flex items-center justify-center w-full py-4 px-6 text-white font-semibold transition-all relative overflow-hidden " + shapeClass
+  let baseBtnClass = "group flex items-center justify-center w-full py-4 px-6 text-white font-semibold transition-all relative overflow-hidden " + shapeClass + hoverClass
   if (styleVal === 'fill') {
     baseBtnClass += " bg-white/10 border border-white/10 hover:bg-white/20 hover:border-white/20"
   } else if (styleVal === 'outline') {
@@ -292,23 +216,20 @@ export function LinkButton({ link, profileId, profile }: { link: Link, profileId
 
   if (!hasGraphic) {
     return (
-      <>
-        <style dangerouslySetInnerHTML={{ __html: ANIMATION_KEYFRAMES }} />
-        <a
-          href={link.url}
-          onClick={handleClick}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={buttonStyle}
-          className={baseBtnClass}
-        >
-          <span className="z-10">{link.title}</span>
-        </a>
-      </>
+      <a
+        href={link.url}
+        onClick={handleClick}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={buttonStyle}
+        className={baseBtnClass}
+      >
+        <span className="z-10">{link.title}</span>
+      </a>
     )
   }
 
-  let baseBtnClassNear = "group flex items-center justify-center gap-2.5 w-full py-4 px-6 text-white font-semibold transition-all relative overflow-hidden " + shapeClass
+  let baseBtnClassNear = "group flex items-center justify-center gap-2.5 w-full py-4 px-6 text-white font-semibold transition-all relative overflow-hidden " + shapeClass + hoverClass
   if (styleVal === 'fill') {
     baseBtnClassNear += " bg-white/10 border border-white/10 hover:bg-white/20 hover:border-white/20"
   } else if (styleVal === 'outline') {
@@ -322,33 +243,30 @@ export function LinkButton({ link, profileId, profile }: { link: Link, profileId
 
   if (isLeftNear || isRightNear) {
     return (
-      <>
-        <style dangerouslySetInnerHTML={{ __html: ANIMATION_KEYFRAMES }} />
-        <a
-          href={link.url}
-          onClick={handleClick}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={buttonStyle}
-          className={baseBtnClassNear}
-        >
-          <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity" style={{ backgroundColor: matchedPlatform?.color || '#ffffff' }} />
-          
-          {isLeftNear && (
-            ThumbnailImg ? ThumbnailImg : (PlatformIcon && <PlatformIcon size={24} color={finalIconColor} className="group-hover:scale-110 transition-transform drop-shadow-sm z-10 shrink-0" />)
-          )}
-          
-          <span className="z-10 text-center">{link.title}</span>
-          
-          {isRightNear && (
-            ThumbnailImg ? ThumbnailImg : (PlatformIcon && <PlatformIcon size={24} color={finalIconColor} className="group-hover:scale-110 transition-transform drop-shadow-sm z-10 shrink-0" />)
-          )}
-        </a>
-      </>
+      <a
+        href={link.url}
+        onClick={handleClick}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={buttonStyle}
+        className={baseBtnClassNear}
+      >
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity" style={{ backgroundColor: matchedPlatform?.color || '#ffffff' }} />
+        
+        {isLeftNear && (
+          ThumbnailImg ? ThumbnailImg : (PlatformIcon && <PlatformIcon size={24} color={finalIconColor} className="group-hover:scale-110 transition-transform drop-shadow-sm z-10 shrink-0" />)
+        )}
+        
+        <span className="z-10 text-center">{link.title}</span>
+        
+        {isRightNear && (
+          ThumbnailImg ? ThumbnailImg : (PlatformIcon && <PlatformIcon size={24} color={finalIconColor} className="group-hover:scale-110 transition-transform drop-shadow-sm z-10 shrink-0" />)
+        )}
+      </a>
     )
   }
 
-  let baseBtnClassBetween = "group flex items-center justify-between w-full py-4 px-6 text-white font-semibold transition-all relative overflow-hidden " + shapeClass
+  let baseBtnClassBetween = "group flex items-center justify-between w-full py-4 px-6 text-white font-semibold transition-all relative overflow-hidden " + shapeClass + hoverClass
   if (styleVal === 'fill') {
     baseBtnClassBetween += " bg-white/10 border border-white/10 hover:bg-white/20 hover:border-white/20"
   } else if (styleVal === 'outline') {
@@ -361,32 +279,29 @@ export function LinkButton({ link, profileId, profile }: { link: Link, profileId
   baseBtnClassBetween += extraClasses
 
   return (
-    <>
-      <style dangerouslySetInnerHTML={{ __html: ANIMATION_KEYFRAMES }} />
-      <a
-        href={link.url}
-        onClick={handleClick}
-        target="_blank"
-        rel="noopener noreferrer"
-        style={buttonStyle}
-        className={baseBtnClassBetween}
-      >
-        <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity" style={{ backgroundColor: matchedPlatform?.color || '#ffffff' }} />
-        
-        <div className={`w-8 flex items-center shrink-0 z-10 ${isRightFar ? 'justify-end' : 'justify-start'}`}>
-          {isLeftFar && (
-            ThumbnailImg ? ThumbnailImg : (PlatformIcon && <PlatformIcon size={24} color={finalIconColor} className="group-hover:scale-110 transition-transform drop-shadow-sm" />)
-          )}
-        </div>
-        
-        <span className="flex-1 text-center z-10">{link.title}</span>
-        
-        <div className={`w-8 flex items-center shrink-0 z-10 ${isRightFar ? 'justify-end' : 'justify-start'}`}>
-          {isRightFar && (
-            ThumbnailImg ? ThumbnailImg : (PlatformIcon && <PlatformIcon size={24} color={finalIconColor} className="group-hover:scale-110 transition-transform drop-shadow-sm" />)
-          )}
-        </div>
-      </a>
-    </>
+    <a
+      href={link.url}
+      onClick={handleClick}
+      target="_blank"
+      rel="noopener noreferrer"
+      style={buttonStyle}
+      className={baseBtnClassBetween}
+    >
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity" style={{ backgroundColor: matchedPlatform?.color || '#ffffff' }} />
+      
+      <div className={`w-8 flex items-center shrink-0 z-10 ${isRightFar ? 'justify-end' : 'justify-start'}`}>
+        {isLeftFar && (
+          ThumbnailImg ? ThumbnailImg : (PlatformIcon && <PlatformIcon size={24} color={finalIconColor} className="group-hover:scale-110 transition-transform drop-shadow-sm" />)
+        )}
+      </div>
+      
+      <span className="flex-1 text-center z-10">{link.title}</span>
+      
+      <div className={`w-8 flex items-center shrink-0 z-10 ${isRightFar ? 'justify-end' : 'justify-start'}`}>
+        {isRightFar && (
+          ThumbnailImg ? ThumbnailImg : (PlatformIcon && <PlatformIcon size={24} color={finalIconColor} className="group-hover:scale-110 transition-transform drop-shadow-sm" />)
+        )}
+      </div>
+    </a>
   )
 }

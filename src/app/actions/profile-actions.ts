@@ -1,12 +1,11 @@
 'use server'
 
-import { createClient } from '@/utils/supabase/server'
+import { createClient, requireAuth } from '@/utils/supabase/server'
 import { revalidatePath } from 'next/cache'
+import { updateAppearanceSchema, updateProfileInfoSchema, updateSocialLinksSchema, updateSettingsSchema } from '@/lib/validations'
 
 export async function getProfile() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
+  const { supabase, user } = await requireAuth()
   if (!user) return null
 
   const { data, error } = await supabase
@@ -24,46 +23,36 @@ export async function getProfile() {
 }
 
 export async function updateAppearance(formData: FormData) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
+  const { supabase, user } = await requireAuth()
   if (!user) return { error: 'Unauthorized' }
 
-  const bg_type = formData.get('bg_type') as string
-  const bg_color = formData.get('bg_color') as string
-  const bg_image_url = formData.get('bg_image_url') as string
-  const bg_overlay_opacity = parseInt(formData.get('bg_overlay_opacity') as string) || 0
-  const button_shape = formData.get('button_shape') as string || 'rounded-2xl'
-  const button_style = formData.get('button_style') as string || 'soft'
-  const font_family = formData.get('font_family') as string || 'font-sans-theme'
+  const raw = {
+    bg_type: formData.get('bg_type') as string,
+    bg_color: formData.get('bg_color') as string,
+    bg_image_url: formData.get('bg_image_url') as string || null,
+    bg_overlay_opacity: formData.get('bg_overlay_opacity') as string,
+    button_shape: formData.get('button_shape') as string,
+    button_style: formData.get('button_style') as string,
+    font_family: formData.get('font_family') as string,
+    text_color: formData.get('text_color') as string,
+    social_style: formData.get('social_style') as string,
+    profile_align: formData.get('profile_align') as string,
+    avatar_shape: formData.get('avatar_shape') as string,
+    banner_url: formData.get('banner_url') as string || null,
+    link_spacing: formData.get('link_spacing') as string,
+    avatar_size: formData.get('avatar_size') as string,
+    bg_video_url: formData.get('bg_video_url') as string || null,
+  }
 
-  const text_color = formData.get('text_color') as string || '#ffffff'
-  const social_style = formData.get('social_style') as string || 'circle'
-  const profile_align = formData.get('profile_align') as string || 'center'
-  const avatar_shape = formData.get('avatar_shape') as string || 'circle'
-  const banner_url = formData.get('banner_url') as string || null
-  const link_spacing = formData.get('link_spacing') as string || 'normal'
-  const avatar_size = formData.get('avatar_size') as string || 'medium'
-  const bg_video_url = formData.get('bg_video_url') as string || null
+  const validated = updateAppearanceSchema.safeParse(raw)
+  if (!validated.success) {
+    return { error: validated.error.issues[0].message }
+  }
 
   const { error } = await supabase
     .from('profiles')
     .update({
-      bg_type,
-      bg_color,
-      bg_image_url,
-      bg_overlay_opacity,
-      button_shape,
-      button_style,
-      font_family,
-      text_color,
-      social_style,
-      profile_align,
-      avatar_shape,
-      banner_url,
-      link_spacing,
-      avatar_size,
-      bg_video_url,
+      ...validated.data,
       updated_at: new Date().toISOString()
     })
     .eq('id', user.id)
@@ -78,31 +67,27 @@ export async function updateAppearance(formData: FormData) {
 }
 
 export async function updateProfileInfo(formData: FormData) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
+  const { supabase, user } = await requireAuth()
   if (!user) return { error: 'Unauthorized' }
 
-  const full_name = formData.get('full_name') as string
-  const bio = formData.get('bio') as string
-  const avatar_url = formData.get('avatar_url') as string
   const username = (formData.get('username') as string || '').toLowerCase().trim()
 
-  // Validate username if provided
+  // Validate username with Zod
+  const validated = updateProfileInfoSchema.safeParse({
+    full_name: formData.get('full_name') as string || null,
+    bio: formData.get('bio') as string || null,
+    avatar_url: formData.get('avatar_url') as string || null,
+    username,
+  })
+
+  if (!validated.success) {
+    return { error: validated.error.issues[0].message }
+  }
+
+  const { full_name, bio, avatar_url } = validated.data
+
+  // Uniqueness check
   if (username) {
-    // Regex validation: lowercase letters, numbers, underscores, and dashes
-    const usernameRegex = /^[a-z0-9_-]+$/
-    if (!usernameRegex.test(username) || username.length < 3 || username.length > 30) {
-      return { error: 'Invalid username. Use 3-30 characters of lowercase letters, numbers, underscores, or hyphens.' }
-    }
-
-    // Blacklist check
-    const blacklist = ['admin', 'api', 'dashboard', 'login', 'register', 'auth', 'settings', 'appearance', 'analytics']
-    if (blacklist.includes(username)) {
-      return { error: 'This username is protected and cannot be used.' }
-    }
-
-    // Uniqueness check
     const { data: existingUser } = await supabase
       .from('profiles')
       .select('id')
@@ -136,16 +121,19 @@ export async function updateProfileInfo(formData: FormData) {
 }
 
 export async function updateSocialLinks(socialLinks: Record<string, string>) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
+  const { supabase, user } = await requireAuth()
   if (!user) return { error: 'Unauthorized' }
+
+  const validated = updateSocialLinksSchema.safeParse(socialLinks)
+  if (!validated.success) {
+    return { error: validated.error.issues[0].message }
+  }
 
   // Clean empty links so we don't save blank strings
   const cleanedSocials: Record<string, string> = {}
-  Object.keys(socialLinks).forEach(key => {
-    if (socialLinks[key]?.trim()) {
-      cleanedSocials[key] = socialLinks[key].trim()
+  Object.keys(validated.data).forEach(key => {
+    if (validated.data[key]?.trim()) {
+      cleanedSocials[key] = validated.data[key].trim()
     }
   })
 
@@ -167,9 +155,7 @@ export async function updateSocialLinks(socialLinks: Record<string, string>) {
 }
 
 export async function updateBranding(showBranding: boolean) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
+  const { supabase, user } = await requireAuth()
   if (!user) return { error: 'Unauthorized' }
 
   const { error } = await supabase
@@ -190,31 +176,32 @@ export async function updateBranding(showBranding: boolean) {
 }
 
 export async function updateSettings(formData: FormData) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
+  const { supabase, user } = await requireAuth()
   if (!user) return { error: 'Unauthorized' }
 
-  const seo_title = formData.get('seo_title') as string || null
-  const seo_description = formData.get('seo_description') as string || null
-  const meta_pixel_id = formData.get('meta_pixel_id') as string || null
-  const tiktok_pixel_id = formData.get('tiktok_pixel_id') as string || null
-  const ga_measurement_id = formData.get('ga_measurement_id') as string || null
-  
   let custom_domain = formData.get('custom_domain') as string || null
   if (custom_domain) {
     custom_domain = custom_domain.toLowerCase().trim().replace(/^(https?:\/\/)?(www\.)?/, '')
   }
 
+  const raw = {
+    seo_title: formData.get('seo_title') as string || null,
+    seo_description: formData.get('seo_description') as string || null,
+    meta_pixel_id: formData.get('meta_pixel_id') as string || null,
+    tiktok_pixel_id: formData.get('tiktok_pixel_id') as string || null,
+    ga_measurement_id: formData.get('ga_measurement_id') as string || null,
+    custom_domain,
+  }
+
+  const validated = updateSettingsSchema.safeParse(raw)
+  if (!validated.success) {
+    return { error: validated.error.issues[0].message }
+  }
+
   const { error } = await supabase
     .from('profiles')
     .update({
-      seo_title,
-      seo_description,
-      meta_pixel_id,
-      tiktok_pixel_id,
-      ga_measurement_id,
-      custom_domain,
+      ...validated.data,
       updated_at: new Date().toISOString()
     })
     .eq('id', user.id)

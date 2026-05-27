@@ -32,8 +32,8 @@ export async function POST(request: Request) {
                request.headers.get('x-forwarded-for')?.split(',')[0].trim() || 
                '';
 
-    let country = 'Indonesia'
-    let city = 'Jakarta'
+    let country: string | null = null
+    let city: string | null = null
     
     const isLocalIp = !ip || ip === '127.0.0.1' || ip === '::1' || ip.startsWith('localhost') || ip.startsWith('192.168.') || ip.startsWith('10.') || ip.startsWith('172.');
     if (!isLocalIp) {
@@ -41,8 +41,8 @@ export async function POST(request: Request) {
         const res = await fetch(`http://ip-api.com/json/${ip}?fields=status,country,city`, { signal: AbortSignal.timeout(2000) });
         const data = await res.json();
         if (data && data.status === 'success') {
-          country = data.country || 'Indonesia'
-          city = data.city || 'Jakarta'
+          country = data.country || null
+          city = data.city || null
         }
       } catch (err) {
         console.error('IP Geolocation error:', err);

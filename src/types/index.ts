@@ -12,6 +12,8 @@ export interface Profile {
   button_shape?: string
   button_style?: string
   font_family?: string
+  theme_style?: string
+  button_hover_effect?: string
   social_links?: Record<string, string> | null
   show_branding?: boolean
   created_at: string

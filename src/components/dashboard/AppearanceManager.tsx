@@ -11,7 +11,7 @@ import { Slider } from '@/components/ui/slider'
 import { updateAppearance, updateProfileInfo, updateSocialLinks, updateBranding } from '@/app/actions/profile-actions'
 import { Switch } from '@/components/ui/switch'
 import { toast } from 'sonner'
-import { Loader2, AlignLeft, AlignCenter, Palette, LayoutGrid, Image, Video, Sparkles, Sliders } from 'lucide-react'
+import { Loader2, AlignLeft, AlignCenter, Palette, LayoutGrid, Image as ImageIcon, Video, Sparkles, Sliders } from 'lucide-react'
 import { 
   FaInstagram, 
   FaYoutube, 
@@ -33,6 +33,7 @@ const socialsList: Record<string, { label: string, icon: any, placeholder: strin
   whatsapp: { label: 'WhatsApp', icon: FaWhatsapp, placeholder: 'https://wa.me/628...' },
   email: { label: 'Email', icon: FaEnvelope, placeholder: 'mailto:email@example.com' },
 }
+import Image from 'next/image'
 import { ColorPickerDialog } from './ColorPickerDialog'
 import { GradientPickerDialog } from './GradientPickerDialog'
 import { ImageCropDialog } from './ImageCropDialog'
@@ -40,6 +41,7 @@ import { createClient } from '@/utils/supabase/client'
 import { useRef } from 'react'
 
 import { Profile } from '@/types'
+import { usernameBlacklist } from '@/lib/validations'
 
 export function AppearanceManager({ profile }: { profile: Profile | null }) {
   const router = useRouter()
@@ -80,6 +82,8 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
   const [avatarSize, setAvatarSize] = useState(profile?.avatar_size || 'medium')
   const [bgVideoUrl, setBgVideoUrl] = useState(profile?.bg_video_url || '')
   const [isTextColorPickerOpen, setIsTextColorPickerOpen] = useState(false)
+  const [themeStyle, setThemeStyle] = useState(profile?.theme_style || 'solid')
+  const [buttonHoverEffect, setButtonHoverEffect] = useState(profile?.button_hover_effect || 'none')
 
   const bannerInputRef = useRef<HTMLInputElement>(null)
 
@@ -104,8 +108,7 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
       return
     }
 
-    const blacklist = ['admin', 'api', 'dashboard', 'login', 'register', 'auth', 'settings', 'appearance', 'analytics']
-    if (blacklist.includes(username.toLowerCase())) {
+    if (usernameBlacklist.includes(username.toLowerCase())) {
       setUsernameStatus('taken')
       return
     }
@@ -170,7 +173,9 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
         bg_image_url: theme.bg_image_url || '',
         button_shape: theme.button_shape,
         button_style: theme.button_style,
-        font_family: theme.font_family
+        font_family: theme.font_family,
+        theme_style: themeStyle,
+        button_hover_effect: buttonHoverEffect
       }
     }))
     
@@ -285,54 +290,68 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
 
   // Sync background customization to live preview in real time
   useEffect(() => {
-    window.dispatchEvent(new CustomEvent('profile-update', {
-      detail: {
-        bg_color: bgColor,
-        bg_type: bgType,
-        bg_image_url: bgImageUrl,
-        bg_overlay_opacity: opacity[0],
-        bg_video_url: bgVideoUrl
-      }
-    }))
+    const timer = setTimeout(() => {
+      window.dispatchEvent(new CustomEvent('profile-update', {
+        detail: {
+          bg_color: bgColor,
+          bg_type: bgType,
+          bg_image_url: bgImageUrl,
+          bg_overlay_opacity: opacity[0],
+          bg_video_url: bgVideoUrl
+        }
+      }))
+    }, 50)
+    return () => clearTimeout(timer)
   }, [bgColor, bgType, bgImageUrl, opacity, bgVideoUrl])
 
   // Sync profile text inputs to live preview in real time
   useEffect(() => {
-    window.dispatchEvent(new CustomEvent('profile-update', {
-      detail: {
-        full_name: fullName,
-        bio: bio,
-        avatar_url: avatarUrl
-      }
-    }))
+    const timer = setTimeout(() => {
+      window.dispatchEvent(new CustomEvent('profile-update', {
+        detail: {
+          full_name: fullName,
+          bio: bio,
+          avatar_url: avatarUrl
+        }
+      }))
+    }, 50)
+    return () => clearTimeout(timer)
   }, [fullName, bio, avatarUrl])
 
   // Sync social links to live preview in real time
   useEffect(() => {
-    window.dispatchEvent(new CustomEvent('profile-update', {
-      detail: {
-        social_links: socialLinks
-      }
-    }))
+    const timer = setTimeout(() => {
+      window.dispatchEvent(new CustomEvent('profile-update', {
+        detail: {
+          social_links: socialLinks
+        }
+      }))
+    }, 50)
+    return () => clearTimeout(timer)
   }, [socialLinks])
 
   // Sync button shape, style & font family to live preview in real time
   useEffect(() => {
-    window.dispatchEvent(new CustomEvent('profile-update', {
-      detail: {
-        button_shape: buttonShape,
-        button_style: buttonStyle,
-        font_family: fontFamily,
-        text_color: textColor,
-        social_style: socialStyle,
-        profile_align: profileAlign,
-        avatar_shape: avatarShape,
-        banner_url: bannerUrl,
-        link_spacing: linkSpacing,
-        avatar_size: avatarSize
-      }
-    }))
-  }, [buttonShape, buttonStyle, fontFamily, textColor, socialStyle, profileAlign, avatarShape, bannerUrl, linkSpacing, avatarSize])
+    const timer = setTimeout(() => {
+      window.dispatchEvent(new CustomEvent('profile-update', {
+        detail: {
+          button_shape: buttonShape,
+          button_style: buttonStyle,
+          font_family: fontFamily,
+          text_color: textColor,
+          social_style: socialStyle,
+          profile_align: profileAlign,
+          avatar_shape: avatarShape,
+          banner_url: bannerUrl,
+          link_spacing: linkSpacing,
+          avatar_size: avatarSize,
+          theme_style: themeStyle,
+          button_hover_effect: buttonHoverEffect
+        }
+      }))
+    }, 50)
+    return () => clearTimeout(timer)
+  }, [buttonShape, buttonStyle, fontFamily, textColor, socialStyle, profileAlign, avatarShape, bannerUrl, linkSpacing, avatarSize, themeStyle, buttonHoverEffect])
 
   const handleSocialChange = (key: string, val: string) => {
     setSocialLinks(prev => ({
@@ -405,6 +424,8 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
     formData.set('link_spacing', linkSpacing)
     formData.set('avatar_size', avatarSize)
     formData.set('bg_video_url', bgVideoUrl)
+    formData.set('theme_style', themeStyle)
+    formData.set('button_hover_effect', buttonHoverEffect)
 
     const result = await updateAppearance(formData)
     if (result.error) {
@@ -431,7 +452,7 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
               <div className="relative group cursor-pointer" onClick={() => avatarInputRef.current?.click()}>
                 <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-white/10 group-hover:border-brand-pink transition-all relative shadow-lg">
                   {avatarUrl ? (
-                    <img src={avatarUrl} alt="Avatar Preview" className="w-full h-full object-cover" />
+                    <Image src={avatarUrl} alt="Avatar Preview" fill className="object-cover" sizes="96px" />
                   ) : (
                     <div className="w-full h-full bg-white/5 flex items-center justify-center text-zinc-500 font-semibold text-xs uppercase">
                       No Photo
@@ -828,6 +849,39 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
               </div>
 
               <div className="space-y-3 pt-4 border-t border-white/5">
+                <Label className="text-zinc-300 font-bold text-sm flex items-center justify-between">
+                  <span>Glassmorphism Container Theme</span>
+                  <Switch 
+                    checked={themeStyle === 'glass'} 
+                    onCheckedChange={(checked) => setThemeStyle(checked ? 'glass' : 'solid')} 
+                  />
+                </Label>
+                <p className="text-xs text-zinc-500">Enable frosted glass effect for links and containers. Works best with image backgrounds.</p>
+                <input type="hidden" name="theme_style" value={themeStyle} />
+              </div>
+
+              <div className="space-y-3 pt-4 border-t border-white/5">
+                <Label className="text-zinc-300 font-bold text-sm">Button Hover Animation</Label>
+                <div className="grid grid-cols-4 gap-2">
+                  {[
+                    { val: 'none', label: 'None' },
+                    { val: 'scale', label: 'Scale Up' },
+                    { val: 'lift', label: 'Lift & Shadow' },
+                    { val: 'glow', label: 'Glow' }
+                  ].map((effect) => (
+                    <div 
+                      key={effect.val} 
+                      onClick={() => setButtonHoverEffect(effect.val)} 
+                      className={`h-12 flex items-center justify-center rounded-xl border-2 cursor-pointer transition-all ${buttonHoverEffect === effect.val ? 'border-brand-pink bg-brand-pink/10 text-white font-bold' : 'border-white/10 bg-white/5 text-zinc-400 hover:border-white/20'}`}
+                    >
+                      <span className="text-xs">{effect.label}</span>
+                    </div>
+                  ))}
+                  <input type="hidden" name="button_hover_effect" value={buttonHoverEffect} />
+                </div>
+              </div>
+
+              <div className="space-y-3 pt-4 border-t border-white/5">
                 <Label className="text-zinc-300 font-bold text-sm">Font Styles</Label>
                 <div className="grid grid-cols-4 gap-2">
                   {[
@@ -870,7 +924,7 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
                         }}
                         className="bg-white/5 border border-white/10 hover:bg-white/10 text-white rounded-xl text-xs h-10 px-4 flex items-center gap-2"
                       >
-                        <Image className="w-4 h-4 text-zinc-400" />
+                        <ImageIcon className="w-4 h-4 text-zinc-400" />
                         {bannerUrl ? 'Change Banner' : 'Upload Banner'}
                       </Button>
                       
@@ -891,8 +945,8 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
                       )}
                     </div>
                     {bannerUrl && (
-                      <div className="w-full aspect-[3/1] rounded-xl overflow-hidden border border-white/10 mt-2">
-                        <img src={bannerUrl} alt="Banner preview" className="w-full h-full object-cover" />
+                      <div className="w-full aspect-[3/1] rounded-xl overflow-hidden border border-white/10 mt-2 relative">
+                        <Image src={bannerUrl} alt="Banner preview" fill className="object-cover" sizes="(max-width: 768px) 100vw, 400px" />
                       </div>
                     )}
                     <input

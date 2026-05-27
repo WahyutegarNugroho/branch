@@ -1,7 +1,6 @@
 import { DashboardNav } from '@/components/dashboard/DashboardNav'
-import { LivePreview } from '@/components/dashboard/LivePreview'
+import LivePreviewWrapper from '@/components/dashboard/LivePreviewWrapper'
 import { getProfile } from '@/app/actions/profile-actions'
-import { getLinks } from '@/app/actions/link-actions'
 
 export default async function DashboardLayout({
   children,
@@ -9,7 +8,6 @@ export default async function DashboardLayout({
   children: React.ReactNode
 }) {
   const profile = await getProfile()
-  const links = await getLinks()
 
   return (
     <div className="min-h-screen bg-zinc-950">
@@ -22,7 +20,7 @@ export default async function DashboardLayout({
         
         {/* Right Column - Live Preview */}
         <div className="hidden md:block bg-zinc-900/20 border-l border-white/10 relative">
-          <LivePreview profile={profile} links={links} />
+          <LivePreviewWrapper profile={profile} />
         </div>
       </div>
     </div>

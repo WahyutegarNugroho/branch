@@ -26,7 +26,9 @@ const formatDateTimeLocal = (isoString?: string) => {
   return localTime.toISOString().slice(0, 16)
 }
 
-export function LinkItem({ link }: { link: any }) {
+import { Link } from '@/types'
+
+export function LinkItem({ link }: { link: Link }) {
   const router = useRouter()
   const {
     attributes,
@@ -176,7 +178,7 @@ export function LinkItem({ link }: { link: any }) {
       const result = await applyStylesToAllLinks(
         customStyleEnabled ? bgColor : null,
         customStyleEnabled ? textColor : null,
-        customStyleEnabled ? bgOpacity : null,
+        customStyleEnabled ? (bgOpacity as number) : null,
         customStyleEnabled
           ? iconColorMode === 'original'
             ? null

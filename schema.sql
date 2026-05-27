@@ -21,6 +21,23 @@ CREATE TABLE public.profiles (
     button_shape VARCHAR(20) DEFAULT 'rounded-2xl',
     button_style VARCHAR(20) DEFAULT 'soft',
     font_family VARCHAR(50) DEFAULT 'font-sans-theme',
+    theme_style VARCHAR(20) DEFAULT 'solid',
+    button_hover_effect VARCHAR(20) DEFAULT 'none',
+    show_branding BOOLEAN DEFAULT true,
+    seo_title VARCHAR(255),
+    seo_description TEXT,
+    meta_pixel_id VARCHAR(100),
+    tiktok_pixel_id VARCHAR(100),
+    ga_measurement_id VARCHAR(100),
+    custom_domain VARCHAR(255),
+    text_color VARCHAR(50) DEFAULT '#ffffff',
+    social_style VARCHAR(30) DEFAULT 'circle',
+    profile_align VARCHAR(20) DEFAULT 'center',
+    avatar_shape VARCHAR(20) DEFAULT 'circle',
+    banner_url TEXT,
+    link_spacing VARCHAR(20) DEFAULT 'normal',
+    avatar_size VARCHAR(20) DEFAULT 'medium',
+    bg_video_url TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -45,6 +62,11 @@ CREATE TABLE public.links (
     bg_opacity INT DEFAULT 100,
     icon_color VARCHAR(50),
     show_icon BOOLEAN DEFAULT true,
+    link_type VARCHAR(20) DEFAULT 'link',
+    thumbnail_url TEXT,
+    embed_type VARCHAR(50),
+    is_spotlight BOOLEAN DEFAULT false,
+    animation VARCHAR(50),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
@@ -58,6 +80,11 @@ CREATE TABLE public.analytics (
     link_id UUID REFERENCES public.links(id) ON DELETE CASCADE NULL,
     device VARCHAR(50),
     referrer TEXT,
+    country VARCHAR(100),
+    city VARCHAR(100),
+    utm_source VARCHAR(100),
+    utm_medium VARCHAR(100),
+    utm_campaign VARCHAR(100),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
@@ -212,13 +239,6 @@ CREATE POLICY "Allow user to delete avatar" ON storage.objects
 -- PHASE 1 UPGRADES
 -- ==========================================
 
--- Alter public.links table
-ALTER TABLE public.links ADD COLUMN IF NOT EXISTS link_type VARCHAR(20) DEFAULT 'link';
-ALTER TABLE public.links ADD COLUMN IF NOT EXISTS thumbnail_url TEXT;
-
--- Alter public.profiles table
-ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS show_branding BOOLEAN DEFAULT true;
-
 -- Create themes table
 CREATE TABLE IF NOT EXISTS public.themes (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -253,11 +273,6 @@ ON CONFLICT DO NOTHING;
 -- ==========================================
 -- PHASE 2 UPGRADES
 -- ==========================================
-
--- 1. Alter public.links table to support Spotlight, Animations, and explicit Embed Type
-ALTER TABLE public.links ADD COLUMN IF NOT EXISTS embed_type VARCHAR(50);
-ALTER TABLE public.links ADD COLUMN IF NOT EXISTS is_spotlight BOOLEAN DEFAULT false;
-ALTER TABLE public.links ADD COLUMN IF NOT EXISTS animation VARCHAR(50);
 
 -- 2. Create public.link_images table for Image Carousel/Gallery
 CREATE TABLE IF NOT EXISTS public.link_images (
@@ -300,37 +315,66 @@ CREATE POLICY Allow_owners_to_delete_link_images ON public.link_images
     );
 
 -- ==========================================
--- PHASE 3: ADVANCED ANALYTICS & SEO EXTENSIONS
+-- DATABASE INDEXES FOR PERFORMANCE
 -- ==========================================
 
--- 1. Extend analytics table with Geolocation & UTM tracking fields
-ALTER TABLE public.analytics ADD COLUMN IF NOT EXISTS country VARCHAR(100);
-ALTER TABLE public.analytics ADD COLUMN IF NOT EXISTS city VARCHAR(100);
-ALTER TABLE public.analytics ADD COLUMN IF NOT EXISTS utm_source VARCHAR(100);
-ALTER TABLE public.analytics ADD COLUMN IF NOT EXISTS utm_medium VARCHAR(100);
-ALTER TABLE public.analytics ADD COLUMN IF NOT EXISTS utm_campaign VARCHAR(100);
-
--- 2. Extend profiles table with Custom SEO, Pixels, Google Analytics, and Custom Domain fields
-ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS seo_title VARCHAR(255);
-ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS seo_description TEXT;
-ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS meta_pixel_id VARCHAR(100);
-ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS tiktok_pixel_id VARCHAR(100);
-ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS ga_measurement_id VARCHAR(100);
-ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS custom_domain VARCHAR(255);
+CREATE INDEX IF NOT EXISTS idx_links_profile_id ON public.links(profile_id);
+CREATE INDEX IF NOT EXISTS idx_links_profile_id_sort_order ON public.links(profile_id, sort_order);
+CREATE INDEX IF NOT EXISTS idx_analytics_profile_id ON public.analytics(profile_id);
+CREATE INDEX IF NOT EXISTS idx_analytics_profile_id_created_at ON public.analytics(profile_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_link_images_link_id ON public.link_images(link_id);
+CREATE INDEX IF NOT EXISTS idx_link_images_link_id_sort_order ON public.link_images(link_id, sort_order);
 
 -- ==========================================
--- PHASE 4: ENHANCED APPEARANCE & CUSTOMIZATION
+-- BULK UPDATE RPCs FOR PERFORMANCE
 -- ==========================================
 
--- 1. Extend profiles table with global style controls, banners, and layout alignments
-ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS text_color VARCHAR(50) DEFAULT '#ffffff';
-ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS social_style VARCHAR(30) DEFAULT 'circle';
-ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS profile_align VARCHAR(20) DEFAULT 'center';
-ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS avatar_shape VARCHAR(20) DEFAULT 'circle';
-ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS banner_url TEXT;
-ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS link_spacing VARCHAR(20) DEFAULT 'normal';
-ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS avatar_size VARCHAR(20) DEFAULT 'medium';
-ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS bg_video_url TEXT;
+CREATE OR REPLACE FUNCTION bulk_reorder_links(p_items JSONB)
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+BEGIN
+  UPDATE public.links l
+  SET sort_order = (item->>'sort_order')::int
+  FROM jsonb_array_elements(p_items) AS item
+  WHERE l.id = (item->>'id')::uuid
+    AND l.profile_id = auth.uid();
+END;
+$$;
 
+CREATE OR REPLACE FUNCTION bulk_reorder_link_images(p_items JSONB)
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+BEGIN
+  UPDATE public.link_images li
+  SET sort_order = (item->>'sort_order')::int
+  FROM jsonb_array_elements(p_items) AS item
+  WHERE li.id = (item->>'id')::uuid
+    AND EXISTS (
+      SELECT 1 FROM public.links l
+      WHERE l.id = li.link_id AND l.profile_id = auth.uid()
+    );
+END;
+$$;
 
+-- ==========================================
+-- ANALYTICS RETENTION POLICY (CLEANUP OLD DATA)
+-- ==========================================
 
+-- Function to delete analytics data older than 90 days
+CREATE OR REPLACE FUNCTION delete_old_analytics()
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+BEGIN
+  DELETE FROM public.analytics WHERE created_at < NOW() - INTERVAL '90 days';
+END;
+$$;
+
+-- Note: To run this automatically, enable pg_cron in Supabase Dashboard 
+-- under Database -> Extensions, then run the following in SQL Editor:
+-- SELECT cron.schedule('delete_old_analytics_job', '0 0 * * *', 'SELECT public.delete_old_analytics();');

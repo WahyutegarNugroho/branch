@@ -1,6 +1,12 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
+const RESERVED_PATHS = ['/_next', '/api', '/login', '/register', '/dashboard', '/favicon.ico']
+
+function isReservedPath(pathname: string): boolean {
+  return RESERVED_PATHS.some(p => pathname === p || pathname.startsWith(p + '/'))
+}
+
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
@@ -27,12 +33,31 @@ export async function updateSession(request: NextRequest) {
     }
   )
 
+  // Custom domain routing: check if host matches a registered custom domain
+  const host = request.headers.get('host') || ''
+  const pathname = request.nextUrl.pathname
+
+  if (!isReservedPath(pathname) && host && !host.startsWith('localhost') && !host.startsWith('127.0.0.1')) {
+    const hostWithoutPort = host.split(':')[0]
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('username')
+      .eq('custom_domain', hostWithoutPort)
+      .maybeSingle()
+
+    if (profile?.username) {
+      const url = request.nextUrl.clone()
+      url.pathname = pathname === '/' ? `/${profile.username}` : `/${profile.username}${pathname}`
+      return NextResponse.rewrite(url)
+    }
+  }
+
   const {
     data: { user },
   } = await supabase.auth.getUser()
 
-  const isAuthPage = request.nextUrl.pathname.startsWith('/login') || request.nextUrl.pathname.startsWith('/register')
-  const isDashboard = request.nextUrl.pathname.startsWith('/dashboard')
+  const isAuthPage = pathname.startsWith('/login') || pathname.startsWith('/register')
+  const isDashboard = pathname.startsWith('/dashboard')
 
   if (!user && isDashboard) {
     const url = request.nextUrl.clone()

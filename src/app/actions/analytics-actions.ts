@@ -1,10 +1,9 @@
 'use server'
 
-import { createClient } from '@/utils/supabase/server'
+import { requireAuth } from '@/utils/supabase/server'
 
 export async function getAnalyticsStats(days?: number, startDate?: string, endDate?: string) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const { supabase, user } = await requireAuth()
 
   const emptyResponse = {
     views: 0,
@@ -157,7 +156,7 @@ export async function getAnalyticsStats(days?: number, startDate?: string, endDa
   // 6. Top Countries Geolocation
   const countryMap: Record<string, number> = {}
   data.forEach(item => {
-    const country = item.country || 'Indonesia'
+    const country = item.country || 'Unknown'
     countryMap[country] = (countryMap[country] || 0) + 1
   })
   const topCountries = Object.keys(countryMap).map(name => ({
@@ -168,7 +167,7 @@ export async function getAnalyticsStats(days?: number, startDate?: string, endDa
   // 7. Top Cities Geolocation
   const cityMap: Record<string, number> = {}
   data.forEach(item => {
-    const city = item.city || 'Jakarta'
+    const city = item.city || 'Unknown'
     cityMap[city] = (cityMap[city] || 0) + 1
   })
   const topCities = Object.keys(cityMap).map(name => ({
@@ -204,8 +203,8 @@ export async function getAnalyticsStats(days?: number, startDate?: string, endDa
     link_url: item.links?.url || 'N/A',
     device: item.device || 'desktop',
     referrer: item.referrer || 'Direct',
-    country: item.country || 'Indonesia',
-    city: item.city || 'Jakarta',
+    country: item.country || 'Unknown',
+    city: item.city || 'Unknown',
     utm_source: item.utm_source || '',
     utm_medium: item.utm_medium || '',
     utm_campaign: item.utm_campaign || ''

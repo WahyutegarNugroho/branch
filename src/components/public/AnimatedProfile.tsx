@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { LinkButton } from '@/components/public/LinkButton'
 import { PageTracker } from '@/components/public/PageTracker'
@@ -14,6 +15,7 @@ import {
 } from 'react-icons/fa'
 import { FaXTwitter } from 'react-icons/fa6'
 import { Zap } from 'lucide-react'
+import { toast } from 'sonner'
 
 const socialsIconMap: Record<string, any> = {
   instagram: FaInstagram,
@@ -152,7 +154,7 @@ export function AnimatedProfile({ profile, links, bgClass, bgStyle }: { profile:
         {/* Hero Banner header overlay */}
         {profile?.banner_url && (
           <div className="absolute top-0 inset-x-0 h-32 w-full overflow-hidden border-b border-white/10 z-0">
-            <img src={profile.banner_url} alt="Banner" className="w-full h-full object-cover" />
+            <Image src={profile.banner_url} alt="Banner" fill className="object-cover" sizes="480px" />
           </div>
         )}
 
@@ -179,7 +181,7 @@ export function AnimatedProfile({ profile, links, bgClass, bgStyle }: { profile:
                 }).catch(() => {});
               } else {
                 navigator.clipboard.writeText(window.location.href);
-                alert('Profile link copied!');
+                toast.success('Profile link copied!');
               }
             }}
             className="w-9 h-9 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white/90 hover:text-white border border-white/10 transition-all active:scale-95"
@@ -198,13 +200,15 @@ export function AnimatedProfile({ profile, links, bgClass, bgStyle }: { profile:
           animate="visible"
           className={`relative z-10 w-full flex flex-col ${
             profile?.profile_align === 'left' ? 'items-start text-left animate-in fade-in duration-500' : 'items-center text-center animate-in fade-in duration-500'
-          } ${profile?.banner_url ? 'pt-12' : ''}`}
+          } ${
+            profile?.theme_style === 'glass' ? 'p-6 sm:p-10 rounded-3xl backdrop-blur-2xl bg-white/5 border border-white/20 shadow-2xl max-w-lg mx-auto' : ''
+          } ${profile?.banner_url && profile?.theme_style !== 'glass' ? 'pt-12' : ''}`}
           style={{ color: profile?.text_color || '#ffffff' }}
         >
           {/* Avatar */}
           <motion.div 
             variants={avatarVariants} 
-            className={`overflow-hidden mb-6 shadow-2xl backdrop-blur-sm border-4 ${
+            className={`relative overflow-hidden mb-6 shadow-2xl backdrop-blur-sm border-4 ${
               profile.avatar_url ? 'border-white/20' : 'border-white/10'
             } ${
               profile?.avatar_shape === 'rounded' ? 'rounded-2xl' : 
@@ -216,7 +220,7 @@ export function AnimatedProfile({ profile, links, bgClass, bgStyle }: { profile:
             style={{ clipPath: profile?.avatar_shape === 'hexagon' ? 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' : undefined }}
           >
             {profile.avatar_url ? (
-              <img src={profile.avatar_url} alt={profile.full_name ?? undefined} className="w-full h-full object-cover" />
+              <Image src={profile.avatar_url} alt={profile.full_name ?? ''} fill className="object-cover" sizes="144px" />
             ) : (
               <div className="w-full h-full bg-gradient-to-tr from-brand-pink to-brand-orange flex items-center justify-center text-white text-4xl font-extrabold">
                 {profile.username.charAt(0).toUpperCase()}

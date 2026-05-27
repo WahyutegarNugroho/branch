@@ -1,12 +1,11 @@
 'use server'
 
-import { createClient } from '@/utils/supabase/server'
+import { createClient, requireAuth } from '@/utils/supabase/server'
 import { revalidatePath } from 'next/cache'
+import { updateLinkSchema, createLinkSchema } from '@/lib/validations'
 
 export async function getLinks() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
+  const { supabase, user } = await requireAuth()
   if (!user) return []
 
   const { data, error } = await supabase
@@ -24,9 +23,10 @@ export async function getLinks() {
 }
 
 export async function createLink(linkType: string = 'link') {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const parsed = createLinkSchema.safeParse({ linkType })
+  if (!parsed.success) return { error: parsed.error.issues[0].message }
 
+  const { supabase, user } = await requireAuth()
   if (!user) return { error: 'Unauthorized' }
 
   const title = linkType === 'header' ? 'New Header' : 'New Link'
@@ -55,9 +55,7 @@ export async function createLink(linkType: string = 'link') {
 }
 
 export async function updateLink(id: string, formData: FormData) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
+  const { supabase, user } = await requireAuth()
   if (!user) return { error: 'Unauthorized' }
 
   const title = formData.get('title') as string
@@ -128,9 +126,15 @@ export async function updateLink(id: string, formData: FormData) {
     updateData.embed_type = formData.get('embed_type') as string || null
   }
 
+  // Validate with Zod before DB write
+  const validated = updateLinkSchema.safeParse(updateData)
+  if (!validated.success) {
+    return { error: validated.error.issues[0].message }
+  }
+
   const { error } = await supabase
     .from('links')
-    .update(updateData)
+    .update(validated.data)
     .eq('id', id)
     .eq('profile_id', user.id) // Ensure owner
 
@@ -144,9 +148,7 @@ export async function updateLink(id: string, formData: FormData) {
 }
 
 export async function deleteLink(id: string) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
+  const { supabase, user } = await requireAuth()
   if (!user) return { error: 'Unauthorized' }
 
   const { error } = await supabase
@@ -165,26 +167,13 @@ export async function deleteLink(id: string) {
 }
 
 export async function reorderLinks(items: { id: string, sort_order: number }[]) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
+  const { supabase, user } = await requireAuth()
   if (!user) return { error: 'Unauthorized' }
 
-  // Since Supabase doesn't easily support bulk update via standard JS client in a single call without RPC,
-  // we can use a Promise.all to update each link's sort_order individually. It's usually fine for < 50 items.
-  const promises = items.map(item => 
-    supabase
-      .from('links')
-      .update({ sort_order: item.sort_order })
-      .eq('id', item.id)
-      .eq('profile_id', user.id)
-  )
+  const { error } = await supabase.rpc('bulk_reorder_links', { p_items: items })
 
-  const results = await Promise.all(promises)
-  const hasError = results.some(r => r.error)
-
-  if (hasError) {
-    return { error: 'Failed to reorder some links' }
+  if (error) {
+    return { error: 'Failed to reorder links' }
   }
 
   revalidatePath('/dashboard')
@@ -193,9 +182,7 @@ export async function reorderLinks(items: { id: string, sort_order: number }[]) 
 }
 
 export async function applyStylesToAllLinks(bgColor: string | null, textColor: string | null, bgOpacity: number | null, iconColor: string | null) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
+  const { supabase, user } = await requireAuth()
   if (!user) return { error: 'Unauthorized' }
 
   const { error } = await supabase
@@ -233,9 +220,7 @@ export async function getLinkImages(linkId: string) {
 }
 
 export async function addLinkImage(linkId: string, imageUrl: string) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
+  const { supabase, user } = await requireAuth()
   if (!user) return { error: 'Unauthorized' }
 
   // Verify owner of the link
@@ -266,10 +251,27 @@ export async function addLinkImage(linkId: string, imageUrl: string) {
 }
 
 export async function deleteLinkImage(id: string) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
+  const { supabase, user } = await requireAuth()
   if (!user) return { error: 'Unauthorized' }
+
+  // Verify ownership: get the link_image's link_id, then check profile_id
+  const { data: image, error: fetchErr } = await supabase
+    .from('link_images')
+    .select('link_id')
+    .eq('id', id)
+    .single()
+
+  if (fetchErr || !image) return { error: 'Image not found' }
+
+  const { data: link } = await supabase
+    .from('links')
+    .select('profile_id')
+    .eq('id', image.link_id)
+    .single()
+
+  if (!link || link.profile_id !== user.id) {
+    return { error: 'Unauthorized' }
+  }
 
   const { error } = await supabase
     .from('link_images')
@@ -284,22 +286,12 @@ export async function deleteLinkImage(id: string) {
 }
 
 export async function reorderLinkImages(images: { id: string, sort_order: number }[]) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
+  const { supabase, user } = await requireAuth()
   if (!user) return { error: 'Unauthorized' }
 
-  const promises = images.map(item =>
-    supabase
-      .from('link_images')
-      .update({ sort_order: item.sort_order })
-      .eq('id', item.id)
-  )
+  const { error } = await supabase.rpc('bulk_reorder_link_images', { p_items: images })
 
-  const results = await Promise.all(promises)
-  const hasError = results.some(r => r.error)
-
-  if (hasError) {
+  if (error) {
     return { error: 'Failed to reorder carousel images' }
   }
 
