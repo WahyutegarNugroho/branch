@@ -172,7 +172,8 @@ export function AnimatedProfile({ profile, links, bgClass: defaultBgClass, bgSty
     <div className="min-h-screen w-full flex items-center justify-center bg-[#1c1c1e] sm:py-8 sm:px-4">
       <div 
         className={`min-h-screen sm:min-h-[820px] sm:max-h-[880px] w-full sm:w-[480px] sm:rounded-[40px] sm:shadow-[0_24px_70px_rgba(0,0,0,0.85)] sm:border sm:border-white/10 relative flex flex-col py-16 px-6 overflow-y-auto no-scrollbar ${profile?.font_family || 'font-sans-theme'} ${
-          profile?.profile_align === 'left' ? 'items-start text-left' : 'items-center text-center'
+          profile?.profile_align === 'left' ? 'items-start text-left' : 
+          profile?.profile_align === 'right' ? 'items-end text-right' : 'items-center text-center'
         }`}
         style={bgStyle}
       >
@@ -193,7 +194,11 @@ export function AnimatedProfile({ profile, links, bgClass: defaultBgClass, bgSty
         {/* Live Background Animations */}
         {profile?.bg_animation === 'aurora' && <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-brand-pink/20 via-transparent to-transparent pointer-events-none z-0 animate-pulse" />}
         {profile?.bg_animation === 'particles' && <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent pointer-events-none z-0" style={{ backgroundImage: 'radial-gradient(circle, #ffffff 1px, transparent 1px)', backgroundSize: '20px 20px', opacity: 0.3 }} />}
-        {profile?.bg_animation === 'snowfall' && <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-40 pointer-events-none z-0 mix-blend-screen" />}
+        {profile?.bg_animation === 'snowfall' && <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-40 pointer-events-none z-0 mix-blend-screen animate-pulse-slow" />}
+        {profile?.bg_animation === 'stars' && <div className="absolute inset-0 pointer-events-none z-0 mix-blend-screen opacity-50" style={{ backgroundImage: 'radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)), radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)), radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0)), radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0)), radial-gradient(2px 2px at 130px 80px, #fff, rgba(0,0,0,0)), radial-gradient(2px 2px at 160px 120px, #ddd, rgba(0,0,0,0))', backgroundSize: '200px 200px', animation: 'pulseSlow 4s infinite alternate' }} />}
+        {profile?.bg_animation === 'matrix' && <div className="absolute inset-0 pointer-events-none z-0 mix-blend-screen opacity-20" style={{ backgroundImage: 'repeating-linear-gradient(0deg, rgba(34, 197, 94, 0.2), rgba(34, 197, 94, 0.2) 1px, transparent 1px, transparent 2px)', backgroundSize: '100% 4px' }} />}
+        {profile?.bg_animation === 'confetti' && <div className="absolute inset-0 pointer-events-none z-0 opacity-30" style={{ backgroundImage: 'radial-gradient(4px 4px at 10% 20%, #ff0055, rgba(0,0,0,0)), radial-gradient(4px 4px at 30% 60%, #00ffaa, rgba(0,0,0,0)), radial-gradient(4px 4px at 50% 40%, #ffaa00, rgba(0,0,0,0)), radial-gradient(4px 4px at 80% 80%, #00aaff, rgba(0,0,0,0))', backgroundSize: '100px 100px', animation: 'bounceSlow 3s infinite alternate' }} />}
+        {profile?.bg_animation === 'bokeh' && <div className="absolute inset-0 pointer-events-none z-0 opacity-40 mix-blend-screen blur-[8px]" style={{ backgroundImage: 'radial-gradient(circle at 20% 30%, rgba(236,72,153,0.4) 0%, transparent 40%), radial-gradient(circle at 80% 60%, rgba(249,115,22,0.4) 0%, transparent 40%)', animation: 'pulseSlow 5s infinite alternate' }} />}
 
         {/* Hero Banner header overlay */}
         {profile?.banner_url && (
@@ -258,11 +263,18 @@ export function AnimatedProfile({ profile, links, bgClass: defaultBgClass, bgSty
           initial="hidden"
           animate="visible"
           className={`relative z-10 w-full flex flex-col ${
-            profile?.profile_align === 'left' ? 'items-start text-left animate-in fade-in duration-500' : 'items-center text-center animate-in fade-in duration-500'
+            profile?.profile_align === 'left' ? 'items-start text-left animate-in fade-in duration-500' : 
+            profile?.profile_align === 'right' ? 'items-end text-right animate-in fade-in duration-500' : 'items-center text-center animate-in fade-in duration-500'
           } ${
-            profile?.theme_style === 'glass' ? 'p-6 sm:p-10 rounded-3xl backdrop-blur-2xl bg-white/5 border border-white/20 shadow-2xl max-w-lg mx-auto' : ''
+            profile?.theme_style === 'glass' ? 'p-6 sm:p-10 rounded-3xl border border-white/20 shadow-2xl max-w-lg mx-auto' : ''
           } ${profile?.banner_url && profile?.theme_style !== 'glass' ? 'pt-12' : ''}`}
-          style={{ color: currentTextColor }}
+          style={{ 
+            color: currentTextColor,
+            ...(profile?.theme_style === 'glass' ? {
+              backdropFilter: `blur(${profile?.glass_blur ?? 10}px)`,
+              backgroundColor: `rgba(255,255,255,${(profile?.glass_opacity ?? 20) / 100})`
+            } : {})
+          }}
         >
           {/* Avatar */}
           <div className={`relative flex justify-center ${profile?.avatar_frame === 'gradient-ring' ? 'p-1.5 rounded-full bg-gradient-to-tr from-brand-pink to-brand-orange shadow-[0_0_20px_rgba(236,72,153,0.5)]' : profile?.avatar_frame === 'neon-glow' ? 'p-1 rounded-full bg-cyan-400 shadow-[0_0_25px_rgba(34,211,238,0.8)]' : ''} mb-6 ${profile?.banner_url ? 'mt-6 border-4 border-zinc-950 rounded-full bg-zinc-950' : ''}`}>
@@ -293,7 +305,10 @@ export function AnimatedProfile({ profile, links, bgClass: defaultBgClass, bgSty
           <motion.h1 
             variants={titleVariants} 
             style={{ color: currentTextColor }}
-            className={`text-3xl font-extrabold mb-2 drop-shadow-md w-full ${profile?.profile_align === 'left' ? 'text-left' : 'text-center'}`}
+            className={`text-3xl font-extrabold mb-2 drop-shadow-md w-full ${
+              profile?.profile_align === 'left' ? 'text-left' : 
+              profile?.profile_align === 'right' ? 'text-right' : 'text-center'
+            }`}
           >
             {profile.full_name || `@${profile.username}`}
           </motion.h1>
@@ -301,7 +316,10 @@ export function AnimatedProfile({ profile, links, bgClass: defaultBgClass, bgSty
             <motion.p 
               variants={titleVariants} 
               style={{ color: currentTextColor + 'cc' }}
-              className={`mb-10 max-w-md drop-shadow-sm text-lg w-full ${profile?.profile_align === 'left' ? 'text-left' : 'text-center'}`}
+              className={`mb-10 max-w-md drop-shadow-sm text-lg w-full ${
+                profile?.profile_align === 'left' ? 'text-left' : 
+                profile?.profile_align === 'right' ? 'text-right' : 'text-center'
+              }`}
             >
               {profile.bio}
             </motion.p>
@@ -311,7 +329,10 @@ export function AnimatedProfile({ profile, links, bgClass: defaultBgClass, bgSty
           {(!profile?.social_placement || profile?.social_placement === 'top') && profile.social_links && typeof profile.social_links === 'object' && Object.keys(profile.social_links).length > 0 && (
             <motion.div 
               variants={socialRowVariants} 
-              className={`flex flex-wrap gap-4 mb-8 z-10 w-full ${profile?.profile_align === 'left' ? 'justify-start' : 'justify-center'}`}
+              className={`flex flex-wrap gap-4 mb-8 z-10 w-full ${
+                profile?.profile_align === 'left' ? 'justify-start' : 
+                profile?.profile_align === 'right' ? 'justify-end' : 'justify-center'
+              }`}
             >
               {Object.keys(profile.social_links).map((key) => {
                 const socialLinksRecord = profile.social_links as Record<string, string>
@@ -391,7 +412,10 @@ export function AnimatedProfile({ profile, links, bgClass: defaultBgClass, bgSty
           {profile?.social_placement === 'bottom' && profile.social_links && typeof profile.social_links === 'object' && Object.keys(profile.social_links).length > 0 && (
             <motion.div 
               variants={socialRowVariants} 
-              className={`flex flex-wrap gap-4 mt-8 mb-4 z-10 w-full justify-center`}
+              className={`flex flex-wrap gap-4 mt-8 mb-4 z-10 w-full ${
+                profile?.profile_align === 'left' ? 'justify-start' : 
+                profile?.profile_align === 'right' ? 'justify-end' : 'justify-center'
+              }`}
             >
               {Object.keys(profile.social_links).map((key) => {
                 const socialLinksRecord = profile.social_links as Record<string, string>

@@ -164,13 +164,21 @@ export function LinkButton({ link, profileId, profile, visitorTheme }: { link: L
     finalIconColor = buttonTextColor
   }
 
-  const shapeClass = profile?.button_shape || 'rounded-2xl'
+  let shapeClass = profile?.button_shape || 'rounded-2xl'
+  if (['cut-corners', 'leaf', 'hexagon', 'diamond'].includes(shapeClass)) {
+    shapeClass = `shape-${shapeClass} rounded-none`
+  }
+  
   const styleVal = profile?.button_style || 'soft'
   const hoverEffect = profile?.button_hover_effect || 'none'
   let hoverClass = ""
   if (hoverEffect === 'scale') hoverClass = " hover:scale-[1.03] transition-transform"
   if (hoverEffect === 'lift') hoverClass = " hover:-translate-y-1 hover:shadow-xl transition-all"
   if (hoverEffect === 'glow') hoverClass = " hover:shadow-[0_0_20px_rgba(255,255,255,0.4)] transition-shadow"
+  if (hoverEffect === 'wobble') hoverClass = " hover:animate-wobble-quick"
+  if (hoverEffect === 'pulse') hoverClass = " hover:animate-pulse-slow"
+  if (hoverEffect === 'shine') hoverClass = " hover-shine-effect"
+  if (hoverEffect === 'glitch') hoverClass = " hover-glitch-effect"
   
   let baseBtnClass = "group flex items-center justify-center w-full py-4 px-6 text-white font-semibold transition-all relative overflow-hidden " + shapeClass + hoverClass
   if (styleVal === 'fill') {
@@ -187,6 +195,10 @@ export function LinkButton({ link, profileId, profile, visitorTheme }: { link: L
     baseBtnClass += " bg-white/5 backdrop-blur-2xl border-t border-l border-white/20 border-r border-b border-white/5 shadow-[0_4px_30px_rgba(0,0,0,0.1)] hover:bg-white/10"
   } else if (styleVal === 'neon') {
     baseBtnClass += " bg-transparent border-2 border-[currentColor] shadow-[0_0_10px_currentColor,inset_0_0_10px_currentColor] hover:shadow-[0_0_20px_currentColor,inset_0_0_20px_currentColor] hover:bg-white/5"
+  } else if (styleVal === 'brutalism') {
+    baseBtnClass += " bg-zinc-900 border-2 border-white/80 shadow-[4px_4px_0px_rgba(255,255,255,0.8)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_rgba(255,255,255,0.8)] transition-all"
+  } else if (styleVal === 'claymorphism') {
+    baseBtnClass += " bg-white/10 shadow-[inset_-4px_-4px_10px_rgba(0,0,0,0.5),inset_4px_4px_10px_rgba(255,255,255,0.3),8px_8px_16px_rgba(0,0,0,0.4)] border border-transparent rounded-3xl"
   }
 
   // Spotlight / Priority support
@@ -257,6 +269,10 @@ export function LinkButton({ link, profileId, profile, visitorTheme }: { link: L
     baseBtnClassNear += " bg-white/5 backdrop-blur-2xl border-t border-l border-white/20 border-r border-b border-white/5 shadow-[0_4px_30px_rgba(0,0,0,0.1)] hover:bg-white/10"
   } else if (styleVal === 'neon') {
     baseBtnClassNear += " bg-transparent border-2 border-[currentColor] shadow-[0_0_10px_currentColor,inset_0_0_10px_currentColor] hover:shadow-[0_0_20px_currentColor,inset_0_0_20px_currentColor] hover:bg-white/5"
+  } else if (styleVal === 'brutalism') {
+    baseBtnClassNear += " bg-zinc-900 border-2 border-white/80 shadow-[4px_4px_0px_rgba(255,255,255,0.8)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_rgba(255,255,255,0.8)] transition-all"
+  } else if (styleVal === 'claymorphism') {
+    baseBtnClassNear += " bg-white/10 shadow-[inset_-4px_-4px_10px_rgba(0,0,0,0.5),inset_4px_4px_10px_rgba(255,255,255,0.3),8px_8px_16px_rgba(0,0,0,0.4)] border border-transparent rounded-3xl"
   }
   baseBtnClassNear += extraClasses
 
@@ -300,6 +316,10 @@ export function LinkButton({ link, profileId, profile, visitorTheme }: { link: L
     baseBtnClassBetween += " bg-white/5 backdrop-blur-2xl border-t border-l border-white/20 border-r border-b border-white/5 shadow-[0_4px_30px_rgba(0,0,0,0.1)] hover:bg-white/10"
   } else if (styleVal === 'neon') {
     baseBtnClassBetween += " bg-transparent border-2 border-[currentColor] shadow-[0_0_10px_currentColor,inset_0_0_10px_currentColor] hover:shadow-[0_0_20px_currentColor,inset_0_0_20px_currentColor] hover:bg-white/5"
+  } else if (styleVal === 'brutalism') {
+    baseBtnClassBetween += " bg-zinc-900 border-2 border-white/80 shadow-[4px_4px_0px_rgba(255,255,255,0.8)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_rgba(255,255,255,0.8)] transition-all"
+  } else if (styleVal === 'claymorphism') {
+    baseBtnClassBetween += " bg-white/10 shadow-[inset_-4px_-4px_10px_rgba(0,0,0,0.5),inset_4px_4px_10px_rgba(255,255,255,0.3),8px_8px_16px_rgba(0,0,0,0.4)] border border-transparent rounded-3xl"
   }
   baseBtnClassBetween += extraClasses
 

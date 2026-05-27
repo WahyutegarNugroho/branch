@@ -37,6 +37,8 @@ export interface Profile {
   avatar_frame?: string | null
   social_placement?: string | null
   theme_lock?: boolean
+  glass_blur?: number
+  glass_opacity?: number
 }
 
 export interface Link {

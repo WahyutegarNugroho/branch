@@ -11,7 +11,7 @@ import { Slider } from '@/components/ui/slider'
 import { updateAppearance, updateProfileInfo, updateSocialLinks, updateBranding } from '@/app/actions/profile-actions'
 import { Switch } from '@/components/ui/switch'
 import { toast } from 'sonner'
-import { Loader2, AlignLeft, AlignCenter, Palette, LayoutGrid, Image as ImageIcon, Video, Sparkles, Sliders } from 'lucide-react'
+import { Loader2, AlignLeft, AlignCenter, AlignRight, Palette, LayoutGrid, Image as ImageIcon, Video, Sparkles, Sliders } from 'lucide-react'
 import { 
   FaInstagram, 
   FaYoutube, 
@@ -89,6 +89,9 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
   const [avatarFrame, setAvatarFrame] = useState(profile?.avatar_frame || 'none')
   const [socialPlacement, setSocialPlacement] = useState(profile?.social_placement || 'top')
   const [themeLock, setThemeLock] = useState(profile?.theme_lock || false)
+  const [glassBlur, setGlassBlur] = useState<number[]>([profile?.glass_blur ?? 10])
+  const [glassOpacity, setGlassOpacity] = useState<number[]>([profile?.glass_opacity ?? 20])
+
 
   const bannerInputRef = useRef<HTMLInputElement>(null)
 
@@ -185,7 +188,9 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
         bg_animation: bgAnimation,
         avatar_frame: avatarFrame,
         social_placement: socialPlacement,
-        theme_lock: themeLock
+        theme_lock: themeLock,
+        glass_blur: glassBlur[0],
+        glass_opacity: glassOpacity[0]
       }
     }))
     
@@ -361,12 +366,14 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
           bg_animation: bgAnimation,
           avatar_frame: avatarFrame,
           social_placement: socialPlacement,
-          theme_lock: themeLock
+          theme_lock: themeLock,
+          glass_blur: glassBlur[0],
+          glass_opacity: glassOpacity[0]
         }
       }))
     }, 50)
     return () => clearTimeout(timer)
-  }, [buttonShape, buttonStyle, fontFamily, textColor, socialStyle, profileAlign, avatarShape, bannerUrl, linkSpacing, avatarSize, themeStyle, buttonHoverEffect, layoutType, bgAnimation, avatarFrame, socialPlacement, themeLock])
+  }, [buttonShape, buttonStyle, fontFamily, textColor, socialStyle, profileAlign, avatarShape, bannerUrl, linkSpacing, avatarSize, themeStyle, buttonHoverEffect, layoutType, bgAnimation, avatarFrame, socialPlacement, themeLock, glassBlur, glassOpacity])
 
   const handleSocialChange = (key: string, val: string) => {
     setSocialLinks(prev => ({
@@ -446,6 +453,8 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
     formData.set('avatar_frame', avatarFrame)
     formData.set('social_placement', socialPlacement)
     formData.set('theme_lock', themeLock ? 'true' : 'false')
+    formData.set('glass_blur', glassBlur[0].toString())
+    formData.set('glass_opacity', glassOpacity[0].toString())
 
     const result = await updateAppearance(formData)
     if (result.error) {
@@ -832,7 +841,11 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
                   { val: 'none', label: 'None' },
                   { val: 'aurora', label: 'Aurora Waves' },
                   { val: 'particles', label: 'Particles' },
-                  { val: 'snowfall', label: 'Snowfall' }
+                  { val: 'snowfall', label: 'Snowfall' },
+                  { val: 'stars', label: 'Stars' },
+                  { val: 'matrix', label: 'Matrix' },
+                  { val: 'confetti', label: 'Confetti' },
+                  { val: 'bokeh', label: 'Bokeh' }
                 ].map((anim) => (
                   <div 
                     key={anim.val} 
@@ -855,7 +868,11 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
                     { val: 'rounded-none', label: 'Square' },
                     { val: 'rounded-xl', label: 'Rounded' },
                     { val: 'rounded-3xl', label: 'Curve' },
-                    { val: 'rounded-full', label: 'Pill' }
+                    { val: 'rounded-full', label: 'Pill' },
+                    { val: 'cut-corners', label: 'Cut Corners' },
+                    { val: 'leaf', label: 'Leaf' },
+                    { val: 'hexagon', label: 'Hexagon' },
+                    { val: 'diamond', label: 'Diamond' }
                   ].map((shape) => (
                     <div 
                       key={shape.val} 
@@ -879,7 +896,9 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
                     { val: 'shadow', label: 'Shadow' },
                     { val: 'neumorphism', label: 'Neumorphism' },
                     { val: 'glassmorphism', label: 'Glassmorphism' },
-                    { val: 'neon', label: 'Neon Glow' }
+                    { val: 'neon', label: 'Neon Glow' },
+                    { val: 'brutalism', label: 'Brutalism' },
+                    { val: 'claymorphism', label: 'Claymorphism' }
                   ].map((style) => (
                     <div 
                       key={style.val} 
@@ -903,6 +922,31 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
                 </Label>
                 <p className="text-xs text-zinc-500">Enable frosted glass effect for links and containers. Works best with image backgrounds.</p>
                 <input type="hidden" name="theme_style" value={themeStyle} />
+                
+                {themeStyle === 'glass' && (
+                  <div className="space-y-6 pt-4 px-4 pb-2 bg-white/5 rounded-xl border border-white/10 animate-in fade-in slide-in-from-top-2 duration-300">
+                    <div className="space-y-4">
+                      <Label className="text-zinc-300 text-xs">Glass Blur Effect ({glassBlur[0]}px)</Label>
+                      <Slider
+                        value={glassBlur}
+                        onValueChange={(val) => setGlassBlur(Array.isArray(val) ? val : [val])}
+                        max={50}
+                        step={1}
+                        className="w-full [&_[role=slider]]:bg-brand-pink"
+                      />
+                    </div>
+                    <div className="space-y-4">
+                      <Label className="text-zinc-300 text-xs">Glass Background Opacity ({glassOpacity[0]}%)</Label>
+                      <Slider
+                        value={glassOpacity}
+                        onValueChange={(val) => setGlassOpacity(Array.isArray(val) ? val : [val])}
+                        max={100}
+                        step={1}
+                        className="w-full [&_[role=slider]]:bg-brand-pink"
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="space-y-3 pt-4 border-t border-white/5">
@@ -924,7 +968,11 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
                     { val: 'none', label: 'None' },
                     { val: 'scale', label: 'Scale Up' },
                     { val: 'lift', label: 'Lift & Shadow' },
-                    { val: 'glow', label: 'Glow' }
+                    { val: 'glow', label: 'Glow' },
+                    { val: 'wobble', label: 'Wobble' },
+                    { val: 'pulse', label: 'Pulse' },
+                    { val: 'shine', label: 'Shine' },
+                    { val: 'glitch', label: 'Glitch' }
                   ].map((effect) => (
                     <div 
                       key={effect.val} 
@@ -945,7 +993,11 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
                     { val: 'font-sans-theme', label: 'Classic Sans', preview: 'Abc' },
                     { val: 'font-display-theme', label: 'Jakarta Display', preview: 'Abc' },
                     { val: 'font-serif-theme', label: 'Georgia Serif', preview: 'Abc' },
-                    { val: 'font-mono-theme', label: 'Space Mono', preview: 'Abc' }
+                    { val: 'font-mono-theme', label: 'Space Mono', preview: 'Abc' },
+                    { val: 'font-handwriting', label: 'Caveat Hand', preview: 'Abc' },
+                    { val: 'font-comic', label: 'Comic Neue', preview: 'Abc' },
+                    { val: 'font-elegant', label: 'Playfair', preview: 'Abc' },
+                    { val: 'font-pixel', label: '8-Bit Pixel', preview: 'Abc' }
                   ].map((font) => (
                     <div 
                       key={font.val} 
@@ -1021,7 +1073,8 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
                     <div className="grid grid-cols-2 gap-2">
                       {[
                         { val: 'center', label: 'Center', icon: AlignCenter },
-                        { val: 'left', label: 'Left Align', icon: AlignLeft }
+                        { val: 'left', label: 'Left Align', icon: AlignLeft },
+                        { val: 'right', label: 'Right Align', icon: AlignRight }
                       ].map((item) => {
                         const Icon = item.icon
                         return (

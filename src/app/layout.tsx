@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Outfit, JetBrains_Mono } from "next/font/google";
+import { Inter, Outfit, JetBrains_Mono, Caveat, Comic_Neue, Playfair_Display, Press_Start_2P } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
@@ -14,6 +14,28 @@ const outfit = Outfit({
 
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-mono",
+  subsets: ["latin"],
+});
+
+const caveat = Caveat({
+  variable: "--font-handwriting",
+  subsets: ["latin"],
+});
+
+const comicNeue = Comic_Neue({
+  variable: "--font-comic",
+  weight: ["400", "700"],
+  subsets: ["latin"],
+});
+
+const playfairDisplay = Playfair_Display({
+  variable: "--font-elegant",
+  subsets: ["latin"],
+});
+
+const pressStart2p = Press_Start_2P({
+  variable: "--font-pixel",
+  weight: "400",
   subsets: ["latin"],
 });
 
@@ -46,10 +68,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${inter.variable} ${outfit.variable} ${jetbrainsMono.variable} h-full antialiased`}
-    >
+      <html
+        lang="en"
+        className={`${inter.variable} ${outfit.variable} ${jetbrainsMono.variable} ${caveat.variable} ${comicNeue.variable} ${playfairDisplay.variable} ${pressStart2p.variable} h-full antialiased`}
+      >
       <body className="min-h-full flex flex-col">
         {children}
         <Toaster closeButton position="top-center" richColors={false} />

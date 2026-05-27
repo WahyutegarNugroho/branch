@@ -128,11 +128,18 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
           
           <div 
             className={`relative z-10 w-full flex flex-col ${
-              profile?.profile_align === 'left' ? 'items-start text-left' : 'items-center text-center'
+              profile?.profile_align === 'left' ? 'items-start text-left' : 
+              profile?.profile_align === 'right' ? 'items-end text-right' : 'items-center text-center'
             } ${
-              profile?.theme_style === 'glass' ? 'm-4 p-6 rounded-3xl backdrop-blur-xl bg-white/10 border border-white/20 shadow-2xl w-[calc(100%-2rem)] shrink-0' : 'h-full p-6'
+              profile?.theme_style === 'glass' ? 'm-4 p-6 rounded-3xl border border-white/20 shadow-2xl w-[calc(100%-2rem)] shrink-0' : 'h-full p-6'
             } ${profile?.font_family || 'font-sans-theme'} ${profile?.banner_url && profile?.theme_style !== 'glass' ? 'pt-8' : ''}`}
-            style={{ color: profile?.text_color || '#ffffff' }}
+            style={{ 
+              color: profile?.text_color || '#ffffff',
+              ...(profile?.theme_style === 'glass' ? {
+                backdropFilter: `blur(${profile?.glass_blur ?? 10}px)`,
+                backgroundColor: `rgba(255,255,255,${(profile?.glass_opacity ?? 20) / 100})`
+              } : {})
+            }}
           >
             {profile?.avatar_url ? (
               <div className={`relative flex items-center justify-center ${profile?.avatar_frame === 'gradient-ring' ? 'p-1 rounded-full bg-gradient-to-tr from-brand-pink to-brand-orange shadow-[0_0_15px_rgba(236,72,153,0.5)]' : profile?.avatar_frame === 'neon-glow' ? 'p-0.5 rounded-full bg-cyan-400 shadow-[0_0_20px_rgba(34,211,238,0.8)]' : ''} mb-4 ${profile?.banner_url ? 'mt-4 border-4 border-zinc-950 rounded-full' : ''}`}>

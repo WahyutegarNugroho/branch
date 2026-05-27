@@ -175,6 +175,18 @@
   .font-mono-theme {
     font-family: var(--font-mono), monospace !important;
   }
+  .font-handwriting {
+    font-family: var(--font-handwriting), cursive !important;
+  }
+  .font-comic {
+    font-family: var(--font-comic), 'Comic Sans MS', cursive !important;
+  }
+  .font-elegant {
+    font-family: var(--font-elegant), 'Times New Roman', serif !important;
+  }
+  .font-pixel {
+    font-family: var(--font-pixel), monospace !important;
+  }
   .no-scrollbar {
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -240,4 +252,54 @@
 }
 .animate-glow-pulse {
   animation: glowPulse 2s infinite ease-in-out !important;
+}
+
+/* Shine Hover */
+@keyframes shineSlide {
+  0% { transform: translateX(-100%) skewX(-15deg); }
+  100% { transform: translateX(200%) skewX(-15deg); }
+}
+.hover-shine-effect {
+  position: relative;
+  overflow: hidden;
+}
+.hover-shine-effect::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent);
+  transform: translateX(-100%) skewX(-15deg);
+}
+.hover-shine-effect:hover::before {
+  animation: shineSlide 0.7s ease-out;
+}
+
+/* Glitch Hover */
+@keyframes glitchAnim {
+  0% { transform: translate(0) }
+  20% { transform: translate(-2px, 2px) }
+  40% { transform: translate(-2px, -2px) }
+  60% { transform: translate(2px, 2px) }
+  80% { transform: translate(2px, -2px) }
+  100% { transform: translate(0) }
+}
+.hover-glitch-effect:hover {
+  animation: glitchAnim 0.3s infinite;
+}
+
+/* Shape Utilities */
+.shape-cut-corners {
+  clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px);
+}
+.shape-leaf {
+  border-radius: 0 20px 0 20px !important;
+}
+.shape-hexagon {
+  clip-path: polygon(5% 0%, 95% 0%, 100% 50%, 95% 100%, 5% 100%, 0% 50%);
+}
+.shape-diamond {
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
 }
