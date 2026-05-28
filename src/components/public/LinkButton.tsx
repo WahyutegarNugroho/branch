@@ -204,6 +204,7 @@ export function LinkButton({ link, profileId, profile, isPreview = false }: { li
     if (!isClippedShape) {
       baseBtnClass += " border border-white/20 hover:border-white/40"
     } else {
+      baseBtnClass += " bg-[rgba(255,255,255,0.01)] hover:bg-[rgba(255,255,255,0.05)]"
       wrapperClass += " [filter:url(#svg-outline)]"
     }
   } else if (styleVal === 'soft') {
