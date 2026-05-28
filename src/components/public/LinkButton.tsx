@@ -200,11 +200,10 @@ export function LinkButton({ link, profileId, profile, isPreview = false }: { li
       wrapperClass += " [filter:url(#svg-outline)]"
     }
   } else if (styleVal === 'outline') {
-    baseBtnClass += " bg-transparent"
     if (!isClippedShape) {
-      baseBtnClass += " border border-white/20 hover:border-white/40"
+      baseBtnClass += " bg-transparent border border-white/20 hover:border-white/40"
     } else {
-      baseBtnClass += " bg-white/5 hover:bg-white/10"
+      baseBtnClass += " bg-[rgba(255,255,255,0.01)] hover:bg-white/5"
       wrapperClass += " [filter:url(#svg-outline)]"
     }
   } else if (styleVal === 'soft') {
@@ -239,7 +238,7 @@ export function LinkButton({ link, profileId, profile, isPreview = false }: { li
     if (!isClippedShape) {
       baseBtnClass += " bg-transparent hover:bg-white/5 shadow-[inset_0_0_10px_currentColor] border-2 border-[currentColor] shadow-[0_0_10px_currentColor,inset_0_0_10px_currentColor] hover:shadow-[0_0_20px_currentColor,inset_0_0_20px_currentColor]"
     } else {
-      baseBtnClass += " bg-white/5 hover:bg-white/10"
+      baseBtnClass += " bg-[rgba(255,255,255,0.01)] hover:bg-white/5"
       wrapperStyle.filter = `url(#svg-neon-${link.id})`
     }
   } else if (styleVal === 'brutalism') {
