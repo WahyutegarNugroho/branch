@@ -277,11 +277,9 @@ export function LinkButton({ link, profileId, profile, isPreview = false }: { li
       }
     }
     ;(buttonStyle as any)['--spotlight-color-rgba'] = `rgba(${r}, ${g}, ${b}, 0.5)`
+    ;(buttonStyle as any)['--spotlight-drop-shadow'] = `drop-shadow(0 0 15px rgba(${r}, ${g}, ${b}, 0.8))`
     
-    if (isClippedShape) {
-       // We use an outer wrapper for drop-shadow so it doesn't override the SVG filter in wrapperStyle or wrapperClass
-       ;(buttonStyle as any)['--spotlight-drop-shadow'] = `drop-shadow(0 0 15px rgba(${r}, ${g}, ${b}, 0.8))`
-    } else {
+    if (!isClippedShape) {
        spotlightClass = " spotlight-active"
     }
   }
@@ -401,7 +399,7 @@ export function LinkButton({ link, profileId, profile, isPreview = false }: { li
     )
   }
 
-  if (link.is_spotlight && isClippedShape) {
+  if (link.is_spotlight) {
     return (
       <div className="w-full relative block" style={{ filter: (buttonStyle as any)['--spotlight-drop-shadow'] }}>
         {content}
