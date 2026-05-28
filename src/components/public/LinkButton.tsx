@@ -197,49 +197,48 @@ export function LinkButton({ link, profileId, profile, isPreview = false }: { li
     if (!isClippedShape) {
       baseBtnClass += " border border-white/10 hover:border-white/20"
     } else {
-      wrapperClass += " wrapper-clipped-fill"
+      wrapperClass += " [filter:url(#svg-outline)]"
     }
   } else if (styleVal === 'outline') {
     baseBtnClass += " bg-transparent"
     if (!isClippedShape) {
       baseBtnClass += " border border-white/20 hover:border-white/40"
     } else {
-      wrapperClass += " wrapper-clipped-outline"
+      wrapperClass += " [filter:url(#svg-outline)]"
     }
   } else if (styleVal === 'soft') {
     baseBtnClass += " bg-white/5 hover:bg-white/10 backdrop-blur-md"
     if (!isClippedShape) {
       baseBtnClass += " border border-white/10 hover:border-white/20 shadow-sm"
     } else {
-      wrapperClass += " wrapper-clipped-soft"
+      wrapperClass += " [filter:url(#svg-shadow)]"
     }
   } else if (styleVal === 'shadow') {
     baseBtnClass += " bg-white/10 hover:bg-white/20"
     if (!isClippedShape) {
       baseBtnClass += " border border-white/15 shadow-[0_8px_30px_rgba(0,0,0,0.3)] hover:shadow-[0_0_25px_rgba(255,255,255,0.15)]"
     } else {
-      wrapperClass += " wrapper-clipped-shadow"
+      wrapperClass += " [filter:url(#svg-shadow)] hover:[filter:url(#svg-shadow)_drop-shadow(0_0_10px_rgba(255,255,255,0.1))]"
     }
   } else if (styleVal === 'neumorphism') {
     if (!isClippedShape) {
       baseBtnClass += " bg-white/10 shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),inset_-3px_-3px_7px_rgba(0,0,0,0.5),3px_3px_6px_rgba(0,0,0,0.4)] hover:shadow-[inset_1px_1px_3px_rgba(255,255,255,0.2),inset_-2px_-2px_5px_rgba(0,0,0,0.5),1px_1px_3px_rgba(0,0,0,0.4)] border border-transparent"
     } else {
       baseBtnClass += " bg-white/10 border border-transparent"
-      wrapperClass += " wrapper-clipped-neumorphism"
+      wrapperClass += " [filter:url(#svg-neumorphism)]"
     }
   } else if (styleVal === 'glassmorphism') {
     baseBtnClass += " bg-white/5 backdrop-blur-2xl hover:bg-white/10"
     if (!isClippedShape) {
       baseBtnClass += " border-t border-l border-white/20 border-r border-b border-white/5 shadow-[0_4px_30px_rgba(0,0,0,0.1)]"
     } else {
-      wrapperClass += " wrapper-clipped-glassmorphism"
+      wrapperClass += " [filter:url(#svg-glassmorphism)]"
     }
   } else if (styleVal === 'neon') {
     baseBtnClass += " bg-transparent hover:bg-white/5"
     if (!isClippedShape) {
       baseBtnClass += " shadow-[inset_0_0_10px_currentColor] border-2 border-[currentColor] shadow-[0_0_10px_currentColor,inset_0_0_10px_currentColor] hover:shadow-[0_0_20px_currentColor,inset_0_0_20px_currentColor]"
     } else {
-      // Pass the neon color to CSS variables
       wrapperClass += " wrapper-clipped-neon"
       ;(wrapperStyle as any)['--theme-color'] = finalIconColor
     }
@@ -248,14 +247,14 @@ export function LinkButton({ link, profileId, profile, isPreview = false }: { li
     if (!isClippedShape) {
       baseBtnClass += " border-2 border-white/80 shadow-[4px_4px_0px_rgba(255,255,255,0.8)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_rgba(255,255,255,0.8)]"
     } else {
-      wrapperClass += " wrapper-clipped-brutalism"
+      wrapperClass += " [filter:url(#svg-brutalism)] hover:translate-x-[2px] hover:translate-y-[2px]"
     }
   } else if (styleVal === 'claymorphism') {
     if (!isClippedShape) {
       baseBtnClass += " bg-white/10 shadow-[inset_-4px_-4px_10px_rgba(0,0,0,0.5),inset_4px_4px_10px_rgba(255,255,255,0.3),8px_8px_16px_rgba(0,0,0,0.4)] border border-transparent rounded-3xl"
     } else {
       baseBtnClass += " bg-white/10 border border-transparent"
-      wrapperClass += " wrapper-clipped-claymorphism"
+      wrapperClass += " [filter:url(#svg-claymorphism)]"
     }
   }
 
