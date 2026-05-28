@@ -279,7 +279,8 @@ export function LinkButton({ link, profileId, profile, isPreview = false }: { li
     ;(buttonStyle as any)['--spotlight-color-rgba'] = `rgba(${r}, ${g}, ${b}, 0.5)`
     
     if (isClippedShape) {
-       wrapperStyle.filter = (wrapperStyle.filter ? wrapperStyle.filter + " " : "") + `drop-shadow(0 0 15px rgba(${r}, ${g}, ${b}, 0.8))`
+       // We use an outer wrapper for drop-shadow so it doesn't override the SVG filter in wrapperStyle or wrapperClass
+       ;(buttonStyle as any)['--spotlight-drop-shadow'] = `drop-shadow(0 0 15px rgba(${r}, ${g}, ${b}, 0.8))`
     } else {
        spotlightClass = " spotlight-active"
     }
@@ -322,8 +323,10 @@ export function LinkButton({ link, profileId, profile, isPreview = false }: { li
     </svg>
   ) : null
 
+  let content: React.ReactNode;
+
   if (!hasGraphic) {
-    return (
+    content = (
       <div className={wrapperClass} style={wrapperStyle}>
         {NeonFilter}
         <a
@@ -338,12 +341,9 @@ export function LinkButton({ link, profileId, profile, isPreview = false }: { li
         </a>
       </div>
     )
-  }
-
-  let baseBtnClassNear = baseBtnClass.replace('justify-center w-full', 'justify-center gap-2.5 w-full')
-
-  if (isLeftNear || isRightNear) {
-    return (
+  } else if (isLeftNear || isRightNear) {
+    let baseBtnClassNear = baseBtnClass.replace('justify-center w-full', 'justify-center gap-2.5 w-full')
+    content = (
       <div className={wrapperClass} style={wrapperStyle}>
         {NeonFilter}
         <a
@@ -368,37 +368,46 @@ export function LinkButton({ link, profileId, profile, isPreview = false }: { li
         </a>
       </div>
     )
+  } else {
+    let baseBtnClassBetween = baseBtnClass.replace('justify-center w-full', 'justify-between w-full')
+    content = (
+      <div className={wrapperClass} style={wrapperStyle}>
+        {NeonFilter}
+        <a
+          href={link.url}
+          onClick={handleClick}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={buttonStyle}
+          className={baseBtnClassBetween}
+        >
+          <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity" style={{ backgroundColor: matchedPlatform?.color || '#ffffff' }} />
+          
+          <div className={`w-10 flex items-center shrink-0 z-10 ${isRightFar ? 'justify-end' : 'justify-start'}`}>
+            {isLeftFar && (
+              ThumbnailImg ? ThumbnailImg : (PlatformIcon && <PlatformIcon size={24} color={finalIconColor} className="group-hover:scale-110 transition-transform drop-shadow-sm" />)
+            )}
+          </div>
+          
+          <span className="flex-1 text-center z-10">{link.title}</span>
+          
+          <div className={`w-10 flex items-center shrink-0 z-10 ${isRightFar ? 'justify-end' : 'justify-start'}`}>
+            {isRightFar && (
+              ThumbnailImg ? ThumbnailImg : (PlatformIcon && <PlatformIcon size={24} color={finalIconColor} className="group-hover:scale-110 transition-transform drop-shadow-sm" />)
+            )}
+          </div>
+        </a>
+      </div>
+    )
   }
 
-  let baseBtnClassBetween = baseBtnClass.replace('justify-center w-full', 'justify-between w-full')
+  if (link.is_spotlight && isClippedShape) {
+    return (
+      <div className="w-full relative block" style={{ filter: (buttonStyle as any)['--spotlight-drop-shadow'] }}>
+        {content}
+      </div>
+    )
+  }
 
-  return (
-    <div className={wrapperClass} style={wrapperStyle}>
-      {NeonFilter}
-      <a
-        href={link.url}
-        onClick={handleClick}
-        target="_blank"
-        rel="noopener noreferrer"
-        style={buttonStyle}
-        className={baseBtnClassBetween}
-      >
-        <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity" style={{ backgroundColor: matchedPlatform?.color || '#ffffff' }} />
-        
-        <div className={`w-10 flex items-center shrink-0 z-10 ${isRightFar ? 'justify-end' : 'justify-start'}`}>
-          {isLeftFar && (
-            ThumbnailImg ? ThumbnailImg : (PlatformIcon && <PlatformIcon size={24} color={finalIconColor} className="group-hover:scale-110 transition-transform drop-shadow-sm" />)
-          )}
-        </div>
-        
-        <span className="flex-1 text-center z-10">{link.title}</span>
-        
-        <div className={`w-10 flex items-center shrink-0 z-10 ${isRightFar ? 'justify-end' : 'justify-start'}`}>
-          {isRightFar && (
-            ThumbnailImg ? ThumbnailImg : (PlatformIcon && <PlatformIcon size={24} color={finalIconColor} className="group-hover:scale-110 transition-transform drop-shadow-sm" />)
-          )}
-        </div>
-      </a>
-    </div>
-  )
+  return content;
 }
