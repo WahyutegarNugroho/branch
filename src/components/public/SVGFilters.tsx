@@ -6,7 +6,7 @@ export default function SVGFilters() {
         <filter id="svg-brutalism" x="-20%" y="-20%" width="150%" height="150%" colorInterpolationFilters="sRGB">
           <feComponentTransfer in="SourceAlpha" result="SOLID_ALPHA"><feFuncA type="linear" slope="1000" /></feComponentTransfer>
           
-          <feMorphology in="SOLID_ALPHA" operator="dilate" radius="1.5" result="BORDER_ALPHA" />
+          <feMorphology in="SOLID_ALPHA" operator="dilate" radius="1" result="BORDER_ALPHA" />
           <feFlood floodColor="rgba(255,255,255,0.8)" result="BORDER_COLOR" />
           <feComposite in="BORDER_COLOR" in2="BORDER_ALPHA" operator="in" result="OUTLINE" />
           
@@ -21,7 +21,7 @@ export default function SVGFilters() {
           </feMerge>
         </filter>
 
-        {/* SVG Claymorphism: Inner Highlights & Shadows + Outer Shadow */}
+        {/* SVG Claymorphism: Soft Inner Highlights & Shadows + Outer Shadow */}
         <filter id="svg-claymorphism" x="-20%" y="-20%" width="150%" height="150%" colorInterpolationFilters="sRGB">
           <feComponentTransfer in="SourceAlpha" result="SOLID_ALPHA"><feFuncA type="linear" slope="1000" /></feComponentTransfer>
 
@@ -31,13 +31,15 @@ export default function SVGFilters() {
           <feComposite in="OUTER_COLOR" in2="OUTER_BLUR" operator="in" result="OUTER_SHADOW" />
 
           <feOffset in="SOLID_ALPHA" dx="4" dy="4" result="INSET_OFFSET1" />
-          <feComposite in="SOLID_ALPHA" in2="INSET_OFFSET1" operator="out" result="INVERSE1" />
-          <feFlood floodColor="rgba(255,255,255,0.3)" result="INSET_COLOR1" />
+          <feGaussianBlur in="INSET_OFFSET1" stdDeviation="3" result="INSET_BLUR1" />
+          <feComposite in="SOLID_ALPHA" in2="INSET_BLUR1" operator="out" result="INVERSE1" />
+          <feFlood floodColor="rgba(255,255,255,0.6)" result="INSET_COLOR1" />
           <feComposite in="INSET_COLOR1" in2="INVERSE1" operator="in" result="INSET_LIGHT" />
 
           <feOffset in="SOLID_ALPHA" dx="-4" dy="-4" result="INSET_OFFSET2" />
-          <feComposite in="SOLID_ALPHA" in2="INSET_OFFSET2" operator="out" result="INVERSE2" />
-          <feFlood floodColor="rgba(0,0,0,0.5)" result="INSET_COLOR2" />
+          <feGaussianBlur in="INSET_OFFSET2" stdDeviation="4" result="INSET_BLUR2" />
+          <feComposite in="SOLID_ALPHA" in2="INSET_BLUR2" operator="out" result="INVERSE2" />
+          <feFlood floodColor="rgba(0,0,0,0.7)" result="INSET_COLOR2" />
           <feComposite in="INSET_COLOR2" in2="INVERSE2" operator="in" result="INSET_DARK" />
 
           <feMerge>
@@ -48,7 +50,7 @@ export default function SVGFilters() {
           </feMerge>
         </filter>
 
-        {/* SVG Neumorphism: Dual Outer Shadows + Dual Inner Highlights */}
+        {/* SVG Neumorphism: Dual Outer Shadows + Dual Smooth Inner Highlights */}
         <filter id="svg-neumorphism" x="-20%" y="-20%" width="150%" height="150%" colorInterpolationFilters="sRGB">
           <feComponentTransfer in="SourceAlpha" result="SOLID_ALPHA"><feFuncA type="linear" slope="1000" /></feComponentTransfer>
 
@@ -63,13 +65,15 @@ export default function SVGFilters() {
           <feComposite in="OUTER_COLOR2" in2="OUTER_BLUR2" operator="in" result="OUTER_LIGHT" />
 
           <feOffset in="SOLID_ALPHA" dx="2" dy="2" result="INSET_OFFSET1" />
-          <feComposite in="SOLID_ALPHA" in2="INSET_OFFSET1" operator="out" result="INVERSE1" />
-          <feFlood floodColor="rgba(255,255,255,0.2)" result="INSET_COLOR1" />
+          <feGaussianBlur in="INSET_OFFSET1" stdDeviation="2" result="INSET_BLUR1" />
+          <feComposite in="SOLID_ALPHA" in2="INSET_BLUR1" operator="out" result="INVERSE1" />
+          <feFlood floodColor="rgba(255,255,255,0.4)" result="INSET_COLOR1" />
           <feComposite in="INSET_COLOR1" in2="INVERSE1" operator="in" result="INSET_LIGHT" />
 
           <feOffset in="SOLID_ALPHA" dx="-3" dy="-3" result="INSET_OFFSET2" />
-          <feComposite in="SOLID_ALPHA" in2="INSET_OFFSET2" operator="out" result="INVERSE2" />
-          <feFlood floodColor="rgba(0,0,0,0.5)" result="INSET_COLOR2" />
+          <feGaussianBlur in="INSET_OFFSET2" stdDeviation="3" result="INSET_BLUR2" />
+          <feComposite in="SOLID_ALPHA" in2="INSET_BLUR2" operator="out" result="INVERSE2" />
+          <feFlood floodColor="rgba(0,0,0,0.6)" result="INSET_COLOR2" />
           <feComposite in="INSET_COLOR2" in2="INVERSE2" operator="in" result="INSET_DARK" />
 
           <feMerge>
@@ -139,17 +143,22 @@ export default function SVGFilters() {
           </feMerge>
         </filter>
 
-        {/* SVG Neon: Glowing Outer Border inheriting currentColor */}
+        {/* SVG Neon: Glowing Outer Border inheriting currentColor + Soft Inner Glow */}
         <filter id="svg-neon" x="-50%" y="-50%" width="200%" height="200%" colorInterpolationFilters="sRGB">
           <feComponentTransfer in="SourceAlpha" result="SOLID_ALPHA"><feFuncA type="linear" slope="1000" /></feComponentTransfer>
 
+          {/* Hard outline */}
           <feMorphology in="SOLID_ALPHA" operator="dilate" radius="1.5" result="BORDER_ALPHA" />
           <feComposite in="BORDER_ALPHA" in2="SOLID_ALPHA" operator="out" result="OUTLINE_ONLY_ALPHA" />
           <feFlood floodColor="currentColor" result="GLOW_COLOR" />
           <feComposite in="GLOW_COLOR" in2="OUTLINE_ONLY_ALPHA" operator="in" result="OUTLINE" />
 
           <feGaussianBlur in="OUTLINE" stdDeviation="4" result="OUTER_GLOW" />
-          <feGaussianBlur in="OUTLINE" stdDeviation="2" result="INNER_GLOW" />
+
+          {/* Smooth Inner Glow */}
+          <feGaussianBlur in="SOLID_ALPHA" stdDeviation="3" result="INNER_BLUR" />
+          <feComposite in="SOLID_ALPHA" in2="INNER_BLUR" operator="out" result="INNER_MASK" />
+          <feComposite in="GLOW_COLOR" in2="INNER_MASK" operator="in" result="INNER_GLOW" />
 
           <feMerge>
             <feMergeNode in="OUTER_GLOW" />
