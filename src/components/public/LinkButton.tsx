@@ -306,7 +306,7 @@ export function LinkButton({ link, profileId, profile, isPreview = false }: { li
         <feComponentTransfer in="SourceAlpha" result="SOLID_ALPHA"><feFuncA type="linear" slope="1000" /></feComponentTransfer>
         <feMorphology in="SOLID_ALPHA" operator="dilate" radius="1.5" result="BORDER_ALPHA" />
         <feComposite in="BORDER_ALPHA" in2="SOLID_ALPHA" operator="out" result="OUTLINE_ONLY_ALPHA" />
-        <feFlood floodColor={finalIconColor} result="GLOW_COLOR" />
+        <feFlood floodColor={finalIconColor} floodOpacity="0.5" result="GLOW_COLOR" />
         <feComposite in="GLOW_COLOR" in2="OUTLINE_ONLY_ALPHA" operator="in" result="OUTLINE" />
         <feGaussianBlur in="OUTLINE" stdDeviation="2" result="OUTER_GLOW" />
         <feGaussianBlur in="SOLID_ALPHA" stdDeviation="1.5" result="INNER_BLUR" />

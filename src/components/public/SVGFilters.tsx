@@ -61,13 +61,13 @@ export default function SVGFilters() {
 
           <feOffset in="SOLID_ALPHA" dx="-2" dy="-2" result="OUTER_OFFSET2" />
           <feGaussianBlur in="OUTER_OFFSET2" stdDeviation="2" result="OUTER_BLUR2" />
-          <feFlood floodColor="rgba(255,255,255,0.1)" result="OUTER_COLOR2" />
+          <feFlood floodColor="rgba(255,255,255,0.05)" result="OUTER_COLOR2" />
           <feComposite in="OUTER_COLOR2" in2="OUTER_BLUR2" operator="in" result="OUTER_LIGHT" />
 
           <feOffset in="SOLID_ALPHA" dx="2" dy="2" result="INSET_OFFSET1" />
           <feGaussianBlur in="INSET_OFFSET1" stdDeviation="2" result="INSET_BLUR1" />
           <feComposite in="SOLID_ALPHA" in2="INSET_BLUR1" operator="out" result="INVERSE1" />
-          <feFlood floodColor="rgba(255,255,255,0.1)" result="INSET_COLOR1" />
+          <feFlood floodColor="rgba(255,255,255,0.05)" result="INSET_COLOR1" />
           <feComposite in="INSET_COLOR1" in2="INVERSE1" operator="in" result="INSET_LIGHT" />
 
           <feOffset in="SOLID_ALPHA" dx="-3" dy="-3" result="INSET_OFFSET2" />
@@ -101,7 +101,7 @@ export default function SVGFilters() {
           <feComposite in="INSET_COLOR" in2="INVERSE" operator="in" result="BORDER_TOPLEFT" />
 
           {/* Thin border around the whole shape */}
-          <feMorphology in="SOLID_ALPHA" operator="dilate" radius="0.5" result="THIN_BORDER_ALPHA" />
+          <feMorphology in="SOLID_ALPHA" operator="dilate" radius="1" result="THIN_BORDER_ALPHA" />
           <feComposite in="THIN_BORDER_ALPHA" in2="SOLID_ALPHA" operator="out" result="THIN_OUTLINE_ONLY_ALPHA" />
           <feFlood floodColor="rgba(255,255,255,0.15)" result="THIN_BORDER_COLOR" />
           <feComposite in="THIN_BORDER_COLOR" in2="THIN_OUTLINE_ONLY_ALPHA" operator="in" result="THIN_OUTLINE" />
@@ -118,7 +118,7 @@ export default function SVGFilters() {
         <filter id="svg-outline" x="-20%" y="-20%" width="150%" height="150%" colorInterpolationFilters="sRGB">
           <feComponentTransfer in="SourceAlpha" result="SOLID_ALPHA"><feFuncA type="linear" slope="1000" /></feComponentTransfer>
 
-          <feMorphology in="SOLID_ALPHA" operator="dilate" radius="0.5" result="BORDER_ALPHA" />
+          <feMorphology in="SOLID_ALPHA" operator="dilate" radius="1" result="BORDER_ALPHA" />
           <feComposite in="BORDER_ALPHA" in2="SOLID_ALPHA" operator="out" result="OUTLINE_ONLY_ALPHA" />
           <feFlood floodColor="rgba(255,255,255,0.2)" result="BORDER_COLOR" />
           <feComposite in="BORDER_COLOR" in2="OUTLINE_ONLY_ALPHA" operator="in" result="OUTLINE" />
@@ -138,7 +138,7 @@ export default function SVGFilters() {
           <feComposite in="OUTER_COLOR" in2="OUTER_BLUR" operator="in" result="OUTER_SHADOW" />
 
           {/* Tiny outline for clarity */}
-          <feMorphology in="SOLID_ALPHA" operator="dilate" radius="0.5" result="BORDER_ALPHA" />
+          <feMorphology in="SOLID_ALPHA" operator="dilate" radius="1" result="BORDER_ALPHA" />
           <feComposite in="BORDER_ALPHA" in2="SOLID_ALPHA" operator="out" result="OUTLINE_ONLY_ALPHA" />
           <feFlood floodColor="rgba(255,255,255,0.15)" result="BORDER_COLOR" />
           <feComposite in="BORDER_COLOR" in2="OUTLINE_ONLY_ALPHA" operator="in" result="OUTLINE" />
