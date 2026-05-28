@@ -15,7 +15,7 @@
   --font-elegant: var(--font-elegant);
   --font-pixel: var(--font-pixel);
   --font-space: var(--font-space);
-  --font-bebas: var(--font-bebas);
+  --font-oswald: var(--font-oswald);
   --font-righteous: var(--font-righteous);
   --font-dancing: var(--font-dancing);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -194,6 +194,9 @@
   }
   .font-pixel {
     font-family: var(--font-pixel), monospace !important;
+  }
+  .font-oswald {
+    font-family: var(--font-oswald), sans-serif !important;
   }
   .no-scrollbar {
     scrollbar-width: none;

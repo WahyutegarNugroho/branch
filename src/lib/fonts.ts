@@ -1,4 +1,4 @@
-import { Inter, Outfit, JetBrains_Mono, Caveat, Comic_Neue, Playfair_Display, Press_Start_2P, Space_Grotesk, Bebas_Neue, Righteous, Dancing_Script } from "next/font/google"
+import { Inter, Outfit, JetBrains_Mono, Caveat, Comic_Neue, Playfair_Display, Press_Start_2P, Space_Grotesk, Oswald, Righteous, Dancing_Script } from "next/font/google"
 
 export const inter = Inter({
   variable: "--font-sans",
@@ -15,23 +15,23 @@ export const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
 })
 
-const caveat = Caveat({
+export const caveat = Caveat({
   variable: "--font-handwriting",
   subsets: ["latin"],
 })
 
-const comicNeue = Comic_Neue({
+export const comicNeue = Comic_Neue({
   variable: "--font-comic",
   weight: ["400", "700"],
   subsets: ["latin"],
 })
 
-const playfairDisplay = Playfair_Display({
+export const playfairDisplay = Playfair_Display({
   variable: "--font-elegant",
   subsets: ["latin"],
 })
 
-const pressStart2p = Press_Start_2P({
+export const pressStart2p = Press_Start_2P({
   variable: "--font-pixel",
   weight: "400",
   subsets: ["latin"],
@@ -42,8 +42,8 @@ export const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
 })
 
-const bebasNeue = Bebas_Neue({
-  variable: "--font-bebas",
+export const oswald = Oswald({
+  variable: "--font-oswald",
   weight: "400",
   subsets: ["latin"],
 })
@@ -59,4 +59,4 @@ export const dancingScript = Dancing_Script({
   subsets: ["latin"],
 })
 
-export const profileFontVariables = `${caveat.variable} ${comicNeue.variable} ${playfairDisplay.variable} ${pressStart2p.variable} ${spaceGrotesk.variable} ${bebasNeue.variable} ${righteous.variable} ${dancingScript.variable}`
+export const profileFontVariables = `${caveat.variable} ${comicNeue.variable} ${playfairDisplay.variable} ${pressStart2p.variable} ${spaceGrotesk.variable} ${oswald.variable} ${righteous.variable} ${dancingScript.variable}`

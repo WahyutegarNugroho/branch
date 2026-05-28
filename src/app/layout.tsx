@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { inter, outfit, jetbrainsMono, spaceGrotesk, righteous, dancingScript } from "@/lib/fonts"
+import { inter, outfit, jetbrainsMono, spaceGrotesk, righteous, dancingScript, caveat, comicNeue, playfairDisplay, pressStart2p, oswald } from "@/lib/fonts"
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -34,7 +34,7 @@ export default function RootLayout({
   return (
       <html
         lang="en"
-        className={`${inter.variable} ${outfit.variable} ${jetbrainsMono.variable} ${spaceGrotesk.variable} ${righteous.variable} ${dancingScript.variable} h-full antialiased`}
+        className={`${inter.variable} ${outfit.variable} ${jetbrainsMono.variable} ${spaceGrotesk.variable} ${righteous.variable} ${dancingScript.variable} ${caveat.variable} ${comicNeue.variable} ${playfairDisplay.variable} ${pressStart2p.variable} ${oswald.variable} h-full antialiased`}
       >
       <body className="min-h-full flex flex-col">
         <SVGFilters />

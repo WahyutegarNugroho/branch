@@ -8,7 +8,7 @@ export const buttonShapeEnum = z.enum(['rounded-none', 'rounded-xl', 'rounded-3x
 
 export const buttonStyleEnum = z.enum(['fill', 'outline', 'soft', 'shadow', 'neumorphism', 'glassmorphism', 'neon', 'brutalism', 'claymorphism'])
 
-export const fontFamilyEnum = z.enum(['font-sans-theme', 'font-display-theme', 'font-serif-theme', 'font-mono-theme', 'font-handwriting', 'font-comic', 'font-elegant', 'font-pixel', 'font-space', 'font-bebas', 'font-righteous', 'font-dancing'])
+export const fontFamilyEnum = z.enum(['font-sans-theme', 'font-display-theme', 'font-serif-theme', 'font-mono-theme', 'font-handwriting', 'font-comic', 'font-elegant', 'font-pixel', 'font-space', 'font-oswald', 'font-righteous', 'font-dancing'])
 
 export const iconPositionEnum = z.enum(['left', 'left_far', 'right', 'right_far', 'left_near', 'right_near'])
 
