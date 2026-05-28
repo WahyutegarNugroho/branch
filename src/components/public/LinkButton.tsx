@@ -235,12 +235,12 @@ export function LinkButton({ link, profileId, profile, isPreview = false }: { li
       wrapperClass += " [filter:url(#svg-glassmorphism)]"
     }
   } else if (styleVal === 'neon') {
-    baseBtnClass += " bg-transparent hover:bg-white/5"
     if (!isClippedShape) {
-      baseBtnClass += " shadow-[inset_0_0_10px_currentColor] border-2 border-[currentColor] shadow-[0_0_10px_currentColor,inset_0_0_10px_currentColor] hover:shadow-[0_0_20px_currentColor,inset_0_0_20px_currentColor]"
+      baseBtnClass += " bg-transparent hover:bg-white/5 shadow-[inset_0_0_10px_currentColor] border-2 border-[currentColor] shadow-[0_0_10px_currentColor,inset_0_0_10px_currentColor] hover:shadow-[0_0_20px_currentColor,inset_0_0_20px_currentColor]"
     } else {
-      wrapperClass += " wrapper-clipped-neon"
-      ;(wrapperStyle as any)['--theme-color'] = finalIconColor
+      baseBtnClass += " bg-[rgba(255,255,255,0.01)] hover:bg-white/5"
+      wrapperClass += " [filter:url(#svg-neon)]"
+      ;(wrapperStyle as any).color = finalIconColor
     }
   } else if (styleVal === 'brutalism') {
     baseBtnClass += " bg-zinc-900 transition-all"
