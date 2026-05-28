@@ -183,10 +183,14 @@ export function LinkButton({ link, profileId, profile, isPreview = false }: { li
   if (hoverEffect === 'shine') btnHoverClass = " hover-shine-effect"
   if (hoverEffect === 'glitch') btnHoverClass = " hover-glitch-effect"
 
-  let wrapperClass = `group w-full relative block transition-all ${wrapperHoverClass}`
+  let wrapperClass = `group w-full relative block transition-all ${isClippedShape ? 'pointer-events-none' : ''} ${wrapperHoverClass}`
   let wrapperStyle: React.CSSProperties = {}
   
-  let baseBtnClass = `flex items-center justify-center w-full py-4 px-6 text-white font-semibold transition-all overflow-hidden ${shapeClass}`
+  let paddingClass = "py-4 px-6"
+  if (profile?.button_shape === 'hexagon') paddingClass = "py-4 px-10"
+  if (profile?.button_shape === 'diamond') paddingClass = "py-6 px-16"
+  
+  let baseBtnClass = `flex items-center justify-center w-full ${paddingClass} text-white font-semibold transition-all overflow-hidden ${isClippedShape ? 'pointer-events-auto' : ''} ${shapeClass}`
   
   if (styleVal === 'fill') {
     baseBtnClass += " bg-white/10 hover:bg-white/20"
