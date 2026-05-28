@@ -356,7 +356,7 @@
           drop-shadow(0 8px 15px rgba(0,0,0,0.4));
   transition: filter 0.2s;
 }
-.group:hover .wrapper-clipped-shadow {
+.group:hover.wrapper-clipped-shadow {
   filter: drop-shadow(1px 1px 0 rgba(255,255,255,0.2)) 
           drop-shadow(-1px -1px 0 rgba(255,255,255,0.2)) 
           drop-shadow(0 0 25px rgba(255,255,255,0.15));
@@ -385,7 +385,7 @@
           drop-shadow(4px 4px 0 rgba(255,255,255,0.8));
   transition: all 0.2s;
 }
-.group:hover .wrapper-clipped-brutalism {
+.group:hover.wrapper-clipped-brutalism {
   transform: translate(2px, 2px);
   filter: drop-shadow(1px 1px 0 rgba(255,255,255,0.8)) 
           drop-shadow(-1px -1px 0 rgba(255,255,255,0.8)) 
@@ -402,7 +402,7 @@
           drop-shadow(0 0 10px var(--theme-color));
   transition: filter 0.2s;
 }
-.group:hover .wrapper-clipped-neon {
+.group:hover.wrapper-clipped-neon {
   filter: drop-shadow(1px 1px 0 var(--theme-color)) 
           drop-shadow(-1px -1px 0 var(--theme-color)) 
           drop-shadow(1px -1px 0 var(--theme-color)) 
