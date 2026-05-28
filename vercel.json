@@ -2,8 +2,7 @@
   "crons": [
     {
       "path": "/api/cron/cleanup-analytics",
-      "schedule": "0 0 * * *",
-      "method": "POST"
+      "schedule": "0 0 * * *"
     }
   ]
 }
