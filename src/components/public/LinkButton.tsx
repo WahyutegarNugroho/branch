@@ -190,39 +190,71 @@ export function LinkButton({ link, profileId, profile, isPreview = false }: { li
   
   if (styleVal === 'fill') {
     baseBtnClass += " bg-white/10 hover:bg-white/20"
-    if (!isClippedShape) baseBtnClass += " border border-white/10 hover:border-white/20"
-    else wrapperClass += " drop-shadow-[0_0_1px_rgba(255,255,255,0.3)]"
+    if (!isClippedShape) {
+      baseBtnClass += " border border-white/10 hover:border-white/20"
+    } else {
+      wrapperStyle.filter = (wrapperStyle.filter ? wrapperStyle.filter + " " : "") + `drop-shadow(1px 1px 0 rgba(255,255,255,0.1)) drop-shadow(-1px -1px 0 rgba(255,255,255,0.1))`
+    }
   } else if (styleVal === 'outline') {
     baseBtnClass += " bg-transparent"
-    if (!isClippedShape) baseBtnClass += " border border-white/20 hover:border-white/40"
-    else wrapperClass += " drop-shadow-[0_0_1px_rgba(255,255,255,0.4)]"
+    if (!isClippedShape) {
+      baseBtnClass += " border border-white/20 hover:border-white/40"
+    } else {
+      wrapperStyle.filter = (wrapperStyle.filter ? wrapperStyle.filter + " " : "") + `drop-shadow(1px 1px 0 rgba(255,255,255,0.2)) drop-shadow(-1px -1px 0 rgba(255,255,255,0.2)) drop-shadow(1px -1px 0 rgba(255,255,255,0.2)) drop-shadow(-1px 1px 0 rgba(255,255,255,0.2))`
+    }
   } else if (styleVal === 'soft') {
     baseBtnClass += " bg-white/5 hover:bg-white/10 backdrop-blur-md"
-    if (!isClippedShape) baseBtnClass += " border border-white/10 hover:border-white/20 shadow-sm"
-    else wrapperClass += " drop-shadow-sm drop-shadow-[0_0_1px_rgba(255,255,255,0.2)]"
+    if (!isClippedShape) {
+      baseBtnClass += " border border-white/10 hover:border-white/20 shadow-sm"
+    } else {
+      wrapperStyle.filter = (wrapperStyle.filter ? wrapperStyle.filter + " " : "") + `drop-shadow(1px 1px 0 rgba(255,255,255,0.1)) drop-shadow(-1px -1px 0 rgba(255,255,255,0.1))`
+    }
   } else if (styleVal === 'shadow') {
     baseBtnClass += " bg-white/10 hover:bg-white/20"
-    if (!isClippedShape) baseBtnClass += " border border-white/15 shadow-[0_8px_30px_rgba(0,0,0,0.3)] hover:shadow-[0_0_25px_rgba(255,255,255,0.15)]"
-    else wrapperClass += " drop-shadow-[0_8px_15px_rgba(0,0,0,0.4)] drop-shadow-[0_0_1px_rgba(255,255,255,0.2)]"
+    if (!isClippedShape) {
+      baseBtnClass += " border border-white/15 shadow-[0_8px_30px_rgba(0,0,0,0.3)] hover:shadow-[0_0_25px_rgba(255,255,255,0.15)]"
+    } else {
+      wrapperStyle.filter = (wrapperStyle.filter ? wrapperStyle.filter + " " : "") + `drop-shadow(1px 1px 0 rgba(255,255,255,0.15)) drop-shadow(-1px -1px 0 rgba(255,255,255,0.15)) drop-shadow(0 8px 15px rgba(0,0,0,0.4))`
+    }
   } else if (styleVal === 'neumorphism') {
-    baseBtnClass += " bg-white/10 shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),inset_-3px_-3px_7px_rgba(0,0,0,0.5),3px_3px_6px_rgba(0,0,0,0.4)] hover:shadow-[inset_1px_1px_3px_rgba(255,255,255,0.2),inset_-2px_-2px_5px_rgba(0,0,0,0.5),1px_1px_3px_rgba(0,0,0,0.4)] border border-transparent"
-    if (isClippedShape) wrapperClass += " drop-shadow-[3px_3px_5px_rgba(0,0,0,0.5)]"
+    if (!isClippedShape) {
+      baseBtnClass += " bg-white/10 shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),inset_-3px_-3px_7px_rgba(0,0,0,0.5),3px_3px_6px_rgba(0,0,0,0.4)] hover:shadow-[inset_1px_1px_3px_rgba(255,255,255,0.2),inset_-2px_-2px_5px_rgba(0,0,0,0.5),1px_1px_3px_rgba(0,0,0,0.4)] border border-transparent"
+    } else {
+      // Fake the neumorphic lighting using a background gradient and outer drop shadows
+      baseBtnClass += " bg-gradient-to-br from-white/20 to-black/30 border border-transparent"
+      wrapperStyle.filter = (wrapperStyle.filter ? wrapperStyle.filter + " " : "") + `drop-shadow(3px 3px 5px rgba(0,0,0,0.5)) drop-shadow(-2px -2px 4px rgba(255,255,255,0.1))`
+    }
   } else if (styleVal === 'glassmorphism') {
     baseBtnClass += " bg-white/5 backdrop-blur-2xl hover:bg-white/10"
-    if (!isClippedShape) baseBtnClass += " border-t border-l border-white/20 border-r border-b border-white/5 shadow-[0_4px_30px_rgba(0,0,0,0.1)]"
-    else wrapperClass += " drop-shadow-[0_4px_15px_rgba(0,0,0,0.2)] drop-shadow-[0_0_1px_rgba(255,255,255,0.2)]"
+    if (!isClippedShape) {
+      baseBtnClass += " border-t border-l border-white/20 border-r border-b border-white/5 shadow-[0_4px_30px_rgba(0,0,0,0.1)]"
+    } else {
+      wrapperStyle.filter = (wrapperStyle.filter ? wrapperStyle.filter + " " : "") + `drop-shadow(1px 1px 0 rgba(255,255,255,0.05)) drop-shadow(-1px -1px 0 rgba(255,255,255,0.15)) drop-shadow(0 4px 15px rgba(0,0,0,0.2))`
+    }
   } else if (styleVal === 'neon') {
-    baseBtnClass += " bg-transparent shadow-[inset_0_0_10px_currentColor] hover:bg-white/5"
-    if (!isClippedShape) baseBtnClass += " border-2 border-[currentColor] shadow-[0_0_10px_currentColor,inset_0_0_10px_currentColor] hover:shadow-[0_0_20px_currentColor,inset_0_0_20px_currentColor]"
-    else wrapperStyle.filter = `drop-shadow(0 0 8px ${finalIconColor}) drop-shadow(0 0 1px ${finalIconColor})`
+    baseBtnClass += " bg-transparent hover:bg-white/5"
+    if (!isClippedShape) {
+      baseBtnClass += " shadow-[inset_0_0_10px_currentColor] border-2 border-[currentColor] shadow-[0_0_10px_currentColor,inset_0_0_10px_currentColor] hover:shadow-[0_0_20px_currentColor,inset_0_0_20px_currentColor]"
+    } else {
+      // 4-sided 1px drop-shadow to simulate border, plus a glowing outer drop-shadow
+      wrapperStyle.filter = (wrapperStyle.filter ? wrapperStyle.filter + " " : "") + `drop-shadow(1px 1px 0 ${finalIconColor}) drop-shadow(-1px -1px 0 ${finalIconColor}) drop-shadow(1px -1px 0 ${finalIconColor}) drop-shadow(-1px 1px 0 ${finalIconColor}) drop-shadow(0 0 10px ${finalIconColor})`
+    }
   } else if (styleVal === 'brutalism') {
     baseBtnClass += " bg-zinc-900 transition-all"
-    if (!isClippedShape) baseBtnClass += " border-2 border-white/80 shadow-[4px_4px_0px_rgba(255,255,255,0.8)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_rgba(255,255,255,0.8)]"
-    else wrapperClass += " drop-shadow-[3px_3px_0_rgba(255,255,255,0.8)] drop-shadow-[0_0_1px_rgba(255,255,255,0.8)]"
+    if (!isClippedShape) {
+      baseBtnClass += " border-2 border-white/80 shadow-[4px_4px_0px_rgba(255,255,255,0.8)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_rgba(255,255,255,0.8)]"
+    } else {
+      // Solid 1px-2px border simulation using drop shadows + brutalism offset shadow
+      wrapperStyle.filter = (wrapperStyle.filter ? wrapperStyle.filter + " " : "") + `drop-shadow(1px 1px 0 rgba(255,255,255,0.8)) drop-shadow(-1px -1px 0 rgba(255,255,255,0.8)) drop-shadow(1px -1px 0 rgba(255,255,255,0.8)) drop-shadow(-1px 1px 0 rgba(255,255,255,0.8)) drop-shadow(4px 4px 0 rgba(255,255,255,0.8))`
+    }
   } else if (styleVal === 'claymorphism') {
-    baseBtnClass += " bg-white/10 shadow-[inset_-4px_-4px_10px_rgba(0,0,0,0.5),inset_4px_4px_10px_rgba(255,255,255,0.3)] border border-transparent"
-    if (!isClippedShape) baseBtnClass += " shadow-[inset_-4px_-4px_10px_rgba(0,0,0,0.5),inset_4px_4px_10px_rgba(255,255,255,0.3),8px_8px_16px_rgba(0,0,0,0.4)] rounded-3xl"
-    else wrapperClass += " drop-shadow-[6px_6px_12px_rgba(0,0,0,0.4)]"
+    if (!isClippedShape) {
+      baseBtnClass += " bg-white/10 shadow-[inset_-4px_-4px_10px_rgba(0,0,0,0.5),inset_4px_4px_10px_rgba(255,255,255,0.3),8px_8px_16px_rgba(0,0,0,0.4)] border border-transparent rounded-3xl"
+    } else {
+      // Fake the clay inner shadow using a linear gradient and apply heavy outer shadow
+      baseBtnClass += " bg-gradient-to-tl from-black/40 via-white/10 to-white/30 border border-transparent"
+      wrapperStyle.filter = (wrapperStyle.filter ? wrapperStyle.filter + " " : "") + `drop-shadow(6px 6px 10px rgba(0,0,0,0.4))`
+    }
   }
 
   // Spotlight / Priority support
