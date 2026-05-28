@@ -8,7 +8,7 @@ import MatrixBackground from '@/components/backgrounds/MatrixBackground'
 import StarsBackground from '@/components/backgrounds/StarsBackground'
 import ConfettiBackground from '@/components/backgrounds/ConfettiBackground'
 import ParticlesBackground from '@/components/backgrounds/ParticlesBackground'
-import { useState, useEffect } from 'react'
+import { memo, useEffect } from 'react'
 import { 
   FaInstagram, 
   FaYoutube, 
@@ -37,46 +37,21 @@ const socialsIconMap: Record<string, any> = {
 
 import { Profile, Link, LinkImage } from '@/types'
 import { getPlatformByName } from '@/utils/platforms'
+import { usePreviewStore } from '@/lib/preview-store'
 
-export function LivePreview({ profile: initialProfile, links }: { profile?: Profile | null, links?: Link[] }) {
-  const [profile, setProfile] = useState(initialProfile)
-  const [localLinks, setLocalLinks] = useState(links)
-
-  useEffect(() => {
-    setProfile(initialProfile)
-  }, [initialProfile])
-
-  useEffect(() => {
-    setLocalLinks(links)
-  }, [links])
+export const LivePreview = memo(function LivePreview({ profile: initialProfile, links }: { profile?: Profile | null, links?: Link[] }) {
+  const profile = usePreviewStore((s) => s.profile)
+  const localLinks = usePreviewStore((s) => s.links)
+  const setProfile = usePreviewStore((s) => s.setProfile)
+  const setLinks = usePreviewStore((s) => s.setLinks)
 
   useEffect(() => {
-    const handleUpdate = (e: CustomEvent) => {
-      setProfile((prev: Profile | null | undefined) => ({ ...(prev || {}), ...e.detail } as Profile))
-    }
-    window.addEventListener('profile-update' as unknown as string, handleUpdate as EventListener)
-    return () => {
-      window.removeEventListener('profile-update' as unknown as string, handleUpdate as EventListener)
-    }
-  }, [])
+    if (initialProfile) setProfile(initialProfile)
+  }, [initialProfile, setProfile])
 
   useEffect(() => {
-    const handleLinksUpdate = (e: CustomEvent) => {
-      setLocalLinks((prev: Link[] | undefined) => {
-        if (!prev) return prev
-        return prev.map(link => {
-          if (link.id === e.detail.id) {
-            return { ...link, ...e.detail.changes }
-          }
-          return link
-        })
-      })
-    }
-    window.addEventListener('link-preview-update' as unknown as string, handleLinksUpdate as EventListener)
-    return () => {
-      window.removeEventListener('link-preview-update' as unknown as string, handleLinksUpdate as EventListener)
-    }
-  }, [])
+    if (links) setLinks(links)
+  }, [links, setLinks])
 
   let bgStyle: React.CSSProperties = {}
   let bgClass = "flex-1 w-full flex flex-col items-center pt-20 px-4 relative overflow-hidden"
@@ -339,7 +314,7 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
 
                     return (
                       <div key={link.id}>
-                        <LinkButton link={link} profileId={profile?.id || ''} profile={profile || undefined} isPreview={true} />
+                        <LinkButton link={link} profileId={profile?.id as string || ''} profile={profile as Profile | undefined} isPreview={true} />
                       </div>
                     )
                 }
@@ -403,4 +378,4 @@ export function LivePreview({ profile: initialProfile, links }: { profile?: Prof
       </div>
     </div>
   )
-}
+})

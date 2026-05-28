@@ -25,6 +25,8 @@ export interface Profile {
   tiktok_pixel_id?: string | null
   ga_measurement_id?: string | null
   custom_domain?: string | null
+  domain_verified?: boolean
+  plan?: 'free' | 'premium' | null
   text_color?: string | null
   social_style?: string | null
   profile_align?: string | null
@@ -34,13 +36,33 @@ export interface Profile {
   avatar_size?: string | null
   bg_video_url?: string | null
   bg_animation?: string | null
-  bg_animation_config?: any | null
+  bg_animation_config?: AnimationConfig | null
   avatar_frame?: string | null
-  avatar_frame_config?: any | null
+  avatar_frame_config?: AvatarFrameConfig | null
   social_placement?: string | null
   theme_lock?: boolean
   glass_blur?: number
   glass_opacity?: number
+}
+
+export interface AnimationConfig {
+  speed?: number
+  theme?: number
+  flakeCount?: number
+  wind?: 'left' | 'right' | 'none'
+  density?: number
+  linkDistance?: number
+  starCount?: number
+  color?: string
+  fontSize?: number
+  confettiCount?: number
+  [key: string]: unknown
+}
+
+export interface AvatarFrameConfig {
+  color1?: string
+  color2?: string
+  [key: string]: unknown
 }
 
 export interface Link {

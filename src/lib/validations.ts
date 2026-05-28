@@ -81,9 +81,9 @@ export const updateAppearanceSchema = z.object({
   glass_blur: z.coerce.number().int().min(0).max(50).default(10).optional(),
   glass_opacity: z.coerce.number().int().min(0).max(100).default(20).optional(),
   bg_animation: z.string().nullable().optional(),
-  bg_animation_config: z.any().nullable().optional(),
+  bg_animation_config: z.record(z.string(), z.unknown()).nullable().optional(),
   avatar_frame: z.string().nullable().optional(),
-  avatar_frame_config: z.any().nullable().optional(),
+  avatar_frame_config: z.record(z.string(), z.unknown()).nullable().optional(),
 })
 
 export const updateProfileInfoSchema = z.object({

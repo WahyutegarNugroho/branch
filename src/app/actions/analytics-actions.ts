@@ -2,65 +2,84 @@
 
 import { requireAuth } from '@/utils/supabase/server'
 
+interface AnalyticsRow {
+  id: string
+  created_at: string
+  link_id: string | null
+  device: string | null
+  referrer: string | null
+  country: string | null
+  city: string | null
+  utm_source: string | null
+  utm_medium: string | null
+  utm_campaign: string | null
+  links: { title: string; url: string } | null
+}
+
+const EMPTY_RESPONSE = {
+  views: 0,
+  clicks: 0,
+  ctr: '0.0',
+  chartData: [] as Array<{ name: string; views: number; clicks: number }>,
+  linkClicks: [] as Array<{ id: string; title: string; clicks: number; url: string }>,
+  topReferrers: [] as Array<{ name: string; count: number }>,
+  devices: [] as Array<{ name: string; count: number; percentage: number }>,
+  topCountries: [] as Array<{ name: string; count: number }>,
+  topCities: [] as Array<{ name: string; count: number }>,
+  utmCampaigns: [] as Array<{ name: string; views: number; clicks: number }>,
+  rawRecords: [] as Array<Record<string, string>>,
+}
+
 export async function getAnalyticsStats(days?: number, startDate?: string, endDate?: string) {
   const { supabase, user } = await requireAuth()
+  if (!user) return EMPTY_RESPONSE
 
-  const emptyResponse = {
-    views: 0,
-    clicks: 0,
-    ctr: '0.0',
-    chartData: [],
-    linkClicks: [],
-    topReferrers: [],
-    devices: [],
-    topCountries: [],
-    topCities: [],
-    utmCampaigns: [],
-    rawRecords: []
-  }
+  // 1. Build date filters
 
-  if (!user) return emptyResponse
-
-  // 1. Construct dynamic date filters
-  let query = supabase
-    .from('analytics')
-    .select('*, links(*)')
-    .eq('profile_id', user.id)
-
-  if (startDate && endDate) {
-    // Include the entire end date till 23:59:59
-    query = query
-      .gte('created_at', new Date(startDate).toISOString())
-      .lte('created_at', new Date(endDate + 'T23:59:59.999Z').toISOString())
-  } else if (days && days > 0) {
+  // 2. Count views and clicks separately (no row fetch)
+  const applyDateFilter = (query: any) => {
+    if (startDate && endDate) {
+      return query
+        .gte('created_at', new Date(startDate).toISOString())
+        .lte('created_at', new Date(endDate + 'T23:59:59.999Z').toISOString())
+    }
     const cutoff = new Date()
-    cutoff.setDate(cutoff.getDate() - days)
-    query = query.gte('created_at', cutoff.toISOString())
-  } else {
-    // Default to last 7 days
-    const cutoff = new Date()
-    cutoff.setDate(cutoff.getDate() - 7)
-    query = query.gte('created_at', cutoff.toISOString())
+    cutoff.setDate(cutoff.getDate() - (days || 7))
+    return query.gte('created_at', cutoff.toISOString())
   }
 
-  const { data, error } = await query
+  const [viewsResult, clicksResult] = await Promise.all([
+    applyDateFilter(
+      supabase.from('analytics').select('*', { count: 'exact', head: true }).eq('profile_id', user.id).is('link_id', null)
+    ),
+    applyDateFilter(
+      supabase.from('analytics').select('*', { count: 'exact', head: true }).eq('profile_id', user.id).not('link_id', 'is', null)
+    ),
+  ])
 
-  if (error || !data) {
-    console.error('Error fetching analytics:', error)
-    return emptyResponse
-  }
-
-  // Calculate totals
-  const views = data.filter(item => item.link_id === null).length
-  const clicks = data.filter(item => item.link_id !== null).length
+  const views = viewsResult.count ?? 0
+  const clicks = clicksResult.count ?? 0
   const ctr = views > 0 ? ((clicks / views) * 100).toFixed(1) : '0.0'
 
-  // 2. Dynamic Chart date range initial mapping
-  const chartMap: Record<string, { views: number, clicks: number }> = {}
-  
+  // 3. Fetch limited dataset for breakdowns (columns only, max 5000 rows)
+  const { data, error } = await applyDateFilter(
+    supabase
+      .from('analytics')
+      .select('id, created_at, link_id, device, referrer, country, city, utm_source, utm_medium, utm_campaign, links(title, url)')
+      .eq('profile_id', user.id)
+      .order('created_at', { ascending: false })
+      .limit(5000)
+  ) as { data: AnalyticsRow[] | null; error: unknown }
+
+  const rows = (data ?? []) as AnalyticsRow[]
+  if (error || rows.length === 0) {
+    console.error('Error fetching analytics:', error)
+    return EMPTY_RESPONSE
+  }
+
+  // 4. Chart data
   let start = new Date()
   let end = new Date()
-
   if (startDate && endDate) {
     start = new Date(startDate)
     end = new Date(endDate)
@@ -69,7 +88,7 @@ export async function getAnalyticsStats(days?: number, startDate?: string, endDa
     start.setDate(end.getDate() - (daysCount - 1))
   }
 
-  // Fill in every single date in the range to ensure a continuous line/bar chart
+  const chartMap: Record<string, { views: number; clicks: number }> = {}
   const curr = new Date(start)
   while (curr <= end) {
     const dateStr = curr.toISOString().split('T')[0]
@@ -77,7 +96,7 @@ export async function getAnalyticsStats(days?: number, startDate?: string, endDa
     curr.setDate(curr.getDate() + 1)
   }
 
-  data.forEach(item => {
+  rows.forEach(item => {
     const dateStr = new Date(item.created_at).toISOString().split('T')[0]
     if (chartMap[dateStr] !== undefined) {
       if (item.link_id === null) {
@@ -91,17 +110,16 @@ export async function getAnalyticsStats(days?: number, startDate?: string, endDa
   const chartData = Object.keys(chartMap).map(date => ({
     name: new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
     views: chartMap[date].views,
-    clicks: chartMap[date].clicks
+    clicks: chartMap[date].clicks,
   }))
 
-  // 3. Link Clicks Breakdown
+  // 5. Link clicks breakdown
   const linkClicksMap: Record<string, { title: string; clicks: number; url: string }> = {}
-  data.forEach(item => {
+  rows.forEach(item => {
     if (item.link_id !== null) {
       const linkId = item.link_id
       const title = item.links?.title || 'Unknown Link'
       const url = item.links?.url || '#'
-      
       if (!linkClicksMap[linkId]) {
         linkClicksMap[linkId] = { title, clicks: 0, url }
       }
@@ -113,19 +131,19 @@ export async function getAnalyticsStats(days?: number, startDate?: string, endDa
     id,
     title: linkClicksMap[id].title,
     clicks: linkClicksMap[id].clicks,
-    url: linkClicksMap[id].url
+    url: linkClicksMap[id].url,
   })).sort((a, b) => b.clicks - a.clicks)
 
-  // 4. Top Referrers
+  // 6. Top referrers
   const referrerMap: Record<string, number> = {}
-  data.forEach(item => {
+  rows.forEach(item => {
     let ref = item.referrer || 'Direct'
     if (ref !== 'Direct') {
       try {
         const urlObj = new URL(ref)
         ref = urlObj.hostname.replace('www.', '')
-      } catch (e) {
-        // Keep original string if not a valid URL
+      } catch {
+        // keep original
       }
     }
     referrerMap[ref] = (referrerMap[ref] || 0) + 1
@@ -133,51 +151,51 @@ export async function getAnalyticsStats(days?: number, startDate?: string, endDa
 
   const topReferrers = Object.keys(referrerMap).map(name => ({
     name,
-    count: referrerMap[name]
+    count: referrerMap[name],
   })).sort((a, b) => b.count - a.count).slice(0, 5)
 
-  // 5. Device Breakdown
+  // 7. Device breakdown
   let desktopCount = 0
   let mobileCount = 0
-  data.forEach(item => {
+  rows.forEach(item => {
     if (item.device === 'mobile') {
       mobileCount++
     } else {
       desktopCount++
     }
   })
-  
+
   const totalDeviceRecords = desktopCount + mobileCount
   const devices = [
     { name: 'Mobile', count: mobileCount, percentage: totalDeviceRecords > 0 ? Math.round((mobileCount / totalDeviceRecords) * 100) : 0 },
-    { name: 'Desktop', count: desktopCount, percentage: totalDeviceRecords > 0 ? Math.round((desktopCount / totalDeviceRecords) * 100) : 0 }
+    { name: 'Desktop', count: desktopCount, percentage: totalDeviceRecords > 0 ? Math.round((desktopCount / totalDeviceRecords) * 100) : 0 },
   ]
 
-  // 6. Top Countries Geolocation
+  // 8. Top countries
   const countryMap: Record<string, number> = {}
-  data.forEach(item => {
+  rows.forEach(item => {
     const country = item.country || 'Unknown'
     countryMap[country] = (countryMap[country] || 0) + 1
   })
   const topCountries = Object.keys(countryMap).map(name => ({
     name,
-    count: countryMap[name]
+    count: countryMap[name],
   })).sort((a, b) => b.count - a.count).slice(0, 5)
 
-  // 7. Top Cities Geolocation
+  // 9. Top cities
   const cityMap: Record<string, number> = {}
-  data.forEach(item => {
+  rows.forEach(item => {
     const city = item.city || 'Unknown'
     cityMap[city] = (cityMap[city] || 0) + 1
   })
   const topCities = Object.keys(cityMap).map(name => ({
     name,
-    count: cityMap[name]
+    count: cityMap[name],
   })).sort((a, b) => b.count - a.count).slice(0, 5)
 
-  // 8. UTM Campaigns Tracker
+  // 10. UTM campaigns
   const utmMap: Record<string, { views: number; clicks: number }> = {}
-  data.forEach(item => {
+  rows.forEach(item => {
     const campaign = item.utm_campaign || 'Organic'
     if (!utmMap[campaign]) {
       utmMap[campaign] = { views: 0, clicks: 0 }
@@ -191,11 +209,11 @@ export async function getAnalyticsStats(days?: number, startDate?: string, endDa
   const utmCampaigns = Object.keys(utmMap).map(name => ({
     name,
     views: utmMap[name].views,
-    clicks: utmMap[name].clicks
+    clicks: utmMap[name].clicks,
   })).sort((a, b) => (b.views + b.clicks) - (a.views + a.clicks))
 
-  // 9. Formatted Raw Records for CSV Export
-  const rawRecords = data.map(item => ({
+  // 11. Raw records for CSV export (limited to 5000)
+  const rawRecords = rows.map(item => ({
     id: item.id,
     created_at: item.created_at,
     type: item.link_id ? 'click' : 'view',
@@ -207,20 +225,8 @@ export async function getAnalyticsStats(days?: number, startDate?: string, endDa
     city: item.city || 'Unknown',
     utm_source: item.utm_source || '',
     utm_medium: item.utm_medium || '',
-    utm_campaign: item.utm_campaign || ''
+    utm_campaign: item.utm_campaign || '',
   }))
 
-  return { 
-    views, 
-    clicks, 
-    ctr, 
-    chartData, 
-    linkClicks, 
-    topReferrers, 
-    devices, 
-    topCountries, 
-    topCities, 
-    utmCampaigns, 
-    rawRecords 
-  }
+  return { views, clicks, ctr, chartData, linkClicks, topReferrers, devices, topCountries, topCities, utmCampaigns, rawRecords }
 }

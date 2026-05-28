@@ -21,9 +21,10 @@ import {
   FaEnvelope 
 } from 'react-icons/fa'
 import { FaXTwitter } from 'react-icons/fa6'
-import { Zap, Sun, Moon } from 'lucide-react'
+import { Zap, Sun, Moon, Share2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { useState, useEffect } from 'react'
+import { SocialShareModal } from './SocialShareModal'
 
 const socialsIconMap: Record<string, any> = {
   instagram: FaInstagram,
@@ -41,6 +42,7 @@ import { Profile, Link } from '@/types'
 export function AnimatedProfile({ profile, links, bgClass: defaultBgClass, bgStyle: defaultBgStyle }: { profile: Profile, links: Link[], bgClass: string, bgStyle: React.CSSProperties }) {
   const currentTextColor = profile?.text_color || '#ffffff'
   const bgStyle = { ...defaultBgStyle }
+  const [isShareOpen, setIsShareOpen] = useState(false)
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -194,27 +196,24 @@ export function AnimatedProfile({ profile, links, bgClass: defaultBgClass, bgSty
           </div>
           <div className="flex gap-2">
             <button 
-              onClick={() => {
-              if (navigator.share) {
-                navigator.share({
-                  title: profile.full_name || `@${profile.username}`,
-                  text: profile.bio || '',
-                  url: window.location.href
-                }).catch(() => {});
-              } else {
-                navigator.clipboard.writeText(window.location.href);
-                toast.success('Profile link copied!');
-              }
-            }}
+              onClick={() => setIsShareOpen(true)}
             className="w-9 h-9 rounded-full bg-black/20 backdrop-blur-md flex items-center justify-center text-white/90 hover:text-white border border-white/20 transition-all active:scale-95 shadow-sm"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-share"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" x2="12" y1="2" y2="15"/></svg>
+            <Share2 className="w-4 h-4" />
           </button>
           </div>
         </div>
 
         {/* Analytics Tracking */}
         <PageTracker profileId={profile.id} />
+
+        <SocialShareModal
+          isOpen={isShareOpen}
+          onClose={() => setIsShareOpen(false)}
+          url={typeof window !== 'undefined' ? window.location.href : ''}
+          title={profile.full_name || `@${profile.username}`}
+          description={profile.bio || undefined}
+        />
 
         {/* Profile Content */}
         <motion.div 

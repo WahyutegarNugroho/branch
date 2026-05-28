@@ -21,8 +21,9 @@ import { LinkItem } from './LinkItem'
 import { reorderLinks } from '@/app/actions/link-actions'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
+import type { Link } from '@/types'
 
-export function LinkManager({ initialLinks }: { initialLinks: any[] }) {
+export function LinkManager({ initialLinks }: { initialLinks: Link[] }) {
   const [links, setLinks] = useState(initialLinks)
   const router = useRouter()
 

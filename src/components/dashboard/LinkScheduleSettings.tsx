@@ -1,7 +1,7 @@
 'use client'
 
-import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
+import { DateTimePicker } from './DateTimePicker'
 
 export function LinkScheduleSettings({
   scheduleEnabled,
@@ -31,22 +31,22 @@ export function LinkScheduleSettings({
         <div className="grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2 duration-200">
           <div className="space-y-2">
             <span className="text-[10px] text-zinc-400 font-semibold uppercase">Show From</span>
-            <Input 
-              type="datetime-local" 
-              name="valid_from"
+            <input type="hidden" name="valid_from" value={validFrom} />
+            <DateTimePicker
               value={validFrom}
-              onChange={(e) => setValidFrom(e.target.value)}
-              className="rounded-xl border-white/10 bg-white/5 text-white h-10 text-xs focus-visible:ring-brand-pink" 
+              onChange={setValidFrom}
+              placeholder="When to show?"
+              minDate={new Date()}
             />
           </div>
           <div className="space-y-2">
             <span className="text-[10px] text-zinc-400 font-semibold uppercase">Hide After</span>
-            <Input 
-              type="datetime-local" 
-              name="valid_until"
+            <input type="hidden" name="valid_until" value={validUntil} />
+            <DateTimePicker
               value={validUntil}
-              onChange={(e) => setValidUntil(e.target.value)}
-              className="rounded-xl border-white/10 bg-white/5 text-white h-10 text-xs focus-visible:ring-brand-pink" 
+              onChange={setValidUntil}
+              placeholder="When to hide?"
+              minDate={validFrom ? new Date(validFrom) : new Date()}
             />
           </div>
         </div>

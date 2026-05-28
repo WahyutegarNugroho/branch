@@ -1,17 +1,16 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { login } from '@/app/auth/actions'
+import { resetPassword } from '@/app/auth/actions'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Loader2, Eye, EyeOff, Zap } from 'lucide-react'
+import { Loader2, Eye, EyeOff, Zap, KeyRound } from 'lucide-react'
 
-export default function LoginPage() {
+export default function ResetPasswordPage() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
@@ -19,7 +18,7 @@ export default function LoginPage() {
   async function onSubmit(formData: FormData) {
     setLoading(true)
     setError(null)
-    const result = await login(formData)
+    const result = await resetPassword(formData)
     if (result?.error) {
       setError(result.error)
       setLoading(false)
@@ -46,11 +45,11 @@ export default function LoginPage() {
 
           <CardHeader className="space-y-2 pb-6 pt-8 text-center">
             <div className="mx-auto w-11 h-11 rounded-2xl bg-gradient-to-tr from-brand-pink to-brand-orange flex items-center justify-center shadow-lg shadow-brand-pink/20 mb-3">
-              <Zap className="w-6 h-6 text-white" />
+              <KeyRound className="w-6 h-6 text-white" />
             </div>
-            <CardTitle className="text-3xl font-display-theme font-black tracking-tight text-white">Welcome Back</CardTitle>
+            <CardTitle className="text-3xl font-display-theme font-black tracking-tight text-white">New Password</CardTitle>
             <CardDescription className="text-zinc-400 text-sm font-medium">
-              Log in to manage your digital presence
+              Enter your new password below
             </CardDescription>
           </CardHeader>
 
@@ -69,30 +68,15 @@ export default function LoginPage() {
               )}
 
               <div className="space-y-1.5">
-                <Label htmlFor="email" className="text-zinc-300 text-xs font-bold uppercase tracking-wider">Email Address</Label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="name@example.com"
-                  required
-                  className="rounded-xl border-white/5 bg-white/[0.03] text-white focus-visible:ring-brand-pink/50 placeholder:text-zinc-600 h-12 transition-all duration-300 focus:bg-white/[0.05] hover:bg-white/[0.04]"
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <div className="flex justify-between items-center">
-                  <Label htmlFor="password" className="text-zinc-300 text-xs font-bold uppercase tracking-wider">Password</Label>
-                  <Link href="/forgot-password" className="text-[11px] text-brand-pink hover:text-brand-orange transition-colors font-semibold">
-                    Forgot password?
-                  </Link>
-                </div>
+                <Label htmlFor="password" className="text-zinc-300 text-xs font-bold uppercase tracking-wider">New Password</Label>
                 <div className="relative">
                   <Input
                     id="password"
                     name="password"
                     type={showPassword ? "text" : "password"}
                     required
+                    minLength={6}
+                    placeholder="Min. 6 characters"
                     className="rounded-xl border-white/5 bg-white/[0.03] text-white focus-visible:ring-brand-pink/50 h-12 pr-12 transition-all duration-300 focus:bg-white/[0.05] hover:bg-white/[0.04]"
                   />
                   <button
@@ -117,23 +101,14 @@ export default function LoginPage() {
                 {loading ? (
                   <div className="flex items-center justify-center gap-2">
                     <Loader2 className="h-5 w-5 animate-spin" />
-                    <span>Signing in...</span>
+                    <span>Resetting...</span>
                   </div>
                 ) : (
-                  'Log in'
+                  'Reset Password'
                 )}
               </Button>
             </form>
           </CardContent>
-
-          <CardFooter className="flex flex-col items-center pt-4 pb-8 border-t border-white/5 bg-black/20">
-            <div className="text-xs text-zinc-400 font-medium">
-              Don't have an account?{' '}
-              <Link href="/register" className="text-brand-pink hover:text-brand-orange transition-colors font-bold">
-                Sign up
-              </Link>
-            </div>
-          </CardFooter>
         </Card>
       </motion.div>
     </div>

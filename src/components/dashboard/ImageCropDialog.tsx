@@ -30,10 +30,46 @@ export function ImageCropDialog({
 
   const imgRef = useRef<HTMLImageElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
+  const previewRef = useRef<HTMLCanvasElement>(null)
 
   const isCircle = cropShape === 'circle'
   const frameWidth = 280
   const frameHeight = isCircle ? 280 : 576
+
+  const previewWidth = isCircle ? 80 : 120
+  const previewHeight = isCircle ? 80 : 60
+
+  // Render live crop preview thumbnail
+  useEffect(() => {
+    const preview = previewRef.current
+    const img = imgRef.current
+    if (!preview || !img || !baseSize.width) return
+
+    preview.width = previewWidth
+    preview.height = previewHeight
+
+    const ctx = preview.getContext('2d')
+    if (!ctx) return
+
+    const currentWidth = baseSize.width * zoom
+    const currentHeight = baseSize.height * zoom
+    const centerX = frameWidth / 2 + position.x
+    const centerY = frameHeight / 2 + position.y
+    const left = centerX - currentWidth / 2
+    const top = centerY - currentHeight / 2
+    const R = previewWidth / frameWidth
+
+    ctx.fillStyle = '#000000'
+    ctx.fillRect(0, 0, previewWidth, previewHeight)
+    ctx.drawImage(img, left * R, top * R, currentWidth * R, currentHeight * R)
+
+    if (isCircle) {
+      ctx.globalCompositeOperation = 'destination-in'
+      ctx.beginPath()
+      ctx.arc(previewWidth / 2, previewHeight / 2, previewWidth / 2, 0, Math.PI * 2)
+      ctx.fill()
+    }
+  }, [zoom, position, baseSize, isCircle, previewWidth, previewHeight])
 
   // Reset states on open/close
   useEffect(() => {
@@ -136,7 +172,7 @@ export function ImageCropDialog({
         setIsLoading(false)
       },
       "image/jpeg",
-      0.95
+      0.85
     )
   }
 
@@ -169,7 +205,7 @@ export function ImageCropDialog({
           </p>
 
           {/* Draggable Viewport Frame */}
-          <div 
+          <div
             ref={containerRef}
             className="rounded-2xl border-2 border-white/20 bg-zinc-950 overflow-hidden relative shadow-inner cursor-move touch-none"
             style={{
@@ -207,6 +243,16 @@ export function ImageCropDialog({
             <div className={`absolute inset-0 border border-white/10 pointer-events-none ${isCircle ? 'rounded-full' : 'rounded-xl'}`} />
             <div className="absolute inset-y-0 left-1/2 w-[1px] border-l border-dashed border-white/20 pointer-events-none" />
             <div className="absolute inset-x-0 top-1/2 h-[1px] border-t border-dashed border-white/20 pointer-events-none" />
+          </div>
+
+          {/* Live crop preview thumbnail */}
+          <div className="flex flex-col items-center gap-2">
+            <span className="text-[10px] text-zinc-500 uppercase tracking-wider font-semibold">Preview</span>
+            <canvas
+              ref={previewRef}
+              className={`border border-white/10 shadow-lg ${isCircle ? 'rounded-full' : 'rounded-lg'}`}
+              style={{ width: `${previewWidth}px`, height: `${previewHeight}px` }}
+            />
           </div>
 
           {/* Controls Panel */}

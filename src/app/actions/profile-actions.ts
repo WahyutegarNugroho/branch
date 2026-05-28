@@ -3,6 +3,7 @@
 import { createClient, requireAuth } from '@/utils/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { updateAppearanceSchema, updateProfileInfoSchema, updateSocialLinksSchema, updateSettingsSchema } from '@/lib/validations'
+import { formDataToObject } from '@/lib/formdata-utils'
 
 export async function getProfile() {
   const { supabase, user } = await requireAuth()
@@ -26,34 +27,19 @@ export async function updateAppearance(formData: FormData) {
   const { supabase, user } = await requireAuth()
   if (!user) return { error: 'Unauthorized' }
 
-  const raw = {
-    bg_type: formData.get('bg_type') as string,
-    bg_color: formData.get('bg_color') as string,
-    bg_image_url: formData.get('bg_image_url') as string || null,
-    bg_overlay_opacity: formData.get('bg_overlay_opacity') as string,
-    button_shape: formData.get('button_shape') as string,
-    button_style: formData.get('button_style') as string,
-    font_family: formData.get('font_family') as string,
-    text_color: formData.get('text_color') as string,
-    social_style: formData.get('social_style') as string,
-    profile_align: formData.get('profile_align') as string,
-    avatar_shape: formData.get('avatar_shape') as string,
-    banner_url: formData.get('banner_url') as string || null,
-    link_spacing: formData.get('link_spacing') as string,
-    avatar_size: formData.get('avatar_size') as string,
-    bg_video_url: formData.get('bg_video_url') as string || null,
-    theme_style: formData.get('theme_style') as string || null,
-    button_hover_effect: formData.get('button_hover_effect') as string || null,
-    layout_type: formData.get('layout_type') as string,
-    bg_animation: formData.get('bg_animation') as string || null,
-    bg_animation_config: formData.get('bg_animation_config') ? JSON.parse(formData.get('bg_animation_config') as string) : null,
-    avatar_frame: formData.get('avatar_frame') as string || null,
-    avatar_frame_config: formData.get('avatar_frame_config') ? JSON.parse(formData.get('avatar_frame_config') as string) : null,
-    social_placement: formData.get('social_placement') as string || null,
-    theme_lock: formData.get('theme_lock') === 'true',
-    glass_blur: formData.get('glass_blur') ? parseInt(formData.get('glass_blur') as string, 10) : undefined,
-    glass_opacity: formData.get('glass_opacity') ? parseInt(formData.get('glass_opacity') as string, 10) : undefined,
-  }
+  const raw = formDataToObject(formData, {
+    theme_lock: v => v === 'true',
+    bg_animation_config: v => v ? JSON.parse(v) : null,
+    avatar_frame_config: v => v ? JSON.parse(v) : null,
+    bg_image_url: v => v || null,
+    banner_url: v => v || null,
+    bg_video_url: v => v || null,
+    social_placement: v => v || null,
+    theme_style: v => v || null,
+    button_hover_effect: v => v || null,
+    bg_animation: v => v || null,
+    avatar_frame: v => v || null,
+  })
 
   const validated = updateAppearanceSchema.safeParse(raw)
   if (!validated.success) {
@@ -169,6 +155,20 @@ export async function updateBranding(showBranding: boolean) {
   const { supabase, user } = await requireAuth()
   if (!user) return { error: 'Unauthorized' }
 
+  if (!showBranding) {
+    const { data: profile, error: fetchError } = await supabase
+      .from('profiles')
+      .select('plan')
+      .eq('id', user.id)
+      .single()
+
+    if (fetchError) return { error: fetchError.message }
+
+    if (profile?.plan !== 'premium') {
+      return { error: 'Only premium plan users can hide branding. Upgrade your plan to unlock this feature.' }
+    }
+  }
+
   const { error } = await supabase
     .from('profiles')
     .update({
@@ -209,10 +209,20 @@ export async function updateSettings(formData: FormData) {
     return { error: validated.error.issues[0].message }
   }
 
+  // If custom_domain changed, reset verification
+  const { data: existingProfile } = await supabase
+    .from('profiles')
+    .select('custom_domain')
+    .eq('id', user.id)
+    .single()
+
+  const domainChanged = existingProfile?.custom_domain !== custom_domain
+
   const { error } = await supabase
     .from('profiles')
     .update({
       ...validated.data,
+      ...(domainChanged ? { domain_verified: false } : {}),
       updated_at: new Date().toISOString()
     })
     .eq('id', user.id)

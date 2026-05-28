@@ -11,28 +11,8 @@ import { Slider } from '@/components/ui/slider'
 import { updateAppearance, updateProfileInfo, updateSocialLinks, updateBranding } from '@/app/actions/profile-actions'
 import { Switch } from '@/components/ui/switch'
 import { toast } from 'sonner'
-import { Loader2, AlignLeft, AlignCenter, AlignRight, Palette, LayoutGrid, Image as ImageIcon, Video, Sparkles, Sliders } from 'lucide-react'
-import { 
-  FaInstagram, 
-  FaYoutube, 
-  FaGithub, 
-  FaLinkedin, 
-  FaWhatsapp, 
-  FaTiktok, 
-  FaEnvelope 
-} from 'react-icons/fa'
-import { FaXTwitter } from 'react-icons/fa6'
-
-const socialsList: Record<string, { label: string, icon: any, placeholder: string }> = {
-  instagram: { label: 'Instagram', icon: FaInstagram, placeholder: 'https://instagram.com/username' },
-  twitter: { label: 'Twitter / X', icon: FaXTwitter, placeholder: 'https://twitter.com/username' },
-  tiktok: { label: 'TikTok', icon: FaTiktok, placeholder: 'https://tiktok.com/@username' },
-  youtube: { label: 'YouTube', icon: FaYoutube, placeholder: 'https://youtube.com/@channel' },
-  github: { label: 'GitHub', icon: FaGithub, placeholder: 'https://github.com/username' },
-  linkedin: { label: 'LinkedIn', icon: FaLinkedin, placeholder: 'https://linkedin.com/in/username' },
-  whatsapp: { label: 'WhatsApp', icon: FaWhatsapp, placeholder: 'https://wa.me/628...' },
-  email: { label: 'Email', icon: FaEnvelope, placeholder: 'mailto:email@example.com' },
-}
+import { Loader2, Lock, AlignLeft, AlignCenter, AlignRight, Palette, LayoutGrid, Image as ImageIcon, Video, Sparkles, Sliders, Search } from 'lucide-react'
+import { PLATFORMS } from '@/utils/platforms'
 import Image from 'next/image'
 import { ColorPickerDialog } from './ColorPickerDialog'
 import { GradientPickerDialog } from './GradientPickerDialog'
@@ -40,8 +20,12 @@ import { ImageCropDialog } from './ImageCropDialog'
 import { createClient } from '@/utils/supabase/client'
 import { useRef } from 'react'
 
-import { Profile } from '@/types'
+import { Profile, AnimationConfig, AvatarFrameConfig } from '@/types'
 import { usernameBlacklist } from '@/lib/validations'
+import { AnimationConfigSection } from './AnimationConfigSection'
+import { BackgroundConfigSection } from './BackgroundConfigSection'
+import { compressImage } from '@/lib/image-utils'
+import { usePreviewStore } from '@/lib/preview-store'
 
 export function AppearanceManager({ profile }: { profile: Profile | null }) {
   const router = useRouter()
@@ -63,6 +47,7 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
       : {}
   )
   const [socialLoading, setSocialLoading] = useState(false)
+  const [socialSearch, setSocialSearch] = useState('')
 
   // Image Upload and Crop States
   const [bgImageUrl, setBgImageUrl] = useState(profile?.bg_image_url || '')
@@ -86,9 +71,9 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
   const [buttonHoverEffect, setButtonHoverEffect] = useState(profile?.button_hover_effect || 'none')
   const [layoutType, setLayoutType] = useState(profile?.layout_type || 'list')
   const [bgAnimation, setBgAnimation] = useState(profile?.bg_animation || 'none')
-  const [bgAnimationConfig, setBgAnimationConfig] = useState<any>(profile?.bg_animation_config || {})
+  const [bgAnimationConfig, setBgAnimationConfig] = useState<AnimationConfig>(profile?.bg_animation_config || {})
   const [avatarFrame, setAvatarFrame] = useState(profile?.avatar_frame || 'none')
-  const [avatarFrameConfig, setAvatarFrameConfig] = useState<any>(profile?.avatar_frame_config || {})
+  const [avatarFrameConfig, setAvatarFrameConfig] = useState<AvatarFrameConfig>(profile?.avatar_frame_config || {})
   const [socialPlacement, setSocialPlacement] = useState(profile?.social_placement || 'top')
   const [themeLock, setThemeLock] = useState(profile?.theme_lock || false)
   const [glassBlur, setGlassBlur] = useState<number[]>([profile?.glass_blur ?? 10])
@@ -149,32 +134,29 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
     return () => clearTimeout(delayDebounce)
   }, [username, profile?.username])
 
-  const updateBgConfig = (key: string, value: any) => {
-    setBgAnimationConfig((prev: any) => {
+  const updateBgConfig = (key: string, value: unknown) => {
+    setBgAnimationConfig((prev: AnimationConfig) => {
       const next = { ...prev, [key]: value }
       
-      // Dispatch immediately for live preview
-      window.dispatchEvent(new CustomEvent('profile-update', {
-        detail: {
-          bg_type: bgType,
-          bg_color: bgColor,
-          bg_image_url: bgImageUrl,
-          button_shape: buttonShape,
-          button_style: buttonStyle,
-          font_family: fontFamily,
-          theme_style: themeStyle,
-          button_hover_effect: buttonHoverEffect,
-          layout_type: layoutType,
-          bg_animation: bgAnimation,
-          bg_animation_config: next,
-          avatar_frame: avatarFrame,
-          avatar_frame_config: avatarFrameConfig,
-          social_placement: socialPlacement,
-          theme_lock: themeLock,
-          glass_blur: glassBlur[0],
-          glass_opacity: glassOpacity[0]
-        }
-      }))
+      usePreviewStore.getState().updateProfile({
+        bg_type: bgType,
+        bg_color: bgColor,
+        bg_image_url: bgImageUrl,
+        button_shape: buttonShape,
+        button_style: buttonStyle,
+        font_family: fontFamily,
+        theme_style: themeStyle,
+        button_hover_effect: buttonHoverEffect,
+        layout_type: layoutType,
+        bg_animation: bgAnimation,
+        bg_animation_config: next,
+        avatar_frame: avatarFrame,
+        avatar_frame_config: avatarFrameConfig,
+        social_placement: socialPlacement,
+        theme_lock: themeLock,
+        glass_blur: glassBlur[0],
+        glass_opacity: glassOpacity[0]
+      })
       
       return next
     })
@@ -207,27 +189,25 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
     setFontFamily(theme.font_family)
     
     // Live update dispatch to preview
-    window.dispatchEvent(new CustomEvent('profile-update', {
-      detail: {
-        bg_type: theme.bg_type,
-        bg_color: theme.bg_color,
-        bg_image_url: theme.bg_image_url || '',
-        button_shape: theme.button_shape,
-        button_style: theme.button_style,
-        font_family: theme.font_family,
-        theme_style: themeStyle,
-        button_hover_effect: buttonHoverEffect,
-        layout_type: layoutType,
-        bg_animation: bgAnimation,
-        bg_animation_config: bgAnimationConfig,
-        avatar_frame: avatarFrame,
-        avatar_frame_config: avatarFrameConfig,
-        social_placement: socialPlacement,
-        theme_lock: themeLock,
-        glass_blur: glassBlur[0],
-        glass_opacity: glassOpacity[0]
-      }
-    }))
+    usePreviewStore.getState().updateProfile({
+      bg_type: theme.bg_type,
+      bg_color: theme.bg_color,
+      bg_image_url: theme.bg_image_url || '',
+      button_shape: theme.button_shape,
+      button_style: theme.button_style,
+      font_family: theme.font_family,
+      theme_style: themeStyle,
+      button_hover_effect: buttonHoverEffect,
+      layout_type: layoutType,
+      bg_animation: bgAnimation,
+      bg_animation_config: bgAnimationConfig,
+      avatar_frame: avatarFrame,
+      avatar_frame_config: avatarFrameConfig,
+      social_placement: socialPlacement,
+      theme_lock: themeLock,
+      glass_blur: glassBlur[0],
+      glass_opacity: glassOpacity[0]
+    })
     
     toast.success(`Theme "${theme.name}" applied to preview! Click "Save Appearance" below to save it to your public profile.`)
   }
@@ -248,7 +228,7 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const avatarInputRef = useRef<HTMLInputElement>(null)
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'avatar' | 'bg' | 'banner' = 'bg') => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>, type: 'avatar' | 'bg' | 'banner' = 'bg') => {
     const file = e.target.files?.[0]
     if (!file) return
 
@@ -260,12 +240,28 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
 
     setCropType(type)
 
-    const reader = new FileReader()
-    reader.onload = () => {
-      setSelectedImage(reader.result as string)
-      setIsCropOpen(true)
+    // Compress before reading into crop dialog
+    try {
+      toast.loading('Compressing image...')
+      const compressed = await compressImage(file)
+      toast.dismiss()
+
+      const reader = new FileReader()
+      reader.onload = () => {
+        setSelectedImage(reader.result as string)
+        setIsCropOpen(true)
+      }
+      reader.readAsDataURL(new File([compressed], file.name, { type: 'image/jpeg' }))
+    } catch (err) {
+      toast.dismiss()
+      toast.error('Failed to compress image, using original')
+      const reader = new FileReader()
+      reader.onload = () => {
+        setSelectedImage(reader.result as string)
+        setIsCropOpen(true)
+      }
+      reader.readAsDataURL(file)
     }
-    reader.readAsDataURL(file)
     e.target.value = '' // Reset input
   }
 
@@ -301,22 +297,18 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
         toast.success('Profile photo cropped successfully!')
 
         // Sync immediately to virtual smartphone preview
-        window.dispatchEvent(new CustomEvent('profile-update', {
-          detail: {
-            avatar_url: publicUrl
-          }
-        }))
+        usePreviewStore.getState().updateProfile({
+          avatar_url: publicUrl
+        })
       } else if (isBanner) {
         setBannerUrl(publicUrl)
         setIsCropOpen(false)
         toast.success('Hero banner cropped successfully!')
 
         // Sync immediately to virtual smartphone preview
-        window.dispatchEvent(new CustomEvent('profile-update', {
-          detail: {
-            banner_url: publicUrl
-          }
-        }))
+        usePreviewStore.getState().updateProfile({
+          banner_url: publicUrl
+        })
       } else {
         setBgImageUrl(publicUrl)
         setBgType('image')
@@ -324,13 +316,11 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
         toast.success('Background image cropped successfully!')
 
         // Sync immediately to virtual smartphone preview
-        window.dispatchEvent(new CustomEvent('profile-update', {
-          detail: {
-            bg_type: 'image',
-            bg_image_url: publicUrl,
-            bg_overlay_opacity: opacity[0]
-          }
-        }))
+        usePreviewStore.getState().updateProfile({
+          bg_type: 'image',
+          bg_image_url: publicUrl,
+          bg_overlay_opacity: opacity[0]
+        })
       }
     } catch (err: any) {
       console.error('Error uploading image:', err)
@@ -338,79 +328,41 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
     }
   }
 
-  // Sync background customization to live preview in real time
+  // Sync all live preview state changes immediately via Zustand store
   useEffect(() => {
-    const timer = setTimeout(() => {
-      window.dispatchEvent(new CustomEvent('profile-update', {
-        detail: {
-          bg_color: bgColor,
-          bg_type: bgType,
-          bg_image_url: bgImageUrl,
-          bg_overlay_opacity: opacity[0],
-          bg_video_url: bgVideoUrl
-        }
-      }))
-    }, 50)
-    return () => clearTimeout(timer)
-  }, [bgColor, bgType, bgImageUrl, opacity, bgVideoUrl])
-
-  // Sync profile text inputs to live preview in real time
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      window.dispatchEvent(new CustomEvent('profile-update', {
-        detail: {
-          full_name: fullName,
-          bio: bio,
-          avatar_url: avatarUrl
-        }
-      }))
-    }, 50)
-    return () => clearTimeout(timer)
-  }, [fullName, bio, avatarUrl])
-
-  // Sync social links to live preview in real time
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      window.dispatchEvent(new CustomEvent('profile-update', {
-        detail: {
-          social_links: socialLinks
-        }
-      }))
-    }, 50)
-    return () => clearTimeout(timer)
-  }, [socialLinks])
-
-  // Sync button shape, style & font family to live preview in real time
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      window.dispatchEvent(new CustomEvent('profile-update', {
-        detail: {
-          button_shape: buttonShape,
-          button_style: buttonStyle,
-          font_family: fontFamily,
-          text_color: textColor,
-          social_style: socialStyle,
-          profile_align: profileAlign,
-          avatar_shape: avatarShape,
-          banner_url: bannerUrl,
-          link_spacing: linkSpacing,
-          avatar_size: avatarSize,
-          theme_style: themeStyle,
-          button_hover_effect: buttonHoverEffect,
-          layout_type: layoutType,
-          bg_animation: bgAnimation,
-          bg_animation_config: bgAnimationConfig,
-          avatar_frame: avatarFrame,
-          avatar_frame_config: avatarFrameConfig,
-          social_placement: socialPlacement,
-          theme_lock: themeLock,
-          glass_blur: glassBlur[0],
-          glass_opacity: glassOpacity[0]
-        }
-      }))
-    }, 50)
-    return () => clearTimeout(timer)
-  }, [buttonShape, buttonStyle, fontFamily, textColor, socialStyle, profileAlign, avatarShape, bannerUrl, linkSpacing, avatarSize, themeStyle, buttonHoverEffect, layoutType, bgAnimation, avatarFrame, avatarFrameConfig, socialPlacement, themeLock, glassBlur, glassOpacity])
+    usePreviewStore.getState().updateProfile({
+      bg_color: bgColor,
+      bg_type: bgType,
+      bg_image_url: bgImageUrl,
+      bg_overlay_opacity: opacity[0],
+      bg_video_url: bgVideoUrl,
+      full_name: fullName,
+      bio: bio,
+      avatar_url: avatarUrl,
+      social_links: socialLinks,
+      button_shape: buttonShape,
+      button_style: buttonStyle,
+      font_family: fontFamily,
+      text_color: textColor,
+      social_style: socialStyle,
+      profile_align: profileAlign,
+      avatar_shape: avatarShape,
+      banner_url: bannerUrl,
+      link_spacing: linkSpacing,
+      avatar_size: avatarSize,
+      theme_style: themeStyle,
+      button_hover_effect: buttonHoverEffect,
+      layout_type: layoutType,
+      bg_animation: bgAnimation,
+      bg_animation_config: bgAnimationConfig,
+      avatar_frame: avatarFrame,
+      avatar_frame_config: avatarFrameConfig,
+      social_placement: socialPlacement,
+      theme_lock: themeLock,
+      glass_blur: glassBlur[0],
+      glass_opacity: glassOpacity[0]
+    })
+  }, [bgColor, bgType, bgImageUrl, opacity, bgVideoUrl, fullName, bio, avatarUrl, socialLinks, buttonShape, buttonStyle, fontFamily, textColor, socialStyle, profileAlign, avatarShape, bannerUrl, linkSpacing, avatarSize, themeStyle, buttonHoverEffect, layoutType, bgAnimation, bgAnimationConfig, avatarFrame, avatarFrameConfig, socialPlacement, themeLock, glassBlur, glassOpacity])
 
   const handleSocialChange = (key: string, val: string) => {
     setSocialLinks(prev => ({
@@ -549,9 +501,7 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
                       variant="ghost" 
                       onClick={() => {
                         setAvatarUrl('')
-                        window.dispatchEvent(new CustomEvent('profile-update', {
-                          detail: { avatar_url: '' }
-                        }))
+                        usePreviewStore.getState().updateProfile({ avatar_url: '' })
                       }}
                       className="rounded-xl text-red-400 hover:text-red-300 hover:bg-red-500/10 h-9 text-xs"
                     >
@@ -659,26 +609,49 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
         </CardHeader>
         <CardContent>
           <form onSubmit={onSocialSubmit} className="space-y-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+              <Input
+                type="text"
+                placeholder="Search platforms..."
+                value={socialSearch}
+                onChange={(e) => setSocialSearch(e.target.value)}
+                className="rounded-xl border-white/10 bg-white/5 text-white focus-visible:ring-brand-pink h-10 text-xs pl-9"
+              />
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {Object.keys(socialsList).map((key) => {
-                const item = socialsList[key]
-                const Icon = item.icon
-                return (
-                  <div key={key} className="space-y-1.5">
-                    <Label htmlFor={`social_${key}`} className="text-zinc-300 flex items-center gap-1.5 text-xs font-semibold">
-                      <Icon size={14} className="text-zinc-400" />
-                      {item.label}
-                    </Label>
-                    <Input
-                      id={`social_${key}`}
-                      value={socialLinks[key] || ''}
-                      onChange={(e) => handleSocialChange(key, e.target.value)}
-                      placeholder={item.placeholder}
-                      className="rounded-xl border-white/10 bg-white/5 text-white focus-visible:ring-brand-pink h-10 text-xs"
-                    />
-                  </div>
-                )
-              })}
+              {(() => {
+                const filtered = PLATFORMS.filter(p => {
+                  if (!socialSearch) return true
+                  const q = socialSearch.toLowerCase()
+                  return p.name.toLowerCase().includes(q) || p.id.includes(q)
+                })
+                const sorted = [...filtered].sort((a, b) => {
+                  const aHasVal = !!socialLinks[a.id]
+                  const bHasVal = !!socialLinks[b.id]
+                  if (aHasVal && !bHasVal) return -1
+                  if (!aHasVal && bHasVal) return 1
+                  return a.name.localeCompare(b.name)
+                })
+                return sorted.map((platform) => {
+                  const Icon = platform.icon
+                  return (
+                    <div key={platform.id} className="space-y-1.5">
+                      <Label htmlFor={`social_${platform.id}`} className="text-zinc-300 flex items-center gap-1.5 text-xs font-semibold">
+                        <Icon size={14} style={{ color: platform.color }} />
+                        {platform.name}
+                      </Label>
+                      <Input
+                        id={`social_${platform.id}`}
+                        value={socialLinks[platform.id] || ''}
+                        onChange={(e) => handleSocialChange(platform.id, e.target.value)}
+                        placeholder={platform.urlPrefix || `https://${platform.id}.com/`}
+                        className="rounded-xl border-white/10 bg-white/5 text-white focus-visible:ring-brand-pink h-10 text-xs"
+                      />
+                    </div>
+                  )
+                })
+              })()}
             </div>
             <Button type="submit" disabled={socialLoading} className="rounded-xl bg-gradient-to-r from-brand-pink to-brand-orange hover:opacity-90 text-white border-0 font-semibold h-11 px-6 shadow-lg mt-4">
               {socialLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Save Social Icons'}
@@ -785,310 +758,28 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
         </CardHeader>
         <CardContent>
           <form key={`app-${profile?.updated_at || 'initial'}`} action={onAppSubmit} className="space-y-6">
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <div className="cursor-pointer" onClick={() => { setBgType('solid'); setIsColorPickerOpen(true); }}>
-                <input type="radio" name="bg_type" value="solid" checked={bgType === 'solid'} onChange={() => setBgType('solid')} id="bg_type_solid" className="peer sr-only" />
-                <div className={`h-24 rounded-2xl border-2 ${bgType === 'solid' ? 'border-brand-pink' : 'border-white/10'} flex flex-col items-center justify-center bg-white/5 transition-all relative overflow-hidden`}>
-                  <span className="font-semibold text-zinc-300 relative z-10">Solid</span>
-                  <div className="w-5 h-5 rounded-full border border-white/20 mt-2 relative z-10 shadow-sm" style={{ backgroundColor: bgType === 'solid' ? bgColor : '#09090b' }} />
-                </div>
-              </div>
-              <div className="cursor-pointer" onClick={() => { setBgType('gradient'); setIsGradientPickerOpen(true); }}>
-                <input type="radio" name="bg_type" value="gradient" checked={bgType === 'gradient'} onChange={() => setBgType('gradient')} id="bg_type_gradient" className="peer sr-only" />
-                <div 
-                  className={`h-24 rounded-2xl border-2 ${bgType === 'gradient' ? 'border-brand-pink' : 'border-white/10'} flex flex-col items-center justify-center transition-all relative overflow-hidden`}
-                  style={{ background: bgColor.includes('gradient') ? bgColor : 'linear-gradient(to bottom, var(--color-brand-pink), var(--color-brand-orange))' }}
-                >
-                  <span className="font-semibold text-white drop-shadow-md relative z-10">Gradient</span>
-                </div>
-              </div>
-              <div className="cursor-pointer" onClick={() => { setBgType('image'); fileInputRef.current?.click(); }}>
-                <input type="radio" name="bg_type" value="image" checked={bgType === 'image'} onChange={() => setBgType('image')} id="bg_type_image" className="peer sr-only" />
-                <div 
-                  className={`h-24 rounded-2xl border-2 ${bgType === 'image' ? 'border-brand-pink' : 'border-white/10'} flex items-center justify-center bg-cover bg-center transition-all relative overflow-hidden`}
-                  style={{ backgroundImage: bgImageUrl ? `url(${bgImageUrl})` : `url('https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=300&auto=format&fit=crop')` }}
-                >
-                  {/* Subtle dark overlay to ensure "Image" label is highly legible */}
-                  <div className="absolute inset-0 bg-black/40" />
-                  <span className="font-semibold text-white drop-shadow-md relative z-10">Image</span>
-                </div>
-              </div>
-              <div className="cursor-pointer" onClick={() => { setBgType('video'); }}>
-                <input type="radio" name="bg_type" value="video" checked={bgType === 'video'} onChange={() => setBgType('video')} id="bg_type_video" className="peer sr-only" />
-                <div className={`h-24 rounded-2xl border-2 ${bgType === 'video' ? 'border-brand-pink' : 'border-white/10'} flex flex-col items-center justify-center bg-white/5 transition-all relative overflow-hidden`}>
-                  <Video className="w-5 h-5 text-zinc-400 mb-1 relative z-10" />
-                  <span className="font-semibold text-zinc-300 relative z-10">Video</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Hidden image file uploader input */}
-            <input
-              type="file"
-              ref={fileInputRef}
-              accept="image/*"
-              className="hidden"
-              onChange={handleFileChange}
+            <BackgroundConfigSection
+              bgType={bgType}
+              setBgType={setBgType}
+              bgColor={bgColor}
+              setBgColor={setBgColor}
+              bgImageUrl={bgImageUrl}
+              bgVideoUrl={bgVideoUrl}
+              setBgVideoUrl={setBgVideoUrl}
+              opacity={opacity}
+              setOpacity={setOpacity}
+              fileInputRef={fileInputRef}
+              handleFileChange={handleFileChange}
+              setIsColorPickerOpen={setIsColorPickerOpen}
+              setIsGradientPickerOpen={setIsGradientPickerOpen}
             />
 
-            <div className="space-y-2">
-              <Label htmlFor="bg_color" className="text-zinc-300">Color Code (Solid/Gradient)</Label>
-              <Input
-                id="bg_color"
-                name="bg_color"
-                value={bgColor}
-                onChange={(e) => setBgColor(e.target.value)}
-                placeholder="#09090b"
-                className="rounded-xl border-white/10 bg-white/5 text-white focus-visible:ring-brand-pink h-12"
-              />
-            </div>
-
-            {bgType === 'video' && (
-              <div className="space-y-2 animate-in fade-in duration-200">
-                <Label htmlFor="bg_video_url" className="text-zinc-300 flex items-center gap-2">
-                  <Video className="w-4 h-4 text-brand-pink" /> Background Video URL (MP4, YouTube, etc.)
-                </Label>
-                <Input
-                  id="bg_video_url"
-                  name="bg_video_url"
-                  value={bgVideoUrl}
-                  onChange={(e) => setBgVideoUrl(e.target.value)}
-                  placeholder="https://assets.mixkit.co/videos/preview/mixkit-stars-in-space-background-1611-large.mp4"
-                  className="rounded-xl border-white/10 bg-white/5 text-white focus-visible:ring-brand-pink h-12 text-sm"
-                />
-                <p className="text-[11px] text-zinc-400">Enter a direct MP4 (.mp4) link, YouTube video link, or other short video url.</p>
-              </div>
-            )}
-
-            <div className="space-y-4">
-              <Label className="text-zinc-300">Dark Overlay Opacity ({opacity?.[0] ?? 0}%)</Label>
-              <Slider
-                value={opacity}
-                onValueChange={(val) => setOpacity(Array.isArray(val) ? val : [val])}
-                max={100}
-                step={1}
-                className="w-full [&_[role=slider]]:bg-brand-pink"
-              />
-              <p className="text-sm text-zinc-400">Useful to make text readable on bright custom images.</p>
-            </div>
-
-            {/* Live Background Animation */}
-            <div className="space-y-3 pt-4 border-t border-white/5">
-              <Label className="text-zinc-300 font-bold text-sm">Background Animation</Label>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                {[
-                  { val: 'none', label: 'None' },
-                  { val: 'aurora', label: 'Aurora Waves' },
-                  { val: 'particles', label: 'Particles' },
-                  { val: 'snowfall', label: 'Snowfall' },
-                  { val: 'stars', label: 'Stars' },
-                  { val: 'matrix', label: 'Matrix' },
-                  { val: 'confetti', label: 'Confetti' },
-                  { val: 'bokeh', label: 'Bokeh' }
-                ].map((anim) => (
-                  <div 
-                    key={anim.val} 
-                    onClick={() => setBgAnimation(anim.val)} 
-                    className={`h-12 flex items-center justify-center rounded-xl border-2 cursor-pointer transition-all ${bgAnimation === anim.val ? 'border-brand-pink bg-brand-pink/10 text-white font-bold' : 'border-white/10 bg-white/5 text-zinc-400 hover:border-white/20'}`}
-                  >
-                    <span className="text-xs">{anim.label}</span>
-                  </div>
-                ))}
-                <input type="hidden" name="bg_animation" value={bgAnimation} />
-              </div>
-            </div>
-
-            {/* Background Animation Settings */}
-            {bgAnimation !== 'none' && bgAnimation !== 'bokeh' && (
-              <div className="space-y-4 pt-4 animate-in fade-in slide-in-from-top-2 duration-300">
-                <Label className="text-zinc-300 font-bold text-xs flex items-center justify-between">
-                  <span>Customize {bgAnimation.charAt(0).toUpperCase() + bgAnimation.slice(1)}</span>
-                </Label>
-                
-                {/* Aurora Settings */}
-                {bgAnimation === 'aurora' && (
-                  <div className="space-y-4 p-4 rounded-xl border border-white/10 bg-white/5">
-                    <div>
-                      <Label className="text-zinc-400 text-xs">Color Theme</Label>
-                      <select 
-                        value={bgAnimationConfig.theme || '0'} 
-                        onChange={(e) => updateBgConfig('theme', parseInt(e.target.value))}
-                        className="w-full mt-2 bg-black/50 border border-white/10 rounded-lg p-2 text-sm text-white"
-                      >
-                        <option value="0">Teal / Blue / Pink</option>
-                        <option value="1">Purple / Cyan / Mint</option>
-                        <option value="2">Aqua / Orange / Lime</option>
-                      </select>
-                    </div>
-                    <div>
-                      <Label className="text-zinc-400 text-xs">Speed (Multiplier)</Label>
-                      <Slider
-                        value={[bgAnimationConfig.speed || 1]}
-                        onValueChange={(v) => updateBgConfig('speed', Array.isArray(v) ? v[0] : v)}
-                        min={0.1} max={3} step={0.1}
-                        className="w-full mt-2 [&_[role=slider]]:bg-brand-pink"
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {/* Snowfall Settings */}
-                {bgAnimation === 'snowfall' && (
-                  <div className="space-y-4 p-4 rounded-xl border border-white/10 bg-white/5">
-                    <div>
-                      <Label className="text-zinc-400 text-xs">Flake Count ({bgAnimationConfig.flakeCount || 100})</Label>
-                      <Slider
-                        value={[bgAnimationConfig.flakeCount || 100]}
-                        onValueChange={(v) => updateBgConfig('flakeCount', Array.isArray(v) ? v[0] : v)}
-                        min={10} max={300} step={10}
-                        className="w-full mt-2 [&_[role=slider]]:bg-brand-pink"
-                      />
-                    </div>
-                    <div>
-                      <Label className="text-zinc-400 text-xs">Fall Speed</Label>
-                      <Slider
-                        value={[bgAnimationConfig.speed || 1]}
-                        onValueChange={(v) => updateBgConfig('speed', Array.isArray(v) ? v[0] : v)}
-                        min={0.1} max={5} step={0.1}
-                        className="w-full mt-2 [&_[role=slider]]:bg-brand-pink"
-                      />
-                    </div>
-                    <div>
-                      <Label className="text-zinc-400 text-xs">Wind Direction</Label>
-                      <select 
-                        value={bgAnimationConfig.wind || 'right'} 
-                        onChange={(e) => updateBgConfig('wind', e.target.value)}
-                        className="w-full mt-2 bg-black/50 border border-white/10 rounded-lg p-2 text-sm text-white"
-                      >
-                        <option value="left">Left</option>
-                        <option value="none">Straight Down</option>
-                        <option value="right">Right</option>
-                      </select>
-                    </div>
-                  </div>
-                )}
-
-                {/* Matrix Settings */}
-                {bgAnimation === 'matrix' && (
-                  <div className="space-y-4 p-4 rounded-xl border border-white/10 bg-white/5">
-                    <div>
-                      <Label className="text-zinc-400 text-xs">Text Color</Label>
-                      <div className="flex gap-2 mt-2">
-                        {['#0F0', '#F00', '#00F', '#F0F', '#0FF'].map(color => (
-                          <button
-                            key={color}
-                            type="button"
-                            onClick={() => updateBgConfig('color', color)}
-                            className={`w-6 h-6 rounded-full border-2 ${bgAnimationConfig.color === color || (!bgAnimationConfig.color && color === '#0F0') ? 'border-white' : 'border-transparent'}`}
-                            style={{ backgroundColor: color }}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                    <div>
-                      <Label className="text-zinc-400 text-xs">Font Size ({bgAnimationConfig.fontSize || 14}px)</Label>
-                      <Slider
-                        value={[bgAnimationConfig.fontSize || 14]}
-                        onValueChange={(v) => updateBgConfig('fontSize', Array.isArray(v) ? v[0] : v)}
-                        min={8} max={32} step={2}
-                        className="w-full mt-2 [&_[role=slider]]:bg-brand-pink"
-                      />
-                    </div>
-                    <div>
-                      <Label className="text-zinc-400 text-xs">Fall Speed</Label>
-                      <Slider
-                        value={[bgAnimationConfig.speed || 1]}
-                        onValueChange={(v) => updateBgConfig('speed', Array.isArray(v) ? v[0] : v)}
-                        min={0.5} max={3} step={0.1}
-                        className="w-full mt-2 [&_[role=slider]]:bg-brand-pink"
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {/* Stars Settings */}
-                {bgAnimation === 'stars' && (
-                  <div className="space-y-4 p-4 rounded-xl border border-white/10 bg-white/5">
-                    <div>
-                      <Label className="text-zinc-400 text-xs">Star Count ({bgAnimationConfig.starCount || 200})</Label>
-                      <Slider
-                        value={[bgAnimationConfig.starCount || 200]}
-                        onValueChange={(v) => updateBgConfig('starCount', Array.isArray(v) ? v[0] : v)}
-                        min={50} max={500} step={25}
-                        className="w-full mt-2 [&_[role=slider]]:bg-brand-pink"
-                      />
-                    </div>
-                    <div>
-                      <Label className="text-zinc-400 text-xs">Movement Speed</Label>
-                      <Slider
-                        value={[bgAnimationConfig.speed || 1]}
-                        onValueChange={(v) => updateBgConfig('speed', Array.isArray(v) ? v[0] : v)}
-                        min={0} max={5} step={0.2}
-                        className="w-full mt-2 [&_[role=slider]]:bg-brand-pink"
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {/* Confetti Settings */}
-                {bgAnimation === 'confetti' && (
-                  <div className="space-y-4 p-4 rounded-xl border border-white/10 bg-white/5">
-                    <div>
-                      <Label className="text-zinc-400 text-xs">Confetti Count ({bgAnimationConfig.confettiCount || 150})</Label>
-                      <Slider
-                        value={[bgAnimationConfig.confettiCount || 150]}
-                        onValueChange={(v) => updateBgConfig('confettiCount', Array.isArray(v) ? v[0] : v)}
-                        min={20} max={300} step={10}
-                        className="w-full mt-2 [&_[role=slider]]:bg-brand-pink"
-                      />
-                    </div>
-                    <div>
-                      <Label className="text-zinc-400 text-xs">Gravity / Speed</Label>
-                      <Slider
-                        value={[bgAnimationConfig.speed || 1]}
-                        onValueChange={(v) => updateBgConfig('speed', Array.isArray(v) ? v[0] : v)}
-                        min={0.2} max={3} step={0.1}
-                        className="w-full mt-2 [&_[role=slider]]:bg-brand-pink"
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {/* Particles Settings */}
-                {bgAnimation === 'particles' && (
-                  <div className="space-y-4 p-4 rounded-xl border border-white/10 bg-white/5">
-                    <div>
-                      <Label className="text-zinc-400 text-xs">Particle Density</Label>
-                      <Slider
-                        value={[bgAnimationConfig.density || 10000]}
-                        onValueChange={(v) => updateBgConfig('density', Array.isArray(v) ? v[0] : v)}
-                        min={4000} max={20000} step={1000}
-                        className="w-full mt-2 [&_[role=slider]]:bg-brand-pink"
-                      />
-                      <p className="text-[10px] text-zinc-500 mt-1">Lower is more dense.</p>
-                    </div>
-                    <div>
-                      <Label className="text-zinc-400 text-xs">Link Distance ({bgAnimationConfig.linkDistance || 120}px)</Label>
-                      <Slider
-                        value={[bgAnimationConfig.linkDistance || 120]}
-                        onValueChange={(v) => updateBgConfig('linkDistance', Array.isArray(v) ? v[0] : v)}
-                        min={50} max={250} step={10}
-                        className="w-full mt-2 [&_[role=slider]]:bg-brand-pink"
-                      />
-                    </div>
-                    <div>
-                      <Label className="text-zinc-400 text-xs">Movement Speed</Label>
-                      <Slider
-                        value={[bgAnimationConfig.speed || 1]}
-                        onValueChange={(v) => updateBgConfig('speed', Array.isArray(v) ? v[0] : v)}
-                        min={0.1} max={3} step={0.1}
-                        className="w-full mt-2 [&_[role=slider]]:bg-brand-pink"
-                      />
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
+            <AnimationConfigSection
+              bgAnimation={bgAnimation}
+              setBgAnimation={setBgAnimation}
+              bgAnimationConfig={bgAnimationConfig}
+              updateBgConfig={updateBgConfig}
+            />
 
             {/* Button Shapes & Styles Theme */}
             <div className="space-y-6 pt-6 border-t border-white/5">
@@ -1278,9 +969,7 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
                           variant="destructive"
                           onClick={() => {
                             setBannerUrl('');
-                            window.dispatchEvent(new CustomEvent('profile-update', {
-                              detail: { banner_url: '' }
-                            }));
+                            usePreviewStore.getState().updateProfile({ banner_url: '' });
                           }}
                           className="bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 rounded-xl text-xs h-10 px-3"
                         >
@@ -1593,16 +1282,20 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
             <div className="flex items-center justify-between p-4 bg-zinc-950/40 border border-white/5 rounded-2xl">
               <div className="space-y-0.5">
                 <span className="text-sm font-bold text-white flex items-center gap-1.5">
+                  {profile?.plan !== 'premium' && <Lock className="h-3.5 w-3.5 text-zinc-500" />}
                   Show Branch Branding
                 </span>
                 <p className="text-[11px] text-zinc-400 max-w-sm">
-                  Turn off this option to hide the Branch branding at the bottom of your public profile.
+                  {profile?.plan === 'premium'
+                    ? 'Turn off this option to hide the Branch branding at the bottom of your public profile.'
+                    : 'Upgrade to premium to hide the Branch branding from your profile.'}
                 </p>
               </div>
               <Switch 
                 id="show_branding"
                 checked={showBranding}
                 onCheckedChange={setShowBranding}
+                disabled={profile?.plan !== 'premium'}
                 className="data-[state=checked]:bg-brand-pink"
               />
             </div>

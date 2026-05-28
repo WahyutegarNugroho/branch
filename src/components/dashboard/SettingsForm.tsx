@@ -17,13 +17,43 @@ import {
   HelpCircle, 
   Server, 
   CheckCircle,
-  AlertTriangle
+  AlertTriangle,
+  ShieldCheck,
+  ShieldX
 } from 'lucide-react'
 import { toast } from 'sonner'
 
 export function SettingsForm({ profile }: { profile: any }) {
   const [loading, setLoading] = useState(false)
+  const [verifying, setVerifying] = useState(false)
   const [customDomain, setCustomDomain] = useState(profile.custom_domain || '')
+  const [domainVerified, setDomainVerified] = useState(profile.domain_verified || false)
+
+  const handleVerify = async () => {
+    if (!customDomain.trim()) return
+    setVerifying(true)
+    try {
+      const res = await fetch('/api/verify-domain', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ domain: customDomain.toLowerCase().trim() }),
+      })
+      const data = await res.json()
+      if (data.error) {
+        toast.error(`Verification failed: ${data.error}`)
+      } else if (data.verified) {
+        setDomainVerified(true)
+        toast.success('Domain verified successfully!')
+      } else {
+        setDomainVerified(false)
+        toast.error('TXT record not found. Make sure you added the correct record and DNS has propagated.')
+      }
+    } catch {
+      toast.error('Failed to verify domain')
+    } finally {
+      setVerifying(false)
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -154,18 +184,45 @@ export function SettingsForm({ profile }: { profile: any }) {
         <CardContent className="space-y-5">
           <div className="space-y-2">
             <label className="text-xs font-semibold text-zinc-300">Your Custom Domain Name</label>
-            <Input 
-              name="custom_domain"
-              placeholder="bio.yourname.com"
-              value={customDomain}
-              onChange={(e) => setCustomDomain(e.target.value)}
-              className="bg-zinc-950 border-white/10 rounded-xl text-white focus-visible:ring-blue-400"
-            />
+            <div className="flex gap-2">
+              <div className="flex-1 relative">
+                <Input 
+                  name="custom_domain"
+                  placeholder="bio.yourname.com"
+                  value={customDomain}
+                  onChange={(e) => {
+                    setCustomDomain(e.target.value)
+                    setDomainVerified(false)
+                  }}
+                  className="bg-zinc-950 border-white/10 rounded-xl text-white focus-visible:ring-blue-400 pr-10"
+                />
+                {domainVerified && (
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                    <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                  </div>
+                )}
+              </div>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleVerify}
+                disabled={verifying || !customDomain.trim()}
+                className="bg-zinc-800 border-zinc-700 text-zinc-300 hover:bg-zinc-700 hover:text-white rounded-xl h-10 text-xs shrink-0"
+              >
+                {verifying ? (
+                  <><Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" />Verifying</>
+                ) : (
+                  <><ShieldCheck className="w-3.5 h-3.5 mr-1.5" />Verify</>
+                )}
+              </Button>
+            </div>
             {customDomain.trim() && (
               <p className="text-xs text-emerald-400 flex items-center gap-1.5 mt-1">
-                <CheckCircle className="w-3.5 h-3.5 shrink-0" />
-                <span>Page will be ready to access at:</span>
-                <span className="font-bold underline">https://{customDomain.toLowerCase().trim()}</span>
+                {domainVerified ? (
+                  <><ShieldCheck className="w-3.5 h-3.5 shrink-0" /><span className="font-bold">Verified</span><span> — page accessible at:</span><span className="font-bold underline">https://{customDomain.toLowerCase().trim()}</span></>
+                ) : (
+                  <><CheckCircle className="w-3.5 h-3.5 shrink-0" /><span>Page will be ready to access at:</span><span className="font-bold underline">https://{customDomain.toLowerCase().trim()}</span></>
+                )}
               </p>
             )}
           </div>
@@ -177,7 +234,7 @@ export function SettingsForm({ profile }: { profile: any }) {
               DNS Server Configuration Guide:
             </div>
             <p className="text-[11px] text-zinc-400 leading-relaxed">
-              Open your domain registrar (e.g., Niagahoster, GoDaddy, Cloudflare) and add the following DNS record:
+              Open your domain registrar (e.g., Niagahoster, GoDaddy, Cloudflare) and add the following DNS records:
             </p>
             <div className="overflow-x-auto">
               <table className="w-full text-left text-[11px] font-mono text-zinc-300">
@@ -194,15 +251,28 @@ export function SettingsForm({ profile }: { profile: any }) {
                     <td className="py-2">@ or subdomain (e.g., bio)</td>
                     <td className="py-2">cname.branch.bio</td>
                   </tr>
+                  <tr className="text-zinc-200 border-t border-white/5">
+                    <td className="py-2 font-bold text-emerald-400">TXT</td>
+                    <td className="py-2">@ or your subdomain</td>
+                    <td className="py-2 text-emerald-300 font-mono">{'branch-verification='}{profile.id || 'YOUR_USER_ID'}</td>
+                  </tr>
                 </tbody>
               </table>
             </div>
             <div className="p-3 bg-brand-orange/10 rounded-lg border border-brand-orange/20 flex gap-2.5">
               <AlertTriangle className="w-5 h-5 text-brand-orange shrink-0 mt-0.5" />
               <p className="text-[10px] text-brand-orange/90 leading-relaxed">
-                <strong>Important Note:</strong> DNS changes require an internet propagation time of 1 - 24 hours before your custom domain can be accessed worldwide.
+                <strong>Important Note:</strong> DNS changes require an internet propagation time of 1 - 24 hours before your custom domain can be accessed worldwide. Click "Verify" after you have added the TXT record.
               </p>
             </div>
+            {domainVerified && (
+              <div className="p-3 bg-emerald-500/10 rounded-lg border border-emerald-500/20 flex gap-2.5">
+                <ShieldCheck className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+                <p className="text-[10px] text-emerald-300/90 leading-relaxed">
+                  <strong>Domain verified!</strong> Your custom domain is active and pointing to your profile.
+                </p>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>

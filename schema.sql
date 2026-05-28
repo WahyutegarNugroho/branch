@@ -1,18 +1,21 @@
 -- ==========================================
 -- SCHEMA.SQL FOR BRANCH (LINKTREE CLONE)
 -- ==========================================
+-- Schema version 1.0 (final)
+-- Untuk update database yang sudah berjalan, jalankan query di bawah.
+-- ==========================================
 
--- 1. EXTENSIONS (Jika belum aktif)
+-- 1. EXTENSIONS
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- 2. TABEL PROFILES
-CREATE TABLE public.profiles (
+CREATE TABLE IF NOT EXISTS public.profiles (
     id UUID REFERENCES auth.users ON DELETE CASCADE PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
     full_name VARCHAR(100),
     bio TEXT,
     avatar_url TEXT,
-    bg_type VARCHAR(20) DEFAULT 'solid', -- 'solid', 'gradient', 'image'
+    bg_type VARCHAR(20) DEFAULT 'solid', -- 'solid', 'gradient', 'image', 'video'
     bg_color VARCHAR(50) DEFAULT '#ffffff',
     bg_image_url TEXT,
     bg_overlay_opacity INT DEFAULT 0 CHECK (bg_overlay_opacity >= 0 AND bg_overlay_opacity <= 100),
@@ -39,15 +42,22 @@ CREATE TABLE public.profiles (
     link_spacing VARCHAR(20) DEFAULT 'normal',
     avatar_size VARCHAR(20) DEFAULT 'medium',
     bg_video_url TEXT,
+    bg_animation VARCHAR(50) DEFAULT 'none',
+    bg_animation_config JSONB DEFAULT '{}'::jsonb,
+    avatar_frame VARCHAR(50) DEFAULT 'none',
+    avatar_frame_config JSONB DEFAULT '{}'::jsonb,
+    social_placement VARCHAR(20) DEFAULT 'top',
+    theme_lock BOOLEAN DEFAULT false,
+    glass_blur INTEGER DEFAULT 10,
+    glass_opacity INTEGER DEFAULT 20,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Enable Row Level Security
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 
 -- 3. TABEL LINKS
-CREATE TABLE public.links (
+CREATE TABLE IF NOT EXISTS public.links (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     profile_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE NOT NULL,
     title VARCHAR(100) NOT NULL,
@@ -68,14 +78,15 @@ CREATE TABLE public.links (
     embed_type VARCHAR(50),
     is_spotlight BOOLEAN DEFAULT false,
     animation VARCHAR(50),
+    spotlight_color VARCHAR(50),
+    is_sticky_cta BOOLEAN DEFAULT false,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Enable Row Level Security
 ALTER TABLE public.links ENABLE ROW LEVEL SECURITY;
 
 -- 4. TABEL ANALYTICS
-CREATE TABLE public.analytics (
+CREATE TABLE IF NOT EXISTS public.analytics (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     profile_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE NOT NULL,
     link_id UUID REFERENCES public.links(id) ON DELETE CASCADE NULL,
@@ -89,158 +100,9 @@ CREATE TABLE public.analytics (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Enable Row Level Security
 ALTER TABLE public.analytics ENABLE ROW LEVEL SECURITY;
 
-
--- Helper function to check admin role without RLS recursion
-CREATE OR REPLACE FUNCTION public.is_admin(user_id UUID)
-RETURNS BOOLEAN AS $$
-BEGIN
-  RETURN EXISTS (
-    SELECT 1 FROM public.profiles
-    WHERE id = user_id AND role = 'admin'
-  );
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
-
--- A. POLICIES UNTUK TABEL: PROFILES
--- Publik bisa melihat profil siapa saja (agar halaman /[username] bisa diakses)
-CREATE POLICY "Allow public read profiles" ON public.profiles
-    FOR SELECT USING (true);
-
--- User bisa update profil mereka sendiri
-CREATE POLICY "Allow user to update own profile" ON public.profiles
-    FOR UPDATE USING (auth.uid() = id);
-
--- Admin bisa melakukan apapun ke semua profil (RBAC)
-CREATE POLICY "Allow admin full access to profiles" ON public.profiles
-    FOR ALL USING ( public.is_admin(auth.uid()) );
-
--- B. POLICIES UNTUK TABEL: LINKS
--- Publik bisa melihat semua link (tapi di frontend nanti kita filter yang aktif & valid saja)
-CREATE POLICY "Allow public read links" ON public.links
-    FOR SELECT USING (true);
-
--- User bisa insert link milik mereka sendiri
-CREATE POLICY "Allow user to insert own links" ON public.links
-    FOR INSERT WITH CHECK (auth.uid() = profile_id);
-
--- User bisa update link milik mereka sendiri
-CREATE POLICY "Allow user to update own links" ON public.links
-    FOR UPDATE USING (auth.uid() = profile_id);
-
--- User bisa delete link milik mereka sendiri
-CREATE POLICY "Allow user to delete own links" ON public.links
-    FOR DELETE USING (auth.uid() = profile_id);
-
--- Admin bisa menghapus link apa saja (RBAC)
-CREATE POLICY "Allow admin to delete any link" ON public.links
-    FOR DELETE USING ( public.is_admin(auth.uid()) );
-
--- C. POLICIES UNTUK TABEL: ANALYTICS
--- Siapa saja bisa mencatat analitik (karena visitor adalah anonim)
-CREATE POLICY "Allow public to insert analytics" ON public.analytics
-    FOR INSERT WITH CHECK (true);
-
--- Hanya pemilik profil yang bisa membaca data analitiknya
-CREATE POLICY "Allow user to view own analytics" ON public.analytics
-    FOR SELECT USING (auth.uid() = profile_id);
-
--- Admin bisa melihat semua data analitik
-CREATE POLICY "Allow admin to view all analytics" ON public.analytics
-    FOR SELECT USING ( public.is_admin(auth.uid()) );
-
-
--- ==========================================
--- TRIGGERS & FUNCTIONS
--- ==========================================
-
--- Fungsi otomatis membuat profile ketika user baru mendaftar di Supabase Auth
-CREATE OR REPLACE FUNCTION public.handle_new_user()
-RETURNS TRIGGER AS $$
-DECLARE
-    new_username VARCHAR(50);
-BEGIN
-    -- Buat username unik default berdasarkan email
-    new_username := lower(split_part(NEW.email, '@', 1)) || '_' || floor(random() * 1000)::text;
-    
-    INSERT INTO public.profiles (id, username, full_name, role, avatar_url)
-    VALUES (
-        NEW.id,
-        new_username,
-        COALESCE(NEW.raw_user_meta_data->>'full_name', split_part(NEW.email, '@', 1)),
-        'user',
-        NEW.raw_user_meta_data->>'avatar_url'
-    );
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
--- Trigger setelah insert di auth.users
-CREATE OR REPLACE TRIGGER on_auth_user_created
-    AFTER INSERT ON auth.users
-    FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
-
-
--- ==========================================
--- STORAGE SETUP (BUCKETS & POLICIES)
--- ==========================================
-
--- Catatan: Jalankan query insert bucket ini jika Anda tidak ingin membuatnya manual lewat Dashboard GUI
-INSERT INTO storage.buckets (id, name, public) 
-VALUES ('backgrounds', 'backgrounds', true)
-ON CONFLICT (id) DO NOTHING;
-
-INSERT INTO storage.buckets (id, name, public) 
-VALUES ('avatars', 'avatars', true)
-ON CONFLICT (id) DO NOTHING;
-
--- RLS untuk Bucket backgrounds & avatars
--- Publik bisa membaca file gambar
-CREATE POLICY "Allow public read storage backgrounds" ON storage.objects
-    FOR SELECT USING (bucket_id = 'backgrounds');
-
-CREATE POLICY "Allow public read storage avatars" ON storage.objects
-    FOR SELECT USING (bucket_id = 'avatars');
-
--- User terautentikasi bisa mengunggah ke foldernya sendiri (nama folder sesuai user_id)
-CREATE POLICY "Allow user to upload background" ON storage.objects
-    FOR INSERT TO authenticated 
-    WITH CHECK (
-        bucket_id = 'backgrounds' AND 
-        (storage.foldername(name))[1] = auth.uid()::text
-    );
-
-CREATE POLICY "Allow user to upload avatar" ON storage.objects
-    FOR INSERT TO authenticated 
-    WITH CHECK (
-        bucket_id = 'avatars' AND 
-        (storage.foldername(name))[1] = auth.uid()::text
-    );
-
--- User terautentikasi bisa menghapus file di foldernya sendiri
-CREATE POLICY "Allow user to delete background" ON storage.objects
-    FOR DELETE TO authenticated
-    USING (
-        bucket_id = 'backgrounds' AND 
-        (storage.foldername(name))[1] = auth.uid()::text
-    );
-
-CREATE POLICY "Allow user to delete avatar" ON storage.objects
-    FOR DELETE TO authenticated
-    USING (
-        bucket_id = 'avatars' AND 
-        (storage.foldername(name))[1] = auth.uid()::text
-    );
-
-
--- ==========================================
--- PHASE 1 UPGRADES
--- ==========================================
-
--- Create themes table
+-- 5. TABEL THEMES
 CREATE TABLE IF NOT EXISTS public.themes (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -254,28 +116,9 @@ CREATE TABLE IF NOT EXISTS public.themes (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Enable RLS for themes
 ALTER TABLE public.themes ENABLE ROW LEVEL SECURITY;
 
--- Allow public read access to themes
-CREATE POLICY "Allow public read themes" ON public.themes
-    FOR SELECT USING (true);
-
--- Insert initial preset themes
-INSERT INTO public.themes (name, bg_type, bg_color, button_shape, button_style, font_family)
-VALUES 
-    ('Minimal Dark', 'solid', '#09090b', 'rounded-2xl', 'soft', 'font-sans-theme'),
-    ('Sunset Glow', 'gradient', 'linear-gradient(to bottom, #ec4899, #f97316)', 'rounded-full', 'fill', 'font-sans-theme'),
-    ('Forest Breeze', 'gradient', 'linear-gradient(to bottom, #115e59, #14b8a6)', 'rounded-lg', 'outline', 'font-sans-theme'),
-    ('Neo Retro', 'solid', '#facc15', 'rounded-none', 'flat', 'font-sans-theme')
-ON CONFLICT DO NOTHING;
-
-
--- ==========================================
--- PHASE 2 UPGRADES
--- ==========================================
-
--- 2. Create public.link_images table for Image Carousel/Gallery
+-- 6. TABEL LINK_IMAGES (image carousel/gallery)
 CREATE TABLE IF NOT EXISTS public.link_images (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     link_id UUID REFERENCES public.links(id) ON DELETE CASCADE NOT NULL,
@@ -284,41 +127,11 @@ CREATE TABLE IF NOT EXISTS public.link_images (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- 3. Enable Row Level Security
 ALTER TABLE public.link_images ENABLE ROW LEVEL SECURITY;
 
--- 4. Set up RLS Policies for link_images
-CREATE POLICY Allow_public_read_link_images ON public.link_images
-    FOR SELECT USING (true);
-
-CREATE POLICY Allow_owners_to_insert_link_images ON public.link_images
-    FOR INSERT WITH CHECK (
-        EXISTS (
-            SELECT 1 FROM public.links
-            WHERE links.id = link_images.link_id AND links.profile_id = auth.uid()
-        )
-    );
-
-CREATE POLICY Allow_owners_to_update_link_images ON public.link_images
-    FOR UPDATE USING (
-        EXISTS (
-            SELECT 1 FROM public.links
-            WHERE links.id = link_images.link_id AND links.profile_id = auth.uid()
-        )
-    );
-
-CREATE POLICY Allow_owners_to_delete_link_images ON public.link_images
-    FOR DELETE USING (
-        EXISTS (
-            SELECT 1 FROM public.links
-            WHERE links.id = link_images.link_id AND links.profile_id = auth.uid()
-        )
-    );
-
 -- ==========================================
--- DATABASE INDEXES FOR PERFORMANCE
+-- INDEXES
 -- ==========================================
-
 CREATE INDEX IF NOT EXISTS idx_links_profile_id ON public.links(profile_id);
 CREATE INDEX IF NOT EXISTS idx_links_profile_id_sort_order ON public.links(profile_id, sort_order);
 CREATE INDEX IF NOT EXISTS idx_analytics_profile_id ON public.analytics(profile_id);
@@ -327,9 +140,200 @@ CREATE INDEX IF NOT EXISTS idx_link_images_link_id ON public.link_images(link_id
 CREATE INDEX IF NOT EXISTS idx_link_images_link_id_sort_order ON public.link_images(link_id, sort_order);
 
 -- ==========================================
--- BULK UPDATE RPCs FOR PERFORMANCE
+-- HELPER FUNCTION
+-- ==========================================
+CREATE OR REPLACE FUNCTION public.is_admin(user_id UUID)
+RETURNS BOOLEAN AS $$
+BEGIN
+  RETURN EXISTS (
+    SELECT 1 FROM public.profiles
+    WHERE id = user_id AND role = 'admin'
+  );
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- ==========================================
+-- RLS POLICIES
 -- ==========================================
 
+-- PROFILES
+CREATE POLICY "Allow public read profiles" ON public.profiles
+    FOR SELECT USING (true);
+
+CREATE POLICY "Allow user to update own profile" ON public.profiles
+    FOR UPDATE USING (auth.uid() = id);
+
+CREATE POLICY "Allow admin full access to profiles" ON public.profiles
+    FOR ALL USING ( public.is_admin(auth.uid()) );
+
+-- LINKS
+CREATE POLICY "Allow public read links" ON public.links
+    FOR SELECT USING (true);
+
+CREATE POLICY "Allow user to insert own links" ON public.links
+    FOR INSERT WITH CHECK (auth.uid() = profile_id);
+
+CREATE POLICY "Allow user to update own links" ON public.links
+    FOR UPDATE USING (auth.uid() = profile_id);
+
+CREATE POLICY "Allow user to delete own links" ON public.links
+    FOR DELETE USING (auth.uid() = profile_id);
+
+CREATE POLICY "Allow admin to delete any link" ON public.links
+    FOR DELETE USING ( public.is_admin(auth.uid()) );
+
+-- ANALYTICS
+CREATE POLICY "Allow public to insert analytics" ON public.analytics
+    FOR INSERT WITH CHECK (true);
+
+CREATE POLICY "Allow user to view own analytics" ON public.analytics
+    FOR SELECT USING (auth.uid() = profile_id);
+
+CREATE POLICY "Allow admin to view all analytics" ON public.analytics
+    FOR SELECT USING ( public.is_admin(auth.uid()) );
+
+-- THEMES
+CREATE POLICY "Allow public read themes" ON public.themes
+    FOR SELECT USING (true);
+
+-- LINK_IMAGES
+CREATE POLICY "Allow public read link_images" ON public.link_images
+    FOR SELECT USING (true);
+
+CREATE POLICY "Allow owners to insert link_images" ON public.link_images
+    FOR INSERT WITH CHECK (
+        EXISTS (
+            SELECT 1 FROM public.links
+            WHERE links.id = link_images.link_id AND links.profile_id = auth.uid()
+        )
+    );
+
+CREATE POLICY "Allow owners to update link_images" ON public.link_images
+    FOR UPDATE USING (
+        EXISTS (
+            SELECT 1 FROM public.links
+            WHERE links.id = link_images.link_id AND links.profile_id = auth.uid()
+        )
+    );
+
+CREATE POLICY "Allow owners to delete link_images" ON public.link_images
+    FOR DELETE USING (
+        EXISTS (
+            SELECT 1 FROM public.links
+            WHERE links.id = link_images.link_id AND links.profile_id = auth.uid()
+        )
+    );
+
+-- ==========================================
+-- TRIGGER: AUTO-CREATE PROFILE ON SIGNUP
+-- ==========================================
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS TRIGGER AS $$
+DECLARE
+    new_username VARCHAR(50);
+    base_username VARCHAR(50);
+    suffix INT;
+    max_attempts INT := 10;
+    attempt INT := 0;
+BEGIN
+    base_username := lower(left(split_part(NEW.email, '@', 1), 42));
+
+    LOOP
+        suffix := floor(random() * 900000 + 100000)::int;
+        new_username := base_username || '_' || suffix;
+        attempt := attempt + 1;
+
+        BEGIN
+            INSERT INTO public.profiles (id, username, full_name, role, avatar_url)
+            VALUES (
+                NEW.id,
+                new_username,
+                COALESCE(NEW.raw_user_meta_data->>'full_name', split_part(NEW.email, '@', 1)),
+                'user',
+                NEW.raw_user_meta_data->>'avatar_url'
+            );
+            RETURN NEW;
+        EXCEPTION WHEN unique_violation THEN
+            IF attempt >= max_attempts THEN
+                new_username := 'user_' || substr(md5(random()::text), 1, 8);
+                INSERT INTO public.profiles (id, username, full_name, role, avatar_url)
+                VALUES (
+                    NEW.id,
+                    new_username,
+                    COALESCE(NEW.raw_user_meta_data->>'full_name', split_part(NEW.email, '@', 1)),
+                    'user',
+                    NEW.raw_user_meta_data->>'avatar_url'
+                );
+                RETURN NEW;
+            END IF;
+        END;
+    END LOOP;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE OR REPLACE TRIGGER on_auth_user_created
+    AFTER INSERT ON auth.users
+    FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
+-- ==========================================
+-- STORAGE BUCKETS & POLICIES
+-- ==========================================
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('backgrounds', 'backgrounds', true)
+ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('avatars', 'avatars', true)
+ON CONFLICT (id) DO NOTHING;
+
+CREATE POLICY "Allow public read storage backgrounds" ON storage.objects
+    FOR SELECT USING (bucket_id = 'backgrounds');
+
+CREATE POLICY "Allow public read storage avatars" ON storage.objects
+    FOR SELECT USING (bucket_id = 'avatars');
+
+CREATE POLICY "Allow user to upload background" ON storage.objects
+    FOR INSERT TO authenticated
+    WITH CHECK (
+        bucket_id = 'backgrounds' AND
+        (storage.foldername(name))[1] = auth.uid()::text
+    );
+
+CREATE POLICY "Allow user to upload avatar" ON storage.objects
+    FOR INSERT TO authenticated
+    WITH CHECK (
+        bucket_id = 'avatars' AND
+        (storage.foldername(name))[1] = auth.uid()::text
+    );
+
+CREATE POLICY "Allow user to delete background" ON storage.objects
+    FOR DELETE TO authenticated
+    USING (
+        bucket_id = 'backgrounds' AND
+        (storage.foldername(name))[1] = auth.uid()::text
+    );
+
+CREATE POLICY "Allow user to delete avatar" ON storage.objects
+    FOR DELETE TO authenticated
+    USING (
+        bucket_id = 'avatars' AND
+        (storage.foldername(name))[1] = auth.uid()::text
+    );
+
+-- ==========================================
+-- INITIAL PRESET THEMES
+-- ==========================================
+INSERT INTO public.themes (name, bg_type, bg_color, button_shape, button_style, font_family)
+VALUES
+    ('Minimal Dark', 'solid', '#09090b', 'rounded-2xl', 'soft', 'font-sans-theme'),
+    ('Sunset Glow', 'gradient', 'linear-gradient(to bottom, #ec4899, #f97316)', 'rounded-full', 'fill', 'font-sans-theme'),
+    ('Forest Breeze', 'gradient', 'linear-gradient(to bottom, #115e59, #14b8a6)', 'rounded-lg', 'outline', 'font-sans-theme'),
+    ('Neo Retro', 'solid', '#facc15', 'rounded-none', 'flat', 'font-sans-theme')
+ON CONFLICT DO NOTHING;
+
+-- ==========================================
+-- BULK UPDATE RPCs
+-- ==========================================
 CREATE OR REPLACE FUNCTION bulk_reorder_links(p_items JSONB)
 RETURNS void
 LANGUAGE plpgsql
@@ -362,10 +366,8 @@ END;
 $$;
 
 -- ==========================================
--- ANALYTICS RETENTION POLICY (CLEANUP OLD DATA)
+-- ANALYTICS RETENTION
 -- ==========================================
-
--- Function to delete analytics data older than 90 days
 CREATE OR REPLACE FUNCTION delete_old_analytics()
 RETURNS void
 LANGUAGE plpgsql
@@ -376,15 +378,23 @@ BEGIN
 END;
 $$;
 
--- Note: To run this automatically, enable pg_cron in Supabase Dashboard 
--- under Database -> Extensions, then run the following in SQL Editor:
+-- Note: Enable pg_cron in Supabase Dashboard -> Extensions, then run:
 -- SELECT cron.schedule('delete_old_analytics_job', '0 0 * * *', 'SELECT public.delete_old_analytics();');
 
 -- ==========================================
--- PHASE 5: Advanced Options (Visual & Layout)
+-- MIGRATION NOTE
+-- Untuk update database yang sudah berjalan (sudah ada data), jalankan query berikut:
 -- ==========================================
-ALTER TABLE public.profiles 
-ADD COLUMN IF NOT EXISTS layout_type VARCHAR(20) DEFAULT 'list';
-
-ALTER TABLE public.links
-ADD COLUMN IF NOT EXISTS is_sticky_cta BOOLEAN DEFAULT false;
+/*
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS bg_animation VARCHAR(50) DEFAULT 'none';
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS bg_animation_config JSONB DEFAULT '{}'::jsonb;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS avatar_frame VARCHAR(50) DEFAULT 'none';
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS avatar_frame_config JSONB DEFAULT '{}'::jsonb;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS social_placement VARCHAR(20) DEFAULT 'top';
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS theme_lock BOOLEAN DEFAULT false;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS glass_blur INTEGER DEFAULT 10;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS glass_opacity INTEGER DEFAULT 20;
+ALTER TABLE public.links ADD COLUMN IF NOT EXISTS spotlight_color VARCHAR(50);
+ALTER TABLE public.links ADD COLUMN IF NOT EXISTS is_sticky_cta BOOLEAN DEFAULT false;
+ALTER TABLE public.links ADD COLUMN IF NOT EXISTS link_type VARCHAR(20) DEFAULT 'link';
+*/

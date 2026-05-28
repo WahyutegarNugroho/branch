@@ -3,6 +3,7 @@
 import { createClient, requireAuth } from '@/utils/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { updateLinkSchema, createLinkSchema } from '@/lib/validations'
+import { formDataToObject } from '@/lib/formdata-utils'
 
 export async function getLinks() {
   const { supabase, user } = await requireAuth()
@@ -58,79 +59,36 @@ export async function updateLink(id: string, formData: FormData) {
   const { supabase, user } = await requireAuth()
   if (!user) return { error: 'Unauthorized' }
 
-  const title = formData.get('title') as string
-  const url = formData.get('url') as string
-  const is_active = formData.get('is_active') === 'on'
-  const icon_position = formData.get('icon_position') as string
+  const raw = formDataToObject(formData, {
+    is_active: v => v === 'on',
+    is_embed: v => v === 'on',
+    show_icon: v => v === 'on',
+    is_spotlight: v => v === 'on' || v === 'true',
+    is_sticky_cta: v => v === 'on' || v === 'true',
+    bg_opacity: v => v ? parseInt(v, 10) : null,
+    valid_from: v => v ? new Date(v).toISOString() : null,
+    valid_until: v => v ? new Date(v).toISOString() : null,
+    thumbnail_url: v => v || null,
+    bg_color: v => v || null,
+    text_color: v => v || null,
+    icon_color: v => v || null,
+    spotlight_color: v => v || null,
+    animation: v => v || null,
+    embed_type: v => v || null,
+  })
 
-  const updateData: any = { title, url, is_active }
-  if (formData.has('is_embed')) {
-    updateData.is_embed = formData.get('is_embed') === 'on'
-  }
-  if (formData.has('show_icon')) {
-    updateData.show_icon = formData.get('show_icon') === 'on'
-  }
-  if (icon_position) {
-    updateData.icon_position = icon_position
-  }
+  // Boolean defaults for checkboxes absent when unchecked
+  if (!('is_active' in raw)) raw.is_active = false
+  if (!('is_embed' in raw)) raw.is_embed = false
+  if (!('is_spotlight' in raw)) raw.is_spotlight = false
+  if (!('is_sticky_cta' in raw)) raw.is_sticky_cta = false
 
-  // Thumbnail support
-  if (formData.has('thumbnail_url')) {
-    updateData.thumbnail_url = formData.get('thumbnail_url') as string || null
-  }
-
-  // Link Type support
-  if (formData.has('link_type')) {
-    updateData.link_type = formData.get('link_type') as string
-  }
-
-  // Button styling parameters
-  if (formData.has('bg_color')) {
-    const bg = formData.get('bg_color') as string
-    updateData.bg_color = bg || null
-  }
-  if (formData.has('text_color')) {
-    const text = formData.get('text_color') as string
-    updateData.text_color = text || null
-  }
-  if (formData.has('bg_opacity')) {
-    const opacity = formData.get('bg_opacity') as string
-    updateData.bg_opacity = opacity ? parseInt(opacity, 10) : null
-  }
-  if (formData.has('icon_color')) {
-    const iconColor = formData.get('icon_color') as string
-    updateData.icon_color = iconColor || null
+  // icon_position: only include if non-empty
+  if ('icon_position' in raw && !raw.icon_position) {
+    delete raw.icon_position
   }
 
-  // Temporal scheduling parameters
-  if (formData.has('valid_from')) {
-    const fromVal = formData.get('valid_from') as string
-    updateData.valid_from = fromVal ? new Date(fromVal).toISOString() : null
-  }
-  if (formData.has('valid_until')) {
-    const untilVal = formData.get('valid_until') as string
-    updateData.valid_until = untilVal ? new Date(untilVal).toISOString() : null
-  }
-
-  // Phase 2 features
-  if (formData.has('is_spotlight')) {
-    updateData.is_spotlight = formData.get('is_spotlight') === 'on' || formData.get('is_spotlight') === 'true'
-  }
-  if (formData.has('animation')) {
-    updateData.animation = formData.get('animation') as string || null
-  }
-  if (formData.has('spotlight_color')) {
-    updateData.spotlight_color = formData.get('spotlight_color') as string || null
-  }
-  if (formData.has('embed_type')) {
-    updateData.embed_type = formData.get('embed_type') as string || null
-  }
-  if (formData.has('is_sticky_cta')) {
-    updateData.is_sticky_cta = formData.get('is_sticky_cta') === 'on' || formData.get('is_sticky_cta') === 'true'
-  }
-
-  // Validate with Zod before DB write
-  const validated = updateLinkSchema.safeParse(updateData)
+  const validated = updateLinkSchema.partial().safeParse(raw)
   if (!validated.success) {
     return { error: validated.error.issues[0].message }
   }

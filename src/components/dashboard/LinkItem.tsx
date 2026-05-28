@@ -13,6 +13,7 @@ import { toast } from 'sonner'
 import { Card } from '@/components/ui/card'
 import { PlatformPickerDialog } from './PlatformPickerDialog'
 import { getPlatformByName, Platform } from '@/utils/platforms'
+import { usePreviewStore } from '@/lib/preview-store'
 import { useRouter } from 'next/navigation'
 import { LinkCarouselManager } from './LinkCarouselManager'
 import { LinkBasicInputs } from './LinkBasicInputs'
@@ -120,38 +121,32 @@ export function LinkItem({ link }: { link: Link }) {
   useEffect(() => {
     if (!isEditing) return
 
-    window.dispatchEvent(new CustomEvent('link-preview-update', {
-      detail: {
-        id: link.id,
-        changes: {
-          title,
-          url: linkType === 'header' ? '' : url,
-          icon_position: iconPosition,
-          bg_color: customStyleEnabled ? bgColor : null,
-          text_color: customStyleEnabled ? textColor : null,
-          bg_opacity: customStyleEnabled ? bgOpacity : null,
-          is_active: isActive,
-          show_icon: showIcon,
-          icon_color: customStyleEnabled
-            ? iconColorMode === 'original'
-              ? null
-              : iconColorMode === 'text'
-              ? 'text'
-              : iconColor
-            : null,
-          valid_from: scheduleEnabled && validFrom ? new Date(validFrom).toISOString() : null,
-          valid_until: scheduleEnabled && validUntil ? new Date(validUntil).toISOString() : null,
-          is_embed: isEmbed,
-          link_type: linkType,
-          thumbnail_url: linkType === 'header' ? null : thumbnailUrl,
-          is_spotlight: isSpotlight,
-          spotlight_color: spotlightColor,
-          animation: animation === 'none' ? null : animation,
-          is_sticky_cta: isStickyCta,
-          carousel_images: carouselImages,
-        }
-      }
-    }))
+    usePreviewStore.getState().updateLink(link.id, {
+      title,
+      url: linkType === 'header' ? '' : url,
+      icon_position: iconPosition,
+      bg_color: customStyleEnabled ? bgColor : null,
+      text_color: customStyleEnabled ? textColor : null,
+      bg_opacity: customStyleEnabled ? bgOpacity : null,
+      is_active: isActive,
+      show_icon: showIcon,
+      icon_color: customStyleEnabled
+        ? iconColorMode === 'original'
+          ? null
+          : iconColorMode === 'text'
+          ? 'text'
+          : iconColor
+        : null,
+      valid_from: scheduleEnabled && validFrom ? new Date(validFrom).toISOString() : null,
+      valid_until: scheduleEnabled && validUntil ? new Date(validUntil).toISOString() : null,
+      is_embed: isEmbed,
+      link_type: linkType,
+      thumbnail_url: linkType === 'header' ? null : thumbnailUrl,
+      is_spotlight: isSpotlight,
+      spotlight_color: spotlightColor,
+      animation: animation === 'none' ? null : animation,
+      is_sticky_cta: isStickyCta,
+    } as Partial<Link>)
   }, [title, url, iconPosition, customStyleEnabled, bgColor, textColor, bgOpacity, isActive, showIcon, iconColorMode, iconColor, scheduleEnabled, validFrom, validUntil, isEmbed, isEditing, link.id, linkType, thumbnailUrl, isSpotlight, spotlightColor, animation, isStickyCta, carouselImages])
 
   const matchedPlatform = getPlatformByName(title)
