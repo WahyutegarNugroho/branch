@@ -83,6 +83,7 @@ export const metadata: Metadata = {
 };
 
 import { Toaster } from "@/components/ui/sonner"
+import SVGFilters from "@/components/public/SVGFilters"
 
 export default function RootLayout({
   children,
@@ -95,6 +96,7 @@ export default function RootLayout({
         className={`${inter.variable} ${outfit.variable} ${jetbrainsMono.variable} ${caveat.variable} ${comicNeue.variable} ${playfairDisplay.variable} ${pressStart2p.variable} ${spaceGrotesk.variable} ${bebasNeue.variable} ${righteous.variable} ${dancingScript.variable} h-full antialiased`}
       >
       <body className="min-h-full flex flex-col">
+        <SVGFilters />
         {children}
         <Toaster closeButton position="top-center" richColors={false} />
       </body>

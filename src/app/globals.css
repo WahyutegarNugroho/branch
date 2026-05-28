@@ -331,70 +331,51 @@
   clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
 }
 
-/* Clipped Shape Advanced Styling */
+/* Clipped Shape Advanced Styling using SVG Filters */
 .wrapper-clipped-outline {
-  filter: drop-shadow(1px 1px 0 rgba(255,255,255,0.2)) 
-          drop-shadow(-1px -1px 0 rgba(255,255,255,0.2)) 
-          drop-shadow(1px -1px 0 rgba(255,255,255,0.2)) 
-          drop-shadow(-1px 1px 0 rgba(255,255,255,0.2));
+  filter: url('#svg-outline');
 }
 
 .wrapper-clipped-fill {
-  filter: drop-shadow(1px 1px 0 rgba(255,255,255,0.1)) 
-          drop-shadow(-1px -1px 0 rgba(255,255,255,0.1));
+  filter: url('#svg-outline'); /* Fill uses outline for slight edge definition */
 }
 
 .wrapper-clipped-soft {
-  filter: drop-shadow(1px 1px 0 rgba(255,255,255,0.1)) 
-          drop-shadow(-1px -1px 0 rgba(255,255,255,0.1))
-          drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+  filter: url('#svg-shadow');
 }
 
 .wrapper-clipped-shadow {
-  filter: drop-shadow(1px 1px 0 rgba(255,255,255,0.15)) 
-          drop-shadow(-1px -1px 0 rgba(255,255,255,0.15)) 
-          drop-shadow(0 8px 15px rgba(0,0,0,0.4));
+  filter: url('#svg-shadow');
   transition: filter 0.2s;
 }
 .group:hover.wrapper-clipped-shadow {
-  filter: drop-shadow(1px 1px 0 rgba(255,255,255,0.2)) 
-          drop-shadow(-1px -1px 0 rgba(255,255,255,0.2)) 
-          drop-shadow(0 0 25px rgba(255,255,255,0.15));
+  filter: url('#svg-shadow') drop-shadow(0 0 10px rgba(255,255,255,0.1));
 }
 
 .wrapper-clipped-glassmorphism {
-  filter: drop-shadow(1px 1px 0 rgba(255,255,255,0.05)) 
-          drop-shadow(-1px -1px 0 rgba(255,255,255,0.15)) 
-          drop-shadow(0 4px 15px rgba(0,0,0,0.2));
+  filter: url('#svg-glassmorphism');
 }
 
 .wrapper-clipped-neumorphism {
-  filter: drop-shadow(3px 3px 5px rgba(0,0,0,0.5)) 
-          drop-shadow(-2px -2px 4px rgba(255,255,255,0.1));
+  filter: url('#svg-neumorphism');
 }
 
 .wrapper-clipped-claymorphism {
-  filter: drop-shadow(6px 6px 10px rgba(0,0,0,0.4));
+  filter: url('#svg-claymorphism');
 }
 
 .wrapper-clipped-brutalism {
-  filter: drop-shadow(1px 1px 0 rgba(255,255,255,0.8)) 
-          drop-shadow(-1px -1px 0 rgba(255,255,255,0.8)) 
-          drop-shadow(1px -1px 0 rgba(255,255,255,0.8)) 
-          drop-shadow(-1px 1px 0 rgba(255,255,255,0.8)) 
-          drop-shadow(4px 4px 0 rgba(255,255,255,0.8));
+  filter: url('#svg-brutalism');
   transition: all 0.2s;
 }
 .group:hover.wrapper-clipped-brutalism {
   transform: translate(2px, 2px);
-  filter: drop-shadow(1px 1px 0 rgba(255,255,255,0.8)) 
-          drop-shadow(-1px -1px 0 rgba(255,255,255,0.8)) 
-          drop-shadow(1px -1px 0 rgba(255,255,255,0.8)) 
-          drop-shadow(-1px 1px 0 rgba(255,255,255,0.8)) 
-          drop-shadow(2px 2px 0 rgba(255,255,255,0.8));
+  filter: url('#svg-brutalism');
 }
 
 .wrapper-clipped-neon {
+  /* Using drop-shadow for neon because SVG flood-color doesn't easily inherit currentColor or CSS variables dynamically without complex setups. 
+     BUT we can chain a drop shadow after the SVG filter if needed, or keep the drop-shadow for Neon since it works well for glows. */
   filter: drop-shadow(1px 1px 0 var(--theme-color)) 
           drop-shadow(-1px -1px 0 var(--theme-color)) 
           drop-shadow(1px -1px 0 var(--theme-color)) 

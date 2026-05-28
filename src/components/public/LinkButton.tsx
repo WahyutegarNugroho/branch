@@ -224,8 +224,7 @@ export function LinkButton({ link, profileId, profile, isPreview = false }: { li
     if (!isClippedShape) {
       baseBtnClass += " bg-white/10 shadow-[inset_2px_2px_5px_rgba(255,255,255,0.2),inset_-3px_-3px_7px_rgba(0,0,0,0.5),3px_3px_6px_rgba(0,0,0,0.4)] hover:shadow-[inset_1px_1px_3px_rgba(255,255,255,0.2),inset_-2px_-2px_5px_rgba(0,0,0,0.5),1px_1px_3px_rgba(0,0,0,0.4)] border border-transparent"
     } else {
-      // Fake the neumorphic lighting using a background gradient and outer drop shadows
-      baseBtnClass += " bg-gradient-to-br from-white/20 to-black/30 border border-transparent"
+      baseBtnClass += " bg-white/10 border border-transparent"
       wrapperClass += " wrapper-clipped-neumorphism"
     }
   } else if (styleVal === 'glassmorphism') {
@@ -255,8 +254,7 @@ export function LinkButton({ link, profileId, profile, isPreview = false }: { li
     if (!isClippedShape) {
       baseBtnClass += " bg-white/10 shadow-[inset_-4px_-4px_10px_rgba(0,0,0,0.5),inset_4px_4px_10px_rgba(255,255,255,0.3),8px_8px_16px_rgba(0,0,0,0.4)] border border-transparent rounded-3xl"
     } else {
-      // Fake the clay inner shadow using a linear gradient and apply heavy outer shadow
-      baseBtnClass += " bg-gradient-to-tl from-black/40 via-white/10 to-white/30 border border-transparent"
+      baseBtnClass += " bg-white/10 border border-transparent"
       wrapperClass += " wrapper-clipped-claymorphism"
     }
   }
