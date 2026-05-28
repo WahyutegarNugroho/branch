@@ -239,8 +239,7 @@ export function LinkButton({ link, profileId, profile, isPreview = false }: { li
       baseBtnClass += " bg-transparent hover:bg-white/5 shadow-[inset_0_0_10px_currentColor] border-2 border-[currentColor] shadow-[0_0_10px_currentColor,inset_0_0_10px_currentColor] hover:shadow-[0_0_20px_currentColor,inset_0_0_20px_currentColor]"
     } else {
       baseBtnClass += " bg-[rgba(255,255,255,0.01)] hover:bg-white/5"
-      wrapperClass += " [filter:url(#svg-neon)]"
-      ;(wrapperStyle as any).color = finalIconColor
+      wrapperStyle.filter = `url(#svg-neon-${link.id})`
     }
   } else if (styleVal === 'brutalism') {
     baseBtnClass += " bg-zinc-900 transition-all"
@@ -301,9 +300,32 @@ export function LinkButton({ link, profileId, profile, isPreview = false }: { li
   const extraClasses = ` ${spotlightClass} ${btnHoverClass}`
   baseBtnClass += extraClasses
 
+  const NeonFilter = (styleVal === 'neon' && isClippedShape) ? (
+    <svg width="0" height="0" className="absolute pointer-events-none" style={{ position: 'absolute', width: 0, height: 0 }}>
+      <filter id={`svg-neon-${link.id}`} x="-50%" y="-50%" width="200%" height="200%" colorInterpolationFilters="sRGB">
+        <feComponentTransfer in="SourceAlpha" result="SOLID_ALPHA"><feFuncA type="linear" slope="1000" /></feComponentTransfer>
+        <feMorphology in="SOLID_ALPHA" operator="dilate" radius="1.5" result="BORDER_ALPHA" />
+        <feComposite in="BORDER_ALPHA" in2="SOLID_ALPHA" operator="out" result="OUTLINE_ONLY_ALPHA" />
+        <feFlood floodColor={finalIconColor} result="GLOW_COLOR" />
+        <feComposite in="GLOW_COLOR" in2="OUTLINE_ONLY_ALPHA" operator="in" result="OUTLINE" />
+        <feGaussianBlur in="OUTLINE" stdDeviation="4" result="OUTER_GLOW" />
+        <feGaussianBlur in="SOLID_ALPHA" stdDeviation="3" result="INNER_BLUR" />
+        <feComposite in="SOLID_ALPHA" in2="INNER_BLUR" operator="out" result="INNER_MASK" />
+        <feComposite in="GLOW_COLOR" in2="INNER_MASK" operator="in" result="INNER_GLOW" />
+        <feMerge>
+          <feMergeNode in="OUTER_GLOW" />
+          <feMergeNode in="INNER_GLOW" />
+          <feMergeNode in="OUTLINE" />
+          <feMergeNode in="SourceGraphic" />
+        </feMerge>
+      </filter>
+    </svg>
+  ) : null
+
   if (!hasGraphic) {
     return (
       <div className={wrapperClass} style={wrapperStyle}>
+        {NeonFilter}
         <a
           href={link.url}
           onClick={handleClick}
@@ -323,6 +345,7 @@ export function LinkButton({ link, profileId, profile, isPreview = false }: { li
   if (isLeftNear || isRightNear) {
     return (
       <div className={wrapperClass} style={wrapperStyle}>
+        {NeonFilter}
         <a
           href={link.url}
           onClick={handleClick}
@@ -351,6 +374,7 @@ export function LinkButton({ link, profileId, profile, isPreview = false }: { li
 
   return (
     <div className={wrapperClass} style={wrapperStyle}>
+      {NeonFilter}
       <a
         href={link.url}
         onClick={handleClick}
