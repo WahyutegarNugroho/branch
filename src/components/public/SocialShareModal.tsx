@@ -74,7 +74,7 @@ export function SocialShareModal({ isOpen, onClose, url, title, description }: S
 
   return (
     <Dialog open={isOpen} onOpenChange={() => onClose()}>
-      <DialogContent className="max-w-[400px] bg-[#222] border border-white/10 text-white rounded-2xl shadow-2xl p-6">
+      <DialogContent className="w-[calc(100%-2rem)] sm:w-full max-w-[400px] bg-[#222] border border-white/10 text-white rounded-2xl shadow-2xl p-5 sm:p-6 mx-auto">
         <DialogHeader>
           <DialogTitle className="text-base font-bold text-white text-center">Share Profile</DialogTitle>
         </DialogHeader>
@@ -86,7 +86,7 @@ export function SocialShareModal({ isOpen, onClose, url, title, description }: S
           </div>
 
           {/* Social share buttons */}
-          <div className="grid grid-cols-4 gap-3">
+          <div className="grid grid-cols-4 gap-2 sm:gap-3">
             {sharePlatforms.map((platform) => {
               const Icon = platform.icon
               return (
@@ -95,10 +95,10 @@ export function SocialShareModal({ isOpen, onClose, url, title, description }: S
                   href={platform.getHref(encodedUrl, encodedText)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex flex-col items-center gap-1.5 p-3 rounded-xl border border-white/10 bg-zinc-900/30 hover:bg-white/5 transition-colors group"
+                  className="flex flex-col items-center gap-1.5 p-2 sm:p-3 rounded-xl border border-white/10 bg-zinc-900/30 hover:bg-white/5 transition-colors group"
                 >
                   <Icon className="w-5 h-5 transition-colors" style={{ color: platform.color }} />
-                  <span className="text-[9px] text-zinc-500 font-semibold">{platform.name}</span>
+                  <span className="text-[9px] sm:text-[10px] text-zinc-500 font-semibold truncate max-w-full">{platform.name}</span>
                 </a>
               )
             })}
