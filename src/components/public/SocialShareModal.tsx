@@ -75,19 +75,19 @@ export function SocialShareModal({ isOpen, onClose, url, title, description }: S
 
   return (
     <Dialog open={isOpen} onOpenChange={() => onClose()}>
-      <DialogContent className="w-[calc(100%-2rem)] sm:w-full max-w-[400px] bg-[#222] border border-white/10 text-white rounded-2xl shadow-2xl p-5 sm:p-6 mx-auto">
+      <DialogContent className="w-[calc(100%-2rem)] sm:max-w-[400px] bg-[#222] border border-white/10 text-white rounded-2xl shadow-2xl p-5 sm:p-6 mx-auto">
         <DialogHeader>
           <DialogTitle className="text-base font-bold text-white text-center">Share Profile</DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-4">
+        <div className="space-y-4 w-full min-w-0 overflow-hidden flex flex-col">
           {/* URL preview */}
-          <div className="bg-zinc-900/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-zinc-400 truncate">
+          <div className="bg-zinc-900/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-zinc-400 truncate w-full min-w-0">
             {url}
           </div>
 
           {/* Social share buttons */}
-          <div className="grid grid-cols-4 gap-2 sm:gap-3">
+          <div className="grid grid-cols-4 gap-2 sm:gap-3 w-full min-w-0">
             {sharePlatforms.map((platform) => {
               const Icon = platform.icon
               return (
@@ -96,17 +96,17 @@ export function SocialShareModal({ isOpen, onClose, url, title, description }: S
                   href={platform.getHref(encodedUrl, encodedText)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex flex-col items-center gap-1.5 p-2 sm:p-3 rounded-xl border border-white/10 bg-zinc-900/30 hover:bg-white/5 transition-colors group"
+                  className="flex flex-col items-center gap-1.5 p-2 rounded-xl border border-white/10 bg-zinc-900/30 hover:bg-white/5 transition-colors group min-w-0 w-full"
                 >
-                  <Icon className="w-5 h-5 transition-colors" style={{ color: platform.color }} />
-                  <span className="text-[9px] sm:text-[10px] text-zinc-500 font-semibold truncate max-w-full">{platform.name}</span>
+                  <Icon className="w-5 h-5 transition-colors shrink-0" style={{ color: platform.color }} />
+                  <span className="text-[9px] sm:text-[10px] text-zinc-500 font-semibold truncate w-full text-center">{platform.name}</span>
                 </a>
               )
             })}
           </div>
 
           {/* Action buttons */}
-          <div className="flex gap-2">
+          <div className="flex gap-2 w-full">
             <Button
               type="button"
               variant="outline"
@@ -114,9 +114,9 @@ export function SocialShareModal({ isOpen, onClose, url, title, description }: S
               className="flex-1 bg-zinc-800 border-zinc-700 text-zinc-300 hover:bg-zinc-700 hover:text-white rounded-xl h-10 text-xs"
             >
               {copied ? (
-                <><Check className="w-3.5 h-3.5 mr-1.5 text-emerald-400" />Copied</>
+                <><Check className="w-3.5 h-3.5 mr-1.5 text-emerald-400 shrink-0" />Copied</>
               ) : (
-                <><Copy className="w-3.5 h-3.5 mr-1.5" />Copy Link</>
+                <><Copy className="w-3.5 h-3.5 mr-1.5 shrink-0" />Copy Link</>
               )}
             </Button>
             <Button
@@ -125,23 +125,23 @@ export function SocialShareModal({ isOpen, onClose, url, title, description }: S
               onClick={handleNativeShare}
               className="flex-1 bg-zinc-800 border-zinc-700 text-zinc-300 hover:bg-zinc-700 hover:text-white rounded-xl h-10 text-xs"
             >
-              <Share2 className="w-3.5 h-3.5 mr-1.5" />
+              <Share2 className="w-3.5 h-3.5 mr-1.5 shrink-0" />
               Share
             </Button>
           </div>
 
           {/* QR Code toggle */}
-          <div className="flex flex-col items-center gap-3">
+          <div className="flex flex-col items-center gap-3 w-full">
             <button
               type="button"
               onClick={() => setShowQR(!showQR)}
               className="inline-flex items-center gap-1.5 text-xs text-zinc-500 hover:text-zinc-300 transition-colors"
             >
-              <QrCode className="w-3.5 h-3.5" />
+              <QrCode className="w-3.5 h-3.5 shrink-0" />
               {showQR ? 'Hide QR Code' : 'Show QR Code'}
             </button>
             {showQR && (
-              <div className="bg-white p-3 rounded-xl">
+              <div className="bg-white p-3 rounded-xl shadow-inner">
                 <QRCodeSVG value={url} size={140} />
               </div>
             )}
