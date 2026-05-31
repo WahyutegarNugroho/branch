@@ -1,10 +1,11 @@
 'use client'
 
 import React, { useEffect, useRef } from 'react'
+import type { AnimationConfig } from '@/types'
 
-export default function SnowfallBackground({ config = {} }: { config?: any }) {
+export default function SnowfallBackground({ config = {} }: { config?: AnimationConfig | null }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  
+
   const flakeCount = typeof config?.flakeCount === 'number' ? config.flakeCount : 100
   const speed = typeof config?.speed === 'number' ? config.speed : 1
   const wind = config?.wind || 'right'
@@ -15,10 +16,14 @@ export default function SnowfallBackground({ config = {} }: { config?: any }) {
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    let width = canvas.width = window.innerWidth
-    let height = canvas.height = window.innerHeight
+    const dpr = window.devicePixelRatio || 1
+    let width = window.innerWidth
+    let height = window.innerHeight
+    canvas.width = width * dpr
+    canvas.height = height * dpr
+    ctx.scale(dpr, dpr)
 
-    const flakes: any[] = []
+    const flakes: { x: number; y: number; r: number; d: number; vx: number; vy: number }[] = []
 
     for (let i = 0; i < flakeCount; i++) {
       flakes.push({
@@ -51,12 +56,12 @@ export default function SnowfallBackground({ config = {} }: { config?: any }) {
       for (let i = 0; i < flakeCount; i++) {
         const f = flakes[i]
         f.y += (Math.cos(angle + f.d) + 1 + f.r / 2) * speed
-        
+
         let windFactor = Math.sin(angle) * 2
         if (wind === 'left') windFactor = -Math.abs(windFactor) - 1
         if (wind === 'right') windFactor = Math.abs(windFactor) + 1
         if (wind === 'none') windFactor = 0
-        
+
         f.x += windFactor * speed
 
         if (f.x > width + 5 || f.x < -5 || f.y > height) {
@@ -78,8 +83,11 @@ export default function SnowfallBackground({ config = {} }: { config?: any }) {
     update()
 
     const handleResize = () => {
-      width = canvas.width = window.innerWidth
-      height = canvas.height = window.innerHeight
+      width = window.innerWidth
+      height = window.innerHeight
+      canvas.width = width * dpr
+      canvas.height = height * dpr
+      ctx.scale(dpr, dpr)
     }
 
     window.addEventListener('resize', handleResize)
@@ -91,8 +99,8 @@ export default function SnowfallBackground({ config = {} }: { config?: any }) {
   }, [flakeCount, speed, wind])
 
   return (
-    <canvas 
-      ref={canvasRef} 
+    <canvas
+      ref={canvasRef}
       className="absolute inset-0 pointer-events-none z-0 opacity-60"
     />
   )

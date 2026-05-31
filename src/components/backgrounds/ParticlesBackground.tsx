@@ -1,10 +1,11 @@
 'use client'
 
 import React, { useEffect, useRef } from 'react'
+import type { AnimationConfig } from '@/types'
 
-export default function ParticlesBackground({ config = {} }: { config?: any }) {
+export default function ParticlesBackground({ config = {} }: { config?: AnimationConfig | null }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  
+
   const density = typeof config?.density === 'number' ? config.density : 10000
   const linkDistance = typeof config?.linkDistance === 'number' ? config.linkDistance : 120
   const speed = typeof config?.speed === 'number' ? config.speed : 1
@@ -15,10 +16,14 @@ export default function ParticlesBackground({ config = {} }: { config?: any }) {
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    let width = canvas.width = window.innerWidth
-    let height = canvas.height = window.innerHeight
+    const dpr = window.devicePixelRatio || 1
+    let width = window.innerWidth
+    let height = window.innerHeight
+    canvas.width = width * dpr
+    canvas.height = height * dpr
+    ctx.scale(dpr, dpr)
 
-    const particles: any[] = []
+    const particles: { x: number; y: number; vx: number; vy: number; radius: number }[] = []
     const particleCount = Math.floor((width * height) / density)
 
     for (let i = 0; i < particleCount; i++) {
@@ -74,8 +79,11 @@ export default function ParticlesBackground({ config = {} }: { config?: any }) {
     draw()
 
     const handleResize = () => {
-      width = canvas.width = window.innerWidth
-      height = canvas.height = window.innerHeight
+      width = window.innerWidth
+      height = window.innerHeight
+      canvas.width = width * dpr
+      canvas.height = height * dpr
+      ctx.scale(dpr, dpr)
     }
 
     window.addEventListener('resize', handleResize)
@@ -87,8 +95,8 @@ export default function ParticlesBackground({ config = {} }: { config?: any }) {
   }, [density, linkDistance, speed])
 
   return (
-    <canvas 
-      ref={canvasRef} 
+    <canvas
+      ref={canvasRef}
       className="absolute inset-0 pointer-events-none z-0 opacity-40 mix-blend-screen"
     />
   )

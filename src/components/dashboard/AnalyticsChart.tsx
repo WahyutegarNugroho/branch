@@ -1,10 +1,11 @@
 'use client'
 
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
+import { EmptyState } from '@/components/ui/empty-state'
 
 export function AnalyticsChart({ data }: { data: any[] }) {
   if (!data || data.length === 0) {
-    return <div className="h-[300px] flex items-center justify-center text-zinc-500 font-medium">No data available yet</div>
+    return <EmptyState title="No data available yet" className="h-[300px]" />
   }
 
   return (

@@ -1,34 +1,35 @@
 'use client'
 
 import React, { useEffect, useRef } from 'react'
+import type { AnimationConfig } from '@/types'
 
 const colorSets = [
   [
-    'rgba(0, 255, 180, 0.7)',  // Teal
-    'rgba(0, 150, 255, 0.7)',   // Blue
-    'rgba(180, 0, 255, 0.7)',   // Purple
-    'rgba(0, 255, 100, 0.7)',   // Green
-    'rgba(255, 50, 150, 0.7)'   // Pink
+    'rgba(0, 255, 180, 0.7)',
+    'rgba(0, 150, 255, 0.7)',
+    'rgba(180, 0, 255, 0.7)',
+    'rgba(0, 255, 100, 0.7)',
+    'rgba(255, 50, 150, 0.7)'
   ],
   [
-    'rgba(100, 0, 255, 0.7)',   // Deep purple
-    'rgba(0, 200, 255, 0.7)',   // Cyan
-    'rgba(50, 255, 200, 0.7)',  // Mint
-    'rgba(255, 0, 150, 0.7)',   // Magenta
-    'rgba(0, 100, 255, 0.7)'    // Royal blue
+    'rgba(100, 0, 255, 0.7)',
+    'rgba(0, 200, 255, 0.7)',
+    'rgba(50, 255, 200, 0.7)',
+    'rgba(255, 0, 150, 0.7)',
+    'rgba(0, 100, 255, 0.7)'
   ],
   [
-    'rgba(0, 255, 200, 0.7)',   // Aqua
-    'rgba(150, 0, 255, 0.7)',   // Violet
-    'rgba(255, 100, 0, 0.7)',   // Orange
-    'rgba(0, 255, 50, 0.7)',    // Lime
-    'rgba(200, 0, 255, 0.7)'    // Lavender
+    'rgba(0, 255, 200, 0.7)',
+    'rgba(150, 0, 255, 0.7)',
+    'rgba(255, 100, 0, 0.7)',
+    'rgba(0, 255, 50, 0.7)',
+    'rgba(200, 0, 255, 0.7)'
   ]
 ]
 
-export default function AuroraBackground({ config = {} }: { config?: any }) {
+export default function AuroraBackground({ config = {} }: { config?: AnimationConfig | null }) {
   const containerRef = useRef<HTMLDivElement>(null)
-  
+
   const themeIndex = typeof config?.theme === 'number' ? config.theme : 0
   const speed = typeof config?.speed === 'number' ? config.speed : 1
 
@@ -112,8 +113,8 @@ export default function AuroraBackground({ config = {} }: { config?: any }) {
   }, [speed, themeIndex])
 
   return (
-    <div 
-      ref={containerRef} 
+    <div
+      ref={containerRef}
       className="absolute inset-0 overflow-hidden pointer-events-none z-0 opacity-80 mix-blend-screen"
     />
   )

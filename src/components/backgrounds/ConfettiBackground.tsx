@@ -1,10 +1,11 @@
 'use client'
 
 import React, { useEffect, useRef } from 'react'
+import type { AnimationConfig } from '@/types'
 
-export default function ConfettiBackground({ config = {} }: { config?: any }) {
+export default function ConfettiBackground({ config = {} }: { config?: AnimationConfig | null }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  
+
   const confettiCount = typeof config?.confettiCount === 'number' ? config.confettiCount : 150
   const speed = typeof config?.speed === 'number' ? config.speed : 1
 
@@ -14,10 +15,17 @@ export default function ConfettiBackground({ config = {} }: { config?: any }) {
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    let width = canvas.width = window.innerWidth
-    let height = canvas.height = window.innerHeight
+    const dpr = window.devicePixelRatio || 1
+    let width = window.innerWidth
+    let height = window.innerHeight
+    canvas.width = width * dpr
+    canvas.height = height * dpr
+    ctx.scale(dpr, dpr)
 
-    const confetti: any[] = []
+    const confetti: {
+      x: number; y: number; r: number; dx: number; dy: number
+      color: string; tilt: number; tiltAngle: number; tiltAngleInc: number
+    }[] = []
     const colors = ['#fce18a', '#ff726d', '#b48def', '#f4306d', '#00ffaa']
 
     for (let i = 0; i < confettiCount; i++) {
@@ -65,8 +73,11 @@ export default function ConfettiBackground({ config = {} }: { config?: any }) {
     draw()
 
     const handleResize = () => {
-      width = canvas.width = window.innerWidth
-      height = canvas.height = window.innerHeight
+      width = window.innerWidth
+      height = window.innerHeight
+      canvas.width = width * dpr
+      canvas.height = height * dpr
+      ctx.scale(dpr, dpr)
     }
 
     window.addEventListener('resize', handleResize)
@@ -78,8 +89,8 @@ export default function ConfettiBackground({ config = {} }: { config?: any }) {
   }, [confettiCount, speed])
 
   return (
-    <canvas 
-      ref={canvasRef} 
+    <canvas
+      ref={canvasRef}
       className="absolute inset-0 pointer-events-none z-0 opacity-60"
     />
   )

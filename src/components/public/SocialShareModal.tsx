@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import { Check, Copy, Share2, QrCode } from 'lucide-react'
+import { copyToClipboard } from '@/lib/utils'
 import { FaXTwitter, FaFacebook, FaWhatsapp } from 'react-icons/fa6'
 import { FaTelegramPlane } from 'react-icons/fa'
 import { QRCodeSVG } from 'qrcode.react'
@@ -52,12 +53,12 @@ export function SocialShareModal({ isOpen, onClose, url, title, description }: S
   const encodedText = encodeURIComponent(`${title}${description ? ` - ${description}` : ''}`)
 
   const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(url)
+    const ok = await copyToClipboard(url)
+    if (ok) {
       setCopied(true)
       toast.success('Link copied to clipboard!')
       setTimeout(() => setCopied(false), 2000)
-    } catch {
+    } else {
       toast.error('Failed to copy link')
     }
   }

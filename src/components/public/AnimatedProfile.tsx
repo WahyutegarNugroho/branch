@@ -11,31 +11,10 @@ import ConfettiBackground from '@/components/backgrounds/ConfettiBackground'
 import ParticlesBackground from '@/components/backgrounds/ParticlesBackground'
 import { LinkButton } from '@/components/public/LinkButton'
 import { PageTracker } from '@/components/public/PageTracker'
-import { 
-  FaInstagram, 
-  FaYoutube, 
-  FaGithub, 
-  FaLinkedin, 
-  FaWhatsapp, 
-  FaTiktok, 
-  FaEnvelope 
-} from 'react-icons/fa'
-import { FaXTwitter } from 'react-icons/fa6'
-import { Zap, Sun, Moon, Share2 } from 'lucide-react'
-import { toast } from 'sonner'
-import { useState, useEffect } from 'react'
+import { SocialIconsRow } from '@/components/shared/SocialIconsRow'
+import { Zap, Share2 } from 'lucide-react'
+import { useState } from 'react'
 import { SocialShareModal } from './SocialShareModal'
-
-const socialsIconMap: Record<string, any> = {
-  instagram: FaInstagram,
-  twitter: FaXTwitter,
-  tiktok: FaTiktok,
-  youtube: FaYoutube,
-  github: FaGithub,
-  linkedin: FaLinkedin,
-  whatsapp: FaWhatsapp,
-  email: FaEnvelope,
-}
 
 import { Profile, Link } from '@/types'
 
@@ -306,42 +285,15 @@ export function AnimatedProfile({ profile, links, bgClass: defaultBgClass, bgSty
             </motion.p>
           )}
 
-          {/* Social Icons Row (Top Placement) */}
-          {(!profile?.social_placement || profile?.social_placement === 'top') && profile.social_links && typeof profile.social_links === 'object' && Object.keys(profile.social_links).length > 0 && (
-            <motion.div 
-              variants={socialRowVariants} 
-              className={`flex flex-wrap gap-4 mb-8 z-10 w-full ${
-                profile?.profile_align === 'left' ? 'justify-start' : 
-                profile?.profile_align === 'right' ? 'justify-end' : 'justify-center'
-              }`}
-            >
-              {Object.keys(profile.social_links).map((key) => {
-                const socialLinksRecord = profile.social_links as Record<string, string>
-                const url = socialLinksRecord[key]
-                if (!url) return null
-                const IconComponent = socialsIconMap[key]
-                if (!IconComponent) return null
-
-                return (
-                  <motion.a
-                    key={key}
-                    variants={socialIconVariants}
-                    href={url.startsWith('http') || url.startsWith('mailto:') || url.startsWith('tel:') ? url : `https://${url}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`w-10 h-10 flex items-center justify-center transition-all hover:scale-110 active:scale-95 shadow-sm backdrop-blur-md ${
-                      profile?.social_style === 'outline' ? 'bg-transparent border border-white/30 text-white' :
-                      profile?.social_style === 'square' ? 'bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white rounded-xl' :
-                      profile?.social_style === 'minimal' ? 'bg-transparent border-0 text-white shadow-none' :
-                      'rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white'
-                    }`}
-                    style={{ color: currentTextColor, borderColor: `${currentTextColor}33` }}
-                  >
-                    <IconComponent size={20} />
-                  </motion.a>
-                )
-              })}
-            </motion.div>
+          {/* Social Icons Row */}
+          {profile.social_links && typeof profile.social_links === 'object' && Object.keys(profile.social_links).length > 0 && (
+            <SocialIconsRow
+              socialLinks={profile.social_links as Record<string, string>}
+              socialStyle={profile?.social_style}
+              placement={(profile?.social_placement as 'top' | 'bottom') || 'top'}
+              align={(profile?.profile_align as 'center' | 'left' | 'right') || 'center'}
+              textColor={currentTextColor}
+            />
           )}
 
           {/* Links */}
@@ -389,45 +341,7 @@ export function AnimatedProfile({ profile, links, bgClass: defaultBgClass, bgSty
             })()}
           </motion.div>
 
-          {/* Social Icons Row (Bottom Placement) */}
-          {profile?.social_placement === 'bottom' && profile.social_links && typeof profile.social_links === 'object' && Object.keys(profile.social_links).length > 0 && (
-            <motion.div 
-              variants={socialRowVariants} 
-              className={`flex flex-wrap gap-4 mt-8 mb-4 z-10 w-full ${
-                profile?.profile_align === 'left' ? 'justify-start' : 
-                profile?.profile_align === 'right' ? 'justify-end' : 'justify-center'
-              }`}
-            >
-              {Object.keys(profile.social_links).map((key) => {
-                const socialLinksRecord = profile.social_links as Record<string, string>
-                const url = socialLinksRecord[key]
-                if (!url) return null
-                const IconComponent = socialsIconMap[key]
-                if (!IconComponent) return null
 
-                return (
-                  <motion.a
-                    key={key}
-                    variants={socialIconVariants}
-                    href={url.startsWith('http') || url.startsWith('mailto:') || url.startsWith('tel:') ? url : `https://${url}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    whileHover={{ scale: 1.15, rotate: 5 }}
-                    whileTap={{ scale: 0.9 }}
-                    className={`w-12 h-12 flex items-center justify-center shadow-lg backdrop-blur-md transition-all ${
-                      profile?.social_style === 'outline' ? 'bg-transparent border-2 border-white/30 text-white hover:border-brand-pink hover:text-brand-pink' :
-                      profile?.social_style === 'square' ? 'bg-white/5 border border-white/10 text-white rounded-xl hover:bg-white/10' :
-                      profile?.social_style === 'minimal' ? 'bg-transparent border-0 text-white shadow-none hover:text-brand-pink hover:scale-125' :
-                      'rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10'
-                    }`}
-                    style={{ color: currentTextColor }}
-                  >
-                    <IconComponent size={22} className={profile?.social_style === 'minimal' ? 'drop-shadow-none' : 'drop-shadow-sm'} />
-                  </motion.a>
-                )
-              })}
-            </motion.div>
-          )}
 
           {/* Footer branding */}
           {profile.show_branding !== false && (

@@ -174,7 +174,7 @@ export default function LandingPage() {
               </Link>
               <Link href="/login">
                 <Button variant="outline" className="h-14 px-8 rounded-full border-white/10 bg-white/5 hover:bg-white/10 text-white font-extrabold text-lg backdrop-blur-md shadow-sm transition-all">
-                  Manage Your Linktree
+                  Manage Your Profiles
                 </Button>
               </Link>
             </motion.div>
@@ -222,8 +222,8 @@ export default function LandingPage() {
                 
                 {/* Live Background Components */}
                 {currentTheme.animation === 'aurora' && <AuroraBackground config={{ speed: 20 }} />}
-                {currentTheme.animation === 'matrix' && <MatrixBackground config={{ density: 50, speed: 20 }} />}
-                {currentTheme.animation === 'confetti' && <ConfettiBackground config={{ speed: 10, amount: 40 }} />}
+{currentTheme.animation === 'matrix' && <MatrixBackground config={{ speed: 20 }} />}
+{currentTheme.animation === 'confetti' && <ConfettiBackground config={{ speed: 10, confettiCount: 40 }} />}
                 
                 <div className="absolute inset-0 bg-black/10 pointer-events-none z-0" />
 

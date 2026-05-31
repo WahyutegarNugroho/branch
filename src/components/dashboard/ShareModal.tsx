@@ -4,18 +4,19 @@ import { useState, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { QRCodeCanvas } from 'qrcode.react'
 import { toast } from 'sonner'
-import { 
-  Copy, 
-  Check, 
-  Download, 
-  Share2, 
-  X, 
-  QrCode, 
-  ExternalLink 
+import {
+  Copy,
+  Check,
+  Download,
+  Share2,
+  X,
+  QrCode,
+  ExternalLink
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Profile } from '@/types'
+import { copyToClipboard } from '@/lib/utils'
 
 export function ShareModal({ 
   profile, 
@@ -44,12 +45,12 @@ export function ShareModal({
   if (!isOpen || !profile || !mounted) return null
 
   const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(shareUrl)
+    const ok = await copyToClipboard(shareUrl)
+    if (ok) {
       setCopied(true)
       toast.success('Link successfully copied to clipboard!')
       setTimeout(() => setCopied(false), 2000)
-    } catch (err) {
+    } else {
       toast.error('Failed to copy link.')
     }
   }

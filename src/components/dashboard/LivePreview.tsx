@@ -35,6 +35,7 @@ const socialsIconMap: Record<string, any> = {
   email: FaEnvelope,
 }
 
+import { EmptyState } from '@/components/ui/empty-state'
 import { Profile, Link, LinkImage } from '@/types'
 import { getPlatformByName } from '@/utils/platforms'
 import { usePreviewStore } from '@/lib/preview-store'
@@ -270,8 +271,8 @@ export const LivePreview = memo(function LivePreview({ profile: initialProfile, 
                           )}
                           <div className="flex gap-2.5 overflow-x-auto pb-2 pt-0.5 px-1 no-scrollbar scroll-smooth snap-x snap-mandatory">
                             {images.length === 0 ? (
-                              <div className="w-full py-6 text-center text-[10px] text-zinc-500 bg-zinc-900/30 border border-white/5 rounded-xl border-dashed">
-                                No images in this gallery yet
+                              <div className="w-full">
+                                <EmptyState title="No images in this gallery yet" className="py-6" />
                               </div>
                             ) : (
                               images.map((img: LinkImage) => (

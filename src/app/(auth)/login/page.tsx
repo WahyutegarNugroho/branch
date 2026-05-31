@@ -7,9 +7,10 @@ import { login } from '@/app/auth/actions'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Loader2, Eye, EyeOff, Zap } from 'lucide-react'
+import { AuthCard } from '@/components/shared/AuthCard'
+import { Loader2, Eye, EyeOff } from 'lucide-react'
 
 export default function LoginPage() {
   const [error, setError] = useState<string | null>(null)
@@ -27,115 +28,87 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-zinc-950 text-zinc-50 relative overflow-hidden font-sans-theme">
-      {/* Background Gradients */}
-      <div className="absolute inset-0 z-0 pointer-events-none opacity-60">
-        <div className="absolute top-[-25%] left-[-15%] w-[60%] h-[60%] rounded-full bg-brand-pink/15 blur-[130px] animate-pulse" style={{ animationDuration: '10s' }} />
-        <div className="absolute bottom-[-25%] right-[-15%] w-[60%] h-[60%] rounded-full bg-brand-orange/15 blur-[130px] animate-pulse" style={{ animationDuration: '14s' }} />
-      </div>
+    <AuthCard title="Welcome Back" description="Log in to manage your digital presence">
+      <CardContent>
+        <form action={onSubmit} className="space-y-4">
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.2 }}
+            >
+              <Alert variant="destructive" className="bg-red-500/10 border-red-500/20 text-red-400 rounded-xl">
+                <AlertDescription className="text-xs font-semibold">{error}</AlertDescription>
+              </Alert>
+            </motion.div>
+          )}
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full max-w-md px-4 z-10"
-      >
-        <Card className="w-full shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-white/10 bg-zinc-900/60 backdrop-blur-2xl rounded-3xl overflow-hidden relative">
-          {/* Card Top Border Glow Accent */}
-          <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-brand-pink via-brand-orange to-brand-pink bg-[length:200%_auto] animate-pulse" />
+          <div className="space-y-1.5">
+            <Label htmlFor="email" className="text-zinc-300 text-xs font-bold uppercase tracking-wider">Email Address</Label>
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="name@example.com"
+              required
+              className="rounded-xl border-white/5 bg-white/[0.03] text-white focus-visible:ring-brand-pink/50 placeholder:text-zinc-600 h-12 transition-all duration-300 focus:bg-white/[0.05] hover:bg-white/[0.04]"
+            />
+          </div>
 
-          <CardHeader className="space-y-2 pb-6 pt-8 text-center">
-            <div className="mx-auto w-11 h-11 rounded-2xl bg-gradient-to-tr from-brand-pink to-brand-orange flex items-center justify-center shadow-lg shadow-brand-pink/20 mb-3">
-              <Zap className="w-6 h-6 text-white" />
-            </div>
-            <CardTitle className="text-3xl font-display-theme font-black tracking-tight text-white">Welcome Back</CardTitle>
-            <CardDescription className="text-zinc-400 text-sm font-medium">
-              Log in to manage your digital presence
-            </CardDescription>
-          </CardHeader>
-
-          <CardContent>
-            <form action={onSubmit} className="space-y-4">
-              {error && (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <Alert variant="destructive" className="bg-red-500/10 border-red-500/20 text-red-400 rounded-xl">
-                    <AlertDescription className="text-xs font-semibold">{error}</AlertDescription>
-                  </Alert>
-                </motion.div>
-              )}
-
-              <div className="space-y-1.5">
-                <Label htmlFor="email" className="text-zinc-300 text-xs font-bold uppercase tracking-wider">Email Address</Label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="name@example.com"
-                  required
-                  className="rounded-xl border-white/5 bg-white/[0.03] text-white focus-visible:ring-brand-pink/50 placeholder:text-zinc-600 h-12 transition-all duration-300 focus:bg-white/[0.05] hover:bg-white/[0.04]"
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <div className="flex justify-between items-center">
-                  <Label htmlFor="password" className="text-zinc-300 text-xs font-bold uppercase tracking-wider">Password</Label>
-                  <Link href="/forgot-password" className="text-[11px] text-brand-pink hover:text-brand-orange transition-colors font-semibold">
-                    Forgot password?
-                  </Link>
-                </div>
-                <div className="relative">
-                  <Input
-                    id="password"
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    required
-                    className="rounded-xl border-white/5 bg-white/[0.03] text-white focus-visible:ring-brand-pink/50 h-12 pr-12 transition-all duration-300 focus:bg-white/[0.05] hover:bg-white/[0.04]"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white transition-colors focus:outline-none"
-                  >
-                    {showPassword ? (
-                      <EyeOff className="h-5 w-5" />
-                    ) : (
-                      <Eye className="h-5 w-5" />
-                    )}
-                  </button>
-                </div>
-              </div>
-
-              <Button
-                type="submit"
-                disabled={loading}
-                className="w-full h-12 rounded-xl bg-gradient-to-r from-brand-pink to-brand-orange hover:opacity-95 text-white font-extrabold text-base shadow-lg shadow-brand-pink/10 hover:shadow-brand-pink/20 hover:scale-[1.01] active:scale-[0.99] transition-all border-0 mt-4 cursor-pointer"
-              >
-                {loading ? (
-                  <div className="flex items-center justify-center gap-2">
-                    <Loader2 className="h-5 w-5 animate-spin" />
-                    <span>Signing in...</span>
-                  </div>
-                ) : (
-                  'Log in'
-                )}
-              </Button>
-            </form>
-          </CardContent>
-
-          <CardFooter className="flex flex-col items-center pt-4 pb-8 border-t border-white/5 bg-black/20">
-            <div className="text-xs text-zinc-400 font-medium">
-              Don't have an account?{' '}
-              <Link href="/register" className="text-brand-pink hover:text-brand-orange transition-colors font-bold">
-                Sign up
+          <div className="space-y-1.5">
+            <div className="flex justify-between items-center">
+              <Label htmlFor="password" className="text-zinc-300 text-xs font-bold uppercase tracking-wider">Password</Label>
+              <Link href="/forgot-password" className="text-[11px] text-brand-pink hover:text-brand-orange transition-colors font-semibold">
+                Forgot password?
               </Link>
             </div>
-          </CardFooter>
-        </Card>
-      </motion.div>
-    </div>
+            <div className="relative">
+              <Input
+                id="password"
+                name="password"
+                type={showPassword ? "text" : "password"}
+                required
+                className="rounded-xl border-white/5 bg-white/[0.03] text-white focus-visible:ring-brand-pink/50 h-12 pr-12 transition-all duration-300 focus:bg-white/[0.05] hover:bg-white/[0.04]"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white transition-colors focus:outline-none"
+              >
+                {showPassword ? (
+                  <EyeOff className="h-5 w-5" />
+                ) : (
+                  <Eye className="h-5 w-5" />
+                )}
+              </button>
+            </div>
+          </div>
+
+          <Button
+            type="submit"
+            disabled={loading}
+            className="w-full h-12 rounded-xl bg-gradient-to-r from-brand-pink to-brand-orange hover:opacity-95 text-white font-extrabold text-base shadow-lg shadow-brand-pink/10 hover:shadow-brand-pink/20 hover:scale-[1.01] active:scale-[0.99] transition-all border-0 mt-4 cursor-pointer"
+          >
+            {loading ? (
+              <div className="flex items-center justify-center gap-2">
+                <Loader2 className="h-5 w-5 animate-spin" />
+                <span>Signing in...</span>
+              </div>
+            ) : (
+              'Log in'
+            )}
+          </Button>
+        </form>
+      </CardContent>
+
+      <CardFooter className="flex flex-col items-center border-t border-white/5 bg-black/20 pt-4 pb-8">
+        <div className="text-xs text-zinc-400 font-medium">
+          Don't have an account?{' '}
+          <Link href="/register" className="text-brand-pink hover:text-brand-orange transition-colors font-bold">
+            Sign up
+          </Link>
+        </div>
+      </CardFooter>
+    </AuthCard>
   )
 }

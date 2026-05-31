@@ -8,7 +8,7 @@ import { GripVertical, Trash2, Edit2, Check, ExternalLink, Search, Link as LinkI
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
-import { updateLink, deleteLink, applyStylesToAllLinks } from '@/app/actions/link-actions'
+import { updateLink, deleteLink, applyStylesToAllLinks, getLinkImages } from '@/app/actions/link-actions'
 import { toast } from 'sonner'
 import { Card } from '@/components/ui/card'
 import { PlatformPickerDialog } from './PlatformPickerDialog'
@@ -83,7 +83,6 @@ export function LinkItem({ link }: { link: Link }) {
   const [carouselImages, setCarouselImages] = useState<any[]>([])
 
   const getCarouselImages = async () => {
-    const { getLinkImages } = require('@/app/actions/link-actions')
     return await getLinkImages(link.id)
   }
 

@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Copy, Check } from 'lucide-react'
 import { hexToRgb, rgbToHsb, rgbToCmyk, hsbToHex } from '@/lib/color-utils'
 import { toast } from 'sonner'
+import { copyToClipboard } from '@/lib/utils'
 
 interface ColorPickerDialogProps {
   isOpen: boolean
@@ -123,11 +124,15 @@ export function ColorPickerDialog({ isOpen, onClose, initialColor, onSelectColor
     setColor(newHex)
   }
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(color.toUpperCase())
-    setCopied(true)
-    toast.success('Hex code copied!')
-    setTimeout(() => setCopied(false), 2000)
+  const handleCopy = async () => {
+    const ok = await copyToClipboard(color.toUpperCase())
+    if (ok) {
+      setCopied(true)
+      toast.success('Hex code copied!')
+      setTimeout(() => setCopied(false), 2000)
+    } else {
+      toast.error('Failed to copy hex code')
+    }
   }
 
   const handleSelect = () => {

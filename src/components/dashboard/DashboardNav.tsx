@@ -8,6 +8,7 @@ import { logout } from '@/app/auth/actions'
 import { LogOut, Copy, Check, Zap, Share2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { ShareModal } from '@/components/dashboard/ShareModal'
+import { copyToClipboard } from '@/lib/utils'
 
 export function DashboardNav({ username }: { username?: string }) {
   const pathname = usePathname()
@@ -16,14 +17,13 @@ export function DashboardNav({ username }: { username?: string }) {
 
   const handleCopy = async () => {
     if (!username) return
-    try {
-      const publicUrl = `${window.location.origin}/${username}`
-      await navigator.clipboard.writeText(publicUrl)
+    const publicUrl = `${window.location.origin}/${username}`
+    const ok = await copyToClipboard(publicUrl)
+    if (ok) {
       setCopied(true)
       toast.success('Profile link copied to clipboard!')
       setTimeout(() => setCopied(false), 2000)
-    } catch (err) {
-      console.error('Failed to copy link:', err)
+    } else {
       toast.error('Failed to copy link')
     }
   }

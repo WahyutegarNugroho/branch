@@ -1,10 +1,11 @@
 'use client'
 
 import React, { useEffect, useRef } from 'react'
+import type { AnimationConfig } from '@/types'
 
-export default function StarsBackground({ config = {} }: { config?: any }) {
+export default function StarsBackground({ config = {} }: { config?: AnimationConfig | null }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  
+
   const numStars = typeof config?.starCount === 'number' ? config.starCount : 200
   const speed = typeof config?.speed === 'number' ? config.speed : 1
 
@@ -14,10 +15,14 @@ export default function StarsBackground({ config = {} }: { config?: any }) {
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    let width = canvas.width = window.innerWidth
-    let height = canvas.height = window.innerHeight
+    const dpr = window.devicePixelRatio || 1
+    let width = window.innerWidth
+    let height = window.innerHeight
+    canvas.width = width * dpr
+    canvas.height = height * dpr
+    ctx.scale(dpr, dpr)
 
-    const stars: any[] = []
+    const stars: { x: number; y: number; r: number; dx: number; dy: number; alpha: number; deltaAlpha: number }[] = []
 
     for (let i = 0; i < numStars; i++) {
       stars.push({
@@ -59,8 +64,11 @@ export default function StarsBackground({ config = {} }: { config?: any }) {
     draw()
 
     const handleResize = () => {
-      width = canvas.width = window.innerWidth
-      height = canvas.height = window.innerHeight
+      width = window.innerWidth
+      height = window.innerHeight
+      canvas.width = width * dpr
+      canvas.height = height * dpr
+      ctx.scale(dpr, dpr)
     }
 
     window.addEventListener('resize', handleResize)
@@ -72,8 +80,8 @@ export default function StarsBackground({ config = {} }: { config?: any }) {
   }, [numStars, speed])
 
   return (
-    <canvas 
-      ref={canvasRef} 
+    <canvas
+      ref={canvasRef}
       className="absolute inset-0 pointer-events-none z-0 opacity-80"
     />
   )

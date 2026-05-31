@@ -1,14 +1,11 @@
 import Link from 'next/link'
-import { Zap, Search } from 'lucide-react'
+import { BackgroundBlobs } from '@/components/shared/BackgroundBlobs'
+import { Search, Zap } from 'lucide-react'
 
-export default function UsernameNotFound() {
+export default function ProfileNotFound() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-zinc-950 text-zinc-50 relative overflow-hidden font-sans-theme">
-      {/* Background Gradients */}
-      <div className="absolute inset-0 z-0 pointer-events-none opacity-60">
-        <div className="absolute top-[-25%] left-[-15%] w-[60%] h-[60%] rounded-full bg-brand-pink/15 blur-[130px] animate-pulse" style={{ animationDuration: '10s' }} />
-        <div className="absolute bottom-[-25%] right-[-15%] w-[60%] h-[60%] rounded-full bg-brand-orange/15 blur-[130px] animate-pulse" style={{ animationDuration: '14s' }} />
-      </div>
+    <div className="min-h-screen flex items-center justify-center bg-zinc-950 relative overflow-hidden">
+      <BackgroundBlobs className="opacity-30" />
 
       <div className="relative z-10 flex flex-col items-center gap-6 px-4 text-center">
         <div className="mx-auto w-16 h-16 rounded-3xl bg-gradient-to-tr from-brand-pink to-brand-orange flex items-center justify-center shadow-lg shadow-brand-pink/20 mb-2">
