@@ -17,8 +17,9 @@ export default function MatrixBackground({ config = {} }: { config?: AnimationCo
     if (!ctx) return
 
     const dpr = window.devicePixelRatio || 1
-    let width = window.innerWidth
-    let height = window.innerHeight
+    const rect = canvas.getBoundingClientRect()
+    let width = rect.width || canvas.clientWidth || canvas.parentElement?.clientWidth || window.innerWidth
+    let height = rect.height || canvas.clientHeight || canvas.parentElement?.clientHeight || window.innerHeight
     canvas.width = width * dpr
     canvas.height = height * dpr
     ctx.scale(dpr, dpr)
@@ -63,8 +64,9 @@ export default function MatrixBackground({ config = {} }: { config?: AnimationCo
     animationFrameId = requestAnimationFrame(draw)
 
     const handleResize = () => {
-      width = window.innerWidth
-      height = window.innerHeight
+      const rect = canvas.getBoundingClientRect()
+      width = rect.width || canvas.clientWidth || canvas.parentElement?.clientWidth || window.innerWidth
+      height = rect.height || canvas.clientHeight || canvas.parentElement?.clientHeight || window.innerHeight
       canvas.width = width * dpr
       canvas.height = height * dpr
       ctx.scale(dpr, dpr)
