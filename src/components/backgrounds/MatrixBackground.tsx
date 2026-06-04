@@ -63,23 +63,25 @@ export default function MatrixBackground({ config = {} }: { config?: AnimationCo
 
     animationFrameId = requestAnimationFrame(draw)
 
-    const handleResize = () => {
-      const rect = canvas.getBoundingClientRect()
-      width = rect.width || canvas.clientWidth || canvas.parentElement?.clientWidth || window.innerWidth
-      height = rect.height || canvas.clientHeight || canvas.parentElement?.clientHeight || window.innerHeight
-      canvas.width = width * dpr
-      canvas.height = height * dpr
-      ctx.scale(dpr, dpr)
-      const newColumns = width / fontSize
-      for (let x = drops.length; x < newColumns; x++) {
-        drops[x] = Math.random() * -100
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        const { width: w, height: h } = entry.contentRect
+        if (w === 0 || h === 0) continue
+        width = w
+        height = h
+        canvas.width = w * dpr
+        canvas.height = h * dpr
+        ctx.scale(dpr, dpr)
+        const newColumns = w / fontSize
+        for (let x = drops.length; x < newColumns; x++) {
+          drops[x] = Math.random() * -100
+        }
       }
-    }
-
-    window.addEventListener('resize', handleResize)
+    })
+    resizeObserver.observe(canvas)
 
     return () => {
-      window.removeEventListener('resize', handleResize)
+      resizeObserver.disconnect()
       cancelAnimationFrame(animationFrameId)
     }
   }, [matrixColor, fontSize, speed])

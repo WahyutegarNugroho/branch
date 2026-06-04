@@ -83,19 +83,21 @@ export default function SnowfallBackground({ config = {} }: { config?: Animation
 
     update()
 
-    const handleResize = () => {
-      const rect = canvas.getBoundingClientRect()
-      width = rect.width || canvas.clientWidth || canvas.parentElement?.clientWidth || window.innerWidth
-      height = rect.height || canvas.clientHeight || canvas.parentElement?.clientHeight || window.innerHeight
-      canvas.width = width * dpr
-      canvas.height = height * dpr
-      ctx.scale(dpr, dpr)
-    }
-
-    window.addEventListener('resize', handleResize)
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        const { width: w, height: h } = entry.contentRect
+        if (w === 0 || h === 0) continue
+        width = w
+        height = h
+        canvas.width = w * dpr
+        canvas.height = h * dpr
+        ctx.scale(dpr, dpr)
+      }
+    })
+    resizeObserver.observe(canvas)
 
     return () => {
-      window.removeEventListener('resize', handleResize)
+      resizeObserver.disconnect()
       cancelAnimationFrame(animationFrameId)
     }
   }, [flakeCount, speed, wind])
