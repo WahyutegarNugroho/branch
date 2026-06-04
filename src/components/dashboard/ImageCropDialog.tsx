@@ -191,7 +191,7 @@ export function ImageCropDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={() => !isLoading && onClose()}>
-      <DialogContent className="max-w-[450px] bg-[#222] border border-white/10 text-white rounded-2xl shadow-2xl p-6 font-sans select-none font-sans-theme">
+      <DialogContent className="max-w-[450px] max-h-[95dvh] overflow-y-auto no-scrollbar bg-[#222] border border-white/10 text-white rounded-2xl shadow-2xl p-6 font-sans select-none font-sans-theme">
         <DialogHeader>
           <DialogTitle className="text-lg font-display-theme font-black text-center text-white mb-2">
             {isCircle ? "Adjust Profile Photo" : "Adjust Background Image"}
