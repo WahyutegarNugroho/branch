@@ -99,9 +99,8 @@ export default function ParticlesBackground({ config = {} }: { config?: Animatio
   }, [density, linkDistance, speed])
 
   return (
-    <canvas
-      ref={canvasRef}
-      className="absolute inset-0 pointer-events-none z-0 opacity-40 mix-blend-screen"
-    />
+    <div className="absolute inset-0 pointer-events-none z-0 opacity-40 mix-blend-screen">
+      <canvas ref={canvasRef} className="w-full h-full" />
+    </div>
   )
 }

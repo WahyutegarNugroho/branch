@@ -103,9 +103,8 @@ export default function SnowfallBackground({ config = {} }: { config?: Animation
   }, [flakeCount, speed, wind])
 
   return (
-    <canvas
-      ref={canvasRef}
-      className="absolute inset-0 pointer-events-none z-0 opacity-60"
-    />
+    <div className="absolute inset-0 pointer-events-none z-0 opacity-60">
+      <canvas ref={canvasRef} className="w-full h-full" />
+    </div>
   )
 }

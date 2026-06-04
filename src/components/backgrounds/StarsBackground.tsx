@@ -84,9 +84,8 @@ export default function StarsBackground({ config = {} }: { config?: AnimationCon
   }, [numStars, speed])
 
   return (
-    <canvas
-      ref={canvasRef}
-      className="absolute inset-0 pointer-events-none z-0 opacity-80"
-    />
+    <div className="absolute inset-0 pointer-events-none z-0 opacity-80">
+      <canvas ref={canvasRef} className="w-full h-full" />
+    </div>
   )
 }
