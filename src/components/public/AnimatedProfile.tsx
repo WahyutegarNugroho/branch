@@ -122,9 +122,9 @@ export function AnimatedProfile({ profile, links, bgClass: defaultBgClass, bgSty
   }
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-[#1c1c1e] sm:py-8 sm:px-4">
+    <div className="h-dvh sm:h-auto sm:min-h-screen w-full flex items-center justify-center bg-[#1c1c1e] sm:py-8 sm:px-4 overflow-hidden">
       <div 
-        className={`min-h-screen sm:min-h-[820px] sm:max-h-[880px] w-full sm:w-[480px] sm:rounded-[40px] sm:shadow-[0_24px_70px_rgba(0,0,0,0.85)] sm:border sm:border-white/10 relative flex flex-col py-16 px-6 overflow-y-auto no-scrollbar ${profile?.font_family || 'font-sans-theme'} ${
+        className={`h-dvh sm:h-auto sm:min-h-[820px] sm:max-h-[880px] w-full sm:w-[480px] sm:rounded-[40px] sm:shadow-[0_24px_70px_rgba(0,0,0,0.85)] sm:border sm:border-white/10 relative flex flex-col py-16 px-6 overflow-y-auto overflow-x-hidden no-scrollbar ${profile?.font_family || 'font-sans-theme'} ${
           profile?.profile_align === 'left' ? 'items-start text-left' : 
           profile?.profile_align === 'right' ? 'items-end text-right' : 'items-center text-center'
         }`}
