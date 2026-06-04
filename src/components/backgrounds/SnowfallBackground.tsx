@@ -16,7 +16,7 @@ export default function SnowfallBackground({ config = {} }: { config?: Animation
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    const dpr = window.devicePixelRatio || 1
+    const dpr = 1
     const rect = canvas.getBoundingClientRect()
     let width = rect.width || canvas.clientWidth || canvas.parentElement?.clientWidth || window.innerWidth
     let height = rect.height || canvas.clientHeight || canvas.parentElement?.clientHeight || window.innerHeight

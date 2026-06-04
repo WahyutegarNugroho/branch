@@ -123,9 +123,9 @@ export function AnimatedProfile({ profile, links, bgClass: defaultBgClass, bgSty
   }
 
   return (
-    <div className="h-dvh sm:h-auto sm:min-h-screen w-full flex items-center justify-center bg-[#1c1c1e] sm:py-8 sm:px-4 overflow-hidden">
+    <div className="fixed inset-0 sm:relative sm:h-auto sm:min-h-screen w-full flex items-center justify-center bg-[#1c1c1e] sm:py-8 sm:px-4 overflow-hidden">
       <div 
-        className={`h-dvh sm:h-auto sm:min-h-[820px] sm:max-h-[880px] w-full sm:w-[480px] sm:rounded-[40px] sm:shadow-[0_24px_70px_rgba(0,0,0,0.85)] sm:border sm:border-white/10 relative overflow-hidden ${profile?.font_family || 'font-sans-theme'}`}
+        className={`h-full sm:h-auto sm:min-h-[820px] sm:max-h-[880px] w-full sm:w-[480px] sm:rounded-[40px] sm:shadow-[0_24px_70px_rgba(0,0,0,0.85)] sm:border sm:border-white/10 relative overflow-hidden ${profile?.font_family || 'font-sans-theme'}`}
       >
         {/* Fixed Background Layer (contained inside the mockup viewport) */}
         <div className="absolute inset-0 z-0 w-full h-full overflow-hidden" style={bgStyle}>
