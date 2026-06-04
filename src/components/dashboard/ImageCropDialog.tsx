@@ -36,8 +36,8 @@ export function ImageCropDialog({
   const frameWidth = 280
   const frameHeight = isCircle ? 280 : 576
 
-  const previewWidth = isCircle ? 80 : 120
-  const previewHeight = isCircle ? 80 : 60
+  const previewWidth = isCircle ? 80 : 58
+  const previewHeight = isCircle ? 80 : 120
 
   // Render live crop preview thumbnail
   useEffect(() => {
