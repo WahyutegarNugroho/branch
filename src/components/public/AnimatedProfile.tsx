@@ -22,6 +22,7 @@ export function AnimatedProfile({ profile, links, bgClass: defaultBgClass, bgSty
   const currentTextColor = profile?.text_color || '#ffffff'
   const bgStyle = { ...defaultBgStyle }
   const [isShareOpen, setIsShareOpen] = useState(false)
+  const stickyLinks = links?.filter(l => l.is_sticky_cta && l.link_type === 'link') || []
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -124,95 +125,101 @@ export function AnimatedProfile({ profile, links, bgClass: defaultBgClass, bgSty
   return (
     <div className="h-dvh sm:h-auto sm:min-h-screen w-full flex items-center justify-center bg-[#1c1c1e] sm:py-8 sm:px-4 overflow-hidden">
       <div 
-        className={`h-dvh sm:h-auto sm:min-h-[820px] sm:max-h-[880px] w-full sm:w-[480px] sm:rounded-[40px] sm:shadow-[0_24px_70px_rgba(0,0,0,0.85)] sm:border sm:border-white/10 relative flex flex-col py-16 px-6 overflow-y-auto overflow-x-hidden no-scrollbar ${profile?.font_family || 'font-sans-theme'} ${
-          profile?.profile_align === 'left' ? 'items-start text-left' : 
-          profile?.profile_align === 'right' ? 'items-end text-right' : 'items-center text-center'
-        }`}
-        style={bgStyle}
+        className={`h-dvh sm:h-auto sm:min-h-[820px] sm:max-h-[880px] w-full sm:w-[480px] sm:rounded-[40px] sm:shadow-[0_24px_70px_rgba(0,0,0,0.85)] sm:border sm:border-white/10 relative overflow-hidden ${profile?.font_family || 'font-sans-theme'}`}
       >
-        {/* Background Video loop (Muted, AutoPlay) */}
-        {profile?.bg_type === 'video' && profile?.bg_video_url && (
-          <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
-            <video 
-              src={profile.bg_video_url} 
-              autoPlay 
-              muted 
-              loop 
-              playsInline 
-              className="w-full h-full object-cover"
+        {/* Fixed Background Layer (contained inside the mockup viewport) */}
+        <div className="absolute inset-0 z-0 w-full h-full overflow-hidden" style={bgStyle}>
+          {/* Background Video loop (Muted, AutoPlay) */}
+          {profile?.bg_type === 'video' && profile?.bg_video_url && (
+            <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
+              <video 
+                src={profile.bg_video_url} 
+                autoPlay 
+                muted 
+                loop 
+                playsInline 
+                className="w-full h-full object-cover"
+              />
+            </div>
+          )}
+
+          {/* Live Background Animations */}
+          {profile?.bg_animation === 'aurora' && <AuroraBackground config={profile?.bg_animation_config} />}
+          {profile?.bg_animation === 'particles' && <ParticlesBackground config={profile?.bg_animation_config} />}
+          {profile?.bg_animation === 'snowfall' && <SnowfallBackground config={profile?.bg_animation_config} />}
+          {profile?.bg_animation === 'stars' && <StarsBackground config={profile?.bg_animation_config} />}
+          {profile?.bg_animation === 'matrix' && <MatrixBackground config={profile?.bg_animation_config} />}
+          {profile?.bg_animation === 'confetti' && <ConfettiBackground config={profile?.bg_animation_config} />}
+          {profile?.bg_animation === 'bokeh' && <div className="absolute inset-0 pointer-events-none z-0 opacity-40 mix-blend-screen blur-[8px]" style={{ backgroundImage: 'radial-gradient(circle at 20% 30%, rgba(236,72,153,0.4) 0%, transparent 40%), radial-gradient(circle at 80% 60%, rgba(249,115,22,0.4) 0%, transparent 40%)', animation: 'pulseSlow 5s infinite alternate, bgMove 20s ease-in-out infinite' }} />}
+
+          {/* Hero Banner header overlay */}
+          {profile?.banner_url && (
+            <div className="absolute top-0 inset-x-0 h-32 w-full overflow-hidden border-b border-white/10 z-0">
+              <Image src={profile.banner_url} alt="Banner" fill className="object-cover" sizes="480px" />
+            </div>
+          )}
+
+          {/* Dark Overlay */}
+          {profile.bg_overlay_opacity > 0 && (
+            <div 
+              className="absolute inset-0 bg-black pointer-events-none z-0" 
+              style={{ opacity: profile.bg_overlay_opacity / 100 }}
             />
-          </div>
-        )}
-
-        {/* Live Background Animations */}
-        {profile?.bg_animation === 'aurora' && <AuroraBackground config={profile?.bg_animation_config} />}
-        {profile?.bg_animation === 'particles' && <ParticlesBackground config={profile?.bg_animation_config} />}
-        {profile?.bg_animation === 'snowfall' && <SnowfallBackground config={profile?.bg_animation_config} />}
-        {profile?.bg_animation === 'stars' && <StarsBackground config={profile?.bg_animation_config} />}
-        {profile?.bg_animation === 'matrix' && <MatrixBackground config={profile?.bg_animation_config} />}
-        {profile?.bg_animation === 'confetti' && <ConfettiBackground config={profile?.bg_animation_config} />}
-        {profile?.bg_animation === 'bokeh' && <div className="absolute inset-0 pointer-events-none z-0 opacity-40 mix-blend-screen blur-[8px]" style={{ backgroundImage: 'radial-gradient(circle at 20% 30%, rgba(236,72,153,0.4) 0%, transparent 40%), radial-gradient(circle at 80% 60%, rgba(249,115,22,0.4) 0%, transparent 40%)', animation: 'pulseSlow 5s infinite alternate, bgMove 20s ease-in-out infinite' }} />}
-
-        {/* Hero Banner header overlay */}
-        {profile?.banner_url && (
-          <div className="absolute top-0 inset-x-0 h-32 w-full overflow-hidden border-b border-white/10 z-0">
-            <Image src={profile.banner_url} alt="Banner" fill className="object-cover" sizes="480px" />
-          </div>
-        )}
-
-        {/* Dark Overlay */}
-        {profile.bg_overlay_opacity > 0 && (
-          <div 
-            className="absolute inset-0 bg-black pointer-events-none z-0" 
-            style={{ opacity: profile.bg_overlay_opacity / 100 }}
-          />
-        )}
-
-        {/* Mockup Header Row */}
-        <div className="absolute top-6 left-6 right-6 flex items-center justify-between z-20">
-          <div className="w-9 h-9 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white/90 border border-white/10">
-            <Zap className="w-4 h-4 text-white" />
-          </div>
-          <div className="flex gap-2">
-            <button 
-              onClick={() => setIsShareOpen(true)}
-            className="w-9 h-9 rounded-full bg-black/20 backdrop-blur-md flex items-center justify-center text-white/90 hover:text-white border border-white/20 transition-all active:scale-95 shadow-sm"
-          >
-            <Share2 className="w-4 h-4" />
-          </button>
-          </div>
+          )}
         </div>
 
-        {/* Analytics Tracking */}
-        <PageTracker profileId={profile.id} />
-
-        <SocialShareModal
-          isOpen={isShareOpen}
-          onClose={() => setIsShareOpen(false)}
-          url={typeof window !== 'undefined' ? window.location.href : ''}
-          title={profile.full_name || `@${profile.username}`}
-          description={profile.bio || undefined}
-        />
-
-        {/* Profile Content */}
-        <motion.div 
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className={`relative z-10 w-full flex flex-col ${
-            profile?.profile_align === 'left' ? 'items-start text-left animate-in fade-in duration-500' : 
-            profile?.profile_align === 'right' ? 'items-end text-right animate-in fade-in duration-500' : 'items-center text-center animate-in fade-in duration-500'
-          } ${
-            profile?.theme_style === 'glass' ? 'p-6 sm:p-10 rounded-3xl border border-white/20 shadow-2xl max-w-lg mx-auto' : ''
-          } ${profile?.banner_url && profile?.theme_style !== 'glass' ? 'pt-12' : ''}`}
-          style={{ 
-            color: currentTextColor,
-            ...(profile?.theme_style === 'glass' ? {
-              backdropFilter: `blur(${profile?.glass_blur ?? 10}px)`,
-              backgroundColor: `rgba(255,255,255,${(profile?.glass_opacity ?? 20) / 100})`
-            } : {})
-          }}
+        {/* Scrollable Content Layer */}
+        <div 
+          className={`absolute inset-0 overflow-y-auto overflow-x-hidden no-scrollbar z-10 flex flex-col py-16 px-6 ${
+            profile?.profile_align === 'left' ? 'items-start text-left' : 
+            profile?.profile_align === 'right' ? 'items-end text-right' : 'items-center text-center'
+          }`}
         >
+          {/* Mockup Header Row */}
+          <div className="absolute top-6 left-6 right-6 flex items-center justify-between z-20">
+            <div className="w-9 h-9 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white/90 border border-white/10">
+              <Zap className="w-4 h-4 text-white" />
+            </div>
+            <div className="flex gap-2">
+              <button 
+                onClick={() => setIsShareOpen(true)}
+                className="w-9 h-9 rounded-full bg-black/20 backdrop-blur-md flex items-center justify-center text-white/90 hover:text-white border border-white/20 transition-all active:scale-95 shadow-sm"
+              >
+                <Share2 className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+
+          {/* Analytics Tracking */}
+          <PageTracker profileId={profile.id} />
+
+          <SocialShareModal
+            isOpen={isShareOpen}
+            onClose={() => setIsShareOpen(false)}
+            url={typeof window !== 'undefined' ? window.location.href : ''}
+            title={profile.full_name || `@${profile.username}`}
+            description={profile.bio || undefined}
+          />
+
+          {/* Profile Content */}
+          <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className={`relative z-10 w-full flex flex-col ${
+              profile?.profile_align === 'left' ? 'items-start text-left animate-in fade-in duration-500' : 
+              profile?.profile_align === 'right' ? 'items-end text-right animate-in fade-in duration-500' : 'items-center text-center animate-in fade-in duration-500'
+            } ${
+              profile?.theme_style === 'glass' ? 'p-6 sm:p-10 rounded-3xl border border-white/20 shadow-2xl max-w-lg mx-auto' : ''
+            } ${profile?.banner_url && profile?.theme_style !== 'glass' ? 'pt-12' : ''}`}
+            style={{ 
+              color: currentTextColor,
+              ...(profile?.theme_style === 'glass' ? {
+                backdropFilter: `blur(${profile?.glass_blur ?? 10}px)`,
+                backgroundColor: `rgba(255,255,255,${(profile?.glass_opacity ?? 20) / 100})`
+              } : {})
+            }}
+          >
           {/* Avatar */}
           {(() => {
             const avatarShapeClass = profile?.avatar_shape === 'rounded' ? 'rounded-2xl' : profile?.avatar_shape === 'hexagon' ? '' : 'rounded-full'
@@ -299,7 +306,9 @@ export function AnimatedProfile({ profile, links, bgClass: defaultBgClass, bgSty
           {/* Links */}
           <motion.div 
             variants={linkWrapperVariants} 
-            className={`w-full max-w-md pb-24 ${
+            className={`w-full max-w-md ${
+              stickyLinks.length > 0 ? 'pb-28' : 'pb-8'
+            } ${
               profile?.layout_type === 'grid' 
                 ? 'grid grid-cols-2 gap-4' 
                 : profile?.link_spacing === 'compact' ? 'space-y-2.5' : 
@@ -308,7 +317,6 @@ export function AnimatedProfile({ profile, links, bgClass: defaultBgClass, bgSty
           >
             {(() => {
               const normalLinks = links?.filter(l => !(l.is_sticky_cta && l.link_type === 'link')) || []
-              const stickyLinks = links?.filter(l => l.is_sticky_cta && l.link_type === 'link') || []
               
               const renderLink = (link: Link) => (
                 <motion.div 
@@ -364,6 +372,7 @@ export function AnimatedProfile({ profile, links, bgClass: defaultBgClass, bgSty
             </motion.div>
           )}
         </motion.div>
+        </div>
       </div>
     </div>
   )
