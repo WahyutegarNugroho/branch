@@ -1,10 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { useEffect } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { GripVertical, Trash2, Edit2, Check, ExternalLink, Search, Link as LinkIcon, Images } from 'lucide-react'
+import { GripVertical, Trash2, Edit2, ExternalLink, Search, Link as LinkIcon, Images } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
@@ -80,39 +80,60 @@ export function LinkItem({ link }: { link: Link }) {
   const [spotlightColor, setSpotlightColor] = useState(link.spotlight_color || '#ec4899')
   const [animation, setAnimation] = useState(link.animation || 'none')
   const [isStickyCta, setIsStickyCta] = useState(!!link.is_sticky_cta)
-  const [carouselImages, setCarouselImages] = useState<any[]>([])
+  const [carouselImages, setCarouselImages] = useState<LinkImage[]>([])
 
-  const getCarouselImages = async () => {
+  const getCarouselImages = useCallback(async () => {
     return await getLinkImages(link.id)
-  }
+  }, [link.id])
 
   useEffect(() => {
     if (linkType === 'carousel') {
       getCarouselImages().then(imgs => setCarouselImages(imgs))
     }
-  }, [link.id, linkType])
+  }, [link.id, linkType, getCarouselImages])
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setTitle(link.title || '')
+     
     setUrl(link.url || '')
+     
     setIconPosition(link.icon_position || 'left_far')
+     
     setCustomStyleEnabled(!!link.bg_color || !!link.text_color || link.bg_opacity !== null)
+     
     setBgColor(link.bg_color || '#ffffff')
+     
     setTextColor(link.text_color || '#000000')
+     
     setBgOpacity(link.bg_opacity !== null ? link.bg_opacity : 100)
+     
     setIsActive(link.is_active)
+     
     setShowIcon(link.show_icon !== false)
+     
     setIconColorMode(!link.icon_color ? 'original' : link.icon_color === 'text' ? 'text' : 'custom')
+     
     setIconColor(link.icon_color && link.icon_color !== 'text' ? link.icon_color : '#ffffff')
+     
     setScheduleEnabled(!!link.valid_from || !!link.valid_until)
+     
     setValidFrom(link.valid_from ? formatDateTimeLocal(link.valid_from) : '')
+     
     setValidUntil(link.valid_until ? formatDateTimeLocal(link.valid_until) : '')
+     
     setIsEmbed(!!link.is_embed)
+     
     setLinkType(link.link_type || 'link')
+     
     setThumbnailUrl(link.thumbnail_url || '')
+     
     setIsSpotlight(!!link.is_spotlight)
+     
     setSpotlightColor(link.spotlight_color || '#ec4899')
+     
     setAnimation(link.animation || 'none')
+     
     setIsStickyCta(!!link.is_sticky_cta)
   }, [link.title, link.url, link.icon_position, link.bg_color, link.text_color, link.bg_opacity, link.is_active, link.show_icon, link.icon_color, link.valid_from, link.valid_until, link.is_embed, link.link_type, link.thumbnail_url, link.is_spotlight, link.spotlight_color, link.animation, link.is_sticky_cta])
 
@@ -489,6 +510,7 @@ export function LinkItem({ link }: { link: Link }) {
             {isLeftFar && (
               <div className="flex items-center justify-center w-11 h-11 shrink-0 rounded-xl bg-white/5 border border-white/10 shadow-inner overflow-hidden">
                 {link.thumbnail_url ? (
+                  // eslint-disable-next-line @next/next/no-img-element
                   <img src={link.thumbnail_url} alt="" className="w-full h-full object-cover animate-in fade-in duration-200" />
                 ) : DisplayIcon && link.show_icon !== false ? (
                   <DisplayIcon size={22} color={displayPlatform?.color} />
@@ -527,6 +549,7 @@ export function LinkItem({ link }: { link: Link }) {
             {isRightFar && (
               <div className="flex items-center justify-center w-11 h-11 shrink-0 rounded-xl bg-white/5 border border-white/10 shadow-inner overflow-hidden">
                 {link.thumbnail_url ? (
+                  // eslint-disable-next-line @next/next/no-img-element
                   <img src={link.thumbnail_url} alt="" className="w-full h-full object-cover animate-in fade-in duration-200" />
                 ) : DisplayIcon && link.show_icon !== false ? (
                   <DisplayIcon size={22} color={displayPlatform?.color} />
@@ -583,7 +606,7 @@ export function LinkItem({ link }: { link: Link }) {
             <div className="min-w-0 text-left">
               <h4 className="text-white font-bold text-sm leading-snug">{isHeader ? 'Delete Header?' : 'Delete Link?'}</h4>
               <p className="text-zinc-400 text-xs truncate max-w-[200px] sm:max-w-md mt-0.5">
-                Delete <span className="text-red-400 font-semibold">"{link.title}"</span> permanently?
+                Delete <span className="text-red-400 font-semibold">&ldquo;{link.title}&rdquo;</span> permanently?
               </p>
             </div>
           </div>

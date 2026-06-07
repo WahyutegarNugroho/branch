@@ -7,7 +7,7 @@ import { login } from '@/app/auth/actions'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardFooter } from '@/components/ui/card'
+import { CardContent, CardFooter } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { AuthCard } from '@/components/shared/AuthCard'
 import { Loader2, Eye, EyeOff } from 'lucide-react'
@@ -103,7 +103,7 @@ export default function LoginPage() {
 
       <CardFooter className="flex flex-col items-center border-t border-white/5 bg-black/20 pt-4 pb-8">
         <div className="text-xs text-zinc-400 font-medium">
-          Don't have an account?{' '}
+          Don&apos;t have an account?{' '}
           <Link href="/register" className="text-brand-pink hover:text-brand-orange transition-colors font-bold">
             Sign up
           </Link>

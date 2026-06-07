@@ -29,7 +29,7 @@ A self-hostable Linktree alternative with **real-time visual editor**, **privacy
 | **Button Styles** | 9 styles: Filled, Outline, Soft, Shadow, Neumorphism, Glassmorphism, Neon Glow, Brutalism, Claymorphism — each with SVG-filter variants for clipped shapes |
 | **Button Shapes** | 8 shapes: Square, Rounded, Curve, Pill, Cut Corners, Leaf, Hexagon, Diamond — CSS `clip-path` powered |
 | **Buttons Hover Effects** | 8 effects: Scale, Lift, Glow, Wobble, Pulse, Shine, Glitch |
-| **Typography** | 12 font families (Inter, Outfit, Georgia, Space Mono, Caveat, Comic Neue, Playfair, Press Start 2P, Space Grotesk, Bebas Neue, Righteous, Dancing Script) |
+| **Typography** | 11 font families (Inter, Outfit, JetBrains Mono, Caveat, Comic Neue, Playfair Display, Press Start 2P, Space Grotesk, Oswald, Righteous, Dancing Script) |
 | **Avatar** | 3 shapes (circle, square, hexagon), 3 sizes (S/M/L), 2 frames (gradient-ring, neon-glow) |
 | **Layout** | List/grid, left/center/right alignment, compact/normal/relaxed spacing, glassmorphism container with configurable blur & opacity |
 | **Social Icons** | 29+ platform presets with brand icons, 4 style variants (circle, outline, square, minimal), top/bottom placement |
@@ -116,18 +116,20 @@ Share your profile via Twitter/X, WhatsApp, Telegram, Facebook, native Web Share
 | **PostgreSQL** | 15+ | Relational database with RLS |
 | **Framer Motion** | 12.38.0 | Animations & transitions |
 | **Zustand** | 5.0.13 | Client-side state management (live preview) |
-| **@dnd-kit** | core 6.3.1 / sortable 10.0.0 | Drag-and-drop link reordering |
+| **@dnd-kit** | core 6.3.1 / sortable 10.0.0 / modifiers 9.0.0 / utilities 3.2.2 | Drag-and-drop link reordering |
 | **React Hook Form** | 7.76.0 | Form state management |
 | **Zod** | 4.4.3 | Schema validation (server + client) |
-| **Recharts** | 3.8.0 | Analytics charts |
+| **Recharts** | 3.8.1 | Analytics charts |
 | **Lucide React** | 1.16.0 | UI icons |
 | **React Icons** | 5.6.0 | Social platform brand icons |
 | **Sonner** | 2.0.7 | Toast notifications |
 | **qrcode.react** | 4.2.0 | QR code generation |
 | **react-colorful** | 5.7.0 | Color picker |
-| **shadcn/ui** | 4.7.0 | Primitive UI components |
+| **shadcn** | 4.7.0 | CLI for primitive UI components |
+| **@base-ui/react** | 1.4.1 | Headless UI primitives (button, dialog, tabs, etc.) |
 | **class-variance-authority** | 0.7.1 | Component variants |
 | **tailwind-merge** | 3.6.0 | Tailwind class merging |
+| **clsx** | 2.1.1 | Conditional class name construction |
 | **next-themes** | 0.4.6 | Dark/light mode toggle |
 | **Vitest** | 4.1.7 | Unit & component testing |
 | **pg** | 8.20.0 | PostgreSQL client (migrations) |
@@ -393,7 +395,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 | `updateSocialLinks` | `profile-actions.ts` | Social platform URLs |
 | `updateBranding` | `profile-actions.ts` | White-label toggle (premium-gated) |
 | `updateSettings` | `profile-actions.ts` | SEO, pixels, custom domain |
-| `getAnalytics`, `getAnalyticsCSV` | `analytics-actions.ts` | Analytics data queries |
+| `getAnalytics` | `analytics-actions.ts` | Analytics data queries |
 
 ---
 

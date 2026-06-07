@@ -18,11 +18,8 @@ const run = async () => {
     // Let's filter statements that don't create an existing table
     const existingTables = result.rows.map(r => r.table_name);
     
-    let safeScript = '';
     for (let stmt of statements) {
         if (!stmt.trim()) continue;
-        
-        let shouldInclude = true;
         
         // If it's a CREATE TABLE, check if it already exists
         const createTableMatch = stmt.match(/CREATE TABLE public\.([a-zA-Z0-9_]+)/i);

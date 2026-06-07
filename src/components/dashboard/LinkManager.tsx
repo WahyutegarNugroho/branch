@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import {
   DndContext,
   closestCenter,
@@ -26,13 +26,10 @@ import { EmptyState } from '@/components/ui/empty-state'
 import type { Link } from '@/types'
 
 export function LinkManager({ initialLinks }: { initialLinks: Link[] }) {
-  const [links, setLinks] = useState(initialLinks)
   const [reordering, setReordering] = useState(false)
   const router = useRouter()
 
-  useEffect(() => {
-    setLinks(initialLinks)
-  }, [initialLinks])
+  const links = initialLinks
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -55,21 +52,11 @@ export function LinkManager({ initialLinks }: { initialLinks: Link[] }) {
 
       const newLinks = arrayMove(links, oldIndex, newIndex)
       
-      // Update sort_order locally
-      const updatedLinks = newLinks.map((link, index) => ({
-        ...link,
-        sort_order: index
-      }))
-
-      setLinks(updatedLinks)
-
-      // Persist to server
-      const payload = updatedLinks.map(l => ({ id: l.id, sort_order: l.sort_order }))
+      // Persist to server directly
+      const payload = newLinks.map((l, index) => ({ id: l.id, sort_order: index }))
       const result = await reorderLinks(payload)
       if (result.error) {
         toast.error('Failed to save link order')
-        // Revert on error
-        setLinks(initialLinks)
       } else {
         router.refresh()
       }

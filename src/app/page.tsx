@@ -1,27 +1,21 @@
 'use client'
 
 import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { 
   ArrowRight, 
   LayoutTemplate, 
   Zap, 
   BarChart3, 
-  Smartphone, 
-  QrCode, 
   Eye, 
   Palette, 
   Sparkles,
-  ExternalLink,
-  ChevronRight,
-  ShieldAlert
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import AuroraBackground from '@/components/backgrounds/AuroraBackground'
 import MatrixBackground from '@/components/backgrounds/MatrixBackground'
 import ConfettiBackground from '@/components/backgrounds/ConfettiBackground'
-import ParticlesBackground from '@/components/backgrounds/ParticlesBackground'
 
 const demoThemes = {
   aurora: {
@@ -91,7 +85,7 @@ export default function LandingPage() {
 
   const itemVariants = {
     hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] as any } },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } },
   }
 
   return (

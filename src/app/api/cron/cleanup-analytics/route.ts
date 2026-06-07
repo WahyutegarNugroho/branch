@@ -44,10 +44,11 @@ export async function POST(request: Request) {
 
     console.log(`[CRON] Analytics cleanup SUCCESS | ip=${requestIp} | duration=${duration}ms`)
     return NextResponse.json({ success: true, message: 'Old analytics data cleaned up successfully' })
-  } catch (err: any) {
+  } catch (err: unknown) {
     const duration = Date.now() - startTime
-    console.error(`[CRON] Analytics cleanup ERROR | ip=${requestIp} | duration=${duration}ms | error=${err.message}`)
-    return NextResponse.json({ error: err.message }, { status: 500 })
+    const message = err instanceof Error ? err.message : 'Unknown error'
+    console.error(`[CRON] Analytics cleanup ERROR | ip=${requestIp} | duration=${duration}ms | error=${message}`)
+    return NextResponse.json({ error: message }, { status: 500 })
   }
 }
 

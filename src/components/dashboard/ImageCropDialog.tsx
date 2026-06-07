@@ -22,7 +22,7 @@ export function ImageCropDialog({
 }: ImageCropDialogProps) {
   const [zoom, setZoom] = useState(1)
   const [position, setPosition] = useState({ x: 0, y: 0 })
-  const [imageSize, setImageSize] = useState({ width: 0, height: 0 })
+  const [, setImageSize] = useState({ width: 0, height: 0 })
   const [baseSize, setBaseSize] = useState({ width: 0, height: 0 })
   const [isDragging, setIsDragging] = useState(false)
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
@@ -69,13 +69,16 @@ export function ImageCropDialog({
       ctx.arc(previewWidth / 2, previewHeight / 2, previewWidth / 2, 0, Math.PI * 2)
       ctx.fill()
     }
-  }, [zoom, position, baseSize, isCircle, previewWidth, previewHeight])
+  }, [zoom, position, baseSize, isCircle, previewWidth, previewHeight, frameHeight])
 
   // Reset states on open/close
   useEffect(() => {
     if (isOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setZoom(1)
+       
       setPosition({ x: 0, y: 0 })
+       
       setIsLoading(false)
     }
   }, [isOpen])
@@ -183,11 +186,12 @@ export function ImageCropDialog({
     const maxDragX = Math.max(0, (baseSize.width * zoom - frameWidth) / 2)
     const maxDragY = Math.max(0, (baseSize.height * zoom - frameHeight) / 2)
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setPosition((prev) => ({
       x: Math.min(Math.max(prev.x, -maxDragX), maxDragX),
       y: Math.min(Math.max(prev.y, -maxDragY), maxDragY)
     }))
-  }, [zoom, baseSize])
+  }, [zoom, baseSize, frameHeight])
 
   return (
     <Dialog open={isOpen} onOpenChange={() => !isLoading && onClose()}>
@@ -223,6 +227,7 @@ export function ImageCropDialog({
 
             {/* Uploaded Image element */}
             {imageUrl && (
+              // eslint-disable-next-line @next/next/no-img-element
               <img
                 ref={imgRef}
                 src={imageUrl}

@@ -65,7 +65,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
     notFound()
   }
 
-  const { data: links, error: linksError } = await supabase
+  const { data: links } = await supabase
     .from('links')
     .select('*, link_images(*)')
     .eq('profile_id', profile.id)
@@ -73,7 +73,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
     .order('sort_order', { ascending: true })
 
   // Construct background styling
-  let bgStyle: React.CSSProperties = {}
+  const bgStyle: React.CSSProperties = {}
   let bgClass = "min-h-screen w-full relative flex flex-col items-center py-16 px-4 overflow-hidden"
 
   if (profile.bg_type === 'solid') {

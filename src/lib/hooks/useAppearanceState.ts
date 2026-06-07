@@ -8,7 +8,7 @@ import { updateAppearance, updateProfileInfo, updateSocialLinks, updateBranding 
 import { compressImage } from '@/lib/image-utils'
 import { usernameBlacklist } from '@/lib/validations'
 import { toast } from 'sonner'
-import type { Profile, AnimationConfig, AvatarFrameConfig } from '@/types'
+import type { Profile, AnimationConfig, AvatarFrameConfig, Theme } from '@/types'
 
 export function useAppearanceState(profile: Profile | null) {
   const router = useRouter()
@@ -63,29 +63,31 @@ export function useAppearanceState(profile: Profile | null) {
   const bannerInputRef = useRef<HTMLInputElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const avatarInputRef = useRef<HTMLInputElement>(null)
-  const [hostPrefix, setHostPrefix] = useState('branch.app/')
-  const [themes, setThemes] = useState<any[]>([])
+  const [hostPrefix] = useState(() =>
+    typeof window !== 'undefined' ? `${window.location.host}/` : 'branch.app/'
+  )
+  const [themes, setThemes] = useState<Theme[]>([])
   const [showBranding, setShowBranding] = useState(profile?.show_branding !== false)
   const [brandingLoading, setBrandingLoading] = useState(false)
 
   useEffect(() => {
-    setHostPrefix(`${window.location.host}/`)
-  }, [])
-
-  useEffect(() => {
     if (!username || username === profile?.username) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setUsernameStatus('idle')
       return
     }
     const usernameRegex = /^[a-z0-9_-]+$/
     if (!usernameRegex.test(username) || username.length < 3 || username.length > 30) {
+       
       setUsernameStatus('invalid')
       return
     }
     if (usernameBlacklist.includes(username.toLowerCase())) {
+       
       setUsernameStatus('taken')
       return
     }
+     
     setUsernameStatus('checking')
     const delayDebounce = setTimeout(async () => {
       try {
@@ -128,14 +130,14 @@ export function useAppearanceState(profile: Profile | null) {
         const { data, error } = await supabase.from('themes').select('*').order('name', { ascending: true })
         if (error) throw error
         if (data) setThemes(data)
-      } catch (err) {
+      } catch {
         console.error('Error fetching themes:', err)
       }
     }
     fetchThemes()
   }, [])
 
-  const handleSelectTheme = (theme: any) => {
+  const handleSelectTheme = (theme: Theme) => {
     setBgType(theme.bg_type)
     setBgColor(theme.bg_color)
     setBgImageUrl(theme.bg_image_url || '')
@@ -185,7 +187,7 @@ export function useAppearanceState(profile: Profile | null) {
         setIsCropOpen(true)
       }
       reader.readAsDataURL(new File([compressed], file.name, { type: 'image/jpeg' }))
-    } catch (err) {
+    } catch {
       toast.dismiss()
       toast.error('Failed to compress image, using original')
       const reader = new FileReader()
@@ -212,7 +214,7 @@ export function useAppearanceState(profile: Profile | null) {
       const fileName = `${user.id}/${prefix}_${Date.now()}.jpg`
       const file = new File([croppedBlob], `${prefix}_${Date.now()}.jpg`, { type: 'image/jpeg' })
       const bucketName = isAvatar ? 'avatars' : 'backgrounds'
-      const { data, error } = await supabase.storage.from(bucketName).upload(fileName, file)
+      const { error } = await supabase.storage.from(bucketName).upload(fileName, file)
       if (error) throw error
       const { data: { publicUrl } } = supabase.storage.from(bucketName).getPublicUrl(fileName)
 
@@ -229,9 +231,10 @@ export function useAppearanceState(profile: Profile | null) {
         toast.success('Background image cropped successfully!')
         usePreviewStore.getState().updateProfile({ bg_type: 'image', bg_image_url: publicUrl, bg_overlay_opacity: opacity[0] })
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Unknown error'
       console.error('Error uploading image:', err)
-      toast.error(`Failed to upload image: ${err.message}`)
+      toast.error(`Failed to upload image: ${message}`)
     }
   }
 

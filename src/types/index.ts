@@ -101,6 +101,18 @@ export interface LinkImage {
   created_at: string
 }
 
+export interface Theme {
+  id: string
+  name: string
+  bg_type: string
+  bg_color: string
+  bg_image_url: string | null
+  button_shape: string
+  button_style: string
+  font_family: string
+  [key: string]: unknown
+}
+
 export interface Analytics {
   id: string
   profile_id: string

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, startTransition } from 'react'
+import { useState } from 'react'
 import { getAnalyticsStats } from '@/app/actions/analytics-actions'
 import { AnalyticsChart } from '@/components/dashboard/AnalyticsChart'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
@@ -39,7 +39,7 @@ export function AnalyticsDashboard({ initialData }: { initialData: Awaited<Retur
       const data = await getAnalyticsStats(parseInt(val))
       setStats(data)
       toast.success(`Analytics updated for the last ${val} days!`)
-    } catch (err) {
+    } catch {
       toast.error('Failed to load analytics')
     } finally {
       setLoading(false)
@@ -62,7 +62,7 @@ export function AnalyticsDashboard({ initialData }: { initialData: Awaited<Retur
       const data = await getAnalyticsStats(undefined, startDate, endDate)
       setStats(data)
       toast.success('Analytics updated for custom date range!')
-    } catch (err) {
+    } catch {
       toast.error('Failed to load analytics')
     } finally {
       setLoading(false)
@@ -124,7 +124,7 @@ export function AnalyticsDashboard({ initialData }: { initialData: Awaited<Retur
       document.body.removeChild(link)
       
       toast.success('Analytics data successfully downloaded (CSV)!')
-    } catch (e) {
+    } catch {
       toast.error('Failed to export data')
     }
   }

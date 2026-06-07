@@ -57,7 +57,7 @@ export function LinkDesignSettings({
   thumbnailUrl: string
   setThumbnailUrl: (val: string) => void
   iconPosition: string
-  setIconPosition: (val: any) => void
+  setIconPosition: (val: string) => void
   isStickyCta?: boolean
   setIsStickyCta?: (val: boolean) => void
   loading: boolean
@@ -111,7 +111,7 @@ export function LinkDesignSettings({
                 ✨ Animation Effect
               </span>
               <p className="text-[10px] text-zinc-400">
-                Choose a movement effect to subtly attract visitors' eyes.
+                Choose a movement effect to subtly attract visitors&apos; eyes.
               </p>
               <select
                 name="animation"
@@ -136,7 +136,7 @@ export function LinkDesignSettings({
                     📌 Sticky Footer CTA
                   </span>
                   <p className="text-[10px] text-zinc-400 max-w-[280px]">
-                    Pin this link to the bottom of the screen so it's always visible when scrolling.
+                    Pin this link to the bottom of the screen so it&apos;s always visible when scrolling.
                   </p>
                 </div>
                 <Switch checked={isStickyCta} onCheckedChange={setIsStickyCta} />

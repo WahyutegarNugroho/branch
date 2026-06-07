@@ -38,8 +38,8 @@ export default function AuroraBackground({ config = {} }: { config?: AnimationCo
     const container = containerRef.current
     let currentColorSet = themeIndex % colorSets.length
     const auroras: HTMLDivElement[] = []
-    let animationFrames: number[] = []
-    let intervalId: NodeJS.Timeout
+    const animationFrames: number[] = []
+
 
     for (let i = 0; i < 5; i++) {
       const aurora = document.createElement('div')
@@ -89,7 +89,7 @@ export default function AuroraBackground({ config = {} }: { config?: AnimationCo
       update()
     }
 
-    intervalId = setInterval(() => {
+    const intervalId = setInterval(() => {
       currentColorSet = (currentColorSet + 1) % colorSets.length
       auroras.forEach(aurora => {
         if (aurora) aurora.style.opacity = '0'

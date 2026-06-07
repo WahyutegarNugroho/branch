@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import { motion } from 'framer-motion'
-import { notFound } from 'next/navigation'
+
 import AuroraBackground from '@/components/backgrounds/AuroraBackground'
 import SnowfallBackground from '@/components/backgrounds/SnowfallBackground'
 import MatrixBackground from '@/components/backgrounds/MatrixBackground'
@@ -18,7 +18,7 @@ import { SocialShareModal } from './SocialShareModal'
 
 import { Profile, Link } from '@/types'
 
-export function AnimatedProfile({ profile, links, bgClass: defaultBgClass, bgStyle: defaultBgStyle }: { profile: Profile, links: Link[], bgClass: string, bgStyle: React.CSSProperties }) {
+export function AnimatedProfile({ profile, links, bgStyle: defaultBgStyle }: { profile: Profile, links: Link[], bgClass: string, bgStyle: React.CSSProperties }) {
   const currentTextColor = profile?.text_color || '#ffffff'
   const bgStyle = { ...defaultBgStyle }
   const [isShareOpen, setIsShareOpen] = useState(false)
@@ -62,6 +62,7 @@ export function AnimatedProfile({ profile, links, bgClass: defaultBgClass, bgSty
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const socialRowVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -72,6 +73,7 @@ export function AnimatedProfile({ profile, links, bgClass: defaultBgClass, bgSty
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const socialIconVariants = {
     hidden: { opacity: 0, scale: 0.4, y: 10 },
     visible: { 
@@ -229,7 +231,7 @@ export function AnimatedProfile({ profile, links, bgClass: defaultBgClass, bgSty
             const frameColor2 = profile?.avatar_frame_config?.color2 || '#f97316'
             
             let frameClass = ''
-            let frameStyle: React.CSSProperties = { clipPath: avatarClipPath }
+            const frameStyle: React.CSSProperties = { clipPath: avatarClipPath }
             
             if (profile?.avatar_frame === 'gradient-ring') {
               frameClass = 'p-1.5'

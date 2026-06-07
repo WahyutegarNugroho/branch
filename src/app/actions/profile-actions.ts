@@ -1,6 +1,6 @@
 'use server'
 
-import { createClient, requireAuth } from '@/utils/supabase/server'
+import { requireAuth } from '@/utils/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { updateAppearanceSchema, updateProfileInfoSchema, updateSocialLinksSchema, updateSettingsSchema } from '@/lib/validations'
 import { formDataToObject } from '@/lib/formdata-utils'

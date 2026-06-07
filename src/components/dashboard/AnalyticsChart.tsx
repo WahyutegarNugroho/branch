@@ -3,7 +3,13 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { EmptyState } from '@/components/ui/empty-state'
 
-export function AnalyticsChart({ data }: { data: any[] }) {
+interface ChartData {
+  name: string
+  views: number
+  clicks: number
+}
+
+export function AnalyticsChart({ data }: { data: ChartData[] }) {
   if (!data || data.length === 0) {
     return <EmptyState title="No data available yet" className="h-[300px]" />
   }

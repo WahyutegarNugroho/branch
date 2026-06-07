@@ -7,7 +7,6 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { hexToRgb, rgbToHex } from '@/lib/color-utils'
 import { ColorPickerDialog } from './ColorPickerDialog'
-import { Trash2 } from 'lucide-react'
 
 interface Stop {
   id: string
@@ -47,7 +46,7 @@ function parseGradient(gradientStr: string) {
   try {
     const angleMatch = gradientStr.match(/linear-gradient\(([\d.-]+)deg/)
     if (angleMatch) {
-      let cssAngle = parseFloat(angleMatch[1])
+      const cssAngle = parseFloat(angleMatch[1])
       let psAngle = (90 - cssAngle) % 360
       if (psAngle < -180) psAngle += 360
       if (psAngle > 180) psAngle -= 360
@@ -91,7 +90,7 @@ function parseGradient(gradientStr: string) {
       colorStops = extractedColorStops
       opacityStops = extractedOpacityStops
     }
-  } catch (e) {
+  } catch {
     // Ignore, use defaults
   }
 
@@ -163,6 +162,7 @@ export function GradientPickerDialog({ isOpen, onClose, initialGradient, onSelec
   const [isColorPickerOpen, setIsColorPickerOpen] = useState(false)
   const [pickerInitialColor, setPickerInitialColor] = useState('#ffffff')
 
+  const nextIdRef = useRef(0)
   const barRef = useRef<HTMLDivElement>(null)
   const dialRef = useRef<HTMLDivElement>(null)
 
@@ -178,8 +178,8 @@ export function GradientPickerDialog({ isOpen, onClose, initialGradient, onSelec
       const dx = clientX - cx
       const dy = clientY - cy
 
-      let rad = Math.atan2(-dy, dx)
-      let deg = Math.round(rad * (180 / Math.PI))
+      const rad = Math.atan2(-dy, dx)
+      const deg = Math.round(rad * (180 / Math.PI))
       setAngle(deg)
     }
 
@@ -199,17 +199,21 @@ export function GradientPickerDialog({ isOpen, onClose, initialGradient, onSelec
   }
 
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && colorStops.length === 0) {
       const parsed = parseGradient(initialGradient)
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setColorStops(parsed.colorStops)
+       
       setOpacityStops(parsed.opacityStops)
+       
       setAngle(parsed.angle)
       
       if (parsed.colorStops.length > 0) {
+         
         setActiveStop({ type: 'color', id: parsed.colorStops[0].id })
       }
     }
-  }, [isOpen, initialGradient])
+  }, [isOpen, initialGradient, colorStops.length])
 
   const previewGradient = generateGradient(colorStops, opacityStops, 0) // Always preview horizontal (left-to-right) on the bar to match stops
   const finalGradient = generateGradient(colorStops, opacityStops, angle)
@@ -222,13 +226,11 @@ export function GradientPickerDialog({ isOpen, onClose, initialGradient, onSelec
     if (!rect) return
 
     let currentId = id
-    let isNew = false
 
     if (!currentId) {
       // Create new stop
       const pos = Math.min(100, Math.max(0, ((e.clientX - rect.left) / rect.width) * 100))
-      currentId = `${type}_${Date.now()}`
-      isNew = true
+      currentId = `${type}_${nextIdRef.current++}`
 
       if (type === 'color') {
         const cStops = [...colorStops].sort((a, b) => a.position - b.position)

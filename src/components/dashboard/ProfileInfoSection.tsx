@@ -58,7 +58,7 @@ export function ProfileInfoSection({
         <CardDescription className="text-zinc-400">Update your personal details.</CardDescription>
       </CardHeader>
       <CardContent>
-        <form key={`info-${Date.now()}`} onSubmit={onInfoSubmit} className="space-y-6">
+        <form onSubmit={onInfoSubmit} className="space-y-6">
           <div className="flex flex-col sm:flex-row items-center gap-6 pb-6 border-b border-white/5 mb-6">
             <div className="relative group cursor-pointer" onClick={() => avatarInputRef.current?.click()}>
               <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-white/10 group-hover:border-brand-pink transition-all relative shadow-lg">

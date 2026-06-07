@@ -5,28 +5,12 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { logout } from '@/app/auth/actions'
-import { LogOut, Copy, Check, Zap, Share2 } from 'lucide-react'
-import { toast } from 'sonner'
+import { LogOut, Zap, Share2 } from 'lucide-react'
 import { ShareModal } from '@/components/dashboard/ShareModal'
-import { copyToClipboard } from '@/lib/utils'
 
 export function DashboardNav({ username }: { username?: string }) {
   const pathname = usePathname()
-  const [copied, setCopied] = useState(false)
   const [isShareOpen, setIsShareOpen] = useState(false)
-
-  const handleCopy = async () => {
-    if (!username) return
-    const publicUrl = `${window.location.origin}/${username}`
-    const ok = await copyToClipboard(publicUrl)
-    if (ok) {
-      setCopied(true)
-      toast.success('Profile link copied to clipboard!')
-      setTimeout(() => setCopied(false), 2000)
-    } else {
-      toast.error('Failed to copy link')
-    }
-  }
 
   return (
     <div className="sticky top-0 z-50 w-full border-b border-white/10 bg-zinc-950/70 backdrop-blur-xl font-sans-theme">
@@ -87,7 +71,7 @@ export function DashboardNav({ username }: { username?: string }) {
               <ShareModal 
                 isOpen={isShareOpen}
                 onClose={() => setIsShareOpen(false)}
-                profile={{ username } as any}
+                profile={{ id: '', username, full_name: null, bio: null, avatar_url: null, bg_type: 'solid', bg_color: '#09090b', bg_image_url: null, role: 'user', button_shape: 'rounded-2xl', button_style: 'soft', font_family: 'font-sans-theme', theme_style: 'solid', social_links: null, bg_animation: null, bg_animation_config: null, plan: null }}
               />
             </>
           )}

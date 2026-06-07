@@ -37,7 +37,7 @@ export async function getAnalyticsStats(days?: number, startDate?: string, endDa
   // 1. Build date filters
 
   // 2. Count views and clicks separately (no row fetch)
-  const applyDateFilter = (query: any) => {
+  const applyDateFilter = (query: ReturnType<ReturnType<typeof supabase.from>['select']>) => {
     if (startDate && endDate) {
       return query
         .gte('created_at', new Date(startDate).toISOString())

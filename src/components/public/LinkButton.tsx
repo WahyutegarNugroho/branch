@@ -41,7 +41,8 @@ interface ButtonClasses {
   btnHover: string
 }
 
-function buildButtonClasses(profile: Profile | undefined, link: Link): ButtonClasses {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function buildButtonClasses(profile: Profile | undefined, _link: Link): ButtonClasses {
   const shapeClass = profile?.button_shape || 'rounded-2xl'
   const isClippedShape = ['cut-corners', 'hexagon', 'diamond'].includes(shapeClass)
   const resolvedShape = ['cut-corners', 'leaf', 'hexagon', 'diamond'].includes(shapeClass)
@@ -54,8 +55,6 @@ function buildButtonClasses(profile: Profile | undefined, link: Link): ButtonCla
   const baseHover = hoverEffectClasses[hoverEffect] || ''
   const wrapperHoverClass = ['shine', 'glitch'].includes(hoverEffect) ? '' : baseHover
   const btnHoverClass = ['shine', 'glitch'].includes(hoverEffect) ? baseHover : ''
-
-  const isNeon = styleVal === 'neon'
 
   let wrapperClass = cn(
     'group w-full relative block transition-all',
@@ -75,7 +74,6 @@ function buildButtonClasses(profile: Profile | undefined, link: Link): ButtonCla
   )
 
   const notClipped = !isClippedShape
-  const clippedFilter = (filter: string) => { wrapperClass += ` [filter:url(#${filter})]` }
 
   const styleConfigs: Record<string, { classes: string[]; clipped?: string }> = {
     fill: {

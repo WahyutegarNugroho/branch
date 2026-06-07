@@ -3,14 +3,25 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 
+interface Theme {
+  id: string
+  name: string
+  bg_type: string
+  bg_color: string
+  bg_image_url: string | null
+  button_shape: string
+  button_style: string
+  font_family: string
+}
+
 interface ThemesGalleryProps {
-  themes: any[]
+  themes: Theme[]
   bgType: string
   bgColor: string
   buttonShape: string
   buttonStyle: string
   fontFamily: string
-  handleSelectTheme: (theme: any) => void
+  handleSelectTheme: (theme: Theme) => void
 }
 
 export function ThemesGallery({

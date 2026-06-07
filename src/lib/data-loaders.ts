@@ -31,7 +31,7 @@ export const getCachedProfileByUsername = cache(async (username: string) => {
 export const getCachedAnalyticsCounts = cache(async (userId: string, dateFilter: { start?: string; end?: string; days?: number }) => {
   const supabase = await createClient()
 
-  const applyFilter = (query: any) => {
+  const applyFilter = (query: ReturnType<ReturnType<typeof supabase.from>['select']>) => {
     if (dateFilter.start && dateFilter.end) {
       return query
         .gte('created_at', new Date(dateFilter.start).toISOString())

@@ -65,7 +65,7 @@ export default function StarsBackground({ config = {} }: { config?: AnimationCon
     draw()
 
     const resizeObserver = new ResizeObserver((entries) => {
-      for (let entry of entries) {
+      for (const entry of entries) {
         const { width: w, height: h } = entry.contentRect
         if (w === 0 || h === 0) continue
         width = w

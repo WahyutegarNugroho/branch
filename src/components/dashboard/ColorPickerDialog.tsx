@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useRef } from 'react'
 import { HexColorPicker } from 'react-colorful'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
@@ -97,15 +97,6 @@ export function ColorPickerDialog({ isOpen, onClose, initialColor, onSelectColor
   const cmyk = rgbToCmyk(rgb.r, rgb.g, rgb.b)
 
   const [hue, setHue] = useState(hsb.h)
-
-  useEffect(() => {
-    if (initialColor) {
-      setColor(initialColor)
-      const initRgb = hexToRgb(initialColor)
-      const initHsb = rgbToHsb(initRgb.r, initRgb.g, initRgb.b)
-      setHue(initHsb.h)
-    }
-  }, [initialColor, isOpen])
 
   const handleSaturationChange = (newHex: string) => {
     setColor(newHex)

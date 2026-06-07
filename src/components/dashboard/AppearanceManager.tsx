@@ -7,20 +7,15 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
-import { Slider } from '@/components/ui/slider'
 import { ColorPickerDialog } from './ColorPickerDialog'
 import { GradientPickerDialog } from './GradientPickerDialog'
 import { ImageCropDialog } from './ImageCropDialog'
 import { BackgroundConfigSection } from './BackgroundConfigSection'
 import { AnimationConfigSection } from './AnimationConfigSection'
-import { ProfileInfoSection } from './ProfileInfoSection'
-import { SocialLinksSection } from './SocialLinksSection'
-import { ThemesGallery } from './ThemesGallery'
 import { ButtonFontSection } from './ButtonFontSection'
 import { AdvancedAppearanceSection } from './AdvancedAppearanceSection'
-import { BrandingSection } from './BrandingSection'
 import { useAppearanceState } from '@/lib/hooks/useAppearanceState'
-import { Loader2, Search, Sparkles, ImageIcon, Sliders, Palette, AlignCenter, AlignLeft, AlignRight, LayoutGrid, Lock, Undo2, Redo2 } from 'lucide-react'
+import { Loader2, Search, Lock, Undo2, Redo2 } from 'lucide-react'
 import { PLATFORMS } from '@/utils/platforms'
 import { usePreviewStore } from '@/lib/preview-store'
 import type { Profile } from '@/types'
@@ -34,7 +29,7 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
     isColorPickerOpen, setIsColorPickerOpen,
     isGradientPickerOpen, setIsGradientPickerOpen,
     socialLinks, socialLoading, socialSearch, setSocialSearch,
-    bgImageUrl, setBgImageUrl, avatarUrl, setAvatarUrl,
+    bgImageUrl, avatarUrl, setAvatarUrl,
     selectedImage, isCropOpen, setIsCropOpen, cropType, setCropType,
     username, setUsername, usernameStatus,
     textColor, setTextColor, socialStyle, setSocialStyle,
@@ -44,7 +39,7 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
     isTextColorPickerOpen, setIsTextColorPickerOpen,
     themeStyle, setThemeStyle, buttonHoverEffect, setButtonHoverEffect,
     layoutType, setLayoutType, bgAnimation, setBgAnimation,
-    bgAnimationConfig, setBgAnimationConfig,
+    bgAnimationConfig,
     avatarFrame, setAvatarFrame, avatarFrameConfig, setAvatarFrameConfig,
     socialPlacement, setSocialPlacement, themeLock, setThemeLock,
     glassBlur, setGlassBlur, glassOpacity, setGlassOpacity,

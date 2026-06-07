@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { BackgroundBlobs } from '@/components/shared/BackgroundBlobs'
-import { Zap, ShieldAlert } from 'lucide-react'
+import { Zap } from 'lucide-react'
 
 export default function NotFound() {
   return (

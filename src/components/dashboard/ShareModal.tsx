@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { QRCodeCanvas } from 'qrcode.react'
 import { toast } from 'sonner'
@@ -10,7 +10,6 @@ import {
   Download,
   Share2,
   X,
-  QrCode,
   ExternalLink
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -29,18 +28,10 @@ export function ShareModal({
 }) {
   const [copied, setCopied] = useState(false)
   const canvasRef = useRef<HTMLDivElement>(null)
-  const [shareUrl, setShareUrl] = useState('')
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  useEffect(() => {
-    if (typeof window !== 'undefined' && profile?.username) {
-      setShareUrl(`${window.location.protocol}//${window.location.host}/${profile.username}`)
-    }
-  }, [profile?.username])
+  const shareUrl = typeof window !== 'undefined' && profile?.username
+    ? `${window.location.protocol}//${window.location.host}/${profile.username}`
+    : ''
+  const [mounted] = useState(() => typeof window !== 'undefined')
 
   if (!isOpen || !profile || !mounted) return null
 
@@ -71,7 +62,7 @@ export function ShareModal({
       downloadLink.click()
       document.body.removeChild(downloadLink)
       toast.success('QR Code successfully downloaded!')
-    } catch (err) {
+    } catch {
       toast.error('An error occurred while downloading the QR Code.')
     }
   }

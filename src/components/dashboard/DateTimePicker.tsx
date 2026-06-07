@@ -13,13 +13,6 @@ interface DateTimePickerProps {
   minDate?: Date
 }
 
-function formatDate(date: Date): string {
-  const y = date.getFullYear()
-  const m = String(date.getMonth() + 1).padStart(2, '0')
-  const d = String(date.getDate()).padStart(2, '0')
-  return `${y}-${m}-${d}`
-}
-
 function formatTime(date: Date): string {
   return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`
 }
@@ -44,18 +37,22 @@ export function DateTimePicker({ value, onChange, placeholder, minDate }: DateTi
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && !tempDate) {
       const initial = value ? new Date(value) : new Date()
       if (isNaN(initial.getTime())) {
         const now = new Date()
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setTempDate(now)
+         
         setTempTime(formatTime(now))
       } else {
+         
         setTempDate(initial)
+         
         setTempTime(formatTime(initial))
       }
     }
-  }, [isOpen, value])
+  }, [isOpen, value, tempDate])
 
   const handleDateSelect = (date: Date) => {
     setTempDate(date)

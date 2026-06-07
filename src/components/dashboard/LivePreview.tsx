@@ -21,10 +21,9 @@ import {
 import { FaXTwitter } from 'react-icons/fa6'
 import { Zap } from 'lucide-react'
 
-import { hexToRgba } from '@/lib/color-utils'
 import { parseEmbedUrl } from '@/lib/embed-utils'
 
-const socialsIconMap: Record<string, any> = {
+const socialsIconMap: Record<string, React.ComponentType<{ size?: number }>> = {
   instagram: FaInstagram,
   twitter: FaXTwitter,
   tiktok: FaTiktok,
@@ -37,7 +36,6 @@ const socialsIconMap: Record<string, any> = {
 
 import { EmptyState } from '@/components/ui/empty-state'
 import { Profile, Link, LinkImage } from '@/types'
-import { getPlatformByName } from '@/utils/platforms'
 import { usePreviewStore } from '@/lib/preview-store'
 
 export const LivePreview = memo(function LivePreview({ profile: initialProfile, links }: { profile?: Profile | null, links?: Link[] }) {
@@ -54,7 +52,7 @@ export const LivePreview = memo(function LivePreview({ profile: initialProfile, 
     if (links) setLinks(links)
   }, [links, setLinks])
 
-  let bgStyle: React.CSSProperties = {}
+  const bgStyle: React.CSSProperties = {}
   let bgClass = "flex-1 w-full flex flex-col items-center pt-20 px-4 relative overflow-hidden"
 
   if (profile?.bg_type === 'solid') {
@@ -135,7 +133,7 @@ export const LivePreview = memo(function LivePreview({ profile: initialProfile, 
               const frameColor2 = profile?.avatar_frame_config?.color2 || '#f97316'
               
               let frameClass = ''
-              let frameStyle: React.CSSProperties = { clipPath: avatarClipPath }
+              const frameStyle: React.CSSProperties = { clipPath: avatarClipPath }
               
               if (profile?.avatar_frame === 'gradient-ring') {
                 frameClass = 'p-1'

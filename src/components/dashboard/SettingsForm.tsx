@@ -10,20 +10,18 @@ import {
   Globe, 
   Search, 
   LineChart, 
-  Settings, 
   Save, 
   Loader2, 
-  Compass, 
-  HelpCircle, 
   Server, 
   CheckCircle,
   AlertTriangle,
   ShieldCheck,
-  ShieldX
 } from 'lucide-react'
 import { toast } from 'sonner'
 
-export function SettingsForm({ profile }: { profile: any }) {
+import type { Profile } from '@/types'
+
+export function SettingsForm({ profile }: { profile: Profile | null }) {
   const [loading, setLoading] = useState(false)
   const [verifying, setVerifying] = useState(false)
   const [customDomain, setCustomDomain] = useState(profile.custom_domain || '')
@@ -68,7 +66,7 @@ export function SettingsForm({ profile }: { profile: any }) {
       } else {
         toast.success('Settings successfully saved!')
       }
-    } catch (err) {
+    } catch {
       toast.error('A server connection error occurred')
     } finally {
       setLoading(false)
@@ -262,7 +260,7 @@ export function SettingsForm({ profile }: { profile: any }) {
             <div className="p-3 bg-brand-orange/10 rounded-lg border border-brand-orange/20 flex gap-2.5">
               <AlertTriangle className="w-5 h-5 text-brand-orange shrink-0 mt-0.5" />
               <p className="text-[10px] text-brand-orange/90 leading-relaxed">
-                <strong>Important Note:</strong> DNS changes require an internet propagation time of 1 - 24 hours before your custom domain can be accessed worldwide. Click "Verify" after you have added the TXT record.
+                <strong>Important Note:</strong> DNS changes require an internet propagation time of 1 - 24 hours before your custom domain can be accessed worldwide. Click &ldquo;Verify&rdquo; after you have added the TXT record.
               </p>
             </div>
             {domainVerified && (

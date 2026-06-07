@@ -32,8 +32,8 @@ export function rgbToHsb(r: number, g: number, b: number) {
   const min = Math.min(r, g, b)
   const delta = max - min
   let h = 0
-  let s = max === 0 ? 0 : delta / max
-  let v = max
+  const s = max === 0 ? 0 : delta / max
+  const v = max
 
   if (delta !== 0) {
     switch (max) {
@@ -74,18 +74,18 @@ export function hsbToRgb(h: number, s: number, v: number) {
   s = s / 100;
   v = v / 100;
   let r = 0, g = 0, b = 0;
-  let i = Math.floor(h * 6);
-  let f = h * 6 - i;
-  let p = v * (1 - s);
-  let q = v * (1 - f * s);
-  let t = v * (1 - (1 - f) * s);
+  const i = Math.floor(h * 6);
+  const f = h * 6 - i;
+  const p = v * (1 - s);
+  const q = v * (1 - f * s);
+  const t = v * (1 - (1 - f) * s);
   switch (i % 6) {
-    case 0: r = v, g = t, b = p; break;
-    case 1: r = q, g = v, b = p; break;
-    case 2: r = p, g = v, b = t; break;
-    case 3: r = p, g = q, b = v; break;
-    case 4: r = t, g = p, b = v; break;
-    case 5: r = v, g = p, b = q; break;
+    case 0: r = v; g = t; b = p; break;
+    case 1: r = q; g = v; b = p; break;
+    case 2: r = p; g = v; b = t; break;
+    case 3: r = p; g = q; b = v; break;
+    case 4: r = t; g = p; b = v; break;
+    case 5: r = v; g = p; b = q; break;
   }
   return {
     r: Math.round(r * 255),

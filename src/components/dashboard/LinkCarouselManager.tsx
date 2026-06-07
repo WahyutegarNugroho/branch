@@ -7,6 +7,8 @@ import { Trash2, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { addLinkImage, deleteLinkImage } from '@/app/actions/link-actions'
 import { EmptyState } from '@/components/ui/empty-state'
+import type { LinkImage } from '@/types'
+import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
 
 export function LinkCarouselManager({
   linkId,
@@ -16,10 +18,10 @@ export function LinkCarouselManager({
   getCarouselImages
 }: {
   linkId: string
-  carouselImages: any[]
-  setCarouselImages: (images: any[]) => void
-  router: any
-  getCarouselImages: () => Promise<any[]>
+  carouselImages: LinkImage[]
+  setCarouselImages: (images: LinkImage[]) => void
+  router: AppRouterInstance
+  getCarouselImages: () => Promise<LinkImage[]>
 }) {
   const [newUrl, setNewUrl] = useState('')
   const [pending, setPending] = useState<string | null>(null)
@@ -59,7 +61,7 @@ export function LinkCarouselManager({
     <div className="p-4 bg-zinc-950/40 border border-white/5 rounded-2xl space-y-4">
       <span className="text-sm font-bold text-white block">🖼️ Manage Carousel Images</span>
       <p className="text-[10px] text-zinc-400">
-        Enter image URLs to add to your profile's carousel gallery. Visitors can swipe them horizontally.
+        Enter image URLs to add to your profile&apos;s carousel gallery. Visitors can swipe them horizontally.
       </p>
       
       {/* Add new Image input */}
@@ -86,9 +88,10 @@ export function LinkCarouselManager({
         {carouselImages.length === 0 ? (
           <EmptyState title="No images yet" description="Add one above!" className="py-6" />
         ) : (
-          carouselImages.map((img: any) => (
+          carouselImages.map((img: LinkImage) => (
             <div key={img.id} className="flex items-center justify-between p-2 bg-zinc-900/60 rounded-xl border border-white/5">
               <div className="flex items-center gap-3 min-w-0 flex-1">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={img.image_url} alt="" className="w-10 h-10 rounded-lg object-cover border border-white/10 shrink-0" />
                 <span className="text-[10px] text-zinc-400 truncate flex-1">{img.image_url}</span>
               </div>
