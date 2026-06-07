@@ -392,7 +392,17 @@ export default function LandingPage() {
               </div>
               <div className="flex-1 flex flex-col gap-3 w-full md:w-auto relative z-10">
                 <div className="py-3 px-6 rounded-full bg-white/5 border-t border-l border-white/20 border-r border-b border-white/5 backdrop-blur-md text-white text-sm font-bold text-center shadow-lg">Glassmorphism</div>
-                <div className="py-3 px-6 shape-cut-corners bg-zinc-900 border-2 border-emerald-500 text-emerald-400 shadow-[4px_4px_0px_#10b981] text-sm font-black text-center">Neo-Brutalism</div>
+                <div className="w-full relative h-[48px]">
+                  {/* Shadow layer */}
+                  <div className="absolute inset-0 bg-emerald-500 shape-cut-corners rounded-none translate-x-[4px] translate-y-[4px]" />
+                  {/* Outer border container */}
+                  <div className="absolute inset-0 bg-emerald-500 shape-cut-corners rounded-none p-[2px]">
+                    {/* Inner content container */}
+                    <div className="w-full h-full bg-zinc-900 text-emerald-400 flex items-center justify-center text-sm font-black shape-cut-corners rounded-none">
+                      Neo-Brutalism
+                    </div>
+                  </div>
+                </div>
                 <div className="py-3 px-6 rounded-2xl bg-zinc-800 shadow-[inset_-4px_-4px_10px_rgba(0,0,0,0.5),inset_4px_4px_10px_rgba(255,255,255,0.1)] text-white text-sm font-bold text-center">Neumorphism</div>
               </div>
             </motion.div>
