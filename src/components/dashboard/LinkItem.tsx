@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
 import { updateLink, deleteLink, applyStylesToAllLinks, getLinkImages } from '@/app/actions/link-actions'
 import { toast } from 'sonner'
+import type { LinkImage } from '@/types'
 import { Card } from '@/components/ui/card'
 import { PlatformPickerDialog } from './PlatformPickerDialog'
 import { getPlatformByName, Platform } from '@/utils/platforms'
@@ -329,7 +330,7 @@ export function LinkItem({ link }: { link: Link }) {
             thumbnailUrl={thumbnailUrl}
             setThumbnailUrl={setThumbnailUrl}
             iconPosition={iconPosition}
-            setIconPosition={setIconPosition}
+            setIconPosition={setIconPosition as (val: string) => void}
             isStickyCta={isStickyCta}
             setIsStickyCta={setIsStickyCta}
             loading={loading}

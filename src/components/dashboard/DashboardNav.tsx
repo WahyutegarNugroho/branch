@@ -71,7 +71,7 @@ export function DashboardNav({ username }: { username?: string }) {
               <ShareModal 
                 isOpen={isShareOpen}
                 onClose={() => setIsShareOpen(false)}
-                profile={{ id: '', username, full_name: null, bio: null, avatar_url: null, bg_type: 'solid', bg_color: '#09090b', bg_image_url: null, role: 'user', button_shape: 'rounded-2xl', button_style: 'soft', font_family: 'font-sans-theme', theme_style: 'solid', social_links: null, bg_animation: null, bg_animation_config: null, plan: null }}
+                profile={{ id: '', username, full_name: null, bio: null, avatar_url: null, bg_type: 'solid', bg_color: '#09090b', bg_image_url: null, bg_overlay_opacity: 40, role: 'user', button_shape: 'rounded-2xl', button_style: 'soft', font_family: 'font-sans-theme', theme_style: 'solid', social_links: null, bg_animation: null, bg_animation_config: null, plan: null, created_at: '', updated_at: '' }}
               />
             </>
           )}

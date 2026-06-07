@@ -35,26 +35,17 @@ export async function getAnalyticsStats(days?: number, startDate?: string, endDa
   if (!user) return EMPTY_RESPONSE
 
   // 1. Build date filters
+  const dateGte = startDate && endDate
+    ? new Date(startDate).toISOString()
+    : (() => { const c = new Date(); c.setDate(c.getDate() - (days || 7)); return c.toISOString() })()
+  const dateLte = startDate && endDate
+    ? new Date(endDate + 'T23:59:59.999Z').toISOString()
+    : undefined
 
   // 2. Count views and clicks separately (no row fetch)
-  const applyDateFilter = (query: ReturnType<ReturnType<typeof supabase.from>['select']>) => {
-    if (startDate && endDate) {
-      return query
-        .gte('created_at', new Date(startDate).toISOString())
-        .lte('created_at', new Date(endDate + 'T23:59:59.999Z').toISOString())
-    }
-    const cutoff = new Date()
-    cutoff.setDate(cutoff.getDate() - (days || 7))
-    return query.gte('created_at', cutoff.toISOString())
-  }
-
   const [viewsResult, clicksResult] = await Promise.all([
-    applyDateFilter(
-      supabase.from('analytics').select('*', { count: 'exact', head: true }).eq('profile_id', user.id).is('link_id', null)
-    ),
-    applyDateFilter(
-      supabase.from('analytics').select('*', { count: 'exact', head: true }).eq('profile_id', user.id).not('link_id', 'is', null)
-    ),
+    supabase.from('analytics').select('*', { count: 'exact', head: true }).eq('profile_id', user.id).is('link_id', null).gte('created_at', dateGte) as unknown as Promise<{ count: number }>,
+    supabase.from('analytics').select('*', { count: 'exact', head: true }).eq('profile_id', user.id).not('link_id', 'is', null).gte('created_at', dateGte) as unknown as Promise<{ count: number }>,
   ])
 
   const views = viewsResult.count ?? 0
@@ -62,14 +53,15 @@ export async function getAnalyticsStats(days?: number, startDate?: string, endDa
   const ctr = views > 0 ? ((clicks / views) * 100).toFixed(1) : '0.0'
 
   // 3. Fetch limited dataset for breakdowns (columns only, max 5000 rows)
-  const { data, error } = await applyDateFilter(
-    supabase
-      .from('analytics')
-      .select('id, created_at, link_id, device, referrer, country, city, utm_source, utm_medium, utm_campaign, links(title, url)')
-      .eq('profile_id', user.id)
-      .order('created_at', { ascending: false })
-      .limit(5000)
-  ) as { data: AnalyticsRow[] | null; error: unknown }
+  let query = supabase
+    .from('analytics')
+    .select('id, created_at, link_id, device, referrer, country, city, utm_source, utm_medium, utm_campaign, links(title, url)')
+    .eq('profile_id', user.id)
+    .gte('created_at', dateGte)
+    .order('created_at', { ascending: false })
+    .limit(5000)
+  if (dateLte) query = query.lte('created_at', dateLte)
+  const { data, error } = await query as { data: AnalyticsRow[] | null; error: unknown }
 
   const rows = (data ?? []) as AnalyticsRow[]
   if (error || rows.length === 0) {

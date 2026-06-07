@@ -130,7 +130,7 @@ export function useAppearanceState(profile: Profile | null) {
         const { data, error } = await supabase.from('themes').select('*').order('name', { ascending: true })
         if (error) throw error
         if (data) setThemes(data)
-      } catch {
+      } catch (err) {
         console.error('Error fetching themes:', err)
       }
     }
@@ -138,14 +138,14 @@ export function useAppearanceState(profile: Profile | null) {
   }, [])
 
   const handleSelectTheme = (theme: Theme) => {
-    setBgType(theme.bg_type)
+    setBgType(theme.bg_type as 'solid' | 'gradient' | 'image' | 'video')
     setBgColor(theme.bg_color)
     setBgImageUrl(theme.bg_image_url || '')
     setButtonShape(theme.button_shape)
     setButtonStyle(theme.button_style)
     setFontFamily(theme.font_family)
      usePreviewStore.getState().updateProfile({
-      bg_type: theme.bg_type, bg_color: theme.bg_color, bg_image_url: theme.bg_image_url || '',
+      bg_type: theme.bg_type as 'solid' | 'gradient' | 'image' | 'video', bg_color: theme.bg_color, bg_image_url: theme.bg_image_url || '',
       button_shape: theme.button_shape, button_style: theme.button_style, font_family: theme.font_family,
       theme_style: themeStyle, button_hover_effect: buttonHoverEffect, layout_type: layoutType,
       bg_animation: bgAnimation, bg_animation_config: bgAnimationConfig,

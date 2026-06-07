@@ -24,8 +24,8 @@ import type { Profile } from '@/types'
 export function SettingsForm({ profile }: { profile: Profile | null }) {
   const [loading, setLoading] = useState(false)
   const [verifying, setVerifying] = useState(false)
-  const [customDomain, setCustomDomain] = useState(profile.custom_domain || '')
-  const [domainVerified, setDomainVerified] = useState(profile.domain_verified || false)
+  const [customDomain, setCustomDomain] = useState(profile?.custom_domain || '')
+  const [domainVerified, setDomainVerified] = useState(profile?.domain_verified || false)
 
   const handleVerify = async () => {
     if (!customDomain.trim()) return
@@ -92,8 +92,8 @@ export function SettingsForm({ profile }: { profile: Profile | null }) {
             <label className="text-xs font-semibold text-zinc-300">SEO Page Title (Title Tag)</label>
             <Input 
               name="seo_title"
-              placeholder={profile.full_name || `@${profile.username}`}
-              defaultValue={profile.seo_title || ''}
+              placeholder={profile?.full_name || `@${profile?.username}`}
+              defaultValue={profile?.seo_title || ''}
               className="bg-zinc-950 border-white/10 rounded-xl text-white focus-visible:ring-brand-pink"
             />
             <p className="text-[10px] text-zinc-500">Recommended under 60 characters for best Google search results.</p>
@@ -103,8 +103,8 @@ export function SettingsForm({ profile }: { profile: Profile | null }) {
             <label className="text-xs font-semibold text-zinc-300">SEO Page Description (Meta Description)</label>
             <Textarea 
               name="seo_description"
-              placeholder={profile.bio || "Connect and view all important links in one place."}
-              defaultValue={profile.seo_description || ''}
+              placeholder={profile?.bio || "Connect and view all important links in one place."}
+              defaultValue={profile?.seo_description || ''}
               className="bg-zinc-950 border-white/10 rounded-xl text-white min-h-[80px] focus-visible:ring-brand-pink"
             />
             <p className="text-[10px] text-zinc-500">Recommended under 160 characters to provide a clear summary in search engine results.</p>
@@ -132,7 +132,7 @@ export function SettingsForm({ profile }: { profile: Profile | null }) {
             <Input 
               name="meta_pixel_id"
               placeholder="Example: 123456789012345"
-              defaultValue={profile.meta_pixel_id || ''}
+              defaultValue={profile?.meta_pixel_id || ''}
               className="bg-zinc-950 border-white/10 rounded-xl text-white focus-visible:ring-blue-500"
             />
             <p className="text-[10px] text-zinc-500">Record visits from Facebook & Instagram platforms to optimize ad delivery.</p>
@@ -146,7 +146,7 @@ export function SettingsForm({ profile }: { profile: Profile | null }) {
             <Input 
               name="tiktok_pixel_id"
               placeholder="Example: C52A6F18B3E49"
-              defaultValue={profile.tiktok_pixel_id || ''}
+              defaultValue={profile?.tiktok_pixel_id || ''}
               className="bg-zinc-950 border-white/10 rounded-xl text-white focus-visible:ring-red-500"
             />
             <p className="text-[10px] text-zinc-500">Track promotional campaign conversions and target audiences on TikTok.</p>
@@ -160,7 +160,7 @@ export function SettingsForm({ profile }: { profile: Profile | null }) {
             <Input 
               name="ga_measurement_id"
               placeholder="Example: G-A1B2C3D4E5"
-              defaultValue={profile.ga_measurement_id || ''}
+              defaultValue={profile?.ga_measurement_id || ''}
               className="bg-zinc-950 border-white/10 rounded-xl text-white focus-visible:ring-emerald-500"
             />
             <p className="text-[10px] text-zinc-500">Connect Google Analytics (GA4) properties to monitor demographics & detailed visitor analysis.</p>
@@ -252,7 +252,7 @@ export function SettingsForm({ profile }: { profile: Profile | null }) {
                   <tr className="text-zinc-200 border-t border-white/5">
                     <td className="py-2 font-bold text-emerald-400">TXT</td>
                     <td className="py-2">@ or your subdomain</td>
-                    <td className="py-2 text-emerald-300 font-mono">{'branch-verification='}{profile.id || 'YOUR_USER_ID'}</td>
+                    <td className="py-2 text-emerald-300 font-mono">{'branch-verification='}{profile?.id || 'YOUR_USER_ID'}</td>
                   </tr>
                 </tbody>
               </table>
