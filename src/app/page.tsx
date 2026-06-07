@@ -35,7 +35,7 @@ const demoThemes = {
     bgClass: 'bg-zinc-950',
     animation: 'matrix',
     btnShape: 'shape-hexagon rounded-none',
-    btnStyle: 'bg-transparent border-2 border-green-500 text-green-400 shadow-[0_0_10px_#22c55e,inset_0_0_10px_#22c55e] hover:shadow-[0_0_20px_#22c55e,inset_0_0_20px_#22c55e] hover:bg-green-500/10 hover-glitch-effect',
+    btnStyle: 'bg-transparent text-green-400 shadow-[0_0_10px_#22c55e,inset_0_0_10px_#22c55e] hover:shadow-[0_0_20px_#22c55e,inset_0_0_20px_#22c55e] hover:bg-green-500/10 hover-glitch-effect',
     font: 'font-space',
     textColor: 'text-green-400',
     badge: 'bg-black text-green-400 border border-green-500 shadow-[0_0_10px_#22c55e]',
@@ -59,11 +59,11 @@ const demoThemes = {
     bgClass: 'bg-yellow-400',
     animation: 'none',
     btnShape: 'shape-cut-corners rounded-none',
-    btnStyle: 'bg-zinc-900 border-2 border-zinc-900 text-yellow-400 shadow-[4px_4px_0px_rgba(24acc15,0.8)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_rgba(24acc15,0.8)]',
+    btnStyle: 'bg-zinc-900 border-2 border-zinc-900 text-yellow-400 shadow-[4px_4px_0px_#18181b] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0px_#18181b]',
     font: 'font-mono',
     textColor: 'text-zinc-900',
     badge: 'bg-zinc-900 text-yellow-400 border-2 border-zinc-900',
-    avatarFrame: 'border-4 border-zinc-900',
+    avatarFrame: 'bg-zinc-900 p-1',
     avatarShape: 'shape-cut-corners rounded-none'
   }
 }
@@ -215,9 +215,9 @@ export default function LandingPage() {
               <div className={`flex-1 w-full flex flex-col items-center pt-16 px-4 relative overflow-hidden transition-all duration-500 ${currentTheme.bgClass} ${currentTheme.font}`}>
                 
                 {/* Live Background Components */}
-                {currentTheme.animation === 'aurora' && <AuroraBackground config={{ speed: 20 }} />}
-{currentTheme.animation === 'matrix' && <MatrixBackground config={{ speed: 20 }} />}
-{currentTheme.animation === 'confetti' && <ConfettiBackground config={{ speed: 10, confettiCount: 40 }} />}
+                {currentTheme.animation === 'aurora' && <AuroraBackground config={{ speed: 1.2 }} />}
+                {currentTheme.animation === 'matrix' && <MatrixBackground config={{ speed: 1.0 }} />}
+                {currentTheme.animation === 'confetti' && <ConfettiBackground config={{ speed: 1.5, confettiCount: 40 }} />}
                 
                 <div className="absolute inset-0 bg-black/10 pointer-events-none z-0" />
 
@@ -246,17 +246,57 @@ export default function LandingPage() {
                   </div>
 
                   {/* Dynamic Buttons conforming to shape and style */}
-                  <div className="w-full space-y-3 mt-4 group">
-                    <div className={`w-full py-4 px-4 text-xs font-extrabold transition-all text-center flex items-center justify-between cursor-pointer ${currentTheme.btnShape} ${currentTheme.btnStyle}`}>
-                      <div className="w-4 h-4 rounded-full bg-current opacity-20" />
-                      <span>Explore Art Portfolio</span>
-                      <div className="w-4" />
-                    </div>
-                    <div className={`w-full py-4 px-4 text-xs font-extrabold transition-all text-center flex items-center justify-between cursor-pointer ${currentTheme.btnShape} ${currentTheme.btnStyle}`}>
-                      <div className="w-4 h-4 rounded-full bg-current opacity-20" />
-                      <span>Latest YouTube Vlog</span>
-                      <div className="w-4" />
-                    </div>
+                  <div className="w-full space-y-3 mt-4">
+                    {[
+                      { title: 'Explore Art Portfolio', key: '1' },
+                      { title: 'Latest YouTube Vlog', key: '2' }
+                    ].map((btn) => {
+                      const isBrutalist = activeTheme === 'brutalist'
+                      const isCyberpunk = activeTheme === 'cyberpunk'
+                      
+                      if (isBrutalist) {
+                        return (
+                          <div 
+                            key={btn.key}
+                            className="w-full h-[52px] relative cursor-pointer group active:scale-[0.98] transition-transform"
+                          >
+                            {/* Black shadow layer */}
+                            <div className="absolute inset-0 bg-zinc-900/40 shape-cut-corners rounded-none translate-x-[4px] translate-y-[4px] group-hover:translate-x-[2px] group-hover:translate-y-[2px] transition-all" />
+                            {/* Main button body */}
+                            <div className="absolute inset-0 bg-zinc-900 shape-cut-corners rounded-none flex items-center justify-between px-4 text-xs font-mono font-extrabold text-yellow-400 group-hover:translate-x-[2px] group-hover:translate-y-[2px] transition-all">
+                              <div className="w-4 h-4 rounded-full bg-current opacity-20" />
+                              <span>{btn.title}</span>
+                              <div className="w-4" />
+                            </div>
+                          </div>
+                        )
+                      }
+                      
+                      if (isCyberpunk) {
+                        return (
+                          <div
+                            key={btn.key}
+                            style={{ filter: 'url(#svg-neon)', '--neon-glow-color': '#22c55e' } as React.CSSProperties}
+                            className={`w-full py-4 px-4 text-xs font-extrabold text-green-400 text-center flex items-center justify-between cursor-pointer shape-hexagon rounded-none bg-zinc-950/80 hover:bg-green-500/10 hover-glitch-effect transition-all`}
+                          >
+                            <div className="w-4 h-4 rounded-full bg-green-500 opacity-20" />
+                            <span>{btn.title}</span>
+                            <div className="w-4" />
+                          </div>
+                        )
+                      }
+
+                      return (
+                        <div 
+                          key={btn.key}
+                          className={`w-full py-4 px-4 text-xs font-extrabold transition-all text-center flex items-center justify-between cursor-pointer ${currentTheme.btnShape} ${currentTheme.btnStyle}`}
+                        >
+                          <div className="w-4 h-4 rounded-full bg-current opacity-20" />
+                          <span>{btn.title}</span>
+                          <div className="w-4" />
+                        </div>
+                      )
+                    })}
                   </div>
 
                   {/* Footer branding respect show branding */}

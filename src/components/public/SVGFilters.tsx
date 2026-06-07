@@ -6,7 +6,11 @@ export default function SVGFilters() {
         <filter id="svg-brutalism" x="-20%" y="-20%" width="150%" height="150%" color-interpolation-filters="sRGB">
           <feComponentTransfer in="SourceAlpha" result="SOLID_ALPHA"><feFuncA type="linear" slope="1000" /></feComponentTransfer>
           
-          <feMorphology in="SOLID_ALPHA" operator="dilate" radius="1" result="BORDER_ALPHA" />
+          <feGaussianBlur in="SOLID_ALPHA" stdDeviation="0.8" result="BLURRED_BORDER" />
+          <feComponentTransfer in="BLURRED_BORDER" result="BORDER_ALPHA">
+            <feFuncA type="linear" slope="20" intercept="-9" />
+          </feComponentTransfer>
+          
           <feFlood floodColor="rgba(255,255,255,0.8)" result="BORDER_COLOR" />
           <feComposite in="BORDER_COLOR" in2="BORDER_ALPHA" operator="in" result="OUTLINE" />
           
@@ -101,7 +105,10 @@ export default function SVGFilters() {
           <feComposite in="INSET_COLOR" in2="INVERSE" operator="in" result="BORDER_TOPLEFT" />
 
           {/* Thin border around the whole shape */}
-          <feMorphology in="SOLID_ALPHA" operator="dilate" radius="1" result="THIN_BORDER_ALPHA" />
+          <feGaussianBlur in="SOLID_ALPHA" stdDeviation="0.8" result="BLURRED_THIN" />
+          <feComponentTransfer in="BLURRED_THIN" result="THIN_BORDER_ALPHA">
+            <feFuncA type="linear" slope="20" intercept="-9" />
+          </feComponentTransfer>
           <feComposite in="THIN_BORDER_ALPHA" in2="SOLID_ALPHA" operator="out" result="THIN_OUTLINE_ONLY_ALPHA" />
           <feFlood floodColor="rgba(255,255,255,0.15)" result="THIN_BORDER_COLOR" />
           <feComposite in="THIN_BORDER_COLOR" in2="THIN_OUTLINE_ONLY_ALPHA" operator="in" result="THIN_OUTLINE" />
@@ -118,7 +125,10 @@ export default function SVGFilters() {
         <filter id="svg-outline" x="-20%" y="-20%" width="150%" height="150%" color-interpolation-filters="sRGB">
           <feComponentTransfer in="SourceAlpha" result="SOLID_ALPHA"><feFuncA type="linear" slope="1000" /></feComponentTransfer>
 
-          <feMorphology in="SOLID_ALPHA" operator="dilate" radius="1" result="BORDER_ALPHA" />
+          <feGaussianBlur in="SOLID_ALPHA" stdDeviation="0.8" result="BLURRED" />
+          <feComponentTransfer in="BLURRED" result="BORDER_ALPHA">
+            <feFuncA type="linear" slope="20" intercept="-9" />
+          </feComponentTransfer>
           <feComposite in="BORDER_ALPHA" in2="SOLID_ALPHA" operator="out" result="OUTLINE_ONLY_ALPHA" />
           <feFlood floodColor="rgba(255,255,255,0.2)" result="BORDER_COLOR" />
           <feComposite in="BORDER_COLOR" in2="OUTLINE_ONLY_ALPHA" operator="in" result="OUTLINE" />
@@ -138,7 +148,10 @@ export default function SVGFilters() {
           <feComposite in="OUTER_COLOR" in2="OUTER_BLUR" operator="in" result="OUTER_SHADOW" />
 
           {/* Tiny outline for clarity */}
-          <feMorphology in="SOLID_ALPHA" operator="dilate" radius="1" result="BORDER_ALPHA" />
+          <feGaussianBlur in="SOLID_ALPHA" stdDeviation="0.8" result="BLURRED_SHADOW_BORDER" />
+          <feComponentTransfer in="BLURRED_SHADOW_BORDER" result="BORDER_ALPHA">
+            <feFuncA type="linear" slope="20" intercept="-9" />
+          </feComponentTransfer>
           <feComposite in="BORDER_ALPHA" in2="SOLID_ALPHA" operator="out" result="OUTLINE_ONLY_ALPHA" />
           <feFlood floodColor="rgba(255,255,255,0.15)" result="BORDER_COLOR" />
           <feComposite in="BORDER_COLOR" in2="OUTLINE_ONLY_ALPHA" operator="in" result="OUTLINE" />
@@ -153,7 +166,10 @@ export default function SVGFilters() {
         {/* SVG Neon: Glow effect using CSS variable for color */}
         <filter id="svg-neon" x="-50%" y="-50%" width="200%" height="200%" color-interpolation-filters="sRGB">
           <feComponentTransfer in="SourceAlpha" result="SOLID_ALPHA"><feFuncA type="linear" slope="1000" /></feComponentTransfer>
-          <feMorphology in="SOLID_ALPHA" operator="dilate" radius="1.5" result="BORDER_ALPHA" />
+          <feGaussianBlur in="SOLID_ALPHA" stdDeviation="1.0" result="BLURRED_NEON" />
+          <feComponentTransfer in="BLURRED_NEON" result="BORDER_ALPHA">
+            <feFuncA type="linear" slope="25" intercept="-11" />
+          </feComponentTransfer>
           <feComposite in="BORDER_ALPHA" in2="SOLID_ALPHA" operator="out" result="OUTLINE_ONLY_ALPHA" />
           <feFlood floodColor="var(--neon-glow-color, rgba(255,255,255,0.5))" floodOpacity="0.5" result="GLOW_COLOR" />
           <feComposite in="GLOW_COLOR" in2="OUTLINE_ONLY_ALPHA" operator="in" result="OUTLINE" />
@@ -168,7 +184,6 @@ export default function SVGFilters() {
             <feMergeNode in="SourceGraphic" />
           </feMerge>
         </filter>
-
       </defs>
     </svg>
   )
