@@ -403,7 +403,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 ### Prerequisites
 
-- **Node.js** v18+ and **npm**
+- **Node.js** v18+ and **pnpm**
 - A **Supabase** project (free tier)
 - (Optional) A custom domain for white-label profiles
 
@@ -412,7 +412,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 ```bash
 git clone https://github.com/WahyutegarNugroho/branch.git
 cd branch
-npm install
+pnpm install
 ```
 
 ### 2. Database Setup
@@ -450,7 +450,7 @@ CRON_SECRET="random-secret-here"
 ### 4. Run
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
@@ -458,7 +458,7 @@ Open [http://localhost:3000](http://localhost:3000).
 ### 5. Run Migrations (alternative)
 
 ```bash
-npm run migrate
+pnpm migrate
 ```
 
 Or visit `/api/migrate` after setting `SUPABASE_SERVICE_ROLE_KEY`.
@@ -468,9 +468,9 @@ Or visit `/api/migrate` after setting `SUPABASE_SERVICE_ROLE_KEY`.
 ## Testing
 
 ```bash
-npm test        # Run all tests
-npx vitest      # Watch mode
-npx vitest run  # Single run
+pnpm test       # Run all tests
+pnpm vitest      # Watch mode
+pnpm vitest run  # Single run
 ```
 
 **67 tests** across 4 files covering:

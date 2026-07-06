@@ -41,13 +41,13 @@ Branch adalah aplikasi SaaS Link-in-Bio (similar to Linktree/Bio.link) dimana pe
 ### Commands
 | Perintah | Fungsi |
 |----------|--------|
-| `npm run dev` | Start dev server (Next.js, port 3000) |
-| `npm run build` | Build production |
-| `npm start` | Start production server |
-| `npm run lint` | Run ESLint |
-| `npm run test` | Vitest watch mode |
-| `npm run test:run` | Vitest single run |
-| `npm run migrate` | Run database migration script |
+| `pnpm dev` | Start dev server (Next.js, port 3000) |
+| `pnpm build` | Build production |
+| `pnpm start` | Start production server |
+| `pnpm lint` | Run ESLint |
+| `pnpm test` | Vitest watch mode |
+| `pnpm test:run` | Vitest single run |
+| `pnpm migrate` | Run database migration script |
 
 ### Project Structure
 ```
@@ -614,7 +614,7 @@ return <LinkList links={data} />
 
 **Kontrak Refactoring — Harus dipenuhi semua:**
 - ✅ Behavior/output sistem identik 100% sebelum dan sesudah
-- ✅ Semua test yang ada masih lulus (`npm run test:run`)
+- ✅ Semua test yang ada masih lulus (`pnpm test:run`)
 - ✅ Tidak ada komentar developer yang dihapus
 - ✅ Tidak ada `// @ts-expect-error` atau `// @ts-ignore` yang dihapus
 - ✅ Variabel "redundan" hanya dihapus setelah grep/search global membuktikannya tidak terpakai
@@ -665,7 +665,7 @@ return <LinkList links={data} />
 3. STAGE   → STOP. Presentasikan plan ke user.
 4. CONFIRM → Tunggu instruksi "Lanjutkan" eksplisit dari user.
 5. EXECUTE → Jalankan update per batch (minor dulu, lalu major).
-6. TEST    → Jalankan `npm run dev` & `npm run test:run` untuk verifikasi.
+6. TEST    → Jalankan `pnpm dev` & `pnpm test:run` untuk verifikasi.
 ```
 
 **Format Plan Mode:**
