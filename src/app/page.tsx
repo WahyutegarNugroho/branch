@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { 
   Zap, 
   ChevronDown,
+  Palette
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import MatrixBackground from '@/components/backgrounds/MatrixBackground'
