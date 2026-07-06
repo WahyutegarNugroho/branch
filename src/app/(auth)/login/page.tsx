@@ -51,14 +51,14 @@ export default function LoginPage() {
               type="email"
               placeholder="name@example.com"
               required
-              className="rounded-xl border-white/5 bg-white/[0.03] text-white focus-visible:ring-brand-pink/50 placeholder:text-zinc-600 h-12 transition-all duration-300 focus:bg-white/[0.05] hover:bg-white/[0.04]"
+              className="rounded-xl border-white/5 bg-white/[0.03] text-white focus-visible:ring-white/50 placeholder:text-zinc-600 h-12 transition-all duration-300 focus:bg-white/[0.05] hover:bg-white/[0.04]"
             />
           </div>
 
           <div className="space-y-1.5">
             <div className="flex justify-between items-center">
               <Label htmlFor="password" className="text-zinc-300 text-xs font-bold uppercase tracking-wider">Password</Label>
-              <Link href="/forgot-password" className="text-[11px] text-brand-pink hover:text-brand-orange transition-colors font-semibold">
+              <Link href="/forgot-password" className="text-[11px] text-white hover:text-zinc-300 transition-colors font-semibold">
                 Forgot password?
               </Link>
             </div>
@@ -68,7 +68,7 @@ export default function LoginPage() {
                 name="password"
                 type={showPassword ? "text" : "password"}
                 required
-                className="rounded-xl border-white/5 bg-white/[0.03] text-white focus-visible:ring-brand-pink/50 h-12 pr-12 transition-all duration-300 focus:bg-white/[0.05] hover:bg-white/[0.04]"
+                className="rounded-xl border-white/5 bg-white/[0.03] text-white focus-visible:ring-white/50 h-12 pr-12 transition-all duration-300 focus:bg-white/[0.05] hover:bg-white/[0.04]"
               />
               <button
                 type="button"
@@ -87,7 +87,7 @@ export default function LoginPage() {
           <Button
             type="submit"
             disabled={loading}
-            className="w-full h-12 rounded-xl bg-gradient-to-r from-brand-pink to-brand-orange hover:opacity-95 text-white font-extrabold text-base shadow-lg shadow-brand-pink/10 hover:shadow-brand-pink/20 hover:scale-[1.01] active:scale-[0.99] transition-all border-0 mt-4 cursor-pointer"
+            className="w-full h-12 rounded-xl bg-white hover:bg-zinc-200 text-black font-extrabold text-base shadow-lg shadow-white/5 hover:shadow-white/10 hover:scale-[1.01] active:scale-[0.99] transition-all border-0 mt-4 cursor-pointer"
           >
             {loading ? (
               <div className="flex items-center justify-center gap-2">
@@ -104,7 +104,7 @@ export default function LoginPage() {
       <CardFooter className="flex flex-col items-center border-t border-white/5 bg-black/20 pt-4 pb-8">
         <div className="text-xs text-zinc-400 font-medium">
           Don&apos;t have an account?{' '}
-          <Link href="/register" className="text-brand-pink hover:text-brand-orange transition-colors font-bold">
+          <Link href="/register" className="text-white hover:text-zinc-300 transition-colors font-bold">
             Sign up
           </Link>
         </div>

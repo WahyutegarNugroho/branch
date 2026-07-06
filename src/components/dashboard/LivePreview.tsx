@@ -365,8 +365,8 @@ export const LivePreview = memo(function LivePreview({ profile: initialProfile, 
               <div className="mt-6 mb-6 flex justify-center w-full z-10">
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-white/40 text-[10px] font-semibold backdrop-blur-md">
                   <span>Powered by</span>
-                  <div className="w-4 h-4 rounded bg-gradient-to-tr from-brand-pink to-brand-orange flex items-center justify-center">
-                    <Zap className="w-2.5 h-2.5 text-white" />
+                  <div className="w-4 h-4 rounded bg-white flex items-center justify-center">
+                    <Zap className="w-2.5 h-2.5 text-black" />
                   </div>
                   <span className="font-bold text-white/80">Branch</span>
                 </div>

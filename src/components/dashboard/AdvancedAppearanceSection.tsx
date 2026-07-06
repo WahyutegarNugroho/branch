@@ -106,7 +106,7 @@ export function AdvancedAppearanceSection({
       {/* Layout & Hero Banner */}
       <div className="space-y-4 pt-6 border-t border-white/5 animate-in fade-in duration-300">
         <h3 className="text-sm font-bold text-zinc-300 flex items-center gap-2">
-          <Sparkles className="w-4 h-4 text-brand-pink" /> Layout & Hero Banner
+          <Sparkles className="w-4 h-4 text-white" /> Layout & Hero Banner
         </h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -176,7 +176,7 @@ export function AdvancedAppearanceSection({
       {/* Avatar & Spacing Controls */}
       <div className="space-y-4 pt-6 border-t border-white/5 animate-in fade-in duration-300">
         <h3 className="text-sm font-bold text-zinc-300 flex items-center gap-2">
-          <Sliders className="w-4 h-4 text-brand-orange" /> Spacing & Custom Elements
+          <Sliders className="w-4 h-4 text-white" /> Spacing & Custom Elements
         </h3>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -210,7 +210,7 @@ export function AdvancedAppearanceSection({
                     <div className="relative">
                       <input
                         type="color"
-                        value={avatarFrameConfig?.color1 || (avatarFrame === 'gradient-ring' ? '#ec4899' : '#22d3ee')}
+                        value={avatarFrameConfig?.color1 || (avatarFrame === 'gradient-ring' ? '#ffffff' : '#e4e4e7')}
                         onChange={(e) => setAvatarFrameConfig({ ...avatarFrameConfig, color1: e.target.value })}
                         className="w-full h-8 rounded-lg cursor-pointer bg-zinc-800 border border-white/10 p-0"
                       />
@@ -222,7 +222,7 @@ export function AdvancedAppearanceSection({
                       <div className="relative">
                         <input
                           type="color"
-                          value={avatarFrameConfig?.color2 || '#f97316'}
+                          value={avatarFrameConfig?.color2 || '#71717a'}
                           onChange={(e) => setAvatarFrameConfig({ ...avatarFrameConfig, color2: e.target.value })}
                           className="w-full h-8 rounded-lg cursor-pointer bg-zinc-800 border border-white/10 p-0"
                         />
@@ -261,7 +261,7 @@ export function AdvancedAppearanceSection({
       {/* Global Colors & Icon Styles */}
       <div className="space-y-4 pt-6 border-t border-white/5 animate-in fade-in duration-300">
         <h3 className="text-sm font-bold text-zinc-300 flex items-center gap-2">
-          <Palette className="w-4 h-4 text-brand-pink" /> Global Colors & Icon Styles
+          <Palette className="w-4 h-4 text-white" /> Global Colors & Icon Styles
         </h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -277,7 +277,7 @@ export function AdvancedAppearanceSection({
                 value={textColor}
                 onChange={(e) => setTextColor(e.target.value)}
                 placeholder="#ffffff"
-                className="rounded-xl border-white/10 bg-white/5 text-white focus-visible:ring-brand-pink h-12"
+                className="rounded-xl border-white/10 bg-white/5 text-white focus-visible:ring-white h-12"
               />
             </div>
           </div>

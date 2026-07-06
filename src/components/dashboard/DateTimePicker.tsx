@@ -159,7 +159,7 @@ export function DateTimePicker({ value, onChange, placeholder, minDate }: DateTi
                 type="button"
                 onClick={handleApply}
                 disabled={!tempDate}
-                className="flex-1 bg-gradient-to-r from-brand-pink to-brand-orange hover:opacity-90 text-white font-semibold rounded-xl h-9 text-xs"
+                className="flex-1 bg-white hover:bg-zinc-200 text-black font-semibold rounded-xl h-9 text-xs"
               >
                 Apply
               </Button>

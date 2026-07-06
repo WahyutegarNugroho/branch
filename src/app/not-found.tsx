@@ -8,8 +8,8 @@ export default function NotFound() {
       <BackgroundBlobs className="opacity-30" />
 
       <div className="relative z-10 flex flex-col items-center gap-6 px-4 text-center">
-        <div className="mx-auto w-16 h-16 rounded-3xl bg-gradient-to-tr from-brand-pink to-brand-orange flex items-center justify-center shadow-lg shadow-brand-pink/20 mb-2">
-          <Zap className="w-8 h-8 text-white" />
+        <div className="mx-auto w-16 h-16 rounded-3xl bg-white text-black flex items-center justify-center shadow-lg shadow-white/20 mb-2">
+          <Zap className="w-8 h-8 text-black" />
         </div>
 
         <h1 className="text-7xl font-display-theme font-black tracking-tight text-white">
@@ -25,7 +25,7 @@ export default function NotFound() {
 
         <Link
           href="/"
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-brand-pink to-brand-orange hover:opacity-95 text-white font-bold text-sm shadow-lg shadow-brand-pink/10 hover:shadow-brand-pink/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white hover:bg-zinc-200 text-black font-bold text-sm shadow-lg shadow-white/10 hover:shadow-white/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
         >
           <Zap className="w-4 h-4" />
           Go Home

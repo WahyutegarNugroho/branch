@@ -44,7 +44,7 @@ export function SocialLinksSection({
               placeholder="Search platforms..."
               value={socialSearch}
               onChange={(e) => setSocialSearch(e.target.value)}
-              className="rounded-xl border-white/10 bg-white/5 text-white focus-visible:ring-brand-pink h-10 text-xs pl-9"
+              className="rounded-xl border-white/10 bg-white/5 text-white focus-visible:ring-white h-10 text-xs pl-9"
             />
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -74,14 +74,14 @@ export function SocialLinksSection({
                       value={socialLinks[platform.id] || ''}
                       onChange={(e) => handleSocialChange(platform.id, e.target.value)}
                       placeholder={platform.urlPrefix || `https://${platform.id}.com/`}
-                      className="rounded-xl border-white/10 bg-white/5 text-white focus-visible:ring-brand-pink h-10 text-xs"
+                      className="rounded-xl border-white/10 bg-white/5 text-white focus-visible:ring-white h-10 text-xs"
                     />
                   </div>
                 )
               })
             })()}
           </div>
-          <Button type="submit" disabled={socialLoading} className="rounded-xl bg-gradient-to-r from-brand-pink to-brand-orange hover:opacity-90 text-white border-0 font-semibold h-11 px-6 shadow-lg mt-4">
+          <Button type="submit" disabled={socialLoading} className="rounded-xl bg-white text-black hover:bg-zinc-200 border-0 font-semibold h-11 px-6 shadow-lg mt-4">
             {socialLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Save Social Icons'}
           </Button>
         </form>

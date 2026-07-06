@@ -500,7 +500,7 @@ export function GradientPickerDialog({ isOpen, onClose, initialGradient, onSelec
               <Button onClick={() => {
                 onSelectGradient(finalGradient)
                 onClose()
-              }} className="bg-blue-600 hover:bg-blue-700 text-white">OK</Button>
+              }} className="bg-white hover:bg-zinc-200 text-black">OK</Button>
             </div>
           </div>
         </DialogContent>

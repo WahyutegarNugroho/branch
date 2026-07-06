@@ -26,7 +26,7 @@ export function EmptyState({ icon, title, description, action, className }: Empt
         <button
           type="button"
           onClick={action.onClick}
-          className="text-xs font-bold text-brand-pink hover:text-brand-pink/80 transition-colors"
+          className="text-xs font-bold text-white hover:text-zinc-300 transition-colors"
         >
           {action.label}
         </button>

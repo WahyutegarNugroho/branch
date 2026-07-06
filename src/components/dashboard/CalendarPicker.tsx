@@ -119,7 +119,7 @@ export function CalendarPicker({ selected, onSelect, minDate }: CalendarPickerPr
               onClick={() => onSelect(new Date(viewYear, viewMonth, day))}
               className={`h-8 w-8 rounded-lg text-xs font-medium transition-all flex items-center justify-center mx-auto
                 ${disabled ? 'text-zinc-700 cursor-not-allowed' : 'hover:bg-white/10 cursor-pointer'}
-                ${selected ? 'bg-brand-pink text-white font-bold shadow-sm' : ''}
+                ${selected ? 'bg-white text-black font-bold shadow-sm' : ''}
                 ${today && !selected ? 'border border-white/20 text-white' : ''}
                 ${!selected && !today && !disabled ? 'text-zinc-300' : ''}
               `}

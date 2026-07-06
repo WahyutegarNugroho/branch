@@ -69,14 +69,14 @@ export default function ForgotPasswordPage() {
                 type="email"
                 placeholder="name@example.com"
                 required
-                className="rounded-xl border-white/5 bg-white/[0.03] text-white focus-visible:ring-brand-pink/50 placeholder:text-zinc-600 h-12 transition-all duration-300 focus:bg-white/[0.05] hover:bg-white/[0.04]"
+                className="rounded-xl border-white/5 bg-white/[0.03] text-white focus-visible:ring-white/50 placeholder:text-zinc-600 h-12 transition-all duration-300 focus:bg-white/[0.05] hover:bg-white/[0.04]"
               />
             </div>
 
             <Button
               type="submit"
               disabled={loading}
-              className="w-full h-12 rounded-xl bg-gradient-to-r from-brand-pink to-brand-orange hover:opacity-95 text-white font-extrabold text-base shadow-lg shadow-brand-pink/10 hover:shadow-brand-pink/20 hover:scale-[1.01] active:scale-[0.99] transition-all border-0 mt-4 cursor-pointer"
+              className="w-full h-12 rounded-xl bg-white hover:bg-zinc-200 text-black font-extrabold text-base shadow-lg shadow-white/5 hover:shadow-white/10 hover:scale-[1.01] active:scale-[0.99] transition-all border-0 mt-4 cursor-pointer"
             >
               {loading ? (
                 <div className="flex items-center justify-center gap-2">

@@ -71,13 +71,13 @@ export function LinkCarouselManager({
           placeholder="https://example.com/slide-image.png" 
           value={newUrl}
           onChange={(e) => setNewUrl(e.target.value)}
-          className="rounded-xl border-white/10 bg-white/5 text-white h-10 text-sm focus-visible:ring-brand-pink flex-1"
+          className="rounded-xl border-white/10 bg-white/5 text-white h-10 text-sm focus-visible:ring-white flex-1"
         />
         <Button 
           type="button" 
           onClick={handleAdd}
           disabled={pending === 'add'}
-          className="bg-brand-pink hover:bg-brand-pink/90 text-white rounded-xl font-bold px-4 h-10 shrink-0 cursor-pointer"
+          className="bg-white hover:bg-zinc-200 text-black rounded-xl font-bold px-4 h-10 shrink-0 cursor-pointer"
         >
           {pending === 'add' ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Add'}
         </Button>

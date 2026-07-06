@@ -261,15 +261,15 @@ export function LinkItem({ link }: { link: Link }) {
           
           {linkType === 'header' ? (
             <div className="space-y-3">
-              <span className="text-xs text-brand-pink font-bold uppercase tracking-wider block">Section Divider / Header</span>
-              <Input name="title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Header Title (e.g., My Socials, Projects)" required className="font-bold rounded-xl border-white/10 bg-white/5 text-white focus-visible:ring-brand-pink h-12" />
+              <span className="text-xs text-white font-bold uppercase tracking-wider block">Section Divider / Header</span>
+              <Input name="title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Header Title (e.g., My Socials, Projects)" required className="font-bold rounded-xl border-white/10 bg-white/5 text-white focus-visible:ring-white h-12" />
               <input type="hidden" name="url" value="" />
             </div>
           ) : linkType === 'carousel' ? (
             <div className="space-y-4">
-              <span className="text-xs text-brand-pink font-bold uppercase tracking-wider block">Image Carousel / Gallery</span>
+              <span className="text-xs text-white font-bold uppercase tracking-wider block">Image Carousel / Gallery</span>
               <div className="space-y-3">
-                <Input name="title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Carousel Title (e.g., My Portfolio, Event Photos)" required className="font-bold rounded-xl border-white/10 bg-white/5 text-white focus-visible:ring-brand-pink h-12" />
+                <Input name="title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Carousel Title (e.g., My Portfolio, Event Photos)" required className="font-bold rounded-xl border-white/10 bg-white/5 text-white focus-visible:ring-white h-12" />
                 <input type="hidden" name="url" value="" />
               </div>
               
@@ -358,7 +358,7 @@ export function LinkItem({ link }: { link: Link }) {
                   id={`is_active_${link.id}`} 
                   checked={isActive} 
                   onCheckedChange={setIsActive} 
-                  className="data-[state=checked]:bg-brand-pink" 
+                  className="data-[state=checked]:bg-white" 
                 />
                 <input type="hidden" name="is_active" value={isActive ? 'on' : ''} />
                 <label htmlFor={`is_active_${link.id}`} className="text-sm text-zinc-400">Active</label>
@@ -371,7 +371,7 @@ export function LinkItem({ link }: { link: Link }) {
                       id={`show_icon_${link.id}`} 
                       checked={showIcon} 
                       onCheckedChange={setShowIcon} 
-                      className="data-[state=checked]:bg-brand-pink" 
+                      className="data-[state=checked]:bg-white" 
                     />
                     <input type="hidden" name="show_icon" value={showIcon ? 'on' : ''} />
                     <label htmlFor={`show_icon_${link.id}`} className="text-sm text-zinc-400">Show Logo</label>
@@ -384,7 +384,7 @@ export function LinkItem({ link }: { link: Link }) {
                         onClick={() => setIconPosition('left_far')}
                         className={`px-3 py-1 text-xs font-semibold rounded-lg transition-all ${
                           iconPosition === 'left_far' || iconPosition === 'left'
-                            ? 'bg-brand-pink text-white shadow'
+                            ? 'bg-white text-black shadow'
                             : 'text-zinc-400 hover:text-white'
                         }`}
                       >
@@ -395,7 +395,7 @@ export function LinkItem({ link }: { link: Link }) {
                         onClick={() => setIconPosition('left_near')}
                         className={`px-3 py-1 text-xs font-semibold rounded-lg transition-all ${
                           iconPosition === 'left_near'
-                            ? 'bg-brand-pink text-white shadow'
+                            ? 'bg-white text-black shadow'
                             : 'text-zinc-400 hover:text-white'
                         }`}
                       >
@@ -406,7 +406,7 @@ export function LinkItem({ link }: { link: Link }) {
                         onClick={() => setIconPosition('right_near')}
                         className={`px-3 py-1 text-xs font-semibold rounded-lg transition-all ${
                           iconPosition === 'right_near'
-                            ? 'bg-brand-pink text-white shadow'
+                            ? 'bg-white text-black shadow'
                             : 'text-zinc-400 hover:text-white'
                         }`}
                       >
@@ -417,7 +417,7 @@ export function LinkItem({ link }: { link: Link }) {
                         onClick={() => setIconPosition('right_far')}
                         className={`px-3 py-1 text-xs font-semibold rounded-lg transition-all ${
                           iconPosition === 'right_far' || iconPosition === 'right'
-                            ? 'bg-brand-pink text-white shadow'
+                            ? 'bg-white text-black shadow'
                             : 'text-zinc-400 hover:text-white'
                         }`}
                       >
@@ -436,7 +436,7 @@ export function LinkItem({ link }: { link: Link }) {
             </div>
             <div className="flex gap-2">
               <Button type="button" variant="ghost" className="text-zinc-400 hover:text-white hover:bg-white/10 rounded-xl" onClick={() => setIsEditing(false)} disabled={loading}>Cancel</Button>
-              <Button type="submit" className="rounded-xl bg-gradient-to-r from-brand-pink to-brand-orange hover:opacity-90 transition-opacity text-white font-bold border-0 h-10 px-5" disabled={loading}>Save</Button>
+              <Button type="submit" className="rounded-xl bg-white hover:bg-zinc-200 transition-colors text-black font-bold border-0 h-10 px-5" disabled={loading}>Save</Button>
             </div>
           </div>
         </form>
@@ -467,7 +467,7 @@ export function LinkItem({ link }: { link: Link }) {
     <Card 
       ref={setNodeRef} 
       style={style} 
-      className={`p-4 mb-4 ${isHeader ? 'bg-zinc-900/80 border-brand-pink/20 border shadow-md' : isCarousel ? 'bg-zinc-900/80 border-brand-pink/20 border shadow-md' : 'bg-zinc-900/40 border-white/10 shadow-lg'} rounded-2xl backdrop-blur-md group hover:border-white/20 transition-all relative flex flex-col sm:flex-row items-stretch sm:items-center gap-4 sm:gap-2`}
+      className={`p-4 mb-4 ${isHeader ? 'bg-zinc-900/80 border-white/20 border shadow-md' : isCarousel ? 'bg-zinc-900/80 border-white/20 border shadow-md' : 'bg-zinc-900/40 border-white/10 shadow-lg'} rounded-2xl backdrop-blur-md group hover:border-white/20 transition-all relative flex flex-col sm:flex-row items-stretch sm:items-center gap-4 sm:gap-2`}
     >
       {/* Left side: Drag Handle & Main Content */}
       <div className="flex items-center gap-2 flex-1 min-w-0">
@@ -479,13 +479,13 @@ export function LinkItem({ link }: { link: Link }) {
         {isHeader ? (
           /* Header Layout */
           <div className="flex items-center gap-3 min-w-0 flex-1 py-1">
-            <div className="flex items-center justify-center w-10 h-10 shrink-0 rounded-xl bg-brand-pink/10 border border-brand-pink/20">
-              <span className="text-brand-pink font-bold text-sm">H</span>
+            <div className="flex items-center justify-center w-10 h-10 shrink-0 rounded-xl bg-white/10 border border-white/20">
+              <span className="text-white font-bold text-sm">H</span>
             </div>
             <div className="min-w-0 flex-1">
               <p className="font-extrabold text-white text-base leading-snug tracking-tight">{link.title}</p>
               <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider mt-0.5 flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-brand-pink shrink-0" />
+                <span className="w-1.5 h-1.5 rounded-full bg-white shrink-0" />
                 Section Divider
               </p>
             </div>
@@ -493,13 +493,13 @@ export function LinkItem({ link }: { link: Link }) {
         ) : isCarousel ? (
           /* Carousel Layout */
           <div className="flex items-center gap-3 min-w-0 flex-1 py-1">
-            <div className="flex items-center justify-center w-10 h-10 shrink-0 rounded-xl bg-brand-pink/10 border border-brand-pink/20">
-              <Images size={20} className="text-brand-pink" />
+            <div className="flex items-center justify-center w-10 h-10 shrink-0 rounded-xl bg-white/10 border border-white/20">
+              <Images size={20} className="text-white" />
             </div>
             <div className="min-w-0 flex-1">
               <p className="font-extrabold text-white text-base leading-snug tracking-tight">{link.title}</p>
               <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider mt-0.5 flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-brand-pink shrink-0" />
+                <span className="w-1.5 h-1.5 rounded-full bg-white shrink-0" />
                 Image Carousel / Gallery
               </p>
             </div>
@@ -535,12 +535,12 @@ export function LinkItem({ link }: { link: Link }) {
               
               <p className="text-xs text-zinc-400 flex items-center gap-1.5 truncate mt-1">
                 <ExternalLink size={10} className="text-zinc-500 shrink-0" /> 
-                <span className="truncate hover:text-brand-pink transition-colors">{link.url}</span>
+                <span className="truncate hover:text-zinc-300 transition-colors">{link.url}</span>
               </p>
               
               {(link.valid_from || link.valid_until) && (
-                <p className="text-[10px] text-brand-pink flex items-center gap-1 mt-1.5 font-semibold">
-                  <span className="w-1.5 h-1.5 rounded-full bg-brand-pink animate-pulse" />
+                <p className="text-[10px] text-white flex items-center gap-1 mt-1.5 font-semibold">
+                  <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
                   Scheduled: {link.valid_from ? new Date(link.valid_from).toLocaleDateString() : 'Always'} - {link.valid_until ? new Date(link.valid_until).toLocaleDateString() : 'Always'}
                 </p>
               )}
@@ -571,7 +571,7 @@ export function LinkItem({ link }: { link: Link }) {
             checked={link.is_active} 
             onCheckedChange={toggleActive} 
             aria-label="Toggle link active state" 
-            className="data-[state=checked]:bg-brand-pink" 
+            className="data-[state=checked]:bg-white" 
           />
           <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider block sm:hidden">Active</span>
         </div>

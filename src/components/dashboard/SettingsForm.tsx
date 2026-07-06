@@ -80,7 +80,7 @@ export function SettingsForm({ profile }: { profile: Profile | null }) {
       <Card className="border-white/10 bg-zinc-900/50 backdrop-blur-md shadow-lg rounded-2xl">
         <CardHeader>
           <CardTitle className="text-xl font-display-theme font-black text-white flex items-center gap-2">
-            <Search className="w-5 h-5 text-brand-pink" />
+            <Search className="w-5 h-5 text-white" />
             Custom SEO & Meta Tags
           </CardTitle>
           <CardDescription className="text-zinc-400">
@@ -94,7 +94,7 @@ export function SettingsForm({ profile }: { profile: Profile | null }) {
               name="seo_title"
               placeholder={profile?.full_name || `@${profile?.username}`}
               defaultValue={profile?.seo_title || ''}
-              className="bg-zinc-950 border-white/10 rounded-xl text-white focus-visible:ring-brand-pink"
+              className="bg-zinc-950 border-white/10 rounded-xl text-white focus-visible:ring-white"
             />
             <p className="text-[10px] text-zinc-500">Recommended under 60 characters for best Google search results.</p>
           </div>
@@ -105,7 +105,7 @@ export function SettingsForm({ profile }: { profile: Profile | null }) {
               name="seo_description"
               placeholder={profile?.bio || "Connect and view all important links in one place."}
               defaultValue={profile?.seo_description || ''}
-              className="bg-zinc-950 border-white/10 rounded-xl text-white min-h-[80px] focus-visible:ring-brand-pink"
+              className="bg-zinc-950 border-white/10 rounded-xl text-white min-h-[80px] focus-visible:ring-white"
             />
             <p className="text-[10px] text-zinc-500">Recommended under 160 characters to provide a clear summary in search engine results.</p>
           </div>
@@ -116,7 +116,7 @@ export function SettingsForm({ profile }: { profile: Profile | null }) {
       <Card className="border-white/10 bg-zinc-900/50 backdrop-blur-md shadow-lg rounded-2xl">
         <CardHeader>
           <CardTitle className="text-xl font-display-theme font-black text-white flex items-center gap-2">
-            <LineChart className="w-5 h-5 text-brand-orange" />
+            <LineChart className="w-5 h-5 text-white" />
             Pixel & Web Tracking Integration
           </CardTitle>
           <CardDescription className="text-zinc-400">
@@ -257,9 +257,9 @@ export function SettingsForm({ profile }: { profile: Profile | null }) {
                 </tbody>
               </table>
             </div>
-            <div className="p-3 bg-brand-orange/10 rounded-lg border border-brand-orange/20 flex gap-2.5">
-              <AlertTriangle className="w-5 h-5 text-brand-orange shrink-0 mt-0.5" />
-              <p className="text-[10px] text-brand-orange/90 leading-relaxed">
+            <div className="p-3 bg-zinc-800 rounded-lg border border-white/20 flex gap-2.5">
+              <AlertTriangle className="w-5 h-5 text-white shrink-0 mt-0.5" />
+              <p className="text-[10px] text-zinc-300 leading-relaxed">
                 <strong>Important Note:</strong> DNS changes require an internet propagation time of 1 - 24 hours before your custom domain can be accessed worldwide. Click &ldquo;Verify&rdquo; after you have added the TXT record.
               </p>
             </div>

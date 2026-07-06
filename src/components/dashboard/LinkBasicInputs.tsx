@@ -21,8 +21,8 @@ export function LinkBasicInputs({
   return (
     <>
       <div className="flex-1 space-y-3">
-        <Input name="title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title" required className="font-bold rounded-xl border-white/10 bg-white/5 text-white focus-visible:ring-brand-pink h-12" />
-        <Input name="url" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="URL" required className="rounded-xl border-white/10 bg-white/5 text-white focus-visible:ring-brand-pink h-12" />
+        <Input name="title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title" required className="font-bold rounded-xl border-white/10 bg-white/5 text-white focus-visible:ring-white h-12" />
+        <Input name="url" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="URL" required className="rounded-xl border-white/10 bg-white/5 text-white focus-visible:ring-white h-12" />
       </div>
       
       {/* Embed Switch */}

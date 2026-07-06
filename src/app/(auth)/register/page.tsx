@@ -64,7 +64,7 @@ export default function RegisterPage() {
               type="email"
               placeholder="name@example.com"
               required
-              className="rounded-xl border-white/5 bg-white/[0.03] text-white focus-visible:ring-brand-pink/50 placeholder:text-zinc-600 h-12 transition-all duration-300 focus:bg-white/[0.05] hover:bg-white/[0.04]"
+              className="rounded-xl border-white/5 bg-white/[0.03] text-white focus-visible:ring-white/50 placeholder:text-zinc-600 h-12 transition-all duration-300 focus:bg-white/[0.05] hover:bg-white/[0.04]"
             />
           </div>
 
@@ -78,7 +78,7 @@ export default function RegisterPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="rounded-xl border-white/5 bg-white/[0.03] text-white focus-visible:ring-brand-pink/50 h-12 pr-12 transition-all duration-300 focus:bg-white/[0.05] hover:bg-white/[0.04]"
+                className="rounded-xl border-white/5 bg-white/[0.03] text-white focus-visible:ring-white/50 h-12 pr-12 transition-all duration-300 focus:bg-white/[0.05] hover:bg-white/[0.04]"
               />
               <button
                 type="button"
@@ -104,7 +104,7 @@ export default function RegisterPage() {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="Re-enter your password"
-              className={`rounded-xl border-white/5 bg-white/[0.03] text-white focus-visible:ring-brand-pink/50 h-12 transition-all duration-300 focus:bg-white/[0.05] hover:bg-white/[0.04] ${!passwordMatch ? 'border-red-500' : ''}`}
+              className={`rounded-xl border-white/5 bg-white/[0.03] text-white focus-visible:ring-white/50 h-12 transition-all duration-300 focus:bg-white/[0.05] hover:bg-white/[0.04] ${!passwordMatch ? 'border-red-500' : ''}`}
             />
             {!passwordMatch && (
               <p className="text-red-400 text-xs font-medium flex items-center gap-1">
@@ -117,7 +117,7 @@ export default function RegisterPage() {
           <Button
             type="submit"
             disabled={loading}
-            className="w-full h-12 rounded-xl bg-gradient-to-r from-brand-pink to-brand-orange hover:opacity-95 text-white font-extrabold text-base shadow-lg shadow-brand-pink/10 hover:shadow-brand-pink/20 hover:scale-[1.01] active:scale-[0.99] transition-all border-0 mt-4 cursor-pointer"
+            className="w-full h-12 rounded-xl bg-white hover:bg-zinc-200 text-black font-extrabold text-base shadow-lg shadow-white/5 hover:shadow-white/10 hover:scale-[1.01] active:scale-[0.99] transition-all border-0 mt-4 cursor-pointer"
           >
             {loading ? (
               <div className="flex items-center justify-center gap-2">
@@ -134,7 +134,7 @@ export default function RegisterPage() {
       <CardFooter className="flex flex-col items-center border-t border-white/5 bg-black/20 pt-4 pb-8">
         <div className="text-xs text-zinc-400 font-medium">
           Already have an account?{' '}
-          <Link href="/login" className="text-brand-pink hover:text-brand-orange transition-colors font-bold">
+          <Link href="/login" className="text-white hover:text-zinc-300 transition-colors font-bold">
             Log in
           </Link>
         </div>

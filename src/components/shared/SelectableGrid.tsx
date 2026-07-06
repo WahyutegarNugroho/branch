@@ -59,7 +59,7 @@ export function SelectableGrid({
               'flex items-center justify-center rounded-xl border-2 cursor-pointer transition-all',
               heightClasses[itemHeight],
               isSelected
-                ? 'border-brand-pink bg-brand-pink/10 text-white font-bold'
+                ? 'border-white bg-white/10 text-white font-bold'
                 : 'border-white/10 bg-white/5 text-zinc-400 hover:border-white/20',
             )}
           >

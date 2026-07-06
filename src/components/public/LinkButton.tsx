@@ -212,7 +212,7 @@ export function LinkButton({ link, profileId, profile, isPreview = false }: { li
   let spotlightClass = ''
   const wrapperStyle: CSSWithCustomVars = {}
   if (link.is_spotlight) {
-    const spotClr = link.spotlight_color || '#ec4899'
+    const spotClr = link.spotlight_color || '#ffffff'
     const rgb = hexToRgb(spotClr)
     buttonStyle['--spotlight-color'] = spotClr
     buttonStyle['--spotlight-color-rgba'] = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.5)`

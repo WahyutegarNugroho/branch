@@ -70,7 +70,7 @@ export function SocialIconsRow({ socialLinks, socialStyle, placement, align, tex
             } ${
               socialStyle === 'outline'
                 ? isBottom 
-                  ? 'bg-transparent border-2 border-white/30 text-white hover:border-brand-pink hover:text-brand-pink'
+                  ? 'bg-transparent border-2 border-white/30 text-white hover:border-white hover:text-white'
                   : 'bg-transparent border border-white/30 text-white'
                 : socialStyle === 'square'
                   ? 'bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white rounded-xl'

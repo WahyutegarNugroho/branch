@@ -261,7 +261,7 @@ export function AnimatedProfile({ profile, links, bgStyle: defaultBgStyle }: { p
             {profile.avatar_url ? (
               <Image src={profile.avatar_url} alt={profile.full_name ?? ''} fill className="object-cover" sizes="144px" />
             ) : (
-              <div className="w-full h-full bg-gradient-to-tr from-brand-pink to-brand-orange flex items-center justify-center text-white text-4xl font-extrabold">
+              <div className="w-full h-full bg-zinc-800 border border-white/20 flex items-center justify-center text-white text-4xl font-extrabold">
                 {profile.username.charAt(0).toUpperCase()}
               </div>
             )}
@@ -366,8 +366,8 @@ export function AnimatedProfile({ profile, links, bgStyle: defaultBgStyle }: { p
                 className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white/50 hover:text-white transition-all text-xs font-semibold shadow-sm backdrop-blur-md hover:scale-[1.02] active:scale-[0.98]"
               >
                 <span>Powered by</span>
-                <div className="w-5 h-5 rounded-md bg-gradient-to-tr from-brand-pink to-brand-orange flex items-center justify-center shadow-inner">
-                  <Zap className="w-3 h-3 text-white" />
+                <div className="w-5 h-5 rounded-md bg-white flex items-center justify-center shadow-inner">
+                  <Zap className="w-3 h-3 text-black" />
                 </div>
                 <span className="font-bold text-white/90">Branch</span>
               </a>

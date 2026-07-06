@@ -61,7 +61,7 @@ export function ProfileInfoSection({
         <form onSubmit={onInfoSubmit} className="space-y-6">
           <div className="flex flex-col sm:flex-row items-center gap-6 pb-6 border-b border-white/5 mb-6">
             <div className="relative group cursor-pointer" onClick={() => avatarInputRef.current?.click()}>
-              <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-white/10 group-hover:border-brand-pink transition-all relative shadow-lg">
+              <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-white/10 group-hover:border-white transition-all relative shadow-lg">
                 {avatarUrl ? (
                   <Image src={avatarUrl} alt="Avatar Preview" fill className="object-cover" sizes="96px" />
                 ) : (
@@ -124,7 +124,7 @@ export function ProfileInfoSection({
                   onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/\s+/g, ''))}
                   placeholder="username"
                   required
-                  className="rounded-r-xl rounded-l-none border-white/10 bg-white/5 text-white focus-visible:ring-brand-pink h-12 pl-3 pr-28 text-sm font-semibold tracking-wide w-full focus-visible:ring-offset-0 focus:border-brand-pink"
+                  className="rounded-r-xl rounded-l-none border-white/10 bg-white/5 text-white focus-visible:ring-white h-12 pl-3 pr-28 text-sm font-semibold tracking-wide w-full focus-visible:ring-offset-0 focus:border-white"
                 />
                 {usernameStatus !== 'idle' && statusBadge[usernameStatus] && (
                   <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5 pointer-events-none font-sans-theme">
@@ -151,7 +151,7 @@ export function ProfileInfoSection({
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               placeholder="Jane Doe"
-              className="rounded-xl border-white/10 bg-white/5 text-white focus-visible:ring-brand-pink h-12"
+              className="rounded-xl border-white/10 bg-white/5 text-white focus-visible:ring-white h-12"
             />
           </div>
           <div className="space-y-2">
@@ -162,10 +162,10 @@ export function ProfileInfoSection({
               value={bio}
               onChange={(e) => setBio(e.target.value)}
               placeholder="Write a short bio..."
-              className="rounded-xl border-white/10 bg-white/5 text-white focus-visible:ring-brand-pink min-h-[100px]"
+              className="rounded-xl border-white/10 bg-white/5 text-white focus-visible:ring-white min-h-[100px]"
             />
           </div>
-          <Button type="submit" disabled={infoLoading} className="rounded-xl bg-gradient-to-r from-brand-pink to-brand-orange hover:opacity-90 text-white border-0 font-semibold h-11 px-6 shadow-lg">
+          <Button type="submit" disabled={infoLoading} className="rounded-xl bg-white text-black hover:bg-zinc-200 border-0 font-semibold h-11 px-6 shadow-lg">
             {infoLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Save Profile'}
           </Button>
         </form>

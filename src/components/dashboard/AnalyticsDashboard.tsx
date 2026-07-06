@@ -140,13 +140,13 @@ export function AnalyticsDashboard({ initialData }: { initialData: Awaited<Retur
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-zinc-900/40 p-4 rounded-2xl border border-white/5 backdrop-blur-md">
         <div className="flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-2 text-zinc-400 text-sm font-semibold">
-            <Calendar className="w-4 h-4 text-brand-pink" />
+            <Calendar className="w-4 h-4 text-white" />
             Time Range:
           </div>
           <select 
             value={filterType}
             onChange={(e) => handleFilterChange(e.target.value)}
-            className="bg-zinc-950 border border-white/10 rounded-xl px-3 py-1.5 text-sm text-white focus:outline-none focus:border-brand-pink/50 cursor-pointer"
+            className="bg-zinc-950 border border-white/10 rounded-xl px-3 py-1.5 text-sm text-white focus:outline-none focus:border-white/50 cursor-pointer"
           >
             <option value="7">Last 7 Days</option>
             <option value="30">Last 30 Days</option>
@@ -160,18 +160,18 @@ export function AnalyticsDashboard({ initialData }: { initialData: Awaited<Retur
                 type="date" 
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="bg-zinc-950 border border-white/10 rounded-xl px-2 py-1 text-xs text-white focus:outline-none focus:border-brand-pink [color-scheme:dark]"
+                className="bg-zinc-950 border border-white/10 rounded-xl px-2 py-1 text-xs text-white focus:outline-none focus:border-white [color-scheme:dark]"
               />
               <span className="text-zinc-500 text-xs">-</span>
               <input 
                 type="date" 
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                className="bg-zinc-950 border border-white/10 rounded-xl px-2 py-1 text-xs text-white focus:outline-none focus:border-brand-pink [color-scheme:dark]"
+                className="bg-zinc-950 border border-white/10 rounded-xl px-2 py-1 text-xs text-white focus:outline-none focus:border-white [color-scheme:dark]"
               />
               <button 
                 onClick={handleCustomRangeLoad}
-                className="bg-brand-pink hover:bg-brand-pink/90 text-white font-bold text-xs px-3 py-1.5 rounded-xl transition-colors active:scale-95 flex items-center gap-1 shrink-0 cursor-pointer"
+                className="bg-white hover:bg-zinc-200 text-black font-bold text-xs px-3 py-1.5 rounded-xl transition-colors active:scale-95 flex items-center gap-1 shrink-0 cursor-pointer"
               >
                 Apply
               </button>
@@ -191,7 +191,7 @@ export function AnalyticsDashboard({ initialData }: { initialData: Awaited<Retur
 
       {loading ? (
         <div className="h-[400px] flex flex-col items-center justify-center gap-3">
-          <Loader2 className="w-8 h-8 text-brand-pink animate-spin" />
+          <Loader2 className="w-8 h-8 text-white animate-spin" />
           <p className="text-zinc-400 text-sm font-semibold">Loading Analytics Data...</p>
         </div>
       ) : (
@@ -246,7 +246,7 @@ export function AnalyticsDashboard({ initialData }: { initialData: Awaited<Retur
             <Card className="border-white/10 bg-zinc-900/50 backdrop-blur-md shadow-lg rounded-2xl flex flex-col">
               <CardHeader>
                 <CardTitle className="text-xl font-display-theme font-black text-white flex items-center gap-2">
-                  <LinkIcon className="w-5 h-5 text-brand-pink" />
+                  <LinkIcon className="w-5 h-5 text-white" />
                   Top Performing Links
                 </CardTitle>
                 <CardDescription className="text-zinc-400">Individual clicks count per button link.</CardDescription>
@@ -268,7 +268,7 @@ export function AnalyticsDashboard({ initialData }: { initialData: Awaited<Retur
                           </div>
                           <div className="w-full h-2.5 bg-white/5 rounded-full overflow-hidden relative">
                             <div 
-                              className="h-full bg-gradient-to-r from-brand-pink to-brand-orange rounded-full transition-all duration-500" 
+                              className="h-full bg-white rounded-full transition-all duration-500" 
                               style={{ width: `${percent}%` }}
                             />
                           </div>
@@ -285,7 +285,7 @@ export function AnalyticsDashboard({ initialData }: { initialData: Awaited<Retur
             <Card className="border-white/10 bg-zinc-900/50 backdrop-blur-md shadow-lg rounded-2xl">
               <CardHeader>
                 <CardTitle className="text-xl font-display-theme font-black text-white flex items-center gap-2">
-                  <MapPin className="w-5 h-5 text-emerald-400" />
+                  <MapPin className="w-5 h-5 text-white" />
                   Audience Geolocation
                 </CardTitle>
                 <CardDescription className="text-zinc-400">Demographic breakdown of visitor countries and cities.</CardDescription>
@@ -306,7 +306,7 @@ export function AnalyticsDashboard({ initialData }: { initialData: Awaited<Retur
                             <span className="font-bold text-white">{c.count} views</span>
                           </div>
                           <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
-                            <div className="h-full bg-emerald-400 rounded-full" style={{ width: `${percent}%` }} />
+                            <div className="h-full bg-white rounded-full" style={{ width: `${percent}%` }} />
                           </div>
                         </div>
                       )
@@ -331,7 +331,7 @@ export function AnalyticsDashboard({ initialData }: { initialData: Awaited<Retur
                             <span className="font-bold text-white">{c.count} views</span>
                           </div>
                           <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
-                            <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${percent}%` }} />
+                            <div className="h-full bg-white rounded-full" style={{ width: `${percent}%` }} />
                           </div>
                         </div>
                       )
@@ -345,7 +345,7 @@ export function AnalyticsDashboard({ initialData }: { initialData: Awaited<Retur
             <Card className="border-white/10 bg-zinc-900/50 backdrop-blur-md shadow-lg rounded-2xl">
               <CardHeader>
                 <CardTitle className="text-xl font-display-theme font-black text-white flex items-center gap-2">
-                  <Share2 className="w-5 h-5 text-brand-orange" />
+                  <Share2 className="w-5 h-5 text-white" />
                   Top Traffic Sources
                 </CardTitle>
                 <CardDescription className="text-zinc-400">Domains where visitors clicked your bio page.</CardDescription>
@@ -370,7 +370,7 @@ export function AnalyticsDashboard({ initialData }: { initialData: Awaited<Retur
                           </div>
                           <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden relative">
                             <div 
-                              className="h-full bg-brand-orange rounded-full transition-all duration-500" 
+                              className="h-full bg-white rounded-full transition-all duration-500" 
                               style={{ width: `${percent}%` }}
                             />
                           </div>
@@ -388,7 +388,7 @@ export function AnalyticsDashboard({ initialData }: { initialData: Awaited<Retur
               <Card className="border-white/10 bg-zinc-900/50 backdrop-blur-md shadow-lg rounded-2xl">
                 <CardHeader>
                   <CardTitle className="text-xl font-display-theme font-black text-white flex items-center gap-2">
-                    <Laptop className="w-5 h-5 text-blue-400" />
+                    <Laptop className="w-5 h-5 text-white" />
                     Devices Breakdown
                   </CardTitle>
                   <CardDescription className="text-zinc-400">Types of hardware used by your visitors.</CardDescription>
@@ -415,10 +415,7 @@ export function AnalyticsDashboard({ initialData }: { initialData: Awaited<Retur
                               </span>
                             </div>
                             <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden relative">
-                              <div 
-                                className={`h-full rounded-full transition-all duration-500 ${isMobile ? 'bg-brand-pink' : 'bg-blue-400'}`}
-                                style={{ width: `${device.percentage}%` }}
-                              />
+                              <div className={`h-full rounded-full transition-all duration-500 ${isMobile ? 'bg-white' : 'bg-zinc-500'}`} style={{ width: `${device.percentage}%` }} />
                             </div>
                           </div>
                         )
@@ -432,7 +429,7 @@ export function AnalyticsDashboard({ initialData }: { initialData: Awaited<Retur
               <Card className="border-white/10 bg-zinc-900/50 backdrop-blur-md shadow-lg rounded-2xl">
                 <CardHeader>
                   <CardTitle className="text-xl font-display-theme font-black text-white flex items-center gap-2">
-                    <Target className="w-5 h-5 text-brand-pink" />
+                    <Target className="w-5 h-5 text-white" />
                     UTM Campaign Performance
                   </CardTitle>
                   <CardDescription className="text-zinc-400">Marketing campaign tracking parameters performance.</CardDescription>
@@ -457,8 +454,8 @@ export function AnalyticsDashboard({ initialData }: { initialData: Awaited<Retur
                                 <Compass className="w-3.5 h-3.5 text-zinc-500" />
                                 {utm.name}
                               </td>
-                              <td className="py-2.5 text-center font-bold text-emerald-400">{utm.views}</td>
-                              <td className="py-2.5 text-center font-bold text-brand-pink">{utm.clicks}</td>
+                              <td className="py-2.5 text-center font-bold text-white">{utm.views}</td>
+                              <td className="py-2.5 text-center font-bold text-white">{utm.clicks}</td>
                             </tr>
                           ))}
                         </tbody>

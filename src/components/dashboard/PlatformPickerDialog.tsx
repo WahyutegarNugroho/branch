@@ -39,7 +39,7 @@ export function PlatformPickerDialog({ isOpen, onClose, onSelectPlatform }: Plat
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search platforms..."
-              className="w-full pl-10 pr-4 h-12 rounded-xl bg-zinc-900 border-white/10 text-white placeholder-zinc-500 focus-visible:ring-brand-pink"
+              className="w-full pl-10 pr-4 h-12 rounded-xl bg-zinc-900 border-white/10 text-white placeholder-zinc-500 focus-visible:ring-white"
             />
           </div>
         </DialogHeader>

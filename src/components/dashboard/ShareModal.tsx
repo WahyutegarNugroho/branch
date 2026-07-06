@@ -80,8 +80,8 @@ export function ShareModal({
         </button>
 
         {/* Share Icon Header */}
-        <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-pink to-brand-orange flex items-center justify-center shadow-lg shadow-brand-pink/20 mb-4">
-          <Share2 className="w-6 h-6 text-white" />
+        <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center shadow-lg shadow-white/20 mb-4">
+          <Share2 className="w-6 h-6 text-black" />
         </div>
 
         <h3 className="text-lg font-display-theme font-black text-white mb-1">
@@ -142,7 +142,7 @@ export function ShareModal({
         <div className="grid grid-cols-2 gap-3 w-full">
           <Button 
             onClick={handleDownloadQR}
-            className="rounded-xl bg-gradient-to-r from-brand-pink to-brand-orange hover:opacity-90 text-white border-0 font-bold h-11 text-xs shadow-lg flex items-center justify-center gap-1.5"
+            className="rounded-xl bg-white hover:bg-zinc-200 text-black border-0 font-bold h-11 text-xs shadow-lg flex items-center justify-center gap-1.5"
           >
             <Download className="w-4 h-4" />
             <span>Download QR</span>

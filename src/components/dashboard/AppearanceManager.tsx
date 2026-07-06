@@ -88,7 +88,7 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
             {/* Avatar Upload */}
             <div className="flex flex-col sm:flex-row items-center gap-6 pb-6 border-b border-white/5 mb-6">
               <div className="relative group cursor-pointer" onClick={() => avatarInputRef.current?.click()}>
-                <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-white/10 group-hover:border-brand-pink transition-all relative shadow-lg">
+                <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-white/10 group-hover:border-white transition-all relative shadow-lg">
                   {avatarUrl ? (
                     <Image src={avatarUrl} alt="Avatar Preview" fill className="object-cover" sizes="96px" />
                   ) : (
@@ -119,7 +119,7 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
                 <span className="bg-zinc-900/80 border border-white/10 border-r-0 rounded-l-xl px-4 flex items-center text-zinc-500 font-bold text-sm tracking-wide shrink-0 select-none font-display-theme">{hostPrefix}</span>
                 <div className="relative flex-1">
                   <Input id="username" name="username" value={username} onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/\s+/g, ''))} placeholder="username" required
-                    className="rounded-r-xl rounded-l-none border-white/10 bg-white/5 text-white focus-visible:ring-brand-pink h-12 pl-3 pr-28 text-sm font-semibold tracking-wide w-full focus-visible:ring-offset-0 focus:border-brand-pink" />
+                    className="rounded-r-xl rounded-l-none border-white/10 bg-white/5 text-white focus-visible:ring-white h-12 pl-3 pr-28 text-sm font-semibold tracking-wide w-full focus-visible:ring-offset-0 focus:border-white" />
                   <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5 pointer-events-none font-sans-theme">
                     {usernameStatus === 'checking' && <span className="text-[10px] bg-zinc-800 text-zinc-400 font-bold px-2 py-1 rounded-md animate-pulse">Checking...</span>}
                     {usernameStatus === 'available' && <span className="text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold px-2 py-1 rounded-md flex items-center gap-1"><span className="w-1 h-1 rounded-full bg-emerald-400 animate-ping" />Available</span>}
@@ -133,13 +133,13 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
 
             <div className="space-y-2">
               <Label htmlFor="full_name" className="text-zinc-300">Full Name</Label>
-              <Input id="full_name" name="full_name" value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="Jane Doe" className="rounded-xl border-white/10 bg-white/5 text-white focus-visible:ring-brand-pink h-12" />
+              <Input id="full_name" name="full_name" value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="Jane Doe" className="rounded-xl border-white/10 bg-white/5 text-white focus-visible:ring-white h-12" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="bio" className="text-zinc-300">Bio</Label>
-              <Textarea id="bio" name="bio" value={bio} onChange={(e) => setBio(e.target.value)} placeholder="Write a short bio..." className="rounded-xl border-white/10 bg-white/5 text-white focus-visible:ring-brand-pink min-h-[100px]" />
+              <Textarea id="bio" name="bio" value={bio} onChange={(e) => setBio(e.target.value)} placeholder="Write a short bio..." className="rounded-xl border-white/10 bg-white/5 text-white focus-visible:ring-white min-h-[100px]" />
             </div>
-            <Button type="submit" disabled={infoLoading} className="rounded-xl bg-gradient-to-r from-brand-pink to-brand-orange hover:opacity-90 text-white border-0 font-semibold h-11 px-6 shadow-lg">
+            <Button type="submit" disabled={infoLoading} className="rounded-xl bg-white hover:bg-zinc-200 text-black border-0 font-semibold h-11 px-6 shadow-lg">
               {infoLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Save Profile'}
             </Button>
           </form>
@@ -156,7 +156,7 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
           <form onSubmit={onSocialSubmit} className="space-y-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-              <Input type="text" placeholder="Search platforms..." value={socialSearch} onChange={(e) => setSocialSearch(e.target.value)} className="rounded-xl border-white/10 bg-white/5 text-white focus-visible:ring-brand-pink h-10 text-xs pl-9" />
+              <Input type="text" placeholder="Search platforms..." value={socialSearch} onChange={(e) => setSocialSearch(e.target.value)} className="rounded-xl border-white/10 bg-white/5 text-white focus-visible:ring-white h-10 text-xs pl-9" />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {(() => {
@@ -170,13 +170,13 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
                   return (
                     <div key={platform.id} className="space-y-1.5">
                       <Label htmlFor={`social_${platform.id}`} className="text-zinc-300 flex items-center gap-1.5 text-xs font-semibold"><Icon size={14} style={{ color: platform.color }} />{platform.name}</Label>
-                      <Input id={`social_${platform.id}`} value={socialLinks[platform.id] || ''} onChange={(e) => handleSocialChange(platform.id, e.target.value)} placeholder={platform.urlPrefix || `https://${platform.id}.com/`} className="rounded-xl border-white/10 bg-white/5 text-white focus-visible:ring-brand-pink h-10 text-xs" />
+                      <Input id={`social_${platform.id}`} value={socialLinks[platform.id] || ''} onChange={(e) => handleSocialChange(platform.id, e.target.value)} placeholder={platform.urlPrefix || `https://${platform.id}.com/`} className="rounded-xl border-white/10 bg-white/5 text-white focus-visible:ring-white h-10 text-xs" />
                     </div>
                   )
                 })
               })()}
             </div>
-            <Button type="submit" disabled={socialLoading} className="rounded-xl bg-gradient-to-r from-brand-pink to-brand-orange hover:opacity-90 text-white border-0 font-semibold h-11 px-6 shadow-lg mt-4">
+            <Button type="submit" disabled={socialLoading} className="rounded-xl bg-white hover:bg-zinc-200 text-black border-0 font-semibold h-11 px-6 shadow-lg mt-4">
               {socialLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Save Social Icons'}
             </Button>
           </form>
@@ -198,7 +198,7 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
                 const isActive = bgType === theme.bg_type && bgColor === theme.bg_color && buttonShape === theme.button_shape && buttonStyle === theme.button_style && fontFamily === theme.font_family
                 return (
                   <button key={theme.id} type="button" onClick={() => handleSelectTheme(theme)}
-                    className={`group relative flex flex-col items-center p-3 rounded-2xl border-2 transition-all text-left overflow-hidden h-36 ${isActive ? 'border-brand-pink bg-brand-pink/5 shadow-[0_0_20px_rgba(236,72,153,0.15)] scale-[1.02]' : 'border-white/10 bg-zinc-950/40 hover:border-white/20 hover:scale-[1.01]'}`}>
+                    className={`group relative flex flex-col items-center p-3 rounded-2xl border-2 transition-all text-left overflow-hidden h-36 ${isActive ? 'border-white bg-white/5 shadow-[0_0_20px_rgba(255,255,255,0.15)] scale-[1.02]' : 'border-white/10 bg-zinc-950/40 hover:border-white/20 hover:scale-[1.01]'}`}>
                     <div className="w-full flex-1 rounded-xl relative overflow-hidden flex flex-col items-center justify-center p-2 gap-1.5 border border-white/5"
                       style={{ background: theme.bg_type === 'image' ? undefined : theme.bg_color, backgroundImage: theme.bg_type === 'image' ? `url(${theme.bg_image_url})` : undefined, backgroundSize: 'cover', backgroundPosition: 'center' }}>
                       <div className="w-5 h-5 rounded-full bg-white/25 border border-white/15" />
@@ -206,8 +206,8 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
                       <div className={`w-10 h-2.5 border border-white/10 flex items-center justify-center ${theme.button_shape === 'rounded-full' ? 'rounded-full' : theme.button_shape === 'rounded-xl' ? 'rounded-md' : theme.button_shape === 'rounded-3xl' ? 'rounded-[10px]' : 'rounded-none'} ${theme.button_style === 'fill' ? 'bg-white/20' : theme.button_style === 'soft' ? 'bg-white/10' : theme.button_style === 'outline' ? 'bg-transparent border-white/30' : 'bg-white/20 shadow-md'}`} />
                     </div>
                     <div className="w-full mt-2 flex items-center justify-between">
-                      <span className="text-[11px] font-bold text-white group-hover:text-brand-pink transition-colors truncate">{theme.name}</span>
-                      {isActive && <span className="w-1.5 h-1.5 rounded-full bg-brand-pink shrink-0" />}
+                      <span className="text-[11px] font-bold text-white group-hover:text-zinc-300 transition-colors truncate">{theme.name}</span>
+                      {isActive && <span className="w-1.5 h-1.5 rounded-full bg-white shrink-0" />}
                     </div>
                   </button>
                 )
@@ -262,7 +262,7 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
               socialStyle={socialStyle} setSocialStyle={setSocialStyle}
               socialPlacement={socialPlacement} setSocialPlacement={setSocialPlacement}
             />
-            <Button type="submit" disabled={appLoading} className="rounded-xl bg-gradient-to-r from-brand-pink to-brand-orange hover:opacity-90 text-white border-0 font-semibold h-11 px-6 shadow-lg">
+            <Button type="submit" disabled={appLoading} className="rounded-xl bg-white hover:bg-zinc-200 text-black border-0 font-semibold h-11 px-6 shadow-lg">
               {appLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Save Appearance'}
             </Button>
           </form>
@@ -287,9 +287,9 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
                   {profile?.plan === 'premium' ? 'Turn off this option to hide the Branch branding.' : 'Upgrade to premium to hide the Branch branding.'}
                 </p>
               </div>
-              <Switch id="show_branding" checked={showBranding} onCheckedChange={setShowBranding} disabled={profile?.plan !== 'premium'} className="data-[state=checked]:bg-brand-pink" />
+              <Switch id="show_branding" checked={showBranding} onCheckedChange={setShowBranding} disabled={profile?.plan !== 'premium'} className="data-[state=checked]:bg-white" />
             </div>
-            <Button type="submit" disabled={brandingLoading} className="rounded-xl bg-gradient-to-r from-brand-pink to-brand-orange hover:opacity-90 text-white border-0 font-semibold h-11 px-6 shadow-lg">
+            <Button type="submit" disabled={brandingLoading} className="rounded-xl bg-white hover:bg-zinc-200 text-black border-0 font-semibold h-11 px-6 shadow-lg">
               {brandingLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Save Branding'}
             </Button>
           </form>

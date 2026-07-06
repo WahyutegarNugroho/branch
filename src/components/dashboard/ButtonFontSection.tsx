@@ -128,7 +128,7 @@ export function ButtonFontSection({
                   onValueChange={(val) => setGlassBlur(Array.isArray(val) ? val : [val])}
                   max={50}
                   step={1}
-                  className="w-full [&_[role=slider]]:bg-brand-pink"
+                  className="w-full [&_[role=slider]]:bg-white"
                 />
               </div>
               <div className="space-y-4">
@@ -138,7 +138,7 @@ export function ButtonFontSection({
                   onValueChange={(val) => setGlassOpacity(Array.isArray(val) ? val : [val])}
                   max={100}
                   step={1}
-                  className="w-full [&_[role=slider]]:bg-brand-pink"
+                  className="w-full [&_[role=slider]]:bg-white"
                 />
               </div>
             </div>

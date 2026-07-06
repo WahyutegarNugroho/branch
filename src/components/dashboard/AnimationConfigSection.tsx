@@ -34,7 +34,7 @@ export function AnimationConfigSection({
           <div
             key={anim.val}
             onClick={() => setBgAnimation(anim.val)}
-            className={`h-12 flex items-center justify-center rounded-xl border-2 cursor-pointer transition-all ${bgAnimation === anim.val ? 'border-brand-pink bg-brand-pink/10 text-white font-bold' : 'border-white/10 bg-white/5 text-zinc-400 hover:border-white/20'}`}
+            className={`h-12 flex items-center justify-center rounded-xl border-2 cursor-pointer transition-all ${bgAnimation === anim.val ? 'border-white bg-white/10 text-white font-bold' : 'border-white/10 bg-white/5 text-zinc-400 hover:border-white/20'}`}
           >
             <span className="text-xs">{anim.label}</span>
           </div>
@@ -68,7 +68,7 @@ export function AnimationConfigSection({
                   value={[bgAnimationConfig.speed ?? 1]}
                   onValueChange={(v) => updateBgConfig('speed', Array.isArray(v) ? v[0] : v)}
                   min={0.1} max={3} step={0.1}
-                  className="w-full mt-2 [&_[role=slider]]:bg-brand-pink"
+                  className="w-full mt-2 [&_[role=slider]]:bg-white"
                 />
               </div>
             </div>
@@ -82,7 +82,7 @@ export function AnimationConfigSection({
                   value={[bgAnimationConfig.flakeCount ?? 100]}
                   onValueChange={(v) => updateBgConfig('flakeCount', Array.isArray(v) ? v[0] : v)}
                   min={10} max={300} step={10}
-                  className="w-full mt-2 [&_[role=slider]]:bg-brand-pink"
+                  className="w-full mt-2 [&_[role=slider]]:bg-white"
                 />
               </div>
               <div>
@@ -91,7 +91,7 @@ export function AnimationConfigSection({
                   value={[bgAnimationConfig.speed ?? 1]}
                   onValueChange={(v) => updateBgConfig('speed', Array.isArray(v) ? v[0] : v)}
                   min={0.1} max={5} step={0.1}
-                  className="w-full mt-2 [&_[role=slider]]:bg-brand-pink"
+                  className="w-full mt-2 [&_[role=slider]]:bg-white"
                 />
               </div>
               <div>
@@ -131,7 +131,7 @@ export function AnimationConfigSection({
                   value={[bgAnimationConfig.fontSize ?? 14]}
                   onValueChange={(v) => updateBgConfig('fontSize', Array.isArray(v) ? v[0] : v)}
                   min={8} max={32} step={2}
-                  className="w-full mt-2 [&_[role=slider]]:bg-brand-pink"
+                  className="w-full mt-2 [&_[role=slider]]:bg-white"
                 />
               </div>
               <div>
@@ -140,7 +140,7 @@ export function AnimationConfigSection({
                   value={[bgAnimationConfig.speed ?? 1]}
                   onValueChange={(v) => updateBgConfig('speed', Array.isArray(v) ? v[0] : v)}
                   min={0.5} max={3} step={0.1}
-                  className="w-full mt-2 [&_[role=slider]]:bg-brand-pink"
+                  className="w-full mt-2 [&_[role=slider]]:bg-white"
                 />
               </div>
             </div>
@@ -154,7 +154,7 @@ export function AnimationConfigSection({
                   value={[bgAnimationConfig.starCount ?? 200]}
                   onValueChange={(v) => updateBgConfig('starCount', Array.isArray(v) ? v[0] : v)}
                   min={50} max={500} step={25}
-                  className="w-full mt-2 [&_[role=slider]]:bg-brand-pink"
+                  className="w-full mt-2 [&_[role=slider]]:bg-white"
                 />
               </div>
               <div>
@@ -163,7 +163,7 @@ export function AnimationConfigSection({
                   value={[bgAnimationConfig.speed ?? 1]}
                   onValueChange={(v) => updateBgConfig('speed', Array.isArray(v) ? v[0] : v)}
                   min={0} max={5} step={0.2}
-                  className="w-full mt-2 [&_[role=slider]]:bg-brand-pink"
+                  className="w-full mt-2 [&_[role=slider]]:bg-white"
                 />
               </div>
             </div>
@@ -177,7 +177,7 @@ export function AnimationConfigSection({
                   value={[bgAnimationConfig.confettiCount ?? 150]}
                   onValueChange={(v) => updateBgConfig('confettiCount', Array.isArray(v) ? v[0] : v)}
                   min={20} max={300} step={10}
-                  className="w-full mt-2 [&_[role=slider]]:bg-brand-pink"
+                  className="w-full mt-2 [&_[role=slider]]:bg-white"
                 />
               </div>
               <div>
@@ -186,7 +186,7 @@ export function AnimationConfigSection({
                   value={[bgAnimationConfig.speed ?? 1]}
                   onValueChange={(v) => updateBgConfig('speed', Array.isArray(v) ? v[0] : v)}
                   min={0.2} max={3} step={0.1}
-                  className="w-full mt-2 [&_[role=slider]]:bg-brand-pink"
+                  className="w-full mt-2 [&_[role=slider]]:bg-white"
                 />
               </div>
             </div>
@@ -200,7 +200,7 @@ export function AnimationConfigSection({
                   value={[bgAnimationConfig.density ?? 10000]}
                   onValueChange={(v) => updateBgConfig('density', Array.isArray(v) ? v[0] : v)}
                   min={4000} max={20000} step={1000}
-                  className="w-full mt-2 [&_[role=slider]]:bg-brand-pink"
+                  className="w-full mt-2 [&_[role=slider]]:bg-white"
                 />
                 <p className="text-[10px] text-zinc-500 mt-1">Lower is more dense.</p>
               </div>
@@ -210,7 +210,7 @@ export function AnimationConfigSection({
                   value={[bgAnimationConfig.linkDistance ?? 120]}
                   onValueChange={(v) => updateBgConfig('linkDistance', Array.isArray(v) ? v[0] : v)}
                   min={50} max={250} step={10}
-                  className="w-full mt-2 [&_[role=slider]]:bg-brand-pink"
+                  className="w-full mt-2 [&_[role=slider]]:bg-white"
                 />
               </div>
               <div>
@@ -219,7 +219,7 @@ export function AnimationConfigSection({
                   value={[bgAnimationConfig.speed ?? 1]}
                   onValueChange={(v) => updateBgConfig('speed', Array.isArray(v) ? v[0] : v)}
                   min={0.1} max={3} step={0.1}
-                  className="w-full mt-2 [&_[role=slider]]:bg-brand-pink"
+                  className="w-full mt-2 [&_[role=slider]]:bg-white"
                 />
               </div>
             </div>

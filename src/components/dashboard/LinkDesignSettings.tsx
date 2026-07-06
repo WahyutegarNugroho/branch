@@ -100,7 +100,7 @@ export function LinkDesignSettings({
                     value={spotlightColor} 
                     onChange={(e) => setSpotlightColor(e.target.value)} 
                     maxLength={7}
-                    className="font-mono rounded-xl border-white/10 bg-white/5 text-white h-10 text-sm focus-visible:ring-brand-pink w-32" 
+                    className="font-mono rounded-xl border-white/10 bg-white/5 text-white h-10 text-sm focus-visible:ring-white w-32" 
                   />
                 </div>
               </div>
@@ -117,7 +117,7 @@ export function LinkDesignSettings({
                 name="animation"
                 value={animation}
                 onChange={(e) => setAnimation(e.target.value)}
-                className="w-full rounded-xl border border-white/10 bg-zinc-900 text-white h-10 px-3 text-sm focus:outline-none focus:ring-1 focus:ring-brand-pink"
+                className="w-full rounded-xl border border-white/10 bg-zinc-900 text-white h-10 px-3 text-sm focus:outline-none focus:ring-1 focus:ring-white"
               >
                 <option value="none">No Animation</option>
                 <option value="pulse">Pulse (Slow Pulse)</option>
@@ -155,7 +155,7 @@ export function LinkDesignSettings({
               id={`custom_style_${linkId}`} 
               checked={customStyleEnabled} 
               onCheckedChange={setCustomStyleEnabled} 
-              className="data-[state=checked]:bg-brand-pink"
+              className="data-[state=checked]:bg-white"
             />
             <label htmlFor={`custom_style_${linkId}`} className="text-sm font-bold text-white cursor-pointer flex items-center gap-1.5">
               🎨 Custom Button Style
@@ -169,7 +169,7 @@ export function LinkDesignSettings({
               size="sm" 
               onClick={handleApplyToAll}
               disabled={loading}
-              className="text-xs text-brand-pink hover:text-brand-orange hover:bg-white/5 rounded-xl font-bold transition-all px-2.5 h-8 border border-brand-pink/20"
+              className="text-xs text-white hover:text-zinc-300 hover:bg-white/5 rounded-xl font-bold transition-all px-2.5 h-8 border border-white/20"
             >
               Apply to All
             </Button>
@@ -195,7 +195,7 @@ export function LinkDesignSettings({
                   value={bgColor} 
                   onChange={(e) => setBgColor(e.target.value)} 
                   maxLength={7}
-                  className="font-mono rounded-xl border-white/10 bg-white/5 text-white h-10 text-sm focus-visible:ring-brand-pink" 
+                  className="font-mono rounded-xl border-white/10 bg-white/5 text-white h-10 text-sm focus-visible:ring-white" 
                 />
                 <input type="hidden" name="bg_color" value={bgColor} />
               </div>
@@ -218,7 +218,7 @@ export function LinkDesignSettings({
                   value={textColor} 
                   onChange={(e) => setTextColor(e.target.value)} 
                   maxLength={7}
-                  className="font-mono rounded-xl border-white/10 bg-white/5 text-white h-10 text-sm focus-visible:ring-brand-pink" 
+                  className="font-mono rounded-xl border-white/10 bg-white/5 text-white h-10 text-sm focus-visible:ring-white" 
                 />
                 <input type="hidden" name="text_color" value={textColor} />
               </div>
@@ -237,7 +237,7 @@ export function LinkDesignSettings({
                   max="100" 
                   value={bgOpacity} 
                   onChange={(e) => setBgOpacity(parseInt(e.target.value, 10))} 
-                  className="flex-1 accent-brand-pink h-1.5 bg-zinc-800 rounded-lg appearance-none cursor-pointer"
+                  className="flex-1 accent-white h-1.5 bg-zinc-800 rounded-lg appearance-none cursor-pointer"
                 />
                 <input type="hidden" name="bg_opacity" value={bgOpacity} />
               </div>
@@ -253,7 +253,7 @@ export function LinkDesignSettings({
                     onClick={() => setIconColorMode('original')}
                     className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
                       iconColorMode === 'original'
-                        ? 'bg-brand-pink text-white shadow'
+                        ? 'bg-white text-black shadow'
                         : 'text-zinc-400 hover:text-white'
                     }`}
                   >
@@ -264,7 +264,7 @@ export function LinkDesignSettings({
                     onClick={() => setIconColorMode('text')}
                     className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
                       iconColorMode === 'text'
-                        ? 'bg-brand-pink text-white shadow'
+                        ? 'bg-white text-black shadow'
                         : 'text-zinc-400 hover:text-white'
                     }`}
                   >
@@ -275,7 +275,7 @@ export function LinkDesignSettings({
                     onClick={() => setIconColorMode('custom')}
                     className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
                       iconColorMode === 'custom'
-                        ? 'bg-brand-pink text-white shadow'
+                        ? 'bg-white text-black shadow'
                         : 'text-zinc-400 hover:text-white'
                     }`}
                   >
@@ -307,7 +307,7 @@ export function LinkDesignSettings({
                     value={iconColor} 
                     onChange={(e) => setIconColor(e.target.value)} 
                     maxLength={7}
-                    className="font-mono rounded-xl border-white/10 bg-white/5 text-white h-10 text-sm focus-visible:ring-brand-pink w-32" 
+                    className="font-mono rounded-xl border-white/10 bg-white/5 text-white h-10 text-sm focus-visible:ring-white w-32" 
                   />
                 </div>
               </div>
@@ -326,7 +326,7 @@ export function LinkDesignSettings({
                 value={thumbnailUrl} 
                 onChange={(e) => setThumbnailUrl(e.target.value)} 
                 placeholder="https://example.com/icon.png" 
-                className="rounded-xl border-white/10 bg-white/5 text-white h-10 text-sm focus-visible:ring-brand-pink" 
+                className="rounded-xl border-white/10 bg-white/5 text-white h-10 text-sm focus-visible:ring-white" 
               />
               <p className="text-[10px] text-zinc-400">Overrides the default platform logo if provided.</p>
             </div>
@@ -337,7 +337,7 @@ export function LinkDesignSettings({
                 name="icon_position"
                 value={iconPosition}
                 onChange={(e) => setIconPosition(e.target.value)}
-                className="w-full rounded-xl border border-white/10 bg-zinc-900 text-white h-10 px-3 text-sm focus:outline-none focus:ring-1 focus:ring-brand-pink"
+                className="w-full rounded-xl border border-white/10 bg-zinc-900 text-white h-10 px-3 text-sm focus:outline-none focus:ring-1 focus:ring-white"
               >
                 <option value="left_far">Far Left</option>
                 <option value="left_near">Near Left (Next to Text)</option>

@@ -266,7 +266,7 @@ export function ImageCropDialog({
             <div className="flex flex-col gap-2">
               <div className="flex justify-between items-center text-xs text-zinc-400">
                 <span>Image Zoom</span>
-                <span className="font-semibold text-brand-pink">{Math.round(zoom * 100)}%</span>
+                <span className="font-semibold text-white">{Math.round(zoom * 100)}%</span>
               </div>
               <input
                 type="range"
@@ -275,7 +275,7 @@ export function ImageCropDialog({
                 step="0.01"
                 value={zoom}
                 onChange={(e) => setZoom(parseFloat(e.target.value))}
-                className="w-full h-1 bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-brand-pink focus:outline-none"
+                className="w-full h-1 bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-white focus:outline-none"
               />
             </div>
 
@@ -292,7 +292,7 @@ export function ImageCropDialog({
               <Button
                 onClick={handleApply}
                 disabled={isLoading || !baseSize.width}
-                className="flex-1 bg-gradient-to-r from-brand-pink to-brand-orange hover:opacity-90 text-white font-semibold shadow-lg relative cursor-pointer"
+                className="flex-1 bg-white hover:bg-zinc-200 text-black font-semibold shadow-lg relative cursor-pointer"
               >
                 {isLoading ? (
                   <>

@@ -76,7 +76,7 @@ export function ThemesGallery({
                   className={cn(
                     'group relative flex flex-col items-center p-3 rounded-2xl border-2 transition-all text-left overflow-hidden h-36',
                     isActive
-                      ? 'border-brand-pink bg-brand-pink/5 shadow-[0_0_20px_rgba(236,72,153,0.15)] scale-[1.02]'
+                      ? 'border-white bg-white/5 shadow-[0_0_20px_rgba(255,255,255,0.15)] scale-[1.02]'
                       : 'border-white/10 bg-zinc-950/40 hover:border-white/20 hover:scale-[1.01]',
                   )}
                 >
@@ -94,11 +94,11 @@ export function ThemesGallery({
                     <div className={cn('w-10 h-2.5 border border-white/10 flex items-center justify-center', btnRadius, btnStyle)} />
                   </div>
                   <div className="w-full mt-2 flex items-center justify-between">
-                    <span className="text-[11px] font-bold text-white group-hover:text-brand-pink transition-colors truncate">
+                    <span className="text-[11px] font-bold text-white group-hover:text-zinc-200 transition-colors truncate">
                       {theme.name}
                     </span>
                     {isActive && (
-                      <span className="w-1.5 h-1.5 rounded-full bg-brand-pink shrink-0" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-white shrink-0" />
                     )}
                   </div>
                 </button>

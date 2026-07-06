@@ -35,7 +35,7 @@ export default async function DashboardPage() {
       
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <form action={handleCreateLinkAction} className="w-full">
-          <Button type="submit" className="w-full h-14 rounded-2xl bg-gradient-to-r from-brand-pink to-brand-orange hover:opacity-90 transition-all text-white font-bold text-sm border-0 shadow-lg cursor-pointer">
+          <Button type="submit" className="w-full h-14 rounded-2xl bg-white hover:bg-zinc-200 transition-all text-black font-bold text-sm border-0 shadow-lg cursor-pointer">
             <Plus className="mr-1.5 h-5 w-5" />
             Add New Link
           </Button>

@@ -50,10 +50,10 @@ export function BrandingSection({
               checked={showBranding}
               onCheckedChange={setShowBranding}
               disabled={plan !== 'premium'}
-              className="data-[state=checked]:bg-brand-pink"
+              className="data-[state=checked]:bg-white"
             />
           </div>
-          <Button type="submit" disabled={brandingLoading} className="rounded-xl bg-gradient-to-r from-brand-pink to-brand-orange hover:opacity-90 text-white border-0 font-semibold h-11 px-6 shadow-lg">
+          <Button type="submit" disabled={brandingLoading} className="rounded-xl bg-white hover:bg-zinc-200 text-black border-0 font-semibold h-11 px-6 shadow-lg">
             {brandingLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Save Branding'}
           </Button>
         </form>

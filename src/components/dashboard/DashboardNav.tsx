@@ -17,8 +17,8 @@ export function DashboardNav({ username }: { username?: string }) {
       <div className="flex h-16 items-center justify-between px-4 md:px-8 max-w-[1280px] mx-auto">
         <div className="flex items-center gap-8">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-brand-pink to-brand-orange flex items-center justify-center">
-              <Zap className="w-5 h-5 text-white" />
+            <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center">
+              <Zap className="w-5 h-5 text-black" />
             </div>
             <span className="font-display-theme font-black text-xl tracking-tight text-white hidden sm:block">Branch</span>
           </div>
