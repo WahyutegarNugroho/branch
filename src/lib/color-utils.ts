@@ -1,15 +1,4 @@
-export function hexToRgba(hex: string, opacity: number) {
-  const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-  const fullHex = hex.replace(shorthandRegex, (_, r, g, b) => r + r + g + g + b + b);
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(fullHex);
-  if (!result) return 'rgba(255, 255, 255, 0.05)';
-  const r = parseInt(result[1], 16);
-  const g = parseInt(result[2], 16);
-  const b = parseInt(result[3], 16);
-  return `rgba(${r}, ${g}, ${b}, ${opacity / 100})`;
-}
-
-export function hexToRgb(hex: string) {
+function parseHex(hex: string) {
   const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i
   const fullHex = hex.replace(shorthandRegex, (_, r, g, b) => r + r + g + g + b + b)
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(fullHex)
@@ -17,7 +6,17 @@ export function hexToRgb(hex: string) {
     r: parseInt(result[1], 16),
     g: parseInt(result[2], 16),
     b: parseInt(result[3], 16)
-  } : { r: 9, g: 9, b: 11 }
+  } : null
+}
+
+export function hexToRgba(hex: string, opacity: number) {
+  const rgb = parseHex(hex)
+  if (!rgb) return 'rgba(255, 255, 255, 0.05)'
+  return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${opacity / 100})`
+}
+
+export function hexToRgb(hex: string) {
+  return parseHex(hex) ?? { r: 9, g: 9, b: 11 }
 }
 
 export function rgbToHex(r: number, g: number, b: number) {

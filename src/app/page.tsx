@@ -3,13 +3,13 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import Image from 'next/image'
 import { 
   Zap, 
   ChevronDown,
   Palette
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import MatrixBackground from '@/components/backgrounds/MatrixBackground'
 
 const faqs = [
   {
@@ -126,8 +126,8 @@ export default function LandingPage() {
                
                {/* Hero Dark Mockup inner */}
                <div className="w-full h-full pt-16 px-6 flex flex-col items-center bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-800 via-zinc-950 to-zinc-950">
-                  <div className="w-20 h-20 rounded-full bg-zinc-800 border border-white/10 mb-4 p-1 overflow-hidden">
-                     <img src="https://i.pravatar.cc/150?img=68" alt="Profile" className="w-full h-full rounded-full object-cover opacity-90" />
+                  <div className="w-20 h-20 rounded-full bg-zinc-800 border border-white/10 mb-4 p-1 overflow-hidden relative">
+                     <Image src="https://i.pravatar.cc/150?img=68" alt="Profile" fill className="rounded-full object-cover opacity-90" unoptimized />
                   </div>
                   <h3 className="text-white font-bold text-xl mb-1">Alex Design</h3>
                   <p className="text-zinc-400 text-sm mb-6 text-center">Creating minimal interfaces and digital experiences.</p>
@@ -248,7 +248,7 @@ export default function LandingPage() {
               Analyze your audience and keep them engaged
             </h2>
             <p className="text-lg text-zinc-400 font-medium mb-8 leading-relaxed max-w-md">
-              Track your engagement over time, monitor revenue and discover what's converting your audience. Make informed updates on the fly to keep them coming back.
+              Track your engagement over time, monitor revenue and discover what&apos;s converting your audience. Make informed updates on the fly to keep them coming back.
             </p>
           </div>
         </div>

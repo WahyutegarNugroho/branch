@@ -247,33 +247,22 @@ export function useAppearanceState(profile: Profile | null) {
         text_color: textColor, font_family: fontFamily,
         button_shape: buttonShape, button_style: buttonStyle,
         theme_style: themeStyle, button_hover_effect: buttonHoverEffect, layout_type: layoutType,
-      })
-    }, 100)
-    return () => clearTimeout(timer)
-  }, [bgColor, bgType, bgImageUrl, opacity, bgVideoUrl, fullName, bio, avatarUrl, textColor, fontFamily, buttonShape, buttonStyle, themeStyle, buttonHoverEffect, layoutType])
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      usePreviewStore.getState().updateProfile({
         social_links: socialLinks, social_style: socialStyle,
         profile_align: profileAlign, avatar_shape: avatarShape,
         banner_url: bannerUrl, link_spacing: linkSpacing,
         avatar_size: avatarSize, social_placement: socialPlacement,
-      })
-    }, 150)
-    return () => clearTimeout(timer)
-  }, [socialLinks, socialStyle, profileAlign, avatarShape, bannerUrl, linkSpacing, avatarSize, socialPlacement])
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      usePreviewStore.getState().updateProfile({
         bg_animation: bgAnimation, bg_animation_config: bgAnimationConfig,
         avatar_frame: avatarFrame, avatar_frame_config: avatarFrameConfig,
         theme_lock: themeLock, glass_blur: glassBlur[0], glass_opacity: glassOpacity[0],
       })
-    }, 200)
+    }, 150)
     return () => clearTimeout(timer)
-  }, [bgAnimation, bgAnimationConfig, avatarFrame, avatarFrameConfig, themeLock, glassBlur, glassOpacity])
+  }, [
+    bgColor, bgType, bgImageUrl, opacity, bgVideoUrl, fullName, bio, avatarUrl,
+    textColor, fontFamily, buttonShape, buttonStyle, themeStyle, buttonHoverEffect, layoutType,
+    socialLinks, socialStyle, profileAlign, avatarShape, bannerUrl, linkSpacing, avatarSize, socialPlacement,
+    bgAnimation, bgAnimationConfig, avatarFrame, avatarFrameConfig, themeLock, glassBlur, glassOpacity
+  ])
 
   const handleSocialChange = (key: string, val: string) => {
     setSocialLinks(prev => ({ ...prev, [key]: val }))

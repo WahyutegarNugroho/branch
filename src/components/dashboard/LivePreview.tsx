@@ -1,13 +1,15 @@
 'use client'
 
 import Image from 'next/image'
+import dynamic from 'next/dynamic'
 import { LinkButton } from '@/components/public/LinkButton'
-import AuroraBackground from '@/components/backgrounds/AuroraBackground'
-import SnowfallBackground from '@/components/backgrounds/SnowfallBackground'
-import MatrixBackground from '@/components/backgrounds/MatrixBackground'
-import StarsBackground from '@/components/backgrounds/StarsBackground'
-import ConfettiBackground from '@/components/backgrounds/ConfettiBackground'
-import ParticlesBackground from '@/components/backgrounds/ParticlesBackground'
+
+const AuroraBackground = dynamic(() => import('@/components/backgrounds/AuroraBackground'), { ssr: false })
+const SnowfallBackground = dynamic(() => import('@/components/backgrounds/SnowfallBackground'), { ssr: false })
+const MatrixBackground = dynamic(() => import('@/components/backgrounds/MatrixBackground'), { ssr: false })
+const StarsBackground = dynamic(() => import('@/components/backgrounds/StarsBackground'), { ssr: false })
+const ConfettiBackground = dynamic(() => import('@/components/backgrounds/ConfettiBackground'), { ssr: false })
+const ParticlesBackground = dynamic(() => import('@/components/backgrounds/ParticlesBackground'), { ssr: false })
 import { memo, useEffect } from 'react'
 import { 
   FaInstagram, 
