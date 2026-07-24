@@ -25,11 +25,11 @@ A self-hostable Linktree alternative with **real-time visual editor**, **privacy
 
 | Category | Options |
 |---|---|
-| **Backgrounds** | Solid, gradient, image, video — plus 7 live animations (Aurora, Matrix, Snowfall, Stars, Particles, Confetti, Bokeh) with per-animation config panels |
+| **Backgrounds** | Solid, gradient, image, video — plus 7 live animations (Aurora, Matrix, Snowfall, Stars, Particles, Confetti, Bokeh) with per-animation config panels (Bokeh is CSS-based, no config panel) |
 | **Button Styles** | 9 styles: Filled, Outline, Soft, Shadow, Neumorphism, Glassmorphism, Neon Glow, Brutalism, Claymorphism — each with SVG-filter variants for clipped shapes |
 | **Button Shapes** | 8 shapes: Square, Rounded, Curve, Pill, Cut Corners, Leaf, Hexagon, Diamond — CSS `clip-path` powered |
-| **Buttons Hover Effects** | 8 effects: Scale, Lift, Glow, Wobble, Pulse, Shine, Glitch |
-| **Typography** | 11 font families (Inter, Outfit, JetBrains Mono, Caveat, Comic Neue, Playfair Display, Press Start 2P, Space Grotesk, Oswald, Righteous, Dancing Script) |
+| **Buttons Hover Effects** | 7 effects: Scale Up, Lift & Shadow, Glow, Wobble, Pulse, Shine, Glitch |
+| **Typography** | 12 font options — 4 system stacks (Classic Sans, Jakarta Display, Georgia Serif, Space Mono) + 8 Google Fonts (Caveat, Comic Neue, Playfair Display, Press Start 2P, Space Grotesk, Oswald, Righteous, Dancing Script) |
 | **Avatar** | 3 shapes (circle, square, hexagon), 3 sizes (S/M/L), 2 frames (gradient-ring, neon-glow) |
 | **Layout** | List/grid, left/center/right alignment, compact/normal/relaxed spacing, glassmorphism container with configurable blur & opacity |
 | **Social Icons** | 29+ platform presets with brand icons, 4 style variants (circle, outline, square, minimal), top/bottom placement |
@@ -117,6 +117,7 @@ Share your profile via Twitter/X, WhatsApp, Telegram, Facebook, native Web Share
 | **Framer Motion** | 12.38.0 | Animations & transitions |
 | **Zustand** | 5.0.13 | Client-side state management (live preview) |
 | **@dnd-kit** | core 6.3.1 / sortable 10.0.0 / modifiers 9.0.0 / utilities 3.2.2 | Drag-and-drop link reordering |
+| **@hookform/resolvers** | ^5.2.2 | Zod resolver for react-hook-form |
 | **React Hook Form** | 7.76.0 | Form state management |
 | **Zod** | 4.4.3 | Schema validation (server + client) |
 | **Recharts** | 3.8.1 | Analytics charts |
@@ -129,6 +130,7 @@ Share your profile via Twitter/X, WhatsApp, Telegram, Facebook, native Web Share
 | **@base-ui/react** | 1.4.1 | Headless UI primitives (button, dialog, tabs, etc.) |
 | **class-variance-authority** | 0.7.1 | Component variants |
 | **tailwind-merge** | 3.6.0 | Tailwind class merging |
+| **tw-animate-css** | ^1.4.0 | Tailwind CSS animation utilities |
 | **clsx** | 2.1.1 | Conditional class name construction |
 | **next-themes** | 0.4.6 | Dark/light mode toggle |
 | **Vitest** | 4.1.7 | Unit & component testing |
@@ -388,14 +390,18 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 |---|---|---|
 | `login`, `signup`, `logout` | `auth/actions.ts` | Supabase authentication |
 | `forgotPassword`, `resetPassword` | `auth/actions.ts` | Password reset flow |
+| `getLinks` | `link-actions.ts` | Fetch all links for profile |
 | `createLink`, `updateLink`, `deleteLink` | `link-actions.ts` | Link CRUD |
 | `reorderLinks` | `link-actions.ts` | Drag-and-drop persistence |
+| `applyStylesToAllLinks` | `link-actions.ts` | Bulk style update on all links |
+| `getLinkImages`, `addLinkImage`, `deleteLinkImage`, `reorderLinkImages` | `link-actions.ts` | Carousel image CRUD |
+| `getProfile` | `profile-actions.ts` | Fetch current profile data |
 | `updateAppearance` | `profile-actions.ts` | Bulk appearance save |
 | `updateProfileInfo` | `profile-actions.ts` | Name, bio, avatar, username |
 | `updateSocialLinks` | `profile-actions.ts` | Social platform URLs |
 | `updateBranding` | `profile-actions.ts` | White-label toggle (premium-gated) |
 | `updateSettings` | `profile-actions.ts` | SEO, pixels, custom domain |
-| `getAnalytics` | `analytics-actions.ts` | Analytics data queries |
+| `getAnalyticsStats` | `analytics-actions.ts` | Analytics data queries |
 
 ---
 
