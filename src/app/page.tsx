@@ -123,11 +123,11 @@ export default function LandingPage() {
                
                {/* Hero Dark Mockup inner */}
                <div className="w-full h-full pt-16 px-6 flex flex-col items-center bg-zinc-950">
-                  <div className="w-20 h-20 rounded-full bg-zinc-900 border border-zinc-800 mb-4 p-1 overflow-hidden relative">
-                     <Image src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&h=150&q=80" alt="Profile" fill className="rounded-full object-cover opacity-90" unoptimized />
+                  <div className="w-20 h-20 rounded-full bg-zinc-900 border border-zinc-800 mb-4 overflow-hidden relative flex items-center justify-center">
+                     <span className="text-zinc-400 font-bold text-xl select-none">SC</span>
                   </div>
-                  <h3 className="text-white font-bold text-base mb-1">Alex Design</h3>
-                  <p className="text-zinc-400 text-xs mb-6 text-center leading-normal">Building minimal user interfaces for digital products.</p>
+                  <h3 className="text-white font-bold text-base mb-1">Sarah Chen</h3>
+                  <p className="text-zinc-400 text-xs mb-6 text-center leading-normal">Software engineer building open-source developer tools.</p>
                   
                   <div className="w-full space-y-2">
                     {[
