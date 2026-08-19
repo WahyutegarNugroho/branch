@@ -26,7 +26,7 @@ export function SocialLinksSection({
   onSocialSubmit,
 }: SocialLinksSectionProps) {
   return (
-    <Card className="rounded-2xl shadow-sm border-white/10 bg-zinc-900/50 backdrop-blur-md">
+    <Card className="rounded-xl border-zinc-800 bg-zinc-950 shadow-sm">
       <CardHeader>
         <CardTitle className="text-xl text-white font-bold flex items-center gap-2">
           🔗 Social Icons

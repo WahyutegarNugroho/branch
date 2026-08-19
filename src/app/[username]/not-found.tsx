@@ -5,10 +5,10 @@ import { Search, Zap } from 'lucide-react'
 export default function ProfileNotFound() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-zinc-950 relative overflow-hidden">
-      <BackgroundBlobs className="opacity-30" />
+      <BackgroundBlobs />
 
       <div className="relative z-10 flex flex-col items-center gap-6 px-4 text-center">
-        <div className="mx-auto w-16 h-16 rounded-3xl bg-white text-black flex items-center justify-center shadow-lg shadow-white/20 mb-2">
+        <div className="mx-auto w-16 h-16 rounded-xl bg-white text-black flex items-center justify-center shadow-lg shadow-white/20 mb-2">
           <Search className="w-8 h-8 text-black" />
         </div>
 

@@ -298,7 +298,7 @@ export default function LandingPage() {
             </div>
             <Link href="/register">
               <Button className="h-14 px-8 rounded-xl bg-white hover:bg-zinc-200 text-black font-bold text-base transition-all w-full sm:w-auto">
-                Get Started
+                Claim username
               </Button>
             </Link>
           </div>

@@ -77,7 +77,7 @@ export function SettingsForm({ profile }: { profile: Profile | null }) {
     <form onSubmit={handleSubmit} className="space-y-6 max-w-[800px] font-sans-theme">
       
       {/* 1. Custom SEO Settings */}
-      <Card className="border-white/10 bg-zinc-900/50 backdrop-blur-md shadow-lg rounded-2xl">
+      <Card className="border-zinc-800 bg-zinc-950 shadow-sm rounded-xl">
         <CardHeader>
           <CardTitle className="text-xl font-display-theme font-black text-white flex items-center gap-2">
             <Search className="w-5 h-5 text-white" />
@@ -113,7 +113,7 @@ export function SettingsForm({ profile }: { profile: Profile | null }) {
       </Card>
 
       {/* 2. Retargeting & Tracking Pixels */}
-      <Card className="border-white/10 bg-zinc-900/50 backdrop-blur-md shadow-lg rounded-2xl">
+      <Card className="border-zinc-800 bg-zinc-950 shadow-sm rounded-xl">
         <CardHeader>
           <CardTitle className="text-xl font-display-theme font-black text-white flex items-center gap-2">
             <LineChart className="w-5 h-5 text-white" />
@@ -169,7 +169,7 @@ export function SettingsForm({ profile }: { profile: Profile | null }) {
       </Card>
 
       {/* 3. Custom Domain Configuration */}
-      <Card className="border-white/10 bg-zinc-900/50 backdrop-blur-md shadow-lg rounded-2xl">
+      <Card className="border-zinc-800 bg-zinc-950 shadow-sm rounded-xl">
         <CardHeader>
           <CardTitle className="text-xl font-display-theme font-black text-white flex items-center gap-2">
             <Globe className="w-5 h-5 text-blue-400" />

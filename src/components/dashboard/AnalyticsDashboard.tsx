@@ -137,7 +137,7 @@ export function AnalyticsDashboard({ initialData }: { initialData: Awaited<Retur
   return (
     <div className="space-y-6 font-sans-theme">
       {/* Dynamic Controls Row */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-zinc-900/40 p-4 rounded-2xl border border-white/5 backdrop-blur-md">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-zinc-950 p-4 rounded-xl border border-zinc-800">
         <div className="flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-2 text-zinc-400 text-sm font-semibold">
             <Calendar className="w-4 h-4 text-white" />
@@ -198,39 +198,39 @@ export function AnalyticsDashboard({ initialData }: { initialData: Awaited<Retur
         <>
           {/* Top Counters Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card className="border-white/10 bg-zinc-900/50 backdrop-blur-md shadow-lg rounded-2xl">
+            <Card className="border-zinc-800 bg-zinc-950 shadow-sm rounded-xl">
               <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <CardTitle className="text-sm font-medium text-zinc-400">Total Views</CardTitle>
                 <Eye className="h-4 w-4 text-zinc-500" />
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold text-white">{stats.views}</div>
+                <div className="text-3xl font-bold text-white tabular-nums">{stats.views}</div>
               </CardContent>
             </Card>
             
-            <Card className="border-white/10 bg-zinc-900/50 backdrop-blur-md shadow-lg rounded-2xl">
+            <Card className="border-zinc-800 bg-zinc-950 shadow-sm rounded-xl">
               <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <CardTitle className="text-sm font-medium text-zinc-400">Total Clicks</CardTitle>
                 <MousePointerClick className="h-4 w-4 text-zinc-500" />
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold text-white">{stats.clicks}</div>
+                <div className="text-3xl font-bold text-white tabular-nums">{stats.clicks}</div>
               </CardContent>
             </Card>
 
-            <Card className="border-white/10 bg-zinc-900/50 backdrop-blur-md shadow-lg rounded-2xl">
+            <Card className="border-zinc-800 bg-zinc-950 shadow-sm rounded-xl">
               <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <CardTitle className="text-sm font-medium text-zinc-400">Click-Through Rate</CardTitle>
                 <Percent className="h-4 w-4 text-zinc-500" />
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold text-white">{stats.ctr}%</div>
+                <div className="text-3xl font-bold text-white tabular-nums">{stats.ctr}%</div>
               </CardContent>
             </Card>
           </div>
 
           {/* Time Series Chart Card */}
-          <Card className="border-white/10 bg-zinc-900/50 backdrop-blur-md shadow-lg rounded-2xl">
+          <Card className="border-zinc-800 bg-zinc-950 shadow-sm rounded-xl">
             <CardHeader>
               <CardTitle className="text-xl font-display-theme font-black text-white">Performance Over Time</CardTitle>
             </CardHeader>
@@ -243,7 +243,7 @@ export function AnalyticsDashboard({ initialData }: { initialData: Awaited<Retur
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             
             {/* Top Performing Links */}
-            <Card className="border-white/10 bg-zinc-900/50 backdrop-blur-md shadow-lg rounded-2xl flex flex-col">
+            <Card className="border-zinc-800 bg-zinc-950 shadow-sm rounded-xl flex flex-col">
               <CardHeader>
                 <CardTitle className="text-xl font-display-theme font-black text-white flex items-center gap-2">
                   <LinkIcon className="w-5 h-5 text-white" />
@@ -264,7 +264,7 @@ export function AnalyticsDashboard({ initialData }: { initialData: Awaited<Retur
                         <div key={link.id} className="space-y-1">
                           <div className="flex justify-between items-center text-sm">
                             <span className="font-semibold text-zinc-200 truncate max-w-[200px]">{link.title}</span>
-                            <span className="font-bold text-white shrink-0">{link.clicks} clicks</span>
+                            <span className="font-bold text-white shrink-0 tabular-nums">{link.clicks} clicks</span>
                           </div>
                           <div className="w-full h-2.5 bg-white/5 rounded-full overflow-hidden relative">
                             <div 
@@ -282,7 +282,7 @@ export function AnalyticsDashboard({ initialData }: { initialData: Awaited<Retur
             </Card>
 
             {/* Geolocation Top Countries & Cities */}
-            <Card className="border-white/10 bg-zinc-900/50 backdrop-blur-md shadow-lg rounded-2xl">
+            <Card className="border-zinc-800 bg-zinc-950 shadow-sm rounded-xl">
               <CardHeader>
                 <CardTitle className="text-xl font-display-theme font-black text-white flex items-center gap-2">
                   <MapPin className="w-5 h-5 text-white" />
@@ -303,7 +303,7 @@ export function AnalyticsDashboard({ initialData }: { initialData: Awaited<Retur
                         <div key={c.name} className="space-y-1">
                           <div className="flex justify-between items-center text-xs">
                             <span className="font-semibold text-zinc-300">{c.name}</span>
-                            <span className="font-bold text-white">{c.count} views</span>
+                            <span className="font-bold text-white tabular-nums">{c.count} views</span>
                           </div>
                           <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
                             <div className="h-full bg-white rounded-full" style={{ width: `${percent}%` }} />
@@ -328,7 +328,7 @@ export function AnalyticsDashboard({ initialData }: { initialData: Awaited<Retur
                         <div key={c.name} className="space-y-1">
                           <div className="flex justify-between items-center text-xs">
                             <span className="font-semibold text-zinc-300">{c.name}</span>
-                            <span className="font-bold text-white">{c.count} views</span>
+                            <span className="font-bold text-white tabular-nums">{c.count} views</span>
                           </div>
                           <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
                             <div className="h-full bg-white rounded-full" style={{ width: `${percent}%` }} />
@@ -342,7 +342,7 @@ export function AnalyticsDashboard({ initialData }: { initialData: Awaited<Retur
             </Card>
 
             {/* Referrer Sources */}
-            <Card className="border-white/10 bg-zinc-900/50 backdrop-blur-md shadow-lg rounded-2xl">
+            <Card className="border-zinc-800 bg-zinc-950 shadow-sm rounded-xl">
               <CardHeader>
                 <CardTitle className="text-xl font-display-theme font-black text-white flex items-center gap-2">
                   <Share2 className="w-5 h-5 text-white" />
@@ -366,7 +366,7 @@ export function AnalyticsDashboard({ initialData }: { initialData: Awaited<Retur
                               <Globe className="w-3.5 h-3.5 text-zinc-400" />
                               {ref.name}
                             </span>
-                            <span className="font-bold text-white shrink-0">{ref.count} visits</span>
+                            <span className="font-bold text-white shrink-0 tabular-nums">{ref.count} visits</span>
                           </div>
                           <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden relative">
                             <div 
@@ -385,7 +385,7 @@ export function AnalyticsDashboard({ initialData }: { initialData: Awaited<Retur
             {/* Devices & UTM Campaigns Panel */}
             <div className="space-y-6">
               {/* Devices Breakdown */}
-              <Card className="border-white/10 bg-zinc-900/50 backdrop-blur-md shadow-lg rounded-2xl">
+              <Card className="border-zinc-800 bg-zinc-950 shadow-sm rounded-xl">
                 <CardHeader>
                   <CardTitle className="text-xl font-display-theme font-black text-white flex items-center gap-2">
                     <Laptop className="w-5 h-5 text-white" />
@@ -410,7 +410,7 @@ export function AnalyticsDashboard({ initialData }: { initialData: Awaited<Retur
                                 <DeviceIcon className="w-4 h-4 text-zinc-400" />
                                 {device.name}
                               </span>
-                              <span className="font-bold text-white shrink-0">
+                              <span className="font-bold text-white shrink-0 tabular-nums">
                                 {device.count} ({device.percentage}%)
                               </span>
                             </div>
@@ -426,7 +426,7 @@ export function AnalyticsDashboard({ initialData }: { initialData: Awaited<Retur
               </Card>
 
               {/* UTM Campaigns Table */}
-              <Card className="border-white/10 bg-zinc-900/50 backdrop-blur-md shadow-lg rounded-2xl">
+              <Card className="border-zinc-800 bg-zinc-950 shadow-sm rounded-xl">
                 <CardHeader>
                   <CardTitle className="text-xl font-display-theme font-black text-white flex items-center gap-2">
                     <Target className="w-5 h-5 text-white" />
@@ -441,21 +441,21 @@ export function AnalyticsDashboard({ initialData }: { initialData: Awaited<Retur
                     <div className="overflow-x-auto">
                       <table className="w-full text-left text-xs">
                         <thead>
-                          <tr className="border-b border-white/5 text-zinc-400 font-bold uppercase tracking-wider">
+                          <tr className="border-b border-zinc-800 text-zinc-400 font-bold uppercase tracking-wider">
                             <th className="py-2">Campaign</th>
-                            <th className="py-2 text-center">Views</th>
-                            <th className="py-2 text-center">Clicks</th>
+                            <th className="py-2 text-right">Views</th>
+                            <th className="py-2 text-right">Clicks</th>
                           </tr>
                         </thead>
                         <tbody>
                           {stats.utmCampaigns.map((utm) => (
-                            <tr key={utm.name} className="border-b border-white/5 text-zinc-200">
+                            <tr key={utm.name} className="border-b border-zinc-800 text-zinc-200">
                               <td className="py-2.5 font-semibold flex items-center gap-1.5">
                                 <Compass className="w-3.5 h-3.5 text-zinc-500" />
                                 {utm.name}
                               </td>
-                              <td className="py-2.5 text-center font-bold text-white">{utm.views}</td>
-                              <td className="py-2.5 text-center font-bold text-white">{utm.clicks}</td>
+                              <td className="py-2.5 text-right font-bold text-white tabular-nums">{utm.views}</td>
+                              <td className="py-2.5 text-right font-bold text-white tabular-nums">{utm.clicks}</td>
                             </tr>
                           ))}
                         </tbody>

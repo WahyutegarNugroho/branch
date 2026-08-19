@@ -34,7 +34,7 @@ export function ThemesGallery({
   handleSelectTheme,
 }: ThemesGalleryProps) {
   return (
-    <Card className="rounded-2xl shadow-sm border-white/10 bg-zinc-900/50 backdrop-blur-md animate-in fade-in slide-in-from-top-4 duration-300">
+    <Card className="rounded-xl border-zinc-800 bg-zinc-950 shadow-sm animate-in fade-in slide-in-from-top-4 duration-300">
       <CardHeader>
         <CardTitle className="text-xl text-white font-display-theme font-black flex items-center gap-2">
           🎨 Preset Themes Gallery

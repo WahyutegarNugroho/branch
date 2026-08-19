@@ -78,7 +78,7 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
         </button>
       </div>
       {/* Profile Information */}
-      <Card className="rounded-2xl shadow-sm border-white/10 bg-zinc-900/50 backdrop-blur-md">
+      <Card className="rounded-xl border-zinc-800 bg-zinc-950 shadow-sm">
         <CardHeader>
           <CardTitle className="text-xl text-white font-bold">Profile</CardTitle>
           <CardDescription className="text-zinc-400">Update your personal details.</CardDescription>
@@ -147,7 +147,7 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
       </Card>
 
       {/* Social Links */}
-      <Card className="rounded-2xl shadow-sm border-white/10 bg-zinc-900/50 backdrop-blur-md">
+      <Card className="rounded-xl border-zinc-800 bg-zinc-950 shadow-sm">
         <CardHeader>
           <CardTitle className="text-xl text-white font-bold flex items-center gap-2">🔗 Social Icons</CardTitle>
           <CardDescription className="text-zinc-400">Display beautiful social icon shortcuts horizontally below your bio.</CardDescription>
@@ -184,7 +184,7 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
       </Card>
 
       {/* Preset Themes Gallery */}
-      <Card className="rounded-2xl shadow-sm border-white/10 bg-zinc-900/50 backdrop-blur-md animate-in fade-in slide-in-from-top-4 duration-300">
+      <Card className="rounded-xl border-zinc-800 bg-zinc-950 shadow-sm animate-in fade-in slide-in-from-top-4 duration-300">
         <CardHeader>
           <CardTitle className="text-xl text-white font-display-theme font-black flex items-center gap-2">🎨 Preset Themes Gallery</CardTitle>
           <CardDescription className="text-zinc-400">Choose from professionally designed premium themes to instantly beautify your profile.</CardDescription>
@@ -218,7 +218,7 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
       </Card>
 
       {/* Appearance Configuration */}
-      <Card className="rounded-2xl shadow-sm border-white/10 bg-zinc-900/50 backdrop-blur-md">
+      <Card className="rounded-xl border-zinc-800 bg-zinc-950 shadow-sm">
         <CardHeader>
           <CardTitle className="text-xl text-white font-bold">Backgrounds</CardTitle>
           <CardDescription className="text-zinc-400">Customize the background of your Branch.</CardDescription>
@@ -270,7 +270,7 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
       </Card>
 
       {/* Branding Settings */}
-      <Card className="rounded-2xl shadow-sm border-white/10 bg-zinc-900/50 backdrop-blur-md animate-in fade-in slide-in-from-top-4 duration-300">
+      <Card className="rounded-xl border-zinc-800 bg-zinc-950 shadow-sm animate-in fade-in slide-in-from-top-4 duration-300">
         <CardHeader>
           <CardTitle className="text-xl text-white font-display-theme font-black flex items-center gap-2">🏷️ White-label Branding</CardTitle>
           <CardDescription className="text-zinc-400">Hide the &quot;Powered by Branch&quot; branding from your profile page.</CardDescription>

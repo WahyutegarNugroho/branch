@@ -52,7 +52,7 @@ export function ProfileInfoSection({
   onInfoSubmit,
 }: ProfileInfoSectionProps) {
   return (
-    <Card className="rounded-2xl shadow-sm border-white/10 bg-zinc-900/50 backdrop-blur-md">
+    <Card className="rounded-xl border-zinc-800 bg-zinc-950 shadow-sm">
       <CardHeader>
         <CardTitle className="text-xl text-white font-bold">Profile</CardTitle>
         <CardDescription className="text-zinc-400">Update your personal details.</CardDescription>

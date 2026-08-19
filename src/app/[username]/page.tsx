@@ -1,23 +1,17 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient } from '@/utils/supabase/server'
 import { notFound } from 'next/navigation'
 import { AnimatedProfile } from '@/components/public/AnimatedProfile'
 import { Metadata } from 'next'
 import Script from 'next/script'
+import { getCachedProfileByUsername } from '@/lib/data-loaders'
+import { Link as LinkType } from '@/types'
 
 // Force dynamic rendering to ensure real-time updates and bypass caching
 export const dynamic = 'force-dynamic'
 
 export async function generateMetadata({ params }: { params: Promise<{ username: string }> }): Promise<Metadata> {
   const { username } = await params
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  const supabase = createClient(supabaseUrl, supabaseKey)
-
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('full_name, username, bio, avatar_url, seo_title, seo_description')
-    .eq('username', username)
-    .single()
+  const { data: profile } = await getCachedProfileByUsername(username)
 
   if (!profile) {
     return {
@@ -50,27 +44,14 @@ export async function generateMetadata({ params }: { params: Promise<{ username:
 
 export default async function PublicProfilePage({ params }: { params: Promise<{ username: string }> }) {
   const { username } = await params
-  // Use generic client because public profiles don't need user session
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  const supabase = createClient(supabaseUrl, supabaseKey)
-
-  const { data: profile, error: profileError } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('username', username)
-    .single()
+  const { data: profile, error: profileError } = await getCachedProfileByUsername(username)
 
   if (profileError || !profile) {
     notFound()
   }
 
-  const { data: links } = await supabase
-    .from('links')
-    .select('*, link_images(*)')
-    .eq('profile_id', profile.id)
-    .eq('is_active', true)
-    .order('sort_order', { ascending: true })
+  // links are fetched in a single preloaded query via relations links(*) in getCachedProfileByUsername
+  const links = profile.links || []
 
   // Construct background styling
   const bgStyle: React.CSSProperties = {}
@@ -92,7 +73,8 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
 
   // Filter links based on active valid_from and valid_until schedules
   const now = new Date()
-  const visibleLinks = (links || []).filter(link => {
+  const visibleLinks = (links as LinkType[] || []).filter(link => {
+    if (!link.is_active) return false
     if (link.valid_from) {
       const fromDate = new Date(link.valid_from)
       if (now < fromDate) return false

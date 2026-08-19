@@ -4,12 +4,20 @@ import { redirect } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
 import { LinkManager } from '@/components/dashboard/LinkManager'
+import { getCachedLinks, getCachedProfile } from '@/lib/data-loaders'
+import { requireAuth } from '@/utils/supabase/server'
 
 export default async function DashboardPage() {
-  const profile = await getProfile()
-  if (!profile) redirect('/login')
+  const { user } = await requireAuth()
+  if (!user) redirect('/login')
 
-  const links = await getLinks()
+  const [profileRes, linksRes] = await Promise.all([
+    getCachedProfile(user.id),
+    getCachedLinks(user.id)
+  ])
+
+  const profile = profileRes.data
+  const links = linksRes.data || []
 
   async function handleCreateLinkAction() {
     'use server'
@@ -35,19 +43,19 @@ export default async function DashboardPage() {
       
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <form action={handleCreateLinkAction} className="w-full">
-          <Button type="submit" className="w-full h-14 rounded-2xl bg-white hover:bg-zinc-200 transition-all text-black font-bold text-sm border-0 shadow-lg cursor-pointer">
+          <Button type="submit" className="w-full h-14 rounded-xl bg-white hover:bg-zinc-200 transition-all text-black font-bold text-sm border-0 shadow-lg cursor-pointer">
             <Plus className="mr-1.5 h-5 w-5" />
             Add New Link
           </Button>
         </form>
         <form action={handleCreateCarouselAction} className="w-full">
-          <Button type="submit" className="w-full h-14 rounded-2xl bg-zinc-800 hover:bg-zinc-700/85 transition-all text-white font-bold text-sm border border-white/10 shadow-lg cursor-pointer">
+          <Button type="submit" className="w-full h-14 rounded-xl bg-zinc-800 hover:bg-zinc-700/85 transition-all text-white font-bold text-sm border border-white/10 shadow-lg cursor-pointer">
             <Plus className="mr-1.5 h-5 w-5" />
             Add Carousel
           </Button>
         </form>
         <form action={handleCreateHeaderAction} className="w-full">
-          <Button type="submit" className="w-full h-14 rounded-2xl bg-zinc-800 hover:bg-zinc-700/85 transition-all text-white font-bold text-sm border border-white/10 shadow-lg cursor-pointer">
+          <Button type="submit" className="w-full h-14 rounded-xl bg-zinc-800 hover:bg-zinc-700/85 transition-all text-white font-bold text-sm border border-white/10 shadow-lg cursor-pointer">
             <Plus className="mr-1.5 h-5 w-5" />
             Add Header Section
           </Button>

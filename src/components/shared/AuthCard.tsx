@@ -18,7 +18,7 @@ export function AuthCard({ title, description, children, footer }: AuthCardProps
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
     >
-      <Card className="w-full shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-white/10 bg-zinc-900/60 backdrop-blur-2xl rounded-3xl overflow-hidden relative">
+      <Card className="w-full shadow-lg border border-zinc-800 bg-zinc-950 rounded-xl overflow-hidden relative">
         <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-white/0 via-white/20 to-white/0 bg-[length:200%_auto] animate-pulse" />
 
         <CardHeader className="space-y-2 pb-6 pt-8 text-center">
