@@ -1,6 +1,7 @@
 'use server'
 
 import { requireAuth } from '@/utils/supabase/server'
+import { analyticsStatsQuerySchema } from '@/lib/validations'
 
 interface AnalyticsRow {
   id: string
@@ -31,15 +32,20 @@ const EMPTY_RESPONSE = {
 }
 
 export async function getAnalyticsStats(days?: number, startDate?: string, endDate?: string) {
+  const parsed = analyticsStatsQuerySchema.safeParse({ days, startDate, endDate })
+  if (!parsed.success) {
+    return EMPTY_RESPONSE
+  }
+
   const { supabase, user } = await requireAuth()
   if (!user) return EMPTY_RESPONSE
 
   // 1. Build date filters
-  const dateGte = startDate && endDate
-    ? new Date(startDate).toISOString()
-    : (() => { const c = new Date(); c.setDate(c.getDate() - (days || 7)); return c.toISOString() })()
-  const dateLte = startDate && endDate
-    ? new Date(endDate + 'T23:59:59.999Z').toISOString()
+  const dateGte = parsed.data.startDate && parsed.data.endDate
+    ? new Date(parsed.data.startDate).toISOString()
+    : (() => { const c = new Date(); c.setDate(c.getDate() - (parsed.data.days || 7)); return c.toISOString() })()
+  const dateLte = parsed.data.startDate && parsed.data.endDate
+    ? new Date(parsed.data.endDate + 'T23:59:59.999Z').toISOString()
     : undefined
 
   // 2. Count views and clicks separately (no row fetch)

@@ -15,7 +15,7 @@ export async function POST(request: Request) {
   const secret = process.env.CRON_SECRET || ''
 
   if (!secret || !authHeader.startsWith('Bearer ') || !timingSafeEqual(authHeader.slice(7), secret)) {
-    return new NextResponse('Unauthorized', { status: 401 })
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
   const startTime = Date.now()

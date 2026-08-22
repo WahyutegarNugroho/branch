@@ -90,7 +90,6 @@ export interface Link {
   spotlight_color?: string | null
   link_images?: LinkImage[]
   is_sticky_cta?: boolean
-  images?: LinkImage[]
 }
 
 export interface LinkImage {

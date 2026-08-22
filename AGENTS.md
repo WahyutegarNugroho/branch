@@ -198,7 +198,7 @@ interface Link {
 - **Components**: `.tsx` extension untuk komponen React. Server Components by default di App Router. Client Components dengan `'use client'`.
 - **Server Actions**: File di `src/app/actions/` dan `src/app/auth/actions.ts`. Gunakan `'use server'` directive. Validasi input dengan Zod sebelum diproses.
 - **Validation**: Semua validasi form/input menggunakan Zod schemas di `src/lib/validations.ts`. JANGAN trust input client.
-- **Database**: Supabase PostgreSQL. Gunakan Supabase JS client (server/client) — jangan `pg` driver langsung.
+- **Database**: Supabase PostgreSQL. Gunakan Supabase JS client (server/client) — jangan `pg` driver langsung. Untuk transaksi multi-tabel, wajib menggunakan RPC (stored procedure) PostgreSQL untuk memastikan atomisitas (ACID) dan mencegah partial write.
 - **Auth Flow**: Supabase SSR pattern: middleware refresh session → `createClient()` di server components → `requireAuth()` di server actions.
 - **Styling**: Tailwind CSS v4 dengan CSS variables. Gunakan `cn()` dari `@/lib/utils` untuk conditional classes. shadcn/ui patterns untuk komponen UI.
 - **State Management**: Zustand untuk client state (preview store). Server state via Supabase langsung. React.cache untuk deduplication.
@@ -208,9 +208,12 @@ interface Link {
 - **Forms**: react-hook-form + zod resolver untuk forms kompleks. Server Actions dengan formData untuk forms sederhana.
 - **Constants**: Semua validasi dan enum ada di `src/lib/validations.ts`. Platform definitions di `src/utils/platforms.tsx`.
 - **Assets**: Static assets di `/public/`, images dioptimasi dengan next/image.
-- **Lazy Loading**: Dynamic imports untuk background animation components yang berat.
+- **Lazy Loading**: Dynamic imports untuk background animation components yang berat untuk optimasi LCP/TBT.
 - **Fonts**: next/font via `@/lib/fonts` — 11 font families di-root layout.
-- **Performance**: `force-dynamic` di profile page untuk real-time data. React.cache untuk query deduplication.
+- **Performance**: `force-dynamic` di profile page untuk real-time data. React.cache untuk query deduplication. Hindari N+1 query dengan melakukan fetch relasi secara batch/join.
+- **Observability**: Wajib menyertakan structured logging dengan log levels (info, warn, error) dan correlation/trace IDs pada Server Actions & API Routes untuk pelacakan performa dan debug prod.
+- **Testing**: Setiap modul baru wajib memiliki unit test (Vitest) dengan coverage minimal 80% untuk logika bisnis (actions/reducers/utils).
+- **Git & PR Workflows**: Pembuatan branch wajib mengikuti pola `feature/[issue-id]-[short-desc]` atau `bugfix/[issue-id]-[short-desc]`. Setiap Pull Request wajib menyertakan detail dampak sistem, hasil test verifikasi, dan checklist keamanan.
 
 ### Background Animation Components
 | Component | File | Config |

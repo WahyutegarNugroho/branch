@@ -35,6 +35,65 @@ export const createLinkSchema = z.object({
   linkType: z.enum(['link', 'header', 'carousel']).default('link'),
 })
 
+// Schema for /api/analytics
+export const analyticsPayloadSchema = z.object({
+  profile_id: z.string().uuid('Invalid profile_id'),
+  link_id: z.string().uuid('Invalid link_id').nullable().optional(),
+  referrer: z.string().max(2048).nullable().optional(),
+  utm_source: z.string().max(255).nullable().optional(),
+  utm_medium: z.string().max(255).nullable().optional(),
+  utm_campaign: z.string().max(255).nullable().optional(),
+})
+
+// Schema for third-party geo IP response
+export const ipGeoResponseSchema = z.object({
+  status: z.string(),
+  country: z.string().nullable().optional(),
+  city: z.string().nullable().optional(),
+})
+
+// Schema for /api/verify-domain
+export const verifyDomainPayloadSchema = z.object({
+  domain: z.string().min(1, 'Domain is required').max(255),
+})
+
+// Schema for Cloudflare DoH response
+export const dnsAnswerSchema = z.object({
+  name: z.string(),
+  type: z.number(),
+  TTL: z.number(),
+  data: z.string(),
+})
+
+export const cloudflareDnsResponseSchema = z.object({
+  Status: z.number(),
+  TC: z.boolean(),
+  RD: z.boolean(),
+  RA: z.boolean(),
+  AD: z.boolean(),
+  CD: z.boolean(),
+  Question: z.array(z.object({
+    name: z.string(),
+    type: z.number(),
+  })).optional(),
+  Answer: z.array(dnsAnswerSchema).optional(),
+})
+
+// Schema for getAnalyticsStats query params
+export const analyticsStatsQuerySchema = z.object({
+  days: z.number().int().min(1).max(365).optional(),
+  startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Invalid startDate format').optional(),
+  endDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Invalid endDate format').optional(),
+}).refine(
+  data => {
+    if (data.startDate || data.endDate) {
+      return !!data.startDate && !!data.endDate
+    }
+    return true
+  },
+  { message: 'Both startDate and endDate must be provided together' }
+)
+
 export const updateLinkSchema = z.object({
   title: z.string().min(1, 'Title is required').max(100, 'Title too long'),
   url: z.string().max(2048, 'URL too long').default(''),

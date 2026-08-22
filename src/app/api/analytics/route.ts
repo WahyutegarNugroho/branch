@@ -1,12 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { checkRateLimit } from '@/lib/rate-limiter'
-
-const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
-
-function isValidUuid(val: unknown): val is string {
-  return typeof val === 'string' && uuidRegex.test(val)
-}
+import { analyticsPayloadSchema, ipGeoResponseSchema } from '@/lib/validations'
 
 function getClientIp(request: Request): string {
   return request.headers.get('cf-connecting-ip') ||
@@ -17,13 +12,14 @@ function getClientIp(request: Request): string {
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json()
-    const { profile_id, link_id } = body
+    const rawBody = await request.json()
+    const parsedBody = analyticsPayloadSchema.safeParse(rawBody)
 
-    // L1: Validasi format UUID profile_id
-    if (!isValidUuid(profile_id)) {
-      return NextResponse.json({ error: 'Invalid profile_id' }, { status: 400 })
+    if (!parsedBody.success) {
+      return NextResponse.json({ error: parsedBody.error.issues[0].message }, { status: 400 })
     }
+
+    const { profile_id, link_id, referrer, utm_source, utm_medium, utm_campaign } = parsedBody.data
 
     // L2: Rate limiting per IP
     const clientIp = getClientIp(request)
@@ -59,8 +55,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Profile not found' }, { status: 404 })
     }
 
-    const { referrer, utm_source, utm_medium, utm_campaign } = body
-
     const userAgent = request.headers.get('user-agent') || ''
     const isMobile = /mobile/i.test(userAgent)
     const device = isMobile ? 'mobile' : 'desktop'
@@ -72,11 +66,12 @@ export async function POST(request: Request) {
     const isLocalIp = !ip || ip === '127.0.0.1' || ip === '::1' || ip.startsWith('localhost') || ip.startsWith('192.168.') || ip.startsWith('10.') || ip.startsWith('172.')
     if (!isLocalIp) {
       try {
-        const res = await fetch(`http://ip-api.com/json/${ip}?fields=status,country,city`, { signal: AbortSignal.timeout(2000) })
-        const data = await res.json()
-        if (data && data.status === 'success') {
-          country = data.country || null
-          city = data.city || null
+        const res = await fetch(`https://ip-api.com/json/${ip}?fields=status,country,city`, { signal: AbortSignal.timeout(2000) })
+        const rawGeo = await res.json()
+        const parsedGeo = ipGeoResponseSchema.safeParse(rawGeo)
+        if (parsedGeo.success && parsedGeo.data.status === 'success') {
+          country = parsedGeo.data.country || null
+          city = parsedGeo.data.city || null
         }
       } catch (err) {
         console.error('IP Geolocation error:', err)
@@ -87,7 +82,7 @@ export async function POST(request: Request) {
       .from('analytics')
       .insert([{
         profile_id,
-        link_id: isValidUuid(link_id) ? link_id : null,
+        link_id: link_id || null,
         device,
         referrer: referrer || null,
         country,
