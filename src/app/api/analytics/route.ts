@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+﻿import { NextResponse, after } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { checkRateLimit } from '@/lib/rate-limiter'
 import { analyticsPayloadSchema, ipGeoResponseSchema } from '@/lib/validations'
@@ -59,42 +59,50 @@ export async function POST(request: Request) {
     const isMobile = /mobile/i.test(userAgent)
     const device = isMobile ? 'mobile' : 'desktop'
 
-    const ip = clientIp
-    let country: string | null = null
-    let city: string | null = null
-
-    const isLocalIp = !ip || ip === '127.0.0.1' || ip === '::1' || ip.startsWith('localhost') || ip.startsWith('192.168.') || ip.startsWith('10.') || ip.startsWith('172.')
-    if (!isLocalIp) {
-      try {
-        const res = await fetch(`https://ip-api.com/json/${ip}?fields=status,country,city`, { signal: AbortSignal.timeout(2000) })
-        const rawGeo = await res.json()
-        const parsedGeo = ipGeoResponseSchema.safeParse(rawGeo)
-        if (parsedGeo.success && parsedGeo.data.status === 'success') {
-          country = parsedGeo.data.country || null
-          city = parsedGeo.data.city || null
-        }
-      } catch (err) {
-        console.error('IP Geolocation error:', err)
-      }
-    }
-
-    const { error } = await supabase
+    // Insert event first (fast path) — geo enrichment happens post-response via after()
+    const { data: inserted, error } = await supabase
       .from('analytics')
       .insert([{
         profile_id,
         link_id: link_id || null,
         device,
         referrer: referrer || null,
-        country,
-        city,
+        country: null,
+        city: null,
         utm_source: utm_source || null,
         utm_medium: utm_medium || null,
         utm_campaign: utm_campaign || null,
       }])
+      .select('id')
+      .single()
 
-    if (error) {
+    if (error || !inserted) {
       console.error('Analytics insert error:', error)
-      return NextResponse.json({ error: error.message }, { status: 500 })
+      return NextResponse.json({ error: error?.message ?? 'Insert failed' }, { status: 500 })
+    }
+
+    const insertedId = inserted.id as string
+    const isLocalIp = !clientIp || clientIp === '127.0.0.1' || clientIp === '::1' || clientIp.startsWith('localhost') || clientIp.startsWith('192.168.') || clientIp.startsWith('10.') || clientIp.startsWith('172.')
+
+    if (!isLocalIp) {
+      after(async () => {
+        try {
+          const res = await fetch(`https://ip-api.com/json/${clientIp}?fields=status,country,city`, { signal: AbortSignal.timeout(2000) })
+          const rawGeo = await res.json()
+          const parsedGeo = ipGeoResponseSchema.safeParse(rawGeo)
+          if (parsedGeo.success && parsedGeo.data.status === 'success') {
+            await supabase
+              .from('analytics')
+              .update({
+                country: parsedGeo.data.country || null,
+                city: parsedGeo.data.city || null,
+              })
+              .eq('id', insertedId)
+          }
+        } catch (err) {
+          console.error('IP Geolocation enrichment error:', err)
+        }
+      })
     }
 
     return NextResponse.json({ success: true })

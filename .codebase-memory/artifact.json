@@ -1,11 +1,11 @@
 {
     "schema_version": 2,
-    "commit": "3dac4525a3809517b63e66db495ff5e1fb4a4fed",
-    "indexed_at": "2026-08-22T11:11:13Z",
+    "commit": "85949272a9f78ba1adcde911f37e60c1852d90a0",
+    "indexed_at": "2026-08-22T12:56:01Z",
     "project": "C-xampp-htdocs-branch",
-    "nodes": 915,
-    "edges": 1823,
+    "nodes": 920,
+    "edges": 1836,
     "original_size": 4063232,
-    "compressed_size": 707979,
+    "compressed_size": 710901,
     "compression_level": 3
 }

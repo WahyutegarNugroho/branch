@@ -1,49 +1,19 @@
-'use client'
-
-import { useState } from 'react'
-import { motion } from 'framer-motion'
-import Link from 'next/link'
-import Image from 'next/image'
-import { 
-  Zap, 
-  ChevronDown,
+﻿import Link from 'next/link'
+import {
+  Zap,
   Palette
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-
-const faqs = [
-  {
-    question: "Why do I need a link in bio tool?",
-    answer: "A link in bio tool allows you to share multiple links through a single URL. This is perfect for platforms like Instagram and TikTok that only allow one link in your profile. You can route followers to your store, blog, videos, and more from one place."
-  },
-  {
-    question: "Is Branch free to use?",
-    answer: "Yes! Branch offers a robust free tier that includes unlimited links, basic themes, and essential analytics. We also offer Pro plans for advanced customization and deeper data insights."
-  },
-  {
-    question: "Can I use my own domain?",
-    answer: "Absolutely. With Branch Pro, you can connect your own custom domain (e.g., links.yourname.com) for a fully branded experience."
-  },
-  {
-    question: "How do I make money with Branch?",
-    answer: "You can add tip jars, affiliate links, or direct links to your merchandise and digital products. We make it seamless for your audience to support you."
-  }
-]
+import { HeroSection } from '@/components/landing/HeroSection'
+import { FaqSection } from '@/components/landing/FaqSection'
 
 export default function LandingPage() {
-  const [username, setUsername] = useState('')
-  const [activeFaq, setActiveFaq] = useState<number | null>(null)
-
-  const toggleFaq = (index: number) => {
-    setActiveFaq(activeFaq === index ? null : index)
-  }
-
   return (
     <div className="min-h-screen bg-[#09090b] text-zinc-100 font-sans selection:bg-white/20 selection:text-white">
-      
+
       {/* --- HERO SECTION --- */}
       <section className="relative overflow-hidden border-b border-zinc-800 bg-zinc-950">
-        
+
         {/* Navbar */}
         <nav className="relative z-50">
           <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
@@ -66,85 +36,7 @@ export default function LandingPage() {
           </div>
         </nav>
 
-        <div className="max-w-7xl mx-auto px-6 pt-16 pb-24 lg:pt-28 lg:pb-32 flex flex-col lg:flex-row items-center gap-16 relative z-10">
-          <div className="flex-1 text-left">
-            <motion.h1 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-5xl sm:text-7xl lg:text-[80px] font-bold tracking-tighter leading-[1.05] text-white mb-6"
-            >
-              Everything you <br className="hidden lg:block"/> are. In one, <br className="hidden lg:block"/> simple link.
-            </motion.h1>
-            <motion.p 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="text-lg lg:text-xl text-zinc-400 font-medium mb-10 max-w-lg leading-relaxed"
-            >
-              Join millions using Branch for their link in bio. One link to help you share everything you create, curate and sell from your social profiles.
-            </motion.p>
-            
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="flex flex-col sm:flex-row gap-3 w-full max-w-md"
-            >
-              <div className="relative flex-1 group">
-                <div className="relative flex items-center bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden">
-                  <span className="pl-4 text-zinc-500 font-medium text-sm">branch.bio/</span>
-                  <input 
-                    type="text" 
-                    placeholder="yourname"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    className="w-full h-14 px-2 border-none bg-transparent text-white font-medium text-sm focus:ring-0 outline-none placeholder:text-zinc-700"
-                  />
-                </div>
-              </div>
-              <Link href={`/register?username=${username}`}>
-                <Button className="h-14 px-8 rounded-lg bg-white hover:bg-zinc-200 text-black font-bold text-sm transition-all w-full sm:w-auto border-0">
-                  Claim link
-                </Button>
-              </Link>
-            </motion.div>
-          </div>
-          
-          <div className="flex-1 w-full max-w-md relative flex justify-center">
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="relative w-full max-w-[320px] aspect-[1/2] rounded-[2.5rem] overflow-hidden border-[6px] border-zinc-800 bg-zinc-950 shadow-2xl"
-            >
-               <div className="absolute top-4 inset-x-0 h-6 flex justify-center z-50">
-                 <div className="w-20 h-5 bg-black rounded-full shadow-inner border border-white/5"></div>
-               </div>
-               
-               {/* Hero Dark Mockup inner */}
-               <div className="w-full h-full pt-16 px-6 flex flex-col items-center bg-zinc-950">
-                  <div className="w-20 h-20 rounded-full bg-zinc-900 border border-zinc-800 mb-4 overflow-hidden relative flex items-center justify-center">
-                     <span className="text-zinc-400 font-bold text-xl select-none">SC</span>
-                  </div>
-                  <h3 className="text-white font-bold text-base mb-1">Sarah Chen</h3>
-                  <p className="text-zinc-400 text-xs mb-6 text-center leading-normal">Software engineer building open-source developer tools.</p>
-                  
-                  <div className="w-full space-y-2">
-                    {[
-                      { label: "My Design Portfolio", url: "#" },
-                      { label: "Latest UI Kits", url: "#" },
-                      { label: "Read Design Case Studies", url: "#" }
-                    ].map((item, idx) => (
-                      <div key={idx} className="w-full h-11 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded-lg flex items-center justify-between px-4 text-xs font-semibold text-zinc-200 transition-colors">
-                        <span>{item.label}</span>
-                        <span className="text-[10px] text-zinc-500 font-mono">→</span>
-                      </div>
-                    ))}
-                  </div>
-               </div>
-            </motion.div>
-          </div>
-        </div>
+        <HeroSection />
       </section>
 
       {/* --- SECTION 2: CREATE & CUSTOMIZE --- */}
@@ -206,8 +98,8 @@ export default function LandingPage() {
                  { bg: 'bg-zinc-800', border: 'border-zinc-700/40', rotate: 'rotate-[4deg]', z: 2 },
                  { bg: 'bg-zinc-950', border: 'border-zinc-800', rotate: 'rotate-[-2deg]', z: 3 },
                ].map((card, i) => (
-                 <div 
-                   key={i} 
+                 <div
+                   key={i}
                    className={`absolute w-52 h-64 ${card.bg} rounded-xl border ${card.border} shadow-lg transform ${card.rotate} transition-transform hover:rotate-0 flex flex-col p-6`}
                    style={{ zIndex: card.z }}
                  >
@@ -260,25 +152,7 @@ export default function LandingPage() {
       <section className="bg-zinc-950 py-16 px-6 border-b border-zinc-800">
         <div className="max-w-3xl mx-auto">
           <h2 className="text-2xl font-bold text-center mb-10 text-white">Questions? Answered.</h2>
-          <div className="space-y-3">
-            {faqs.map((faq, index) => (
-              <div 
-                key={index} 
-                className="bg-zinc-900 rounded-xl overflow-hidden cursor-pointer transition-all border border-zinc-800 hover:border-zinc-700/60"
-                onClick={() => toggleFaq(index)}
-              >
-                <div className="p-5 flex items-center justify-between font-semibold text-sm text-zinc-200">
-                  {faq.question}
-                  <ChevronDown className={`w-4 h-4 text-zinc-500 transition-transform ${activeFaq === index ? 'rotate-180' : ''}`} />
-                </div>
-                {activeFaq === index && (
-                  <div className="px-5 pb-5 text-zinc-400 text-xs leading-relaxed border-t border-zinc-800/40 pt-3">
-                    {faq.answer}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
+          <FaqSection />
         </div>
       </section>
 
@@ -291,8 +165,8 @@ export default function LandingPage() {
             <div className="relative flex-1">
               <div className="relative flex items-center bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden">
                 <span className="pl-4 text-zinc-500 font-medium text-sm">branch.bio/</span>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   placeholder="yourname"
                   className="w-full h-12 px-2 border-none bg-transparent text-white font-medium text-sm focus:ring-0 outline-none placeholder:text-zinc-700"
                 />
@@ -342,7 +216,7 @@ export default function LandingPage() {
             </ul>
           </div>
         </div>
-        
+
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 pt-8 border-t border-zinc-800">
           <div className="flex items-center gap-2 text-zinc-400 font-medium text-xs">
              <Zap className="w-4 h-4" />
