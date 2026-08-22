@@ -186,7 +186,7 @@ export function LinkButton({ link, profileId, profile, isPreview = false }: { li
 
   const ThumbnailImg = link.thumbnail_url ? (
     <div className="w-7 h-7 rounded-full overflow-hidden border border-white/20 shadow-inner flex items-center justify-center shrink-0 z-10 group-hover:scale-105 transition-transform relative">
-      <Image src={link.thumbnail_url} alt="" fill className="object-cover" sizes="28px" />
+      <Image src={link.thumbnail_url} alt="" fill className="object-cover" sizes="28px" loading="lazy" />
     </div>
   ) : null
 

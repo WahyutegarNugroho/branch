@@ -5,6 +5,7 @@ import { Metadata } from 'next'
 import Script from 'next/script'
 import { getCachedProfileByUsername } from '@/lib/data-loaders'
 import { Link as LinkType } from '@/types'
+import { profileFontVariables } from '@/lib/fonts'
 
 // Force dynamic rendering to ensure real-time updates and bypass caching
 export const dynamic = 'force-dynamic'
@@ -137,12 +138,14 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
         </Script>
       )}
 
-      <AnimatedProfile 
-        profile={profile} 
-        links={visibleLinks} 
-        bgClass={bgClass} 
-        bgStyle={bgStyle} 
-      />
+      <div className={profileFontVariables}>
+        <AnimatedProfile 
+          profile={profile} 
+          links={visibleLinks} 
+          bgClass={bgClass} 
+          bgStyle={bgStyle} 
+        />
+      </div>
     </>
   )
 }

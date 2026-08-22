@@ -2,7 +2,9 @@
 
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { headers } from 'next/headers'
 import { createClient } from '@/utils/supabase/server'
+import { checkRateLimit } from '@/lib/rate-limiter'
 import { z } from 'zod'
 
 const authSchema = z.object({
@@ -10,7 +12,21 @@ const authSchema = z.object({
   password: z.string().min(6, { message: 'Password must be at least 6 characters' }),
 })
 
+async function getClientIp(): Promise<string> {
+  const reqHeaders = await headers()
+  return reqHeaders.get('cf-connecting-ip') ||
+    reqHeaders.get('x-real-ip') ||
+    reqHeaders.get('x-forwarded-for')?.split(',')[0].trim() ||
+    '127.0.0.1'
+}
+
 export async function login(formData: FormData) {
+  const clientIp = await getClientIp()
+  const limit = checkRateLimit(`auth:${clientIp}`, { maxRequests: 5, windowMs: 60_000 })
+  if (!limit.allowed) {
+    return { error: 'Too many requests. Try again later.' }
+  }
+
   const supabase = await createClient()
 
   const data = {
@@ -35,6 +51,12 @@ export async function login(formData: FormData) {
 }
 
 export async function signup(formData: FormData) {
+  const clientIp = await getClientIp()
+  const limit = checkRateLimit(`auth:${clientIp}`, { maxRequests: 5, windowMs: 60_000 })
+  if (!limit.allowed) {
+    return { error: 'Too many requests. Try again later.' }
+  }
+
   const supabase = await createClient()
 
   const data = {
@@ -66,6 +88,12 @@ export async function logout() {
 }
 
 export async function forgotPassword(formData: FormData) {
+  const clientIp = await getClientIp()
+  const limit = checkRateLimit(`auth:${clientIp}`, { maxRequests: 5, windowMs: 60_000 })
+  if (!limit.allowed) {
+    return { error: 'Too many requests. Try again later.' }
+  }
+
   const supabase = await createClient()
   const email = formData.get('email') as string
 
@@ -86,6 +114,12 @@ export async function forgotPassword(formData: FormData) {
 }
 
 export async function resetPassword(formData: FormData) {
+  const clientIp = await getClientIp()
+  const limit = checkRateLimit(`auth:${clientIp}`, { maxRequests: 5, windowMs: 60_000 })
+  if (!limit.allowed) {
+    return { error: 'Too many requests. Try again later.' }
+  }
+
   const supabase = await createClient()
   const password = formData.get('password') as string
 

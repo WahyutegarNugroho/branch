@@ -158,7 +158,7 @@ export function AnimatedProfile({ profile, links, bgStyle: defaultBgStyle }: { p
           {/* Hero Banner header overlay */}
           {profile?.banner_url && (
             <div className="absolute top-0 inset-x-0 h-32 w-full overflow-hidden border-b border-white/10 z-0">
-              <Image src={profile.banner_url} alt="Banner" fill className="object-cover" sizes="480px" />
+              <Image src={profile.banner_url} alt="Banner" fill className="object-cover" sizes="480px" priority />
             </div>
           )}
 
@@ -260,7 +260,7 @@ export function AnimatedProfile({ profile, links, bgStyle: defaultBgStyle }: { p
                 style={{ clipPath: avatarClipPath }}
               >
             {profile.avatar_url ? (
-              <Image src={profile.avatar_url} alt={profile.full_name ?? ''} fill className="object-cover" sizes="144px" />
+              <Image src={profile.avatar_url} alt={profile.full_name ?? ''} fill className="object-cover" sizes="144px" priority />
             ) : (
               <div className="w-full h-full bg-zinc-800 border border-white/20 flex items-center justify-center text-white text-4xl font-extrabold">
                 {profile.username.charAt(0).toUpperCase()}

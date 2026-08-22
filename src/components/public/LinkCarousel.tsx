@@ -34,6 +34,7 @@ export function LinkCarousel({ title, images }: LinkCarouselProps) {
                 fill
                 className="object-cover" 
                 sizes="200px"
+                loading="lazy"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover/img:opacity-100 transition-opacity flex items-end p-2.5">
                 <span className="text-[9px] text-white/90 truncate font-semibold">Buka Gambar Penuh ↗</span>

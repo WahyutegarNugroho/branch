@@ -261,7 +261,7 @@ export const LivePreview = memo(function LivePreview({ profile: initialProfile, 
 
                     // Render Carousel in Live Preview
                     if (link.link_type === 'carousel') {
-                      const images = link.link_images || link.images || []
+                      const images = link.link_images || []
                       return (
                         <div key={link.id} className={`w-full space-y-2 py-1 select-none pointer-events-auto ${profile?.layout_type === 'grid' ? 'col-span-2' : ''}`}>
                           {link.title && (
