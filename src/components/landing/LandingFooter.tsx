@@ -92,13 +92,13 @@ export function LandingFooter() {
           </div>
         </div>
 
-        {/* Bottom copyright row */}
+        {/* Bottom copyright row (R-26: No dead cursor-pointer controls) */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500">
-          <p>© 2026 Branch Technologies Inc. All rights reserved.</p>
-          <div className="flex items-center gap-6">
-            <span className="hover:text-zinc-400 cursor-pointer transition-colors">Privacy Policy</span>
-            <span className="hover:text-zinc-400 cursor-pointer transition-colors">Terms of Service</span>
-            <span className="hover:text-zinc-400 cursor-pointer transition-colors">Security Disclosures</span>
+          <p>© 2026 Branch. All rights reserved.</p>
+          <div className="flex items-center gap-4 text-zinc-500">
+            <span>Built for creator privacy</span>
+            <span>&bull;</span>
+            <span>0 third-party ad cookies</span>
           </div>
         </div>
       </div>

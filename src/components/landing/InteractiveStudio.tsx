@@ -4,13 +4,11 @@ import React, { useState } from 'react'
 import Link from 'next/link'
 import {
   Sliders,
-  Sparkles,
   Type,
   Square,
-  ArrowRight,
   MousePointerClick,
   Palette,
-  Check
+  Eye
 } from 'lucide-react'
 
 type ButtonShape = 'pill' | 'rounded' | 'sharp' | 'brutalist' | 'glass'
@@ -72,15 +70,12 @@ export function InteractiveStudio() {
   return (
     <section id="studio" aria-labelledby="studio-heading" className="py-20 lg:py-28 px-4 sm:px-6 border-t border-white/[0.08] bg-zinc-950/60">
       <div className="max-w-7xl mx-auto">
+        {/* Section Header (R-09: No category pill parked above H2) */}
         <div className="max-w-3xl mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-white/[0.08] text-xs font-medium text-emerald-400 mb-4">
-            <Sliders className="w-3.5 h-3.5" />
-            <span>Style Preview</span>
-          </div>
           <h2 id="studio-heading" className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white">
             Make it match your style.
           </h2>
-          <p className="mt-4 text-base lg:text-lg text-zinc-400 leading-relaxed max-w-2xl">
+          <p className="mt-3 text-base lg:text-lg text-zinc-400 leading-relaxed max-w-2xl">
             Choose button shapes, fonts, and colors to see how your links will appear to visitors before you sign up.
           </p>
         </div>
@@ -109,7 +104,7 @@ export function InteractiveStudio() {
                     key={item.id}
                     type="button"
                     onClick={() => setShape(item.id as ButtonShape)}
-                    className={`py-2 px-3 text-xs font-medium rounded-lg border transition-all ${
+                    className={`py-2 px-3 text-xs font-medium rounded-lg border transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
                       shape === item.id
                         ? 'bg-white text-zinc-950 border-white font-bold shadow-md'
                         : 'bg-zinc-950 text-zinc-400 border-zinc-800 hover:border-zinc-700 hover:text-zinc-200'
@@ -138,7 +133,7 @@ export function InteractiveStudio() {
                     key={item.id}
                     type="button"
                     onClick={() => setFont(item.id as FontOption)}
-                    className={`p-3 text-left rounded-lg border transition-all ${
+                    className={`p-3 text-left rounded-lg border transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
                       font === item.id
                         ? 'bg-white text-zinc-950 border-white font-semibold shadow-md'
                         : 'bg-zinc-950 text-zinc-400 border-zinc-800 hover:border-zinc-700 hover:text-zinc-200'
@@ -163,7 +158,7 @@ export function InteractiveStudio() {
                     key={preset.id}
                     type="button"
                     onClick={() => setColorPreset(preset)}
-                    className={`flex items-center gap-2.5 p-2.5 rounded-lg border text-xs font-medium transition-all ${
+                    className={`flex items-center gap-2.5 p-2.5 rounded-lg border text-xs font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
                       colorPreset.id === preset.id
                         ? 'border-emerald-400 bg-emerald-500/10 text-white'
                         : 'border-zinc-800 bg-zinc-950 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
@@ -179,7 +174,7 @@ export function InteractiveStudio() {
             {/* Control 4: Micro-Animations */}
             <div className="p-5 rounded-2xl bg-zinc-900/80 border border-white/[0.08]">
               <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400 flex items-center gap-2 mb-3">
-                <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                <Eye className="w-3.5 h-3.5 text-emerald-400" />
                 <span>Link Highlight Effect</span>
               </label>
               <div className="grid grid-cols-3 gap-2">
@@ -192,7 +187,7 @@ export function InteractiveStudio() {
                     key={item.id}
                     type="button"
                     onClick={() => setAnimation(item.id as AnimationStyle)}
-                    className={`py-2 px-3 text-xs font-medium rounded-lg border transition-all text-center ${
+                    className={`py-2 px-3 text-xs font-medium rounded-lg border transition-all text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
                       animation === item.id
                         ? 'bg-white text-zinc-950 border-white font-bold shadow-md'
                         : 'bg-zinc-950 text-zinc-400 border-zinc-800 hover:border-zinc-700 hover:text-zinc-200'
@@ -240,7 +235,7 @@ export function InteractiveStudio() {
                       : ''
                   }`}
                 >
-                  <span>My Primary Project (2026)</span>
+                  <span>Featured Project</span>
                   <MousePointerClick className="w-4 h-4 opacity-70 group-hover:opacity-100 transition-opacity" />
                 </button>
 
@@ -248,27 +243,26 @@ export function InteractiveStudio() {
                   type="button"
                   className={`w-full h-12 px-4 flex items-center justify-between text-sm font-semibold transition-all ${getShapeClass()} ${colorPreset.bg} ${colorPreset.text}`}
                 >
-                  <span>Read the Documentation</span>
-                  <ArrowRight className="w-4 h-4 opacity-70" />
+                  <span>Documentation & Guide</span>
+                  <span className="text-xs opacity-60">DOCS</span>
                 </button>
 
                 <button
                   type="button"
                   className={`w-full h-12 px-4 flex items-center justify-between text-sm font-semibold transition-all ${getShapeClass()} ${colorPreset.bg} ${colorPreset.text}`}
                 >
-                  <span>Join the Community</span>
-                  <Sparkles className="w-4 h-4 opacity-70" />
+                  <span>Join Creator Community</span>
+                  <span className="text-xs opacity-60">COMMUNITY</span>
                 </button>
               </div>
 
-              {/* Claim Action */}
+              {/* Claim Action (R-08: Specific CTA, no decorative arrow) */}
               <div className="mt-8 pt-5 border-t border-white/[0.08] text-center">
                 <Link
                   href="/register"
-                  className="w-full h-11 inline-flex items-center justify-center gap-2 rounded-xl bg-white hover:bg-zinc-100 text-zinc-950 font-bold text-xs transition-all shadow-md"
+                  className="w-full h-11 inline-flex items-center justify-center rounded-xl bg-white hover:bg-zinc-100 text-zinc-950 font-bold text-xs transition-all shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white active:scale-[0.98]"
                 >
-                  <span>Use this style & create page</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  Claim your link with this style
                 </Link>
               </div>
             </div>

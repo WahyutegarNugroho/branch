@@ -2,14 +2,7 @@ import React from 'react'
 import Link from 'next/link'
 import {
   Zap,
-  ArrowRight,
-  Sparkles,
-  ShieldCheck,
-  CheckCircle2,
-  Globe,
-  Layers,
-  BarChart3,
-  Gauge
+  CheckCircle2
 } from 'lucide-react'
 import { LandingNavbar } from '@/components/landing/LandingNavbar'
 import { HeroLivePreview } from '@/components/landing/HeroLivePreview'
@@ -20,7 +13,7 @@ import { FaqSection } from '@/components/landing/FaqSection'
 import { LandingFooter } from '@/components/landing/LandingFooter'
 
 export const metadata = {
-  title: 'Branch — A Clean, Fast Link-in-Bio',
+  title: 'Branch: Clean, Fast Link-in-Bio',
   description: 'Put your links, music, videos, and socials on a single fast page. Fully customizable, no watermarks, and privacy-friendly analytics.',
 }
 
@@ -39,16 +32,7 @@ export default function LandingPage() {
 
               {/* Left Column: Copy & Form (7 cols) */}
               <div className="lg:col-span-7 space-y-8 text-left">
-                {/* Release announcement tag */}
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-900 border border-white/[0.08] text-xs font-medium text-zinc-300">
-                  <span className="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono text-[10px] font-bold">
-                    FREE
-                  </span>
-                  <span className="text-zinc-400">Zero watermarks on any plan</span>
-                  <ArrowRight className="w-3.5 h-3.5 text-zinc-500" />
-                </div>
-
-                {/* Primary Heading */}
+                {/* Primary Heading (Focal Point: No category badge parked above) */}
                 <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.08]">
                   One link for everything you make.
                 </h1>
@@ -82,10 +66,9 @@ export default function LandingPage() {
                     </div>
                     <button
                       type="submit"
-                      className="group h-12 px-6 rounded-xl bg-white hover:bg-zinc-100 text-zinc-950 font-bold text-sm transition-all shadow-[0_1px_3px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.8)] flex items-center justify-center gap-2 whitespace-nowrap active:scale-[0.98]"
+                      className="h-12 px-6 rounded-xl bg-white hover:bg-zinc-100 text-zinc-950 font-bold text-sm transition-all shadow-[0_1px_3px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.8)] flex items-center justify-center whitespace-nowrap active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                     >
-                      <span>Claim your link</span>
-                      <ArrowRight className="w-4 h-4 text-zinc-700 group-hover:translate-x-0.5 group-hover:text-zinc-950 transition-all" />
+                      Claim your link
                     </button>
                   </form>
 
@@ -105,19 +88,19 @@ export default function LandingPage() {
                   </div>
                 </div>
 
-                {/* Metric Highlights Pill Bar */}
-                <div className="pt-4 border-t border-white/[0.08] grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-xl">
+                {/* Architecture Highlights Bar (R-17/R-36: Real features, no speculative speeds) */}
+                <div className="pt-6 border-t border-white/[0.08] grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-xl">
                   <div>
-                    <p className="text-xl sm:text-2xl font-bold text-white tracking-tight">&lt;100ms</p>
-                    <p className="text-xs text-zinc-400 mt-0.5">Page load time</p>
+                    <p className="text-xl sm:text-2xl font-bold text-white tracking-tight">Next.js 16</p>
+                    <p className="text-xs text-zinc-400 mt-0.5">Server rendered</p>
                   </div>
                   <div>
                     <p className="text-xl sm:text-2xl font-bold text-white tracking-tight">6 Styles</p>
-                    <p className="text-xs text-zinc-400 mt-0.5">Animated backgrounds</p>
+                    <p className="text-xs text-zinc-400 mt-0.5">WebGL backgrounds</p>
                   </div>
                   <div>
                     <p className="text-xl sm:text-2xl font-bold text-white tracking-tight">0 Cookies</p>
-                    <p className="text-xs text-zinc-400 mt-0.5">Privacy-first stats</p>
+                    <p className="text-xs text-zinc-400 mt-0.5">First-party stats</p>
                   </div>
                   <div>
                     <p className="text-xl sm:text-2xl font-bold text-emerald-400 tracking-tight">Zero</p>
@@ -184,9 +167,9 @@ export default function LandingPage() {
                 </div>
                 <button
                   type="submit"
-                  className="h-12 px-7 rounded-xl bg-white hover:bg-zinc-100 text-zinc-950 font-bold text-sm transition-all shadow-md whitespace-nowrap active:scale-[0.98]"
+                  className="h-12 px-7 rounded-xl bg-white hover:bg-zinc-100 text-zinc-950 font-bold text-sm transition-all shadow-md whitespace-nowrap active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                 >
-                  Get started
+                  Claim your link
                 </button>
               </form>
 

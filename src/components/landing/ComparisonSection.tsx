@@ -1,5 +1,5 @@
 import React from 'react'
-import { Check, X, Zap, Shield, Sparkles } from 'lucide-react'
+import { Check, X, Zap } from 'lucide-react'
 
 interface ComparisonRow {
   feature: string
@@ -11,46 +11,39 @@ interface ComparisonRow {
 
 const COMPARISON_ROWS: ComparisonRow[] = [
   {
-    feature: 'Page Load Speed',
-    branch: '< 100ms',
-    linktree: '1.4s - 2.8s',
-    beacons: '1.2s - 2.1s',
-    note: 'Loads instantly without heavy client scripts.'
+    feature: 'Forced Brand Watermarks',
+    branch: 'Zero on any plan',
+    linktree: 'Forced logo badge',
+    beacons: 'Forced logo badge',
+    note: 'Your profile highlights your content, not our branding.'
   },
   {
-    feature: 'Forced Watermarks',
-    branch: 'None (Clean profile)',
-    linktree: 'Linktree logo',
-    beacons: 'Beacons logo',
-    note: 'Your profile is for your brand, not ours.'
+    feature: 'Visitor Privacy & Cookies',
+    branch: '0 ad tracking cookies',
+    linktree: 'Third-party ad scripts',
+    beacons: 'Third-party tracking cookies',
+    note: 'Server-side telemetry without invasive cookies or consent popups.'
   },
   {
-    feature: 'Animated Canvas Backgrounds',
+    feature: 'Animated WebGL Backgrounds',
     branch: '6 Included',
     linktree: false,
     beacons: false,
-    note: 'Subtle moving backgrounds like aurora, stars, and snowfall.'
+    note: 'Interactive background shaders like aurora, stars, and snowfall.'
   },
   {
-    feature: 'Privacy-Friendly Analytics',
-    branch: 'First-party (0 cookies)',
-    linktree: 'Ad tracking scripts',
-    beacons: 'Ad cookies',
-    note: 'No cookie consent popups or cross-site trackers.'
-  },
-  {
-    feature: 'Custom Domain',
+    feature: 'Custom Domain Connection',
     branch: true,
-    linktree: 'Pro tier ($24/mo)',
+    linktree: 'Paid tier only ($24/mo)',
     beacons: 'Paid tier only',
-    note: 'Connect links.yourdomain.com via simple DNS record.'
+    note: 'Connect links.yourdomain.com via a single DNS TXT record.'
   },
   {
-    feature: 'Link Scheduling & Expiry',
+    feature: 'Link Scheduling & Auto-Expiry',
     branch: true,
     linktree: 'Paid tier only',
     beacons: 'Paid tier only',
-    note: 'Set exact start and expiration dates for launches.'
+    note: 'Set exact start and expiration dates for launches or sales.'
   },
   {
     feature: 'CSV Data Export',
@@ -65,16 +58,12 @@ export function ComparisonSection() {
   return (
     <section id="compare" aria-labelledby="compare-heading" className="py-20 lg:py-28 px-4 sm:px-6 border-t border-white/[0.08]">
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
+        {/* Header (R-09: No category pill parked above H2) */}
         <div className="max-w-3xl mb-14 text-left sm:text-center sm:mx-auto">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-white/[0.08] text-xs font-medium text-emerald-400 mb-4">
-            <Zap className="w-3.5 h-3.5" />
-            <span>Comparison</span>
-          </div>
           <h2 id="compare-heading" className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white">
             How Branch compares.
           </h2>
-          <p className="mt-4 text-base lg:text-lg text-zinc-400 leading-relaxed">
+          <p className="mt-3 text-base lg:text-lg text-zinc-400 leading-relaxed">
             Fair pricing, no forced watermarks, and fast page loads without heavy tracking scripts.
           </p>
         </div>
@@ -166,10 +155,10 @@ export function ComparisonSection() {
           </div>
         </div>
 
-        {/* Micro Guarantee footer */}
+        {/* Micro Guarantee footer (R-08: Clean, no decorative arrow) */}
         <div className="mt-8 flex flex-wrap items-center justify-between gap-4 text-xs text-zinc-500 px-2">
           <span>Based on publicly available plan specifications.</span>
-          <span className="text-zinc-400 font-medium">Takes less than 2 minutes to set up &rarr;</span>
+          <span className="text-zinc-400 font-medium">Free plan requires no credit card</span>
         </div>
       </div>
     </section>

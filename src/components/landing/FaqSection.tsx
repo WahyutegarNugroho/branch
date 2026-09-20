@@ -32,11 +32,8 @@ export function FaqSection() {
   return (
     <section id="faq" aria-labelledby="faq-heading" className="py-20 lg:py-28 px-4 sm:px-6 border-t border-white/[0.08]">
       <div className="max-w-3xl mx-auto">
+        {/* Header (R-09: No category pill parked above H2) */}
         <div className="mb-12 text-left sm:text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-white/[0.08] text-xs font-medium text-emerald-400 mb-4">
-            <HelpCircle className="w-3.5 h-3.5" />
-            <span>FAQ</span>
-          </div>
           <h2 id="faq-heading" className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
             Frequently Asked Questions
           </h2>

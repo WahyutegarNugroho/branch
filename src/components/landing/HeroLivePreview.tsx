@@ -3,16 +3,12 @@
 import React, { useState } from 'react'
 import dynamic from 'next/dynamic'
 import {
-  Sparkles,
   ExternalLink,
   Play,
   Pause,
-  Flame,
   CheckCircle2,
-  Terminal,
   Globe,
-  Share2,
-  Volume2
+  Sliders
 } from 'lucide-react'
 import {
   FaInstagram,
@@ -336,13 +332,10 @@ export function HeroLivePreview() {
                   onClick={() => handleLinkClick(link.title)}
                   className={`group relative w-full p-3.5 text-left flex items-center justify-between transition-all duration-200 active:scale-[0.98] ${current.buttonClass} ${current.buttonShape}`}
                 >
-                  {/* Spotlight pulse glow */}
+                  {/* Spotlight label */}
                   {link.isSpotlight && (
-                    <span className="absolute -top-1.5 -right-1.5 flex h-3.5 w-3.5">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-amber-500 text-[8px] font-bold text-black items-center justify-center">
-                        ★
-                      </span>
+                    <span className="absolute -top-2 right-3 px-2 py-0.5 rounded bg-zinc-900 border border-amber-400/40 text-[9px] font-mono font-semibold text-amber-300 shadow-sm">
+                      Spotlight
                     </span>
                   )}
 
@@ -412,7 +405,7 @@ export function HeroLivePreview() {
 
       {/* Micro instructions under phone */}
       <p className="text-xs text-zinc-500 mt-4 flex items-center gap-1.5">
-        <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+        <Sliders className="w-3.5 h-3.5 text-zinc-400" />
         <span>Click the presets above to preview different themes and button styles</span>
       </p>
     </div>
