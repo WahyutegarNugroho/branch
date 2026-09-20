@@ -1,230 +1,217 @@
-﻿import Link from 'next/link'
-import { Zap } from 'lucide-react'
-import { ThemeDemo } from '@/components/landing/ThemeDemo'
+import React from 'react'
+import Link from 'next/link'
+import {
+  Zap,
+  ArrowRight,
+  Sparkles,
+  ShieldCheck,
+  CheckCircle2,
+  Globe,
+  Layers,
+  BarChart3,
+  Gauge
+} from 'lucide-react'
+import { LandingNavbar } from '@/components/landing/LandingNavbar'
+import { HeroLivePreview } from '@/components/landing/HeroLivePreview'
+import { BentoFeatures } from '@/components/landing/BentoFeatures'
+import { InteractiveStudio } from '@/components/landing/InteractiveStudio'
+import { ComparisonSection } from '@/components/landing/ComparisonSection'
+import { FaqSection } from '@/components/landing/FaqSection'
+import { LandingFooter } from '@/components/landing/LandingFooter'
 
-const STEPS = [
-  {
-    title: 'Claim your username',
-    desc: 'Reserve branch.bio/yourname during sign-up. Takes an email and password.',
-  },
-  {
-    title: 'Add links and embeds',
-    desc: 'Paste URLs, or embed YouTube, Spotify, and TikTok directly. Reorder by drag-and-drop.',
-  },
-  {
-    title: 'Style the page',
-    desc: 'Pick a theme, button shape, font, and animated background. No code involved.',
-  },
-  {
-    title: 'Share one URL',
-    desc: 'Drop it in every bio. Views and clicks start showing up in analytics immediately.',
-  },
-]
-
-const SAMPLE_STATS = [
-  { label: 'Profile views', value: '42,019' },
-  { label: 'Link clicks', value: '12,480' },
-  { label: 'Click-through rate', value: '29.7%' },
-  { label: 'Top referrer', value: 'instagram.com' },
-  { label: 'Mobile share', value: '71%' },
-]
-
-const FAQS = [
-  {
-    q: 'Why do I need a link-in-bio page?',
-    a: 'Instagram, TikTok, and X allow a single bio link. A Branch page turns that one slot into a directory of everything you want people to reach — store, videos, newsletter, portfolio.',
-  },
-  {
-    q: 'Is Branch free?',
-    a: 'The free plan includes unlimited links, all core themes, embeds, and 90 days of click analytics. Paid plans add custom domains, branding removal, and longer data retention.',
-  },
-  {
-    q: 'Can I use my own domain?',
-    a: 'Yes. Point a TXT record at your Branch account to verify it, and your page serves from links.yourdomain.com instead of branch.bio.',
-  },
-  {
-    q: 'What does the analytics track?',
-    a: 'Profile views and per-link clicks, broken down by device type, country, city, referrer, and UTM campaign. Data is first-party and stored on our own infrastructure.',
-  },
-]
+export const metadata = {
+  title: 'Branch — The High-Performance Link-in-Bio for Creators',
+  description: 'Fast, customizable, and completely yours. Branch combines hardware-accelerated WebGL backgrounds, drag-and-drop link scheduling, and privacy-first analytics.',
+}
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 font-sans selection:bg-emerald-400/20 selection:text-white">
+    <div className="min-h-screen bg-zinc-950 text-zinc-100 font-sans selection:bg-emerald-400/20 selection:text-white relative overflow-x-hidden">
 
-      {/* ============================== HERO ============================== */}
-      <header className="border-b border-zinc-800">
-        <nav aria-label="Main" className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <span className="w-7 h-7 rounded-md bg-white flex items-center justify-center" aria-hidden="true">
-              <Zap className="w-4 h-4 text-zinc-950" />
-            </span>
-            <span className="text-lg font-bold tracking-tight text-white">Branch</span>
-          </Link>
-          <div className="flex items-center gap-2">
-            <Link href="/login" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors px-3 py-2">
-              Log in
-            </Link>
-            <Link href="/register" className="h-9 inline-flex items-center px-4 rounded-lg bg-white hover:bg-zinc-200 text-zinc-950 text-sm font-semibold transition-colors">
-              Create your page
-            </Link>
-          </div>
-        </nav>
-
-        <div className="max-w-6xl mx-auto px-6 pt-14 pb-16 lg:pt-20 lg:pb-20 grid lg:grid-cols-[1fr_auto] gap-12 lg:gap-16 items-center">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-emerald-400 mb-4">
-              Link-in-bio for creators
-            </p>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tighter leading-[1.05] text-white mb-5">
-              One link for everything you make.
-            </h1>
-            <p className="text-base lg:text-lg text-zinc-400 leading-relaxed max-w-md mb-8">
-              Branch puts your links, shops, videos, and socials on a single page — then shows you exactly which ones your audience clicks.
-            </p>
-
-            <form action="/register" method="get" className="flex flex-col sm:flex-row gap-3 max-w-md">
-              <label htmlFor="claim-username" className="sr-only">Choose your username</label>
-              <div className="flex flex-1 items-center bg-zinc-900 border border-zinc-700 rounded-lg overflow-hidden focus-within:border-emerald-400/60 transition-colors">
-                <span className="pl-3.5 text-zinc-500 font-medium text-sm select-none" aria-hidden="true">branch.bio/</span>
-                <input
-                  id="claim-username"
-                  name="username"
-                  type="text"
-                  inputMode="text"
-                  autoComplete="off"
-                  spellCheck={false}
-                  maxLength={30}
-                  placeholder="yourname"
-                  pattern="[a-z0-9_-]+"
-                  title="Lowercase letters, numbers, hyphens and underscores only"
-                  className="w-full h-12 px-2 bg-transparent text-white font-medium text-sm placeholder:text-zinc-600"
-                />
-              </div>
-              <button
-                type="submit"
-                className="h-12 px-6 rounded-lg bg-white hover:bg-zinc-200 active:bg-zinc-300 text-zinc-950 font-bold text-sm transition-colors whitespace-nowrap"
-              >
-                Claim your link
-              </button>
-            </form>
-            <p className="mt-3 text-xs text-zinc-500">Free forever plan. No credit card required.</p>
-          </div>
-
-          <ThemeDemo />
-        </div>
-      </header>
+      {/* Top Navbar */}
+      <LandingNavbar />
 
       <main>
-        {/* ========================= HOW IT WORKS ========================= */}
-        <section id="how-it-works" aria-labelledby="how-heading" className="border-b border-zinc-800 py-12 lg:py-16 px-6">
-          <div className="max-w-3xl mx-auto">
-            <h2 id="how-heading" className="text-2xl font-bold tracking-tight text-white mb-2">
-              From sign-up to shared link in minutes
-            </h2>
-            <ol className="mt-8 divide-y divide-zinc-800 border-y border-zinc-800 list-none">
-              {STEPS.map((step, i) => (
-                <li key={step.title} className="flex gap-5 py-4">
-                  <span className="text-sm font-bold text-emerald-400 tabular-nums shrink-0 w-7 pt-0.5">
-                    {String(i + 1).padStart(2, '0')}
+        {/* ============================== HERO SECTION ============================== */}
+        <section id="demo" className="relative pt-12 pb-20 lg:pt-20 lg:pb-28 px-4 sm:px-6 overflow-hidden">
+          {/* Subtle radial ambient lighting (not AI neon slop, but subtle dark engineering glow) */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[550px] bg-[radial-gradient(ellipse_80%_60%_at_50%_-20%,rgba(16,185,129,0.15),rgba(255,255,255,0))] pointer-events-none" />
+
+          {/* Grid background texture */}
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none" />
+
+          <div className="max-w-7xl mx-auto relative z-10">
+            <div className="grid lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+
+              {/* Left Column: Copy & Form (7 cols) */}
+              <div className="lg:col-span-7 space-y-8 text-left">
+                {/* Release announcement tag */}
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-900/90 border border-white/[0.08] text-xs font-medium text-zinc-300 shadow-inner">
+                  <span className="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono text-[10px] font-bold">
+                    NEW v2.0
                   </span>
-                  <div>
-                    <h3 className="text-sm font-semibold text-white">{step.title}</h3>
-                    <p className="text-sm text-zinc-400 mt-0.5 leading-relaxed">{step.desc}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </section>
-
-        {/* =========================== ANALYTICS ========================== */}
-        <section id="analytics" aria-labelledby="analytics-heading" className="border-b border-zinc-800 py-12 lg:py-16 px-6">
-          <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-            <div>
-              <h2 id="analytics-heading" className="text-2xl font-bold tracking-tight text-white mb-4">
-                See what your audience actually clicks
-              </h2>
-              <p className="text-sm text-zinc-400 leading-relaxed max-w-md">
-                Every profile view and every link click is recorded with device, country, referrer,
-                and UTM campaign — kept for 90 days, exportable as CSV.
-              </p>
-            </div>
-
-            <div>
-              <div className="rounded-xl border border-zinc-800 overflow-hidden">
-                <div className="flex items-center justify-between px-4 py-2.5 border-b border-zinc-800 bg-zinc-900">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Last 7 days</span>
-                  <span className="text-xs text-zinc-500 tabular-nums">Sample data</span>
+                  <span className="text-zinc-400">GPU WebGL Shaders & Next.js 16 SSR</span>
+                  <ArrowRight className="w-3.5 h-3.5 text-zinc-500" />
                 </div>
-                <dl className="divide-y divide-zinc-800/80 bg-zinc-900/40">
-                  {SAMPLE_STATS.map(stat => (
-                    <div key={stat.label} className="flex items-center justify-between px-4 h-11">
-                      <dt className="text-sm text-zinc-400">{stat.label}</dt>
-                      <dd className="text-sm font-semibold text-white tabular-nums">{stat.value}</dd>
+
+                {/* Primary Heading */}
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.08]">
+                  The link-in-bio built like{' '}
+                  <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">
+                    high-end software.
+                  </span>
+                </h1>
+
+                {/* Subtitle */}
+                <p className="text-base sm:text-lg text-zinc-400 leading-relaxed max-w-xl">
+                  Fast, customizable, and completely yours. Branch gives you living WebGL canvas backgrounds, drag-and-drop scheduling, and real-time privacy analytics without watermarks.
+                </p>
+
+                {/* Username Claim Form */}
+                <div className="space-y-3 max-w-lg">
+                  <form action="/register" method="get" className="flex flex-col sm:flex-row gap-2.5">
+                    <label htmlFor="hero-username" className="sr-only">Choose your username</label>
+                    <div className="flex flex-1 items-center bg-zinc-900/90 border border-zinc-700/80 rounded-xl overflow-hidden focus-within:border-emerald-400 focus-within:ring-2 focus-within:ring-emerald-400/20 transition-all shadow-inner">
+                      <span className="pl-3.5 text-zinc-500 font-mono text-sm select-none" aria-hidden="true">
+                        branch.bio/
+                      </span>
+                      <input
+                        id="hero-username"
+                        name="username"
+                        type="text"
+                        inputMode="text"
+                        autoComplete="off"
+                        spellCheck={false}
+                        maxLength={30}
+                        placeholder="yourname"
+                        pattern="[a-z0-9_-]+"
+                        title="Lowercase letters, numbers, hyphens and underscores only"
+                        className="w-full h-12 px-2 bg-transparent text-white font-medium text-sm placeholder:text-zinc-600 focus:outline-none"
+                      />
                     </div>
-                  ))}
-                </dl>
+                    <button
+                      type="submit"
+                      className="group h-12 px-6 rounded-xl bg-white hover:bg-zinc-100 text-zinc-950 font-bold text-sm transition-all shadow-[0_1px_3px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.8)] flex items-center justify-center gap-2 whitespace-nowrap active:scale-[0.98]"
+                    >
+                      <span>Claim your link</span>
+                      <ArrowRight className="w-4 h-4 text-zinc-700 group-hover:translate-x-0.5 group-hover:text-zinc-950 transition-all" />
+                    </button>
+                  </form>
+
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-zinc-400 pt-1">
+                    <span className="flex items-center gap-1.5">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                      Free forever tier
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                      Zero credit card needed
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                      Instant edge deploy
+                    </span>
+                  </div>
+                </div>
+
+                {/* Metric Highlights Pill Bar */}
+                <div className="pt-4 border-t border-white/[0.08] grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-xl">
+                  <div>
+                    <p className="text-xl sm:text-2xl font-bold text-white tracking-tight">&lt;100ms</p>
+                    <p className="text-xs text-zinc-400 mt-0.5">Edge SSR TTFB</p>
+                  </div>
+                  <div>
+                    <p className="text-xl sm:text-2xl font-bold text-white tracking-tight">6 Shaders</p>
+                    <p className="text-xs text-zinc-400 mt-0.5">GPU WebGL Canvases</p>
+                  </div>
+                  <div>
+                    <p className="text-xl sm:text-2xl font-bold text-white tracking-tight">0 Cookies</p>
+                    <p className="text-xs text-zinc-400 mt-0.5">Privacy First Analytics</p>
+                  </div>
+                  <div>
+                    <p className="text-xl sm:text-2xl font-bold text-emerald-400 tracking-tight">Zero</p>
+                    <p className="text-xs text-zinc-400 mt-0.5">Forced Watermarks</p>
+                  </div>
+                </div>
               </div>
-              <p className="mt-2 text-xs text-zinc-600">
-                Numbers shown are illustrative. Your dashboard starts at zero.
+
+              {/* Right Column: High-Fidelity Interactive Preview (5 cols) */}
+              <div className="lg:col-span-5 flex justify-center">
+                <HeroLivePreview />
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+        {/* ============================ BENTO GRID FEATURES ============================ */}
+        <BentoFeatures />
+
+        {/* ========================== INTERACTIVE STUDIO SANDBOX ======================= */}
+        <InteractiveStudio />
+
+        {/* ========================== ARCHITECTURAL COMPARISON ========================= */}
+        <ComparisonSection />
+
+        {/* ============================= ACCESSIBLE FAQ =============================== */}
+        <FaqSection />
+
+        {/* ============================== FINAL CTA BANNER ============================= */}
+        <section className="py-20 lg:py-28 px-4 sm:px-6 relative border-t border-white/[0.08]">
+          <div className="max-w-5xl mx-auto rounded-3xl bg-gradient-to-b from-zinc-900 via-zinc-900/90 to-zinc-950 border border-white/[0.1] p-8 sm:p-14 text-center relative overflow-hidden shadow-2xl">
+            {/* Background lighting */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-2xl h-48 bg-emerald-500/10 blur-3xl pointer-events-none" />
+
+            <div className="relative z-10 max-w-2xl mx-auto space-y-6">
+              <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center mx-auto shadow-lg">
+                <Zap className="w-6 h-6 text-zinc-950 fill-zinc-950" />
+              </div>
+
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white">
+                Reserve your username today.
+              </h2>
+
+              <p className="text-base sm:text-lg text-zinc-400 leading-relaxed">
+                Take control of your audience and link architecture. Free forever, no credit card required, and zero forced branding on your profile.
+              </p>
+
+              <form action="/register" method="get" className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto pt-2">
+                <label htmlFor="final-username" className="sr-only">Choose your username</label>
+                <div className="flex flex-1 items-center bg-zinc-950 border border-zinc-700 rounded-xl overflow-hidden focus-within:border-emerald-400 transition-colors shadow-inner">
+                  <span className="pl-3.5 text-zinc-500 font-mono text-sm select-none" aria-hidden="true">
+                    branch.bio/
+                  </span>
+                  <input
+                    id="final-username"
+                    name="username"
+                    type="text"
+                    inputMode="text"
+                    autoComplete="off"
+                    spellCheck={false}
+                    maxLength={30}
+                    placeholder="yourname"
+                    pattern="[a-z0-9_-]+"
+                    className="w-full h-12 px-2 bg-transparent text-white font-medium text-sm placeholder:text-zinc-600 focus:outline-none"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="h-12 px-7 rounded-xl bg-white hover:bg-zinc-100 text-zinc-950 font-bold text-sm transition-all shadow-md whitespace-nowrap active:scale-[0.98]"
+                >
+                  Get started
+                </button>
+              </form>
+
+              <p className="text-xs text-zinc-400">
+                Setup takes approximately 120 seconds. Custom domains supported on all tiers.
               </p>
             </div>
-          </div>
-        </section>
-
-        {/* ============================== FAQ ============================= */}
-        <section id="faq" aria-labelledby="faq-heading" className="border-b border-zinc-800 py-12 lg:py-16 px-6">
-          <div className="max-w-3xl mx-auto">
-            <h2 id="faq-heading" className="text-2xl font-bold tracking-tight text-white mb-8">
-              Questions, answered
-            </h2>
-            <div className="border-t border-zinc-800">
-              {FAQS.map(faq => (
-                <details key={faq.q} className="group border-b border-zinc-800">
-                  <summary className="flex items-center justify-between gap-4 py-4 cursor-pointer text-sm font-semibold text-zinc-200 hover:text-white transition-colors marker:hidden [&::-webkit-details-marker]:hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-400 -outline-offset-4">
-                    {faq.q}
-                    <span className="text-zinc-500 group-open:rotate-180 transition-transform shrink-0" aria-hidden="true">
-                      ▾
-                    </span>
-                  </summary>
-                  <p className="pb-4 pr-8 text-sm text-zinc-400 leading-relaxed">{faq.a}</p>
-                </details>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ============================ FINAL CTA ========================== */}
-        <section className="py-12 px-6">
-          <div className="max-w-6xl mx-auto flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-              <h2 className="text-xl font-bold text-white">Ready when you are.</h2>
-              <p className="text-sm text-zinc-400 mt-1">Setup takes about two minutes.</p>
-            </div>
-            <Link href="/register" className="shrink-0 h-11 inline-flex items-center px-6 rounded-lg bg-white hover:bg-zinc-200 text-zinc-950 font-bold text-sm transition-colors">
-              Create your page
-            </Link>
           </div>
         </section>
       </main>
 
-      {/* ============================= FOOTER ============================ */}
-      <footer className="border-t border-zinc-800 py-6 px-6">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs text-zinc-500">
-          <div className="flex items-center gap-1.5">
-            <Zap className="w-3.5 h-3.5" aria-hidden="true" />
-            <span>Branch © 2026</span>
-          </div>
-          <nav aria-label="Footer" className="flex flex-wrap gap-x-5 gap-y-1">
-            <a href="#how-it-works" className="hover:text-white transition-colors">How it works</a>
-            <a href="#analytics" className="hover:text-white transition-colors">Analytics</a>
-            <a href="#faq" className="hover:text-white transition-colors">FAQ</a>
-            <Link href="/login" className="hover:text-white transition-colors">Log in</Link>
-            <Link href="/register" className="hover:text-white transition-colors">Sign up</Link>
-          </nav>
-        </div>
-      </footer>
+      {/* Footer */}
+      <LandingFooter />
     </div>
   )
 }

@@ -3,7 +3,7 @@ export default function SVGFilters() {
     <svg width="0" height="0" className="absolute pointer-events-none" style={{ position: 'absolute', width: 0, height: 0 }}>
       <defs>
         {/* SVG Brutalism: 1px Solid Border + 3x3 Offset Shadow */}
-        <filter id="svg-brutalism" x="-20%" y="-20%" width="150%" height="150%" color-interpolation-filters="sRGB">
+        <filter id="svg-brutalism" x="-20%" y="-20%" width="150%" height="150%" colorInterpolationFilters="sRGB">
           <feComponentTransfer in="SourceAlpha" result="SOLID_ALPHA"><feFuncA type="linear" slope="1000" /></feComponentTransfer>
           
           <feGaussianBlur in="SOLID_ALPHA" stdDeviation="0.8" result="BLURRED_BORDER" />
@@ -26,7 +26,7 @@ export default function SVGFilters() {
         </filter>
 
         {/* SVG Claymorphism: Soft Inner Highlights & Shadows + Outer Shadow */}
-        <filter id="svg-claymorphism" x="-20%" y="-20%" width="150%" height="150%" color-interpolation-filters="sRGB">
+        <filter id="svg-claymorphism" x="-20%" y="-20%" width="150%" height="150%" colorInterpolationFilters="sRGB">
           <feComponentTransfer in="SourceAlpha" result="SOLID_ALPHA"><feFuncA type="linear" slope="1000" /></feComponentTransfer>
 
           <feOffset in="SOLID_ALPHA" dx="6" dy="6" result="OUTER_OFFSET" />
@@ -55,7 +55,7 @@ export default function SVGFilters() {
         </filter>
 
         {/* SVG Neumorphism: Dual Outer Shadows + Dual Smooth Inner Highlights */}
-        <filter id="svg-neumorphism" x="-20%" y="-20%" width="150%" height="150%" color-interpolation-filters="sRGB">
+        <filter id="svg-neumorphism" x="-20%" y="-20%" width="150%" height="150%" colorInterpolationFilters="sRGB">
           <feComponentTransfer in="SourceAlpha" result="SOLID_ALPHA"><feFuncA type="linear" slope="1000" /></feComponentTransfer>
 
           <feOffset in="SOLID_ALPHA" dx="3" dy="3" result="OUTER_OFFSET1" />
@@ -90,7 +90,7 @@ export default function SVGFilters() {
         </filter>
 
         {/* SVG Glassmorphism: Outer Shadow + 1px Top/Left highlight border + thin outline */}
-        <filter id="svg-glassmorphism" x="-20%" y="-20%" width="150%" height="150%" color-interpolation-filters="sRGB">
+        <filter id="svg-glassmorphism" x="-20%" y="-20%" width="150%" height="150%" colorInterpolationFilters="sRGB">
           <feComponentTransfer in="SourceAlpha" result="SOLID_ALPHA"><feFuncA type="linear" slope="1000" /></feComponentTransfer>
 
           <feOffset in="SOLID_ALPHA" dx="0" dy="4" result="OUTER_OFFSET" />
@@ -122,7 +122,7 @@ export default function SVGFilters() {
         </filter>
 
         {/* SVG Outline: 1px Solid Border */}
-        <filter id="svg-outline" x="-20%" y="-20%" width="150%" height="150%" color-interpolation-filters="sRGB">
+        <filter id="svg-outline" x="-20%" y="-20%" width="150%" height="150%" colorInterpolationFilters="sRGB">
           <feComponentTransfer in="SourceAlpha" result="SOLID_ALPHA"><feFuncA type="linear" slope="1000" /></feComponentTransfer>
 
           <feGaussianBlur in="SOLID_ALPHA" stdDeviation="0.8" result="BLURRED" />
@@ -139,7 +139,7 @@ export default function SVGFilters() {
         </filter>
 
         {/* SVG Shadow: Outer Drop Shadow + thin border */}
-        <filter id="svg-shadow" x="-20%" y="-20%" width="150%" height="150%" color-interpolation-filters="sRGB">
+        <filter id="svg-shadow" x="-20%" y="-20%" width="150%" height="150%" colorInterpolationFilters="sRGB">
           <feComponentTransfer in="SourceAlpha" result="SOLID_ALPHA"><feFuncA type="linear" slope="1000" /></feComponentTransfer>
 
           <feOffset in="SOLID_ALPHA" dx="0" dy="8" result="OUTER_OFFSET" />
@@ -164,7 +164,7 @@ export default function SVGFilters() {
         </filter>
 
         {/* SVG Neon: Glow effect using CSS variable for color */}
-        <filter id="svg-neon" x="-50%" y="-50%" width="200%" height="200%" color-interpolation-filters="sRGB">
+        <filter id="svg-neon" x="-50%" y="-50%" width="200%" height="200%" colorInterpolationFilters="sRGB">
           <feComponentTransfer in="SourceAlpha" result="SOLID_ALPHA"><feFuncA type="linear" slope="1000" /></feComponentTransfer>
           <feGaussianBlur in="SOLID_ALPHA" stdDeviation="1.0" result="BLURRED_NEON" />
           <feComponentTransfer in="BLURRED_NEON" result="BORDER_ALPHA">
