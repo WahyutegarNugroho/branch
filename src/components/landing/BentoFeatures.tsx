@@ -135,7 +135,7 @@ export function BentoFeatures() {
                 <div className="absolute inset-0 pointer-events-none">
                   {CHART_DATA.map((d, index) => {
                     const cx = 50 + index * 100
-                    const cy = [110, 85, 80, 68, 55, 32, 20][index]
+                    const cy = [110, 90, 80, 71.25, 55, 36.25, 20][index]
                     const left = `${(cx / 700) * 100}%`
                     const top = `${(cy / 160) * 100}%`
                     const isHovered = hoveredPoint === index
@@ -148,13 +148,13 @@ export function BentoFeatures() {
                         onMouseEnter={() => setHoveredPoint(index)}
                         aria-label={`Select ${d.day}: ${d.views.toLocaleString()} views`}
                         style={{ left, top }}
-                        className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-auto p-2 focus-visible:outline-none group cursor-pointer"
+                        className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-auto p-2 focus-visible:outline-none group cursor-pointer flex items-center justify-center"
                       >
                         <span
-                          className={`block rounded-full aspect-square transition-all duration-150 ${
+                          className={`block rounded-full aspect-square shrink-0 transition-all duration-150 ${
                             isHovered
-                              ? 'w-4 h-4 bg-emerald-400 border-2 border-white ring-4 ring-zinc-950/80 shadow-md scale-110'
-                              : 'w-2.5 h-2.5 bg-emerald-500 ring-2 ring-zinc-950 group-hover:scale-125 group-hover:bg-emerald-400'
+                              ? 'w-4 h-4 bg-emerald-400 border-2 border-white ring-4 ring-zinc-950 shadow-md'
+                              : 'w-2.5 h-2.5 bg-emerald-400 ring-2 ring-zinc-950 group-hover:scale-125 group-hover:bg-white'
                           }`}
                         />
                       </button>
