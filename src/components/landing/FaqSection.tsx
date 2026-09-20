@@ -4,27 +4,27 @@ import { HelpCircle, ChevronDown } from 'lucide-react'
 const FAQS = [
   {
     q: 'Why do I need Branch if I already have social accounts?',
-    a: 'Instagram, TikTok, and X only allow a single clickable link in your bio. Branch turns that single slot into a blazing-fast digital storefront and portfolio — connecting your followers directly to your store, videos, newsletter, and tour dates without awkward redirects.'
+    a: 'Instagram, TikTok, and X only allow a single link in your bio. Branch gives you a clean, fast page to connect your followers to your shop, newsletter, music, and latest projects without redirects.'
   },
   {
     q: 'Is Branch genuinely free forever?',
-    a: 'Yes. The Free tier includes unlimited links, all 6 GPU WebGL canvas shaders, video and audio embeds (YouTube, Spotify, TikTok), custom button styling, and 90 days of privacy-first analytics. We do not require a credit card during sign-up.'
+    a: 'Yes. The free plan includes unlimited links, all animated backgrounds, video and audio embeds (YouTube, Spotify, TikTok), custom button styles, and built-in analytics. No credit card required.'
   },
   {
     q: 'Can I connect my own custom domain?',
-    a: 'Yes. You can link your own subdomain (such as links.yourdomain.com) by adding a single TXT verification record in your DNS provider (Cloudflare, Namecheap, GoDaddy, etc.). Automatic SSL encryption is provisioned immediately.'
+    a: 'Yes. You can use your own domain (such as links.yourdomain.com) by adding a single TXT verification record at your DNS provider. Automatic SSL encryption is included.'
   },
   {
     q: 'How does Branch analytics protect visitor privacy?',
-    a: 'Branch collects first-party analytics directly on our edge servers. We never install third-party tracking pixels, we do not store personal identifiers, and we never share your audience data with ad networks. This means your visitors are never bothered with GDPR cookie consent banners.'
+    a: 'Branch measures page visits and link clicks directly on our servers without third-party tracking cookies or advertising networks. Your visitors will never see cookie consent banners.'
   },
   {
-    q: 'Can I schedule links for product drops or limited-time campaigns?',
-    a: 'Yes. Every link supports scheduled start and end timestamps. You can set a link to appear at the exact moment your album drops or ticket sales open, and automatically disappear when your promotion ends.'
+    q: 'Can I schedule links for launches or limited-time campaigns?',
+    a: 'Yes. Every link can have a start and expiration date. You can set links to go live when a project launches, and automatically expire when a sale ends.'
   },
   {
-    q: 'How long does it take to migrate from Linktree or Beacons?',
-    a: 'Most creators migrate in under three minutes. Reserve your username, paste your existing links into our drag-and-drop dashboard, pick your theme, and update your bio link.'
+    q: 'How long does it take to switch from Linktree or Beacons?',
+    a: 'About two minutes. Reserve your username, paste your existing links into the dashboard, choose your theme, and update your bio link.'
   }
 ]
 
@@ -35,13 +35,13 @@ export function FaqSection() {
         <div className="mb-12 text-left sm:text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-white/[0.08] text-xs font-medium text-emerald-400 mb-4">
             <HelpCircle className="w-3.5 h-3.5" />
-            <span>Clear Answers</span>
+            <span>FAQ</span>
           </div>
           <h2 id="faq-heading" className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
             Frequently Asked Questions
           </h2>
           <p className="mt-3 text-base text-zinc-400">
-            Everything you need to know about Branch, performance, and privacy.
+            Answers to common questions about features, domains, and privacy.
           </p>
         </div>
 

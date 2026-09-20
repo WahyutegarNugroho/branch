@@ -61,7 +61,7 @@ interface Archetype {
 const ARCHETYPES: Archetype[] = [
   {
     id: 'minimal',
-    label: 'Obsidian Minimal',
+    label: 'Minimal Dark',
     tag: 'Design Engineer',
     name: 'Elena Vance',
     handle: 'elena.design',
@@ -88,7 +88,7 @@ const ARCHETYPES: Archetype[] = [
   },
   {
     id: 'aurora',
-    label: 'Aurora WebGL',
+    label: 'Aurora',
     tag: 'Creative Tech',
     name: 'Kaelen Thorne',
     handle: 'kaelen.art',
@@ -115,7 +115,7 @@ const ARCHETYPES: Archetype[] = [
   },
   {
     id: 'matrix',
-    label: 'Matrix Terminal',
+    label: 'Matrix',
     tag: 'Cybersec / Dev',
     name: 'ZeroDay Protocol',
     handle: 'zeroday.sh',
@@ -137,7 +137,7 @@ const ARCHETYPES: Archetype[] = [
   },
   {
     id: 'stars',
-    label: 'Cosmic Galaxy',
+    label: 'Stars',
     tag: 'Photographer',
     name: 'Aria Nova',
     handle: 'aria.deepsky',
@@ -159,7 +159,7 @@ const ARCHETYPES: Archetype[] = [
   },
   {
     id: 'sunset',
-    label: 'Warm Minimal',
+    label: 'Warm Slate',
     tag: 'Creator / Podcast',
     name: 'Leo Rivera',
     handle: 'leorivera',
@@ -413,7 +413,7 @@ export function HeroLivePreview() {
       {/* Micro instructions under phone */}
       <p className="text-xs text-zinc-500 mt-4 flex items-center gap-1.5">
         <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-        <span>Click presets above to trigger real GPU WebGL shaders & button styles</span>
+        <span>Click the presets above to preview different themes and button styles</span>
       </p>
     </div>
   )

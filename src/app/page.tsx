@@ -20,8 +20,8 @@ import { FaqSection } from '@/components/landing/FaqSection'
 import { LandingFooter } from '@/components/landing/LandingFooter'
 
 export const metadata = {
-  title: 'Branch — The High-Performance Link-in-Bio for Creators',
-  description: 'Fast, customizable, and completely yours. Branch combines hardware-accelerated WebGL backgrounds, drag-and-drop link scheduling, and privacy-first analytics.',
+  title: 'Branch — A Clean, Fast Link-in-Bio',
+  description: 'Put your links, music, videos, and socials on a single fast page. Fully customizable, no watermarks, and privacy-friendly analytics.',
 }
 
 export default function LandingPage() {
@@ -42,23 +42,20 @@ export default function LandingPage() {
                 {/* Release announcement tag */}
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-900 border border-white/[0.08] text-xs font-medium text-zinc-300">
                   <span className="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono text-[10px] font-bold">
-                    NEW v2.0
+                    FREE
                   </span>
-                  <span className="text-zinc-400">GPU WebGL Shaders & Next.js 16 SSR</span>
+                  <span className="text-zinc-400">Zero watermarks on any plan</span>
                   <ArrowRight className="w-3.5 h-3.5 text-zinc-500" />
                 </div>
 
                 {/* Primary Heading */}
                 <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.08]">
-                  The link-in-bio built like{' '}
-                  <span className="text-zinc-100">
-                    high-end software.
-                  </span>
+                  One link for everything you make.
                 </h1>
 
                 {/* Subtitle */}
                 <p className="text-base sm:text-lg text-zinc-400 leading-relaxed max-w-xl">
-                  Fast, customizable, and completely yours. Branch gives you living WebGL canvas backgrounds, drag-and-drop scheduling, and real-time privacy analytics without watermarks.
+                  Share your links, music, videos, and socials on a clean page that loads instantly. Custom backgrounds, no ads, and analytics that actually respect privacy.
                 </p>
 
                 {/* Username Claim Form */}
@@ -95,15 +92,15 @@ export default function LandingPage() {
                   <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-zinc-400 pt-1">
                     <span className="flex items-center gap-1.5">
                       <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                      Free forever tier
+                      Free forever
                     </span>
                     <span className="flex items-center gap-1.5">
                       <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                      Zero credit card needed
+                      No credit card needed
                     </span>
                     <span className="flex items-center gap-1.5">
                       <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                      Instant edge deploy
+                      Setup in 2 minutes
                     </span>
                   </div>
                 </div>
@@ -112,19 +109,19 @@ export default function LandingPage() {
                 <div className="pt-4 border-t border-white/[0.08] grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-xl">
                   <div>
                     <p className="text-xl sm:text-2xl font-bold text-white tracking-tight">&lt;100ms</p>
-                    <p className="text-xs text-zinc-400 mt-0.5">Edge SSR TTFB</p>
+                    <p className="text-xs text-zinc-400 mt-0.5">Page load time</p>
                   </div>
                   <div>
-                    <p className="text-xl sm:text-2xl font-bold text-white tracking-tight">6 Shaders</p>
-                    <p className="text-xs text-zinc-400 mt-0.5">GPU WebGL Canvases</p>
+                    <p className="text-xl sm:text-2xl font-bold text-white tracking-tight">6 Styles</p>
+                    <p className="text-xs text-zinc-400 mt-0.5">Animated backgrounds</p>
                   </div>
                   <div>
                     <p className="text-xl sm:text-2xl font-bold text-white tracking-tight">0 Cookies</p>
-                    <p className="text-xs text-zinc-400 mt-0.5">Privacy First Analytics</p>
+                    <p className="text-xs text-zinc-400 mt-0.5">Privacy-first stats</p>
                   </div>
                   <div>
                     <p className="text-xl sm:text-2xl font-bold text-emerald-400 tracking-tight">Zero</p>
-                    <p className="text-xs text-zinc-400 mt-0.5">Forced Watermarks</p>
+                    <p className="text-xs text-zinc-400 mt-0.5">Forced watermarks</p>
                   </div>
                 </div>
               </div>
@@ -159,11 +156,11 @@ export default function LandingPage() {
               </div>
 
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white">
-                Reserve your username today.
+                Claim your link before someone else does.
               </h2>
 
               <p className="text-base sm:text-lg text-zinc-400 leading-relaxed">
-                Take control of your audience and link architecture. Free forever, no credit card required, and zero forced branding on your profile.
+                Put your store, socials, and work under one clean URL. Free forever with no ads and no forced watermarks.
               </p>
 
               <form action="/register" method="get" className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto pt-2">
@@ -194,7 +191,7 @@ export default function LandingPage() {
               </form>
 
               <p className="text-xs text-zinc-400">
-                Setup takes approximately 120 seconds. Custom domains supported on all tiers.
+                Takes about two minutes to set up. Free forever.
               </p>
             </div>
           </div>

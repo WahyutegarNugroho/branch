@@ -16,11 +16,11 @@ export function LandingFooter() {
               <span className="text-lg font-bold tracking-tight text-white">Branch</span>
             </Link>
             <p className="text-sm text-zinc-400 max-w-sm leading-relaxed">
-              The link-in-bio platform built like high-end software. GPU-accelerated WebGL shaders, zero watermarks, and edge SSR for creators who refuse to compromise on craft.
+              A clean, fast link-in-bio for creators and developers. Custom themes, privacy-friendly analytics, and zero forced watermarks.
             </p>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-white/[0.08] text-xs font-mono text-zinc-400">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span>Edge Network: 100% Operational</span>
+              <span className="w-2 h-2 rounded-full bg-emerald-400" />
+              <span>All systems operational</span>
             </div>
           </div>
 
@@ -34,10 +34,10 @@ export function LandingFooter() {
                 <a href="#demo" className="hover:text-white transition-colors">Live Preview</a>
               </li>
               <li>
-                <a href="#features" className="hover:text-white transition-colors">Bento Architecture</a>
+                <a href="#features" className="hover:text-white transition-colors">Features</a>
               </li>
               <li>
-                <a href="#studio" className="hover:text-white transition-colors">Interactive Studio</a>
+                <a href="#studio" className="hover:text-white transition-colors">Style Preview</a>
               </li>
               <li>
                 <a href="#compare" className="hover:text-white transition-colors">Why Branch</a>
@@ -55,13 +55,13 @@ export function LandingFooter() {
             </h4>
             <ul className="space-y-2 text-sm text-zinc-400">
               <li>
-                <Link href="/login" className="hover:text-white transition-colors">Log in to Dashboard</Link>
+                <Link href="/login" className="hover:text-white transition-colors">Log in</Link>
               </li>
               <li>
-                <Link href="/register" className="hover:text-white transition-colors">Create Free Account</Link>
+                <Link href="/register" className="hover:text-white transition-colors">Create Account</Link>
               </li>
               <li>
-                <Link href="/forgot-password" className="hover:text-white transition-colors">Password Recovery</Link>
+                <Link href="/forgot-password" className="hover:text-white transition-colors">Reset Password</Link>
               </li>
             </ul>
           </div>
@@ -69,7 +69,7 @@ export function LandingFooter() {
           {/* Navigation Column 3: Trust & Specs */}
           <div>
             <h4 className="text-xs font-semibold uppercase tracking-wider text-white mb-3 font-mono">
-              Engineering
+              Built With
             </h4>
             <ul className="space-y-2 text-sm text-zinc-400">
               <li className="flex items-center gap-1.5">
@@ -86,7 +86,7 @@ export function LandingFooter() {
               </li>
               <li className="flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-zinc-600" />
-                <span>Hardware WebGL Shaders</span>
+                <span>Canvas WebGL Effects</span>
               </li>
             </ul>
           </div>

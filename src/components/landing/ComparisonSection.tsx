@@ -11,53 +11,53 @@ interface ComparisonRow {
 
 const COMPARISON_ROWS: ComparisonRow[] = [
   {
-    feature: 'Page Load Speed (TTFB)',
-    branch: '< 100ms (Edge SSR)',
-    linktree: '1.4s - 2.8s (Client SPA)',
-    beacons: '1.2s - 2.1s (SPA)',
-    note: 'Compiled statically on edge servers with 0kB initial client overhead.'
+    feature: 'Page Load Speed',
+    branch: '< 100ms',
+    linktree: '1.4s - 2.8s',
+    beacons: '1.2s - 2.1s',
+    note: 'Loads instantly without heavy client scripts.'
   },
   {
-    feature: 'Forced Watermarks & Badges',
-    branch: 'Zero (Clean profile)',
-    linktree: 'Large "Linktree" logo',
-    beacons: 'Beacons watermark',
-    note: 'We never hijack your profile to advertise our own tool.'
+    feature: 'Forced Watermarks',
+    branch: 'None (Clean profile)',
+    linktree: 'Linktree logo',
+    beacons: 'Beacons logo',
+    note: 'Your profile is for your brand, not ours.'
   },
   {
-    feature: 'Dynamic GPU WebGL Backgrounds',
-    branch: '6 Living Shaders (60fps)',
+    feature: 'Animated Canvas Backgrounds',
+    branch: '6 Included',
     linktree: false,
     beacons: false,
-    note: 'Aurora, Matrix rain, Starfield, and interactive particle fields.'
+    note: 'Subtle moving backgrounds like aurora, stars, and snowfall.'
   },
   {
-    feature: 'Privacy-First Analytics',
+    feature: 'Privacy-Friendly Analytics',
     branch: 'First-party (0 cookies)',
-    linktree: 'Heavy tracking scripts',
-    beacons: 'Ad cookies & trackers',
-    note: 'Compliant with GDPR & ePrivacy regulations right out of the box.'
+    linktree: 'Ad tracking scripts',
+    beacons: 'Ad cookies',
+    note: 'No cookie consent popups or cross-site trackers.'
   },
   {
-    feature: 'Custom Domain Verification',
+    feature: 'Custom Domain',
     branch: true,
-    linktree: 'Expensive Pro tier ($24/m)',
+    linktree: 'Pro tier ($24/mo)',
     beacons: 'Paid tier only',
-    note: 'Point your TXT record and use links.yourbrand.com.'
+    note: 'Connect links.yourdomain.com via simple DNS record.'
   },
   {
     feature: 'Link Scheduling & Expiry',
     branch: true,
-    linktree: 'Pro tier only',
+    linktree: 'Paid tier only',
     beacons: 'Paid tier only',
-    note: 'Set exact release and sunset timestamps for time-sensitive drops.'
+    note: 'Set exact start and expiration dates for launches.'
   },
   {
-    feature: 'Full Data Portability (CSV)',
+    feature: 'CSV Data Export',
     branch: true,
-    linktree: 'Limited retention',
-    beacons: 'Limited retention',
-    note: 'Export every click and referral event whenever you want.'
+    linktree: 'Paid tier only',
+    beacons: 'Paid tier only',
+    note: 'Download your full visitor and click data anytime.'
   },
 ]
 
@@ -69,13 +69,13 @@ export function ComparisonSection() {
         <div className="max-w-3xl mb-14 text-left sm:text-center sm:mx-auto">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-white/[0.08] text-xs font-medium text-emerald-400 mb-4">
             <Zap className="w-3.5 h-3.5" />
-            <span>Honest Architecture</span>
+            <span>Comparison</span>
           </div>
           <h2 id="compare-heading" className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white">
-            Why creators switch to Branch.
+            How Branch compares.
           </h2>
           <p className="mt-4 text-base lg:text-lg text-zinc-400 leading-relaxed">
-            No extortion pricing. No bloated tracking scripts. Just a blazing fast profile with uncompromising craft.
+            Fair pricing, no forced watermarks, and fast page loads without heavy tracking scripts.
           </p>
         </div>
 
@@ -168,8 +168,8 @@ export function ComparisonSection() {
 
         {/* Micro Guarantee footer */}
         <div className="mt-8 flex flex-wrap items-center justify-between gap-4 text-xs text-zinc-500 px-2">
-          <span>All comparisons based on publicly available tier specifications as of 2026.</span>
-          <span className="text-zinc-400 font-medium">Free migration assistance available &rarr;</span>
+          <span>Based on publicly available plan specifications.</span>
+          <span className="text-zinc-400 font-medium">Takes less than 2 minutes to set up &rarr;</span>
         </div>
       </div>
     </section>

@@ -75,15 +75,13 @@ export function InteractiveStudio() {
         <div className="max-w-3xl mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-white/[0.08] text-xs font-medium text-emerald-400 mb-4">
             <Sliders className="w-3.5 h-3.5" />
-            <span>Interactive Sandbox</span>
+            <span>Style Preview</span>
           </div>
           <h2 id="studio-heading" className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white">
-            Fine-tune every visual token.
-            <br />
-            <span className="text-zinc-500 font-normal">Test the studio before signing up.</span>
+            Make it match your style.
           </h2>
           <p className="mt-4 text-base lg:text-lg text-zinc-400 leading-relaxed max-w-2xl">
-            Tweak shapes, typography pairings, and micro-interactions in real time. What you see here is exactly how your public profile compiles on the edge.
+            Choose button shapes, fonts, and colors to see how your links will appear to visitors before you sign up.
           </p>
         </div>
 
@@ -97,7 +95,7 @@ export function InteractiveStudio() {
             <div className="p-5 rounded-2xl bg-zinc-900/80 border border-white/[0.08]">
               <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400 flex items-center gap-2 mb-3">
                 <Square className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Button Geometry & Border Radius</span>
+                <span>Button Shape</span>
               </label>
               <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
                 {[
@@ -127,7 +125,7 @@ export function InteractiveStudio() {
             <div className="p-5 rounded-2xl bg-zinc-900/80 border border-white/[0.08]">
               <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400 flex items-center gap-2 mb-3">
                 <Type className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Font Pairing</span>
+                <span>Font</span>
               </label>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 {[
@@ -157,7 +155,7 @@ export function InteractiveStudio() {
             <div className="p-5 rounded-2xl bg-zinc-900/80 border border-white/[0.08]">
               <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400 flex items-center gap-2 mb-3">
                 <Palette className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Color Palette & Surface</span>
+                <span>Button Colors</span>
               </label>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 {COLOR_PRESETS.map(preset => (
@@ -182,7 +180,7 @@ export function InteractiveStudio() {
             <div className="p-5 rounded-2xl bg-zinc-900/80 border border-white/[0.08]">
               <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400 flex items-center gap-2 mb-3">
                 <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Spotlight & Motion Behavior</span>
+                <span>Link Highlight Effect</span>
               </label>
               <div className="grid grid-cols-3 gap-2">
                 {[
@@ -212,10 +210,10 @@ export function InteractiveStudio() {
           <div className="lg:col-span-5 flex flex-col items-center">
             <div className="w-full max-w-sm rounded-3xl p-6 bg-zinc-900/90 border border-white/[0.08] shadow-2xl relative overflow-hidden">
               <div className="flex items-center justify-between pb-4 mb-4 border-b border-white/[0.06] text-xs text-zinc-400">
-                <span className="font-mono">Live Studio Preview</span>
+                <span className="font-mono">Live Preview</span>
                 <span className="flex items-center gap-1.5 text-emerald-400">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  Synced
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                  Active
                 </span>
               </div>
 
@@ -224,9 +222,9 @@ export function InteractiveStudio() {
                 <div className="w-16 h-16 rounded-full bg-zinc-800 border border-zinc-700 text-white font-bold text-lg flex items-center justify-center mx-auto mb-3 shadow-md">
                   ST
                 </div>
-                <h3 className="text-lg font-bold text-white tracking-tight">Studio Sandbox</h3>
+                <h3 className="text-lg font-bold text-white tracking-tight">Sarah Tan</h3>
                 <p className="text-xs text-zinc-400 mt-1">
-                  Testing custom styles, typography, and button dynamics.
+                  Photographer & visual designer based in Jakarta.
                 </p>
               </div>
 
@@ -269,7 +267,7 @@ export function InteractiveStudio() {
                   href="/register"
                   className="w-full h-11 inline-flex items-center justify-center gap-2 rounded-xl bg-white hover:bg-zinc-100 text-zinc-950 font-bold text-xs transition-all shadow-md"
                 >
-                  <span>Keep this style & create page</span>
+                  <span>Use this style & create page</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
               </div>

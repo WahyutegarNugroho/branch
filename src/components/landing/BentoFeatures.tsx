@@ -65,15 +65,13 @@ export function BentoFeatures() {
         <div className="max-w-3xl mb-16">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-white/[0.08] text-xs font-medium text-emerald-400 mb-4">
             <Layers className="w-3.5 h-3.5" />
-            <span>Modern Architecture</span>
+            <span>Features</span>
           </div>
           <h2 id="features-heading" className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white">
-            Built like high-end software.
-            <br />
-            <span className="text-zinc-500 font-normal">Not a generic static list.</span>
+            Everything you need to share your work.
           </h2>
           <p className="mt-4 text-base lg:text-lg text-zinc-400 leading-relaxed max-w-2xl">
-            Every feature in Branch is engineered for speed, aesthetics, and privacy. Here is what separates your page from traditional bloated link-in-bio tools.
+            From interactive embeds to privacy-friendly analytics, Branch gives you complete control over your bio page without bloat.
           </p>
         </div>
 
@@ -87,10 +85,10 @@ export function BentoFeatures() {
                 <div>
                   <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-emerald-400">
                     <BarChart3 className="w-4 h-4" />
-                    <span>First-Party Real-Time Analytics</span>
+                    <span>Real-Time Analytics</span>
                   </div>
                   <h3 className="text-xl sm:text-2xl font-bold text-white mt-1">
-                    Know exactly what converts without invasive tracking
+                    See what your audience clicks, without creepy cookies
                   </h3>
                 </div>
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs font-medium text-emerald-400">
@@ -201,7 +199,7 @@ export function BentoFeatures() {
             </div>
 
             <div className="mt-6 pt-4 border-t border-white/[0.06] flex items-center justify-between text-xs text-zinc-400">
-              <span>All analytics collected on your own edge infrastructure. Zero third-party scripts.</span>
+              <span>First-party stats stored securely. No tracking pixels or ad cookies.</span>
               <span className="text-emerald-400 font-medium">Export raw CSV anytime &rarr;</span>
             </div>
           </div>
@@ -211,13 +209,13 @@ export function BentoFeatures() {
             <div>
               <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-emerald-400 mb-2">
                 <Sparkles className="w-4 h-4" />
-                <span>GPU-Accelerated Shaders</span>
+                <span>Animated Backgrounds</span>
               </div>
               <h3 className="text-xl font-bold text-white">
-                6 Living WebGL Backgrounds
+                6 Dynamic Canvas Effects
               </h3>
               <p className="text-sm text-zinc-400 mt-2 leading-relaxed">
-                Replace flat wallpapers with lightweight, 60fps dynamic canvas effects that adapt to user interaction.
+                Pick from subtle animations like aurora, starfields, snow, or matrix rain. Smooth and battery-friendly on phones.
               </p>
 
               {/* Shader Selector Chips */}
@@ -248,13 +246,13 @@ export function BentoFeatures() {
                 {activeShader === 'confetti' && <ConfettiBackground config={{ amount: 50, speed: 1 }} />}
 
                 <div className="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-black/60 backdrop-blur-md border border-white/10 text-[10px] font-mono text-zinc-300">
-                  {activeShader.toUpperCase()} SHADER &bull; 60 FPS
+                  {activeShader.toUpperCase()} &bull; 60 FPS
                 </div>
               </div>
             </div>
 
             <p className="text-xs text-zinc-500 mt-4">
-              Fully optimized for low battery & CPU overhead with requestAnimationFrame throttling.
+              Runs smoothly on mobile devices with minimal battery and CPU usage.
             </p>
           </div>
 
@@ -263,13 +261,13 @@ export function BentoFeatures() {
             <div>
               <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-emerald-400 mb-2">
                 <Calendar className="w-4 h-4" />
-                <span>Smart Organization</span>
+                <span>Organization</span>
               </div>
               <h3 className="text-xl font-bold text-white">
-                Drag, Schedule & Pin
+                Drag, Drop & Schedule
               </h3>
               <p className="text-sm text-zinc-400 mt-2 leading-relaxed">
-                Schedule campaign links to automatically appear and disappear without manual toggling.
+                Reorder links with drag and drop, pin spotlight links, and set automatic start or expiration dates.
               </p>
 
               {/* Mockup of Drag & Drop Item */}
@@ -314,7 +312,7 @@ export function BentoFeatures() {
             </div>
 
             <p className="text-xs text-zinc-500 mt-4">
-              Integrated with @dnd-kit for accessible, tactile keyboard and touch reordering.
+              Easy to reorder on both phone and desktop.
             </p>
           </div>
 
@@ -323,13 +321,13 @@ export function BentoFeatures() {
             <div>
               <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-emerald-400 mb-2">
                 <Volume2 className="w-4 h-4" />
-                <span>Rich Embed Engine</span>
+                <span>Media & Music</span>
               </div>
               <h3 className="text-xl font-bold text-white">
                 Spotify, YouTube & TikTok
               </h3>
               <p className="text-sm text-zinc-400 mt-2 leading-relaxed">
-                Stream podcasts, preview video trailers, and play tracks directly on your profile with zero friction.
+                Play songs, podcast episodes, and video clips directly on your page without sending visitors away.
               </p>
 
               {/* Embed Card Mockup */}
@@ -363,7 +361,7 @@ export function BentoFeatures() {
             </div>
 
             <p className="text-xs text-zinc-500 mt-4">
-              Supports responsive oEmbed providers with lazy load optimization for high Google Lighthouse scores.
+              Embeds load lazily so your page opens in milliseconds.
             </p>
           </div>
 
@@ -372,13 +370,13 @@ export function BentoFeatures() {
             <div>
               <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-emerald-400 mb-2">
                 <Globe className="w-4 h-4" />
-                <span>Domain Independence</span>
+                <span>Custom Domain</span>
               </div>
               <h3 className="text-xl font-bold text-white">
-                Your Own Domain & Vector QR
+                Your Own Domain & QR Code
               </h3>
               <p className="text-sm text-zinc-400 mt-2 leading-relaxed">
-                Connect your personal custom domain with automatic SSL certification and generate vector QR codes for physical cards.
+                Connect your personal domain like links.yourname.com with automatic SSL, and generate clean QR codes for print.
               </p>
 
               {/* DNS Verification Mockup */}
@@ -399,7 +397,7 @@ export function BentoFeatures() {
             </div>
 
             <div className="mt-4 pt-3 border-t border-white/[0.06] flex items-center justify-between">
-              <span className="text-xs text-zinc-400">High-resolution QR download included</span>
+              <span className="text-xs text-zinc-400">Download QR code as SVG or PNG</span>
               <QrCode className="w-4 h-4 text-emerald-400" />
             </div>
           </div>
