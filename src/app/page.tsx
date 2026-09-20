@@ -91,8 +91,8 @@ export default function LandingPage() {
                 {/* Architecture Highlights Bar (R-17/R-36: Real features, no speculative speeds) */}
                 <div className="pt-6 border-t border-white/[0.08] grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-xl">
                   <div>
-                    <p className="text-xl sm:text-2xl font-bold text-white tracking-tight">Next.js 16</p>
-                    <p className="text-xs text-zinc-400 mt-0.5">Server rendered</p>
+                    <p className="text-xl sm:text-2xl font-bold text-white tracking-tight">Unlimited</p>
+                    <p className="text-xs text-zinc-400 mt-0.5">Links & embeds</p>
                   </div>
                   <div>
                     <p className="text-xl sm:text-2xl font-bold text-white tracking-tight">6 Styles</p>
@@ -139,42 +139,30 @@ export default function LandingPage() {
               </div>
 
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white">
-                Claim your link before someone else does.
+                Build your bio page in minutes.
               </h2>
 
               <p className="text-base sm:text-lg text-zinc-400 leading-relaxed">
-                Put your store, socials, and work under one clean URL. Free forever with no ads and no forced watermarks.
+                Put your store, socials, and projects under one clean URL. Free forever with no ads and zero forced watermarks.
               </p>
 
-              <form action="/register" method="get" className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto pt-2">
-                <label htmlFor="final-username" className="sr-only">Choose your username</label>
-                <div className="flex flex-1 items-center bg-zinc-950 border border-zinc-700 rounded-xl overflow-hidden focus-within:border-emerald-400 transition-colors shadow-inner">
-                  <span className="pl-3.5 text-zinc-500 font-mono text-sm select-none" aria-hidden="true">
-                    branch.bio/
-                  </span>
-                  <input
-                    id="final-username"
-                    name="username"
-                    type="text"
-                    inputMode="text"
-                    autoComplete="off"
-                    spellCheck={false}
-                    maxLength={30}
-                    placeholder="yourname"
-                    pattern="[a-z0-9_-]+"
-                    className="w-full h-12 px-2 bg-transparent text-white font-medium text-sm placeholder:text-zinc-600 focus:outline-none"
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="h-12 px-7 rounded-xl bg-white hover:bg-zinc-100 text-zinc-950 font-bold text-sm transition-all shadow-md whitespace-nowrap active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+              <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4">
+                <Link
+                  href="/register"
+                  className="h-12 px-8 rounded-xl bg-white hover:bg-zinc-100 text-zinc-950 font-bold text-sm transition-all shadow-md flex items-center justify-center whitespace-nowrap active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                 >
-                  Claim your link
-                </button>
-              </form>
+                  Create your free page
+                </Link>
+                <Link
+                  href="/login"
+                  className="h-12 px-6 rounded-xl bg-zinc-950 hover:bg-zinc-800 text-zinc-300 hover:text-white font-medium text-sm border border-zinc-700 transition-all flex items-center justify-center whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                >
+                  Sign in
+                </Link>
+              </div>
 
               <p className="text-xs text-zinc-400">
-                Takes about two minutes to set up. Free forever.
+                No credit card required. Free plan includes custom themes and analytics.
               </p>
             </div>
           </div>

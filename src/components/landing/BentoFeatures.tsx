@@ -79,14 +79,9 @@ export function BentoFeatures() {
                   See what your audience clicks, without tracking cookies
                 </h3>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-800 text-zinc-400 border border-zinc-700">
-                  [Interactive Sample]
-                </span>
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs font-medium text-emerald-400">
-                  <ShieldCheck className="w-3.5 h-3.5" />
-                  <span>Zero Cookies</span>
-                </div>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs font-medium text-emerald-400">
+                <ShieldCheck className="w-3.5 h-3.5" />
+                <span>Zero Cookies</span>
               </div>
             </div>
 

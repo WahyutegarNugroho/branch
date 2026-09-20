@@ -30,19 +30,10 @@ export function LandingNavbar() {
             <span className="w-8 h-8 rounded-lg bg-white flex items-center justify-center shadow-[0_0_20px_rgba(255,255,255,0.15)] group-hover:scale-105 transition-transform" aria-hidden="true">
               <Zap className="w-4 h-4 text-zinc-950 fill-zinc-950" />
             </span>
-            <span className="text-lg font-bold tracking-tight text-white flex items-center gap-2">
+            <span className="text-lg font-bold tracking-tight text-white">
               Branch
-              <span className="text-[10px] font-mono font-medium px-1.5 py-0.5 rounded bg-zinc-900 text-zinc-400 border border-zinc-800">
-                v2.0
-              </span>
             </span>
           </Link>
-
-          {/* Genuine plan note (R-09: No ping animation, clear status) */}
-          <div className="hidden lg:flex items-center gap-2 text-xs font-mono text-zinc-400 bg-zinc-900/60 border border-zinc-800 px-3 py-1 rounded-md">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" aria-hidden="true" />
-            <span>Zero watermarks on any plan</span>
-          </div>
         </div>
 
         {/* Center: Nav Links */}

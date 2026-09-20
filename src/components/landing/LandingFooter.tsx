@@ -1,12 +1,12 @@
 import React from 'react'
 import Link from 'next/link'
-import { Zap, Globe, Shield, Terminal, ArrowUpRight } from 'lucide-react'
+import { Zap } from 'lucide-react'
 
 export function LandingFooter() {
   return (
     <footer className="border-t border-white/[0.08] bg-zinc-950 py-16 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-white/[0.06]">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 border-b border-white/[0.06]">
           {/* Brand & Mission (2 cols) */}
           <div className="lg:col-span-2 space-y-4">
             <Link href="/" className="flex items-center gap-2.5">
@@ -18,10 +18,6 @@ export function LandingFooter() {
             <p className="text-sm text-zinc-400 max-w-sm leading-relaxed">
               A clean, fast link-in-bio for creators and developers. Custom themes, privacy-friendly analytics, and zero forced watermarks.
             </p>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-white/[0.08] text-xs font-mono text-zinc-400">
-              <span className="w-2 h-2 rounded-full bg-emerald-400" />
-              <span>All systems operational</span>
-            </div>
           </div>
 
           {/* Navigation Column 1: Product */}
@@ -62,31 +58,6 @@ export function LandingFooter() {
               </li>
               <li>
                 <Link href="/forgot-password" className="hover:text-white transition-colors">Reset Password</Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Navigation Column 3: Trust & Specs */}
-          <div>
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-white mb-3 font-mono">
-              Built With
-            </h4>
-            <ul className="space-y-2 text-sm text-zinc-400">
-              <li className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-zinc-600" />
-                <span>Next.js 16 App Router</span>
-              </li>
-              <li className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-zinc-600" />
-                <span>Supabase PostgreSQL</span>
-              </li>
-              <li className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-zinc-600" />
-                <span>Tailwind CSS v4</span>
-              </li>
-              <li className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-zinc-600" />
-                <span>Canvas WebGL Effects</span>
               </li>
             </ul>
           </div>

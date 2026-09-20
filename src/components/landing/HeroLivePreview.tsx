@@ -216,7 +216,7 @@ export function HeroLivePreview() {
               <span
                 className={`w-2 h-2 rounded-full ${
                   theme.bgType === 'aurora'
-                    ? 'bg-emerald-400 animate-pulse'
+                    ? 'bg-emerald-400'
                     : theme.bgType === 'matrix'
                     ? 'bg-emerald-500'
                     : theme.bgType === 'stars'
