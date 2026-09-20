@@ -60,10 +60,10 @@ export function ComparisonSection() {
       <div className="max-w-6xl mx-auto">
         {/* Header (R-09: No category pill parked above H2) */}
         <div className="max-w-3xl mb-14 text-left sm:text-center sm:mx-auto">
-          <h2 id="compare-heading" className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white">
+          <h2 id="compare-heading" className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white font-heading">
             How Branch compares.
           </h2>
-          <p className="mt-3 text-base lg:text-lg text-zinc-400 leading-relaxed">
+          <p className="mt-3 text-base lg:text-lg text-zinc-300 leading-relaxed">
             Fair pricing, no forced watermarks, and fast page loads without heavy tracking scripts.
           </p>
         </div>
@@ -77,7 +77,7 @@ export function ComparisonSection() {
                   <th className="py-5 px-6 text-sm font-semibold text-zinc-400 w-2/5">
                     Feature & Performance Metric
                   </th>
-                  <th className="py-5 px-6 text-sm font-bold text-emerald-400 bg-emerald-500/10 border-x border-emerald-500/20 w-1/5">
+                  <th className="py-5 px-6 text-sm font-bold text-emerald-400 bg-emerald-500/10 border-x border-emerald-500/20 w-1/5 font-heading">
                     <div className="flex items-center gap-1.5">
                       <Zap className="w-4 h-4 fill-current" />
                       <span>Branch</span>
@@ -97,7 +97,7 @@ export function ComparisonSection() {
                     <td className="py-4 px-6">
                       <p className="font-medium text-white">{row.feature}</p>
                       {row.note && (
-                        <p className="text-xs text-zinc-400 mt-0.5 leading-relaxed">{row.note}</p>
+                        <p className="text-xs text-zinc-300 mt-0.5 leading-relaxed">{row.note}</p>
                       )}
                     </td>
 
@@ -156,9 +156,9 @@ export function ComparisonSection() {
         </div>
 
         {/* Micro Guarantee footer (R-08: Clean, no decorative arrow) */}
-        <div className="mt-8 flex flex-wrap items-center justify-between gap-4 text-xs text-zinc-500 px-2">
+        <div className="mt-8 flex flex-wrap items-center justify-between gap-4 text-xs text-zinc-400 px-2">
           <span>Based on publicly available plan specifications.</span>
-          <span className="text-zinc-400 font-medium">Free plan requires no credit card</span>
+          <span className="text-zinc-300 font-medium">Free plan requires no credit card</span>
         </div>
       </div>
     </section>

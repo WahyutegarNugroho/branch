@@ -25,46 +25,46 @@ export function LandingNavbar() {
         <div className="flex items-center gap-6">
           <Link
             href="/"
-            className="flex items-center gap-2.5 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded-lg p-1"
+            className="flex items-center gap-2.5 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded-lg p-1 cursor-pointer"
           >
             <span className="w-8 h-8 rounded-lg bg-white flex items-center justify-center shadow-[0_0_20px_rgba(255,255,255,0.15)] group-hover:scale-105 transition-transform" aria-hidden="true">
               <Zap className="w-4 h-4 text-zinc-950 fill-zinc-950" />
             </span>
-            <span className="text-lg font-bold tracking-tight text-white">
+            <span className="text-lg font-bold tracking-tight text-white font-heading">
               Branch
             </span>
           </Link>
         </div>
 
         {/* Center: Nav Links */}
-        <div className="hidden md:flex items-center gap-1 text-sm font-medium text-zinc-400">
+        <div className="hidden md:flex items-center gap-1 text-sm font-medium text-zinc-300">
           <a
             href="#demo"
-            className="px-3 py-1.5 rounded-md hover:text-white hover:bg-white/[0.04] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+            className="px-3 py-1.5 rounded-md hover:text-white hover:bg-white/[0.04] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white cursor-pointer"
           >
             Live Preview
           </a>
           <a
             href="#features"
-            className="px-3 py-1.5 rounded-md hover:text-white hover:bg-white/[0.04] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+            className="px-3 py-1.5 rounded-md hover:text-white hover:bg-white/[0.04] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white cursor-pointer"
           >
             Features
           </a>
           <a
             href="#studio"
-            className="px-3 py-1.5 rounded-md hover:text-white hover:bg-white/[0.04] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+            className="px-3 py-1.5 rounded-md hover:text-white hover:bg-white/[0.04] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white cursor-pointer"
           >
             Style Preview
           </a>
           <a
             href="#compare"
-            className="px-3 py-1.5 rounded-md hover:text-white hover:bg-white/[0.04] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+            className="px-3 py-1.5 rounded-md hover:text-white hover:bg-white/[0.04] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white cursor-pointer"
           >
             Why Branch
           </a>
           <a
             href="#faq"
-            className="px-3 py-1.5 rounded-md hover:text-white hover:bg-white/[0.04] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+            className="px-3 py-1.5 rounded-md hover:text-white hover:bg-white/[0.04] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white cursor-pointer"
           >
             FAQ
           </a>
@@ -74,13 +74,13 @@ export function LandingNavbar() {
         <div className="hidden sm:flex items-center gap-3">
           <Link
             href="/login"
-            className="text-sm font-medium text-zinc-400 hover:text-white transition-colors px-3 py-1.5 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+            className="text-sm font-medium text-zinc-300 hover:text-white transition-colors px-3 py-1.5 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white cursor-pointer"
           >
             Log in
           </Link>
           <Link
             href="/register"
-            className="inline-flex items-center justify-center h-9 px-4 rounded-lg bg-white text-zinc-950 text-sm font-semibold hover:bg-zinc-100 transition-all shadow-[0_1px_2px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.8)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white active:scale-[0.98]"
+            className="inline-flex items-center justify-center h-9 px-4 rounded-lg bg-white text-zinc-950 text-sm font-semibold hover:bg-zinc-100 transition-all shadow-[0_1px_2px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.8)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white active:scale-[0.98] cursor-pointer"
           >
             Claim your page
           </Link>
@@ -92,7 +92,7 @@ export function LandingNavbar() {
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-expanded={mobileOpen}
           aria-label="Toggle navigation menu"
-          className="md:hidden p-2 text-zinc-400 hover:text-white rounded-lg hover:bg-zinc-900 border border-zinc-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+          className="md:hidden p-2 text-zinc-300 hover:text-white rounded-lg hover:bg-zinc-900 border border-zinc-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white cursor-pointer"
         >
           {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
@@ -109,35 +109,35 @@ export function LandingNavbar() {
             <a
               href="#demo"
               onClick={() => setMobileOpen(false)}
-              className="py-2 hover:text-white transition-colors"
+              className="py-2 hover:text-white transition-colors cursor-pointer"
             >
               Live Preview
             </a>
             <a
               href="#features"
               onClick={() => setMobileOpen(false)}
-              className="py-2 hover:text-white transition-colors"
+              className="py-2 hover:text-white transition-colors cursor-pointer"
             >
               Features
             </a>
             <a
               href="#studio"
               onClick={() => setMobileOpen(false)}
-              className="py-2 hover:text-white transition-colors"
+              className="py-2 hover:text-white transition-colors cursor-pointer"
             >
               Style Preview
             </a>
             <a
               href="#compare"
               onClick={() => setMobileOpen(false)}
-              className="py-2 hover:text-white transition-colors"
+              className="py-2 hover:text-white transition-colors cursor-pointer"
             >
               Why Branch
             </a>
             <a
               href="#faq"
               onClick={() => setMobileOpen(false)}
-              className="py-2 hover:text-white transition-colors"
+              className="py-2 hover:text-white transition-colors cursor-pointer"
             >
               FAQ
             </a>
@@ -146,14 +146,14 @@ export function LandingNavbar() {
             <Link
               href="/login"
               onClick={() => setMobileOpen(false)}
-              className="w-full text-center py-2 text-sm font-medium text-zinc-300 hover:text-white"
+              className="w-full text-center py-2 text-sm font-medium text-zinc-300 hover:text-white cursor-pointer"
             >
               Log in
             </Link>
             <Link
               href="/register"
               onClick={() => setMobileOpen(false)}
-              className="w-full h-10 inline-flex items-center justify-center rounded-lg bg-white text-zinc-950 text-sm font-semibold hover:bg-zinc-100"
+              className="w-full h-10 inline-flex items-center justify-center rounded-lg bg-white text-zinc-950 text-sm font-semibold hover:bg-zinc-100 cursor-pointer"
             >
               Claim your page
             </Link>

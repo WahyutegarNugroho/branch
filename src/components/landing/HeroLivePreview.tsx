@@ -207,10 +207,10 @@ export function HeroLivePreview() {
               key={theme.id}
               type="button"
               onClick={() => setActiveId(theme.id)}
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all cursor-pointer select-none active:scale-[0.97] ${
                 isActive
                   ? 'bg-white text-zinc-950 shadow-[0_1px_8px_rgba(255,255,255,0.25)] font-semibold'
-                  : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/60'
+                  : 'text-zinc-300 hover:text-white hover:bg-zinc-800/80'
               }`}
             >
               <span
@@ -330,7 +330,7 @@ export function HeroLivePreview() {
                   key={link.title}
                   type="button"
                   onClick={() => handleLinkClick(link.title)}
-                  className={`group relative w-full p-3.5 text-left flex items-center justify-between transition-all duration-200 active:scale-[0.98] ${current.buttonClass} ${current.buttonShape}`}
+                  className={`group relative w-full p-3.5 text-left flex items-center justify-between transition-all duration-200 active:scale-[0.98] cursor-pointer ${current.buttonClass} ${current.buttonShape}`}
                 >
                   {/* Spotlight label */}
                   {link.isSpotlight && (
@@ -373,7 +373,7 @@ export function HeroLivePreview() {
                     <p className="text-[11px] font-semibold truncate leading-tight">
                       {current.nowPlaying.title}
                     </p>
-                    <p className="text-[9px] text-zinc-400 truncate">
+                    <p className="text-[9px] text-zinc-300 truncate">
                       {current.nowPlaying.artist}
                     </p>
                   </div>
@@ -382,7 +382,7 @@ export function HeroLivePreview() {
                 <button
                   type="button"
                   onClick={() => setIsPlaying(!isPlaying)}
-                  className="w-7 h-7 rounded-full bg-white text-zinc-950 flex items-center justify-center hover:scale-105 transition-transform shrink-0"
+                  className="w-7 h-7 rounded-full bg-white text-zinc-950 flex items-center justify-center hover:scale-105 transition-transform shrink-0 cursor-pointer"
                   aria-label={isPlaying ? 'Pause preview' : 'Play preview'}
                 >
                   {isPlaying ? <Pause className="w-3 h-3 fill-current" /> : <Play className="w-3 h-3 fill-current ml-0.5" />}
@@ -404,8 +404,8 @@ export function HeroLivePreview() {
       </div>
 
       {/* Micro instructions under phone */}
-      <p className="text-xs text-zinc-500 mt-4 flex items-center gap-1.5">
-        <Sliders className="w-3.5 h-3.5 text-zinc-400" />
+      <p className="text-xs text-zinc-400 mt-4 flex items-center gap-1.5">
+        <Sliders className="w-3.5 h-3.5 text-zinc-300" />
         <span>Click the presets above to preview different themes and button styles</span>
       </p>
     </div>

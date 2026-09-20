@@ -34,10 +34,10 @@ export function FaqSection() {
       <div className="max-w-3xl mx-auto">
         {/* Header (R-09: No category pill parked above H2) */}
         <div className="mb-12 text-left sm:text-center">
-          <h2 id="faq-heading" className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
+          <h2 id="faq-heading" className="text-3xl sm:text-4xl font-bold tracking-tight text-white font-heading">
             Frequently Asked Questions
           </h2>
-          <p className="mt-3 text-base text-zinc-400">
+          <p className="mt-3 text-base text-zinc-300">
             Answers to common questions about features, domains, and privacy.
           </p>
         </div>
@@ -46,13 +46,13 @@ export function FaqSection() {
         <div className="divide-y divide-white/[0.08] border-y border-white/[0.08]">
           {FAQS.map((faq) => (
             <details key={faq.q} className="group py-5">
-              <summary className="flex items-center justify-between gap-4 cursor-pointer text-base font-semibold text-zinc-200 hover:text-white transition-colors marker:hidden [&::-webkit-details-marker]:hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-400 -outline-offset-2">
+              <summary className="flex items-center justify-between gap-4 cursor-pointer text-base font-semibold text-zinc-100 hover:text-white transition-colors marker:hidden [&::-webkit-details-marker]:hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-400 -outline-offset-2 select-none">
                 <span>{faq.q}</span>
                 <span className="w-6 h-6 rounded-full bg-zinc-900 border border-white/[0.08] flex items-center justify-center text-zinc-400 group-open:rotate-180 group-open:text-white transition-all shrink-0">
                   <ChevronDown className="w-4 h-4" />
                 </span>
               </summary>
-              <p className="pt-3 pr-8 text-sm text-zinc-400 leading-relaxed">
+              <p className="pt-3 pr-8 text-sm text-zinc-300 leading-relaxed">
                 {faq.a}
               </p>
             </details>

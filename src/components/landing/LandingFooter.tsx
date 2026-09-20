@@ -9,13 +9,13 @@ export function LandingFooter() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 border-b border-white/[0.06]">
           {/* Brand & Mission (2 cols) */}
           <div className="lg:col-span-2 space-y-4">
-            <Link href="/" className="flex items-center gap-2.5">
+            <Link href="/" className="flex items-center gap-2.5 cursor-pointer">
               <span className="w-7 h-7 rounded-md bg-white flex items-center justify-center">
                 <Zap className="w-4 h-4 text-zinc-950 fill-zinc-950" />
               </span>
-              <span className="text-lg font-bold tracking-tight text-white">Branch</span>
+              <span className="text-lg font-bold tracking-tight text-white font-heading">Branch</span>
             </Link>
-            <p className="text-sm text-zinc-400 max-w-sm leading-relaxed">
+            <p className="text-sm text-zinc-300 max-w-sm leading-relaxed">
               A clean, fast link-in-bio for creators and developers. Custom themes, privacy-friendly analytics, and zero forced watermarks.
             </p>
           </div>
@@ -25,21 +25,21 @@ export function LandingFooter() {
             <h4 className="text-xs font-semibold uppercase tracking-wider text-white mb-3 font-mono">
               Product
             </h4>
-            <ul className="space-y-2 text-sm text-zinc-400">
+            <ul className="space-y-2 text-sm text-zinc-300">
               <li>
-                <a href="#demo" className="hover:text-white transition-colors">Live Preview</a>
+                <a href="#demo" className="hover:text-white transition-colors cursor-pointer">Live Preview</a>
               </li>
               <li>
-                <a href="#features" className="hover:text-white transition-colors">Features</a>
+                <a href="#features" className="hover:text-white transition-colors cursor-pointer">Features</a>
               </li>
               <li>
-                <a href="#studio" className="hover:text-white transition-colors">Style Preview</a>
+                <a href="#studio" className="hover:text-white transition-colors cursor-pointer">Style Preview</a>
               </li>
               <li>
-                <a href="#compare" className="hover:text-white transition-colors">Why Branch</a>
+                <a href="#compare" className="hover:text-white transition-colors cursor-pointer">Why Branch</a>
               </li>
               <li>
-                <a href="#faq" className="hover:text-white transition-colors">FAQ</a>
+                <a href="#faq" className="hover:text-white transition-colors cursor-pointer">FAQ</a>
               </li>
             </ul>
           </div>
@@ -49,24 +49,24 @@ export function LandingFooter() {
             <h4 className="text-xs font-semibold uppercase tracking-wider text-white mb-3 font-mono">
               Account
             </h4>
-            <ul className="space-y-2 text-sm text-zinc-400">
+            <ul className="space-y-2 text-sm text-zinc-300">
               <li>
-                <Link href="/login" className="hover:text-white transition-colors">Log in</Link>
+                <Link href="/login" className="hover:text-white transition-colors cursor-pointer">Log in</Link>
               </li>
               <li>
-                <Link href="/register" className="hover:text-white transition-colors">Create Account</Link>
+                <Link href="/register" className="hover:text-white transition-colors cursor-pointer">Create Account</Link>
               </li>
               <li>
-                <Link href="/forgot-password" className="hover:text-white transition-colors">Reset Password</Link>
+                <Link href="/forgot-password" className="hover:text-white transition-colors cursor-pointer">Reset Password</Link>
               </li>
             </ul>
           </div>
         </div>
 
         {/* Bottom copyright row (R-26: No dead cursor-pointer controls) */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500">
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-400">
           <p>© 2026 Branch. All rights reserved.</p>
-          <div className="flex items-center gap-4 text-zinc-500">
+          <div className="flex items-center gap-4 text-zinc-400">
             <span>Built for creator privacy</span>
             <span>&bull;</span>
             <span>0 third-party ad cookies</span>

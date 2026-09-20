@@ -56,10 +56,10 @@ export function BentoFeatures() {
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Section Header (R-09: No category pill parked above headline) */}
         <div className="max-w-3xl mb-14">
-          <h2 id="features-heading" className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white">
+          <h2 id="features-heading" className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white font-heading">
             Everything you need to share your work.
           </h2>
-          <p className="mt-3 text-base lg:text-lg text-zinc-400 leading-relaxed max-w-2xl">
+          <p className="mt-3 text-base lg:text-lg text-zinc-300 leading-relaxed max-w-2xl">
             From interactive embeds to privacy-friendly analytics, Branch gives you complete control over your bio page without bloat.
           </p>
         </div>
@@ -75,7 +75,7 @@ export function BentoFeatures() {
                   <BarChart3 className="w-4 h-4" />
                   <span>Real-Time Analytics</span>
                 </div>
-                <h3 className="text-xl sm:text-2xl font-bold text-white mt-1">
+                <h3 className="text-xl sm:text-2xl font-bold text-white mt-1 font-heading">
                   See what your audience clicks, without tracking cookies
                 </h3>
               </div>
@@ -89,9 +89,9 @@ export function BentoFeatures() {
             <div className="rounded-xl bg-zinc-950/80 border border-white/[0.06] p-5 mb-6">
               <div className="flex flex-wrap items-end justify-between gap-4 mb-4">
                 <div>
-                  <span className="text-xs text-zinc-500 font-medium">Selected Day ({activeStat.day})</span>
+                  <span className="text-xs text-zinc-400 font-medium">Selected Day ({activeStat.day})</span>
                   <div className="flex items-baseline gap-3 mt-0.5">
-                    <span className="text-2xl sm:text-3xl font-bold text-white tabular-nums">
+                    <span className="text-2xl sm:text-3xl font-bold text-white tabular-nums font-heading">
                       {activeStat.views.toLocaleString()}
                     </span>
                     <span className="text-xs text-emerald-400 font-semibold">
@@ -159,7 +159,7 @@ export function BentoFeatures() {
               </div>
 
               {/* Day labels aligned precisely under each data point */}
-              <div className="relative w-full h-6 mt-3 text-[11px] font-mono text-zinc-500">
+              <div className="relative w-full h-6 mt-3 text-[11px] font-mono text-zinc-400">
                 {CHART_DATA.map((d, i) => {
                   const cx = 50 + i * 100
                   const left = `${(cx / 700) * 100}%`
@@ -171,7 +171,7 @@ export function BentoFeatures() {
                       type="button"
                       onClick={() => setHoveredPoint(i)}
                       style={{ left }}
-                      className={`absolute -translate-x-1/2 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white rounded px-1.5 py-0.5 ${
+                      className={`absolute -translate-x-1/2 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white rounded px-1.5 py-0.5 cursor-pointer ${
                         isHovered ? 'text-emerald-400 font-bold' : ''
                       }`}
                     >
@@ -218,10 +218,10 @@ export function BentoFeatures() {
                   <Palette className="w-4 h-4" />
                   <span>Animated Backgrounds</span>
                 </div>
-                <h3 className="text-xl sm:text-2xl font-bold text-white">
+                <h3 className="text-xl sm:text-2xl font-bold text-white font-heading">
                   6 Dynamic Canvas Effects Included
                 </h3>
-                <p className="text-sm text-zinc-400 mt-2 leading-relaxed">
+                <p className="text-sm text-zinc-300 mt-2 leading-relaxed">
                   Choose from subtle WebGL animations like aurora, starfields, snow, or matrix rain. Lightweight and battery-friendly on mobile browsers.
                 </p>
 
@@ -232,10 +232,10 @@ export function BentoFeatures() {
                       key={shader.id}
                       type="button"
                       onClick={() => setActiveShader(shader.id)}
-                      className={`px-3 py-2 rounded-lg text-xs font-medium border text-center transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
+                      className={`px-3 py-2 rounded-lg text-xs font-medium border text-center transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white active:scale-95 ${
                         activeShader === shader.id
                           ? 'bg-white text-zinc-950 border-white font-bold shadow-md'
-                          : 'bg-zinc-950/60 border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700'
+                          : 'bg-zinc-950/60 border-zinc-800 text-zinc-300 hover:text-white hover:border-zinc-700'
                       }`}
                     >
                       {shader.name}
@@ -258,7 +258,7 @@ export function BentoFeatures() {
                 </div>
               </div>
 
-              <p className="text-xs text-zinc-500 mt-4">
+              <p className="text-xs text-zinc-400 mt-4">
                 Shader components are loaded on demand to keep initial page bundle under 100KB.
               </p>
             </div>
@@ -272,10 +272,10 @@ export function BentoFeatures() {
                   <Volume2 className="w-4 h-4" />
                   <span>Media Embeds</span>
                 </div>
-                <h3 className="text-lg font-bold text-white">
+                <h3 className="text-lg font-bold text-white font-heading">
                   Spotify, YouTube, TikTok & GitHub
                 </h3>
-                <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
+                <p className="text-xs text-zinc-300 mt-1 leading-relaxed">
                   Play songs, podcast episodes, and videos directly on your page without sending visitors away.
                 </p>
 
@@ -283,7 +283,7 @@ export function BentoFeatures() {
                 <div className="mt-4 p-3 rounded-xl bg-zinc-950 border border-white/[0.08] space-y-2.5">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+                      <div className="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 cursor-pointer">
                         <Play className="w-3.5 h-3.5 fill-current ml-0.5" />
                       </div>
                       <div>
@@ -315,10 +315,10 @@ export function BentoFeatures() {
                   <Globe className="w-4 h-4" />
                   <span>Domain & Scheduling</span>
                 </div>
-                <h3 className="text-lg font-bold text-white">
+                <h3 className="text-lg font-bold text-white font-heading">
                   Custom Domain & Timed Links
                 </h3>
-                <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
+                <p className="text-xs text-zinc-300 mt-1 leading-relaxed">
                   Connect your personal domain (links.yourname.com) and set links to auto-publish or expire on specific dates.
                 </p>
 

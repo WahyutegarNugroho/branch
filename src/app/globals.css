@@ -169,9 +169,15 @@
   html {
     @apply font-sans;
   }
+  button, [role="button"], summary {
+    cursor: pointer;
+  }
 }
 
 @layer utilities {
+  .font-heading {
+    font-family: var(--font-display), var(--font-sans), sans-serif;
+  }
   .font-sans-theme {
     font-family: var(--font-sans), sans-serif !important;
   }
