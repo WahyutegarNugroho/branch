@@ -159,16 +159,16 @@ const ARCHETYPES: Archetype[] = [
   },
   {
     id: 'sunset',
-    label: 'Sunset Terracotta',
+    label: 'Warm Minimal',
     tag: 'Creator / Podcast',
     name: 'Leo Rivera',
     handle: 'leorivera',
     bio: 'Storyteller, specialty coffee roaster, & host of The Craft Podcast.',
     avatarInitials: 'LR',
-    avatarBg: 'bg-white/20 text-white backdrop-blur-md',
-    bgType: 'gradient',
-    bgClass: 'bg-gradient-to-b from-amber-700 via-rose-800 to-zinc-950',
-    buttonClass: 'bg-white/95 hover:bg-white text-zinc-950 font-semibold shadow-md',
+    avatarBg: 'bg-zinc-800 text-white border border-zinc-700',
+    bgType: 'solid',
+    bgClass: 'bg-[#18181b]',
+    buttonClass: 'bg-white text-zinc-950 font-semibold shadow-md hover:bg-zinc-100',
     buttonShape: 'rounded-full',
     fontClass: 'font-sans',
     verified: true,
@@ -237,7 +237,7 @@ export function HeroLivePreview() {
       </div>
 
       {/* Smartphone Device Frame */}
-      <div className="relative w-full max-w-[340px] sm:max-w-[360px] h-[640px] sm:h-[680px] rounded-[2.75rem] p-3 bg-gradient-to-b from-zinc-700 via-zinc-800 to-zinc-900 shadow-[0_25px_70px_rgba(0,0,0,0.8),0_0_0_1px_rgba(255,255,255,0.1)] transition-all">
+      <div className="relative w-full max-w-[340px] sm:max-w-[360px] h-[640px] sm:h-[680px] rounded-[2.75rem] p-3 bg-zinc-900 border border-zinc-800 shadow-[0_25px_70px_rgba(0,0,0,0.8)] transition-all">
         {/* Outer Ring Reflection Accent */}
         <div className="absolute inset-0 rounded-[2.75rem] border border-white/10 pointer-events-none" />
 

@@ -33,20 +33,14 @@ export default function LandingPage() {
 
       <main>
         {/* ============================== HERO SECTION ============================== */}
-        <section id="demo" className="relative pt-12 pb-20 lg:pt-20 lg:pb-28 px-4 sm:px-6 overflow-hidden">
-          {/* Subtle radial ambient lighting (not AI neon slop, but subtle dark engineering glow) */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[550px] bg-[radial-gradient(ellipse_80%_60%_at_50%_-20%,rgba(16,185,129,0.15),rgba(255,255,255,0))] pointer-events-none" />
-
-          {/* Grid background texture */}
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none" />
-
+        <section id="demo" className="relative pt-12 pb-20 lg:pt-20 lg:pb-28 px-4 sm:px-6">
           <div className="max-w-7xl mx-auto relative z-10">
             <div className="grid lg:grid-cols-12 gap-12 lg:gap-8 items-center">
 
               {/* Left Column: Copy & Form (7 cols) */}
               <div className="lg:col-span-7 space-y-8 text-left">
                 {/* Release announcement tag */}
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-900/90 border border-white/[0.08] text-xs font-medium text-zinc-300 shadow-inner">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-900 border border-white/[0.08] text-xs font-medium text-zinc-300">
                   <span className="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono text-[10px] font-bold">
                     NEW v2.0
                   </span>
@@ -57,7 +51,7 @@ export default function LandingPage() {
                 {/* Primary Heading */}
                 <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.08]">
                   The link-in-bio built like{' '}
-                  <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">
+                  <span className="text-zinc-100">
                     high-end software.
                   </span>
                 </h1>
@@ -158,10 +152,7 @@ export default function LandingPage() {
 
         {/* ============================== FINAL CTA BANNER ============================= */}
         <section className="py-20 lg:py-28 px-4 sm:px-6 relative border-t border-white/[0.08]">
-          <div className="max-w-5xl mx-auto rounded-3xl bg-gradient-to-b from-zinc-900 via-zinc-900/90 to-zinc-950 border border-white/[0.1] p-8 sm:p-14 text-center relative overflow-hidden shadow-2xl">
-            {/* Background lighting */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-2xl h-48 bg-emerald-500/10 blur-3xl pointer-events-none" />
-
+          <div className="max-w-5xl mx-auto rounded-3xl bg-zinc-900/90 border border-white/[0.08] p-8 sm:p-14 text-center relative overflow-hidden">
             <div className="relative z-10 max-w-2xl mx-auto space-y-6">
               <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center mx-auto shadow-lg">
                 <Zap className="w-6 h-6 text-zinc-950 fill-zinc-950" />

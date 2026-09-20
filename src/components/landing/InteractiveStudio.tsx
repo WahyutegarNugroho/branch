@@ -30,7 +30,7 @@ const COLOR_PRESETS: StylePreset[] = [
   { id: 'monochrome', name: 'Monochrome', bg: 'bg-white', text: 'text-zinc-950', border: 'border-white' },
   { id: 'emerald', name: 'Emerald Cyber', bg: 'bg-emerald-500', text: 'text-zinc-950 font-bold', border: 'border-emerald-400' },
   { id: 'glass', name: 'Frosted Glass', bg: 'bg-white/10 backdrop-blur-md', text: 'text-white', border: 'border-white/20' },
-  { id: 'violet', name: 'Electric Violet', bg: 'bg-gradient-to-r from-violet-600 to-indigo-600', text: 'text-white', border: 'border-violet-400/40' },
+  { id: 'slate', name: 'Dark Slate', bg: 'bg-zinc-800 hover:bg-zinc-700', text: 'text-white', border: 'border-zinc-700' },
 ]
 
 export function InteractiveStudio() {
@@ -221,7 +221,7 @@ export function InteractiveStudio() {
 
               {/* Sample Profile Header */}
               <div className={`text-center mb-6 ${getFontClass()}`}>
-                <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-emerald-500 to-cyan-500 text-zinc-950 font-bold text-lg flex items-center justify-center mx-auto mb-3 shadow-lg">
+                <div className="w-16 h-16 rounded-full bg-zinc-800 border border-zinc-700 text-white font-bold text-lg flex items-center justify-center mx-auto mb-3 shadow-md">
                   ST
                 </div>
                 <h3 className="text-lg font-bold text-white tracking-tight">Studio Sandbox</h3>

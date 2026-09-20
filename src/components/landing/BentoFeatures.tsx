@@ -60,9 +60,6 @@ export function BentoFeatures() {
 
   return (
     <section id="features" aria-labelledby="features-heading" className="py-20 lg:py-28 px-4 sm:px-6 relative">
-      {/* Background ambient lighting */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-7xl h-[600px] bg-gradient-to-b from-emerald-500/5 via-transparent to-transparent blur-3xl pointer-events-none" />
-
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Section Header */}
         <div className="max-w-3xl mb-16">
@@ -127,17 +124,11 @@ export function BentoFeatures() {
                 {/* SVG Area Chart */}
                 <div className="w-full h-40 relative">
                   <svg className="w-full h-full overflow-visible" viewBox="0 0 700 160" preserveAspectRatio="none">
-                    <defs>
-                      <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#10b981" stopOpacity="0.3" />
-                        <stop offset="100%" stopColor="#10b981" stopOpacity="0.0" />
-                      </linearGradient>
-                    </defs>
-
-                    {/* Area fill */}
+                    {/* Flat Area fill */}
                     <path
                       d="M 50,110 Q 150,85 250,80 T 450,55 T 650,20 L 650,150 L 50,150 Z"
-                      fill="url(#areaGradient)"
+                      fill="#10b981"
+                      fillOpacity="0.1"
                     />
 
                     {/* Stroke line */}
