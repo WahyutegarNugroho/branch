@@ -129,43 +129,61 @@ export function BentoFeatures() {
                     stroke="#10b981"
                     strokeWidth="2.5"
                   />
+                </svg>
 
-                  {/* Interactive points */}
+                {/* Perfect Round Indicators Layer (R-03 / Visual Craft: Immune to SVG aspect-ratio distortion) */}
+                <div className="absolute inset-0 pointer-events-none">
                   {CHART_DATA.map((d, index) => {
                     const cx = 50 + index * 100
                     const cy = [110, 85, 80, 68, 55, 32, 20][index]
+                    const left = `${(cx / 700) * 100}%`
+                    const top = `${(cy / 160) * 100}%`
                     const isHovered = hoveredPoint === index
 
                     return (
-                      <g
+                      <button
                         key={d.day}
-                        className="cursor-pointer"
+                        type="button"
+                        onClick={() => setHoveredPoint(index)}
                         onMouseEnter={() => setHoveredPoint(index)}
+                        aria-label={`Select ${d.day}: ${d.views.toLocaleString()} views`}
+                        style={{ left, top }}
+                        className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-auto p-2 focus-visible:outline-none group cursor-pointer"
                       >
-                        <circle
-                          cx={cx}
-                          cy={cy}
-                          r={isHovered ? 6 : 4}
-                          className={`transition-all ${isHovered ? 'fill-emerald-400 stroke-white stroke-2' : 'fill-emerald-500'}`}
+                        <span
+                          className={`block rounded-full aspect-square transition-all duration-150 ${
+                            isHovered
+                              ? 'w-4 h-4 bg-emerald-400 border-2 border-white ring-4 ring-zinc-950/80 shadow-md scale-110'
+                              : 'w-2.5 h-2.5 bg-emerald-500 ring-2 ring-zinc-950 group-hover:scale-125 group-hover:bg-emerald-400'
+                          }`}
                         />
-                      </g>
+                      </button>
                     )
                   })}
-                </svg>
+                </div>
+              </div>
 
-                {/* Day labels */}
-                <div className="flex justify-between text-[11px] font-mono text-zinc-500 mt-2 px-6">
-                  {CHART_DATA.map((d, i) => (
+              {/* Day labels aligned precisely under each data point */}
+              <div className="relative w-full h-6 mt-3 text-[11px] font-mono text-zinc-500">
+                {CHART_DATA.map((d, i) => {
+                  const cx = 50 + i * 100
+                  const left = `${(cx / 700) * 100}%`
+                  const isHovered = hoveredPoint === i
+
+                  return (
                     <button
                       key={d.day}
                       type="button"
                       onClick={() => setHoveredPoint(i)}
-                      className={`hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white rounded px-1 ${hoveredPoint === i ? 'text-emerald-400 font-bold' : ''}`}
+                      style={{ left }}
+                      className={`absolute -translate-x-1/2 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white rounded px-1.5 py-0.5 ${
+                        isHovered ? 'text-emerald-400 font-bold' : ''
+                      }`}
                     >
                       {d.day}
                     </button>
-                  ))}
-                </div>
+                  )
+                })}
               </div>
             </div>
 
