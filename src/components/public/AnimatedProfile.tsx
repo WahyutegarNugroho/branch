@@ -126,72 +126,59 @@ export function AnimatedProfile({ profile, links, bgStyle: defaultBgStyle }: { p
   }
 
   return (
-    <div className="fixed inset-0 sm:relative sm:h-auto sm:min-h-screen w-full flex items-center justify-center bg-[#1c1c1e] sm:py-8 sm:px-4 overflow-hidden">
-      <div 
-        className={`h-full sm:h-auto sm:min-h-[820px] sm:max-h-[880px] w-full sm:w-[480px] sm:rounded-[40px] sm:shadow-[0_24px_70px_rgba(0,0,0,0.85)] sm:border sm:border-white/10 relative overflow-hidden ${profile?.font_family || 'font-sans-theme'}`}
-      >
-        {/* Fixed Background Layer (contained inside the mockup viewport) */}
-        <div className="absolute inset-0 z-0 w-full h-full overflow-hidden" style={bgStyle}>
-          {/* Background Video loop (Muted, AutoPlay) */}
-          {profile?.bg_type === 'video' && profile?.bg_video_url && (
-            <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
-              <video 
-                src={profile.bg_video_url} 
-                autoPlay 
-                muted 
-                loop 
-                playsInline 
-                className="w-full h-full object-cover"
-              />
-            </div>
-          )}
-
-          {/* Live Background Animations */}
-          {profile?.bg_animation === 'aurora' && <AuroraBackground config={profile?.bg_animation_config} />}
-          {profile?.bg_animation === 'particles' && <ParticlesBackground config={profile?.bg_animation_config} />}
-          {profile?.bg_animation === 'snowfall' && <SnowfallBackground config={profile?.bg_animation_config} />}
-          {profile?.bg_animation === 'stars' && <StarsBackground config={profile?.bg_animation_config} />}
-          {profile?.bg_animation === 'matrix' && <MatrixBackground config={profile?.bg_animation_config} />}
-          {profile?.bg_animation === 'confetti' && <ConfettiBackground config={profile?.bg_animation_config} />}
-          {profile?.bg_animation === 'bokeh' && <div className="absolute inset-0 pointer-events-none z-0 opacity-40 mix-blend-screen blur-[8px]" style={{ backgroundImage: 'radial-gradient(circle at 20% 30%, rgba(236,72,153,0.4) 0%, transparent 40%), radial-gradient(circle at 80% 60%, rgba(249,115,22,0.4) 0%, transparent 40%)', animation: 'pulseSlow 5s infinite alternate, bgMove 20s ease-in-out infinite' }} />}
-
-          {/* Hero Banner header overlay */}
-          {profile?.banner_url && (
-            <div className="absolute top-0 inset-x-0 h-32 w-full overflow-hidden border-b border-white/10 z-0">
-              <Image src={profile.banner_url} alt="Banner" fill className="object-cover" sizes="480px" priority />
-            </div>
-          )}
-
-          {/* Dark Overlay */}
-          {profile.bg_overlay_opacity > 0 && (
-            <div 
-              className="absolute inset-0 bg-black pointer-events-none z-0" 
-              style={{ opacity: profile.bg_overlay_opacity / 100 }}
+    <div className={`min-h-screen w-full relative flex flex-col items-center justify-between overflow-x-hidden ${profile?.font_family || 'font-sans-theme'}`}>
+      {/* Full Viewport Background Layer */}
+      <div className="fixed inset-0 z-0 w-full h-full overflow-hidden pointer-events-none" style={bgStyle}>
+        {/* Background Video loop (Muted, AutoPlay) */}
+        {profile?.bg_type === 'video' && profile?.bg_video_url && (
+          <div className="absolute inset-0 w-full h-full overflow-hidden z-0">
+            <video 
+              src={profile.bg_video_url} 
+              autoPlay 
+              muted 
+              loop 
+              playsInline 
+              className="w-full h-full object-cover"
             />
-          )}
-        </div>
-
-        {/* Scrollable Content Layer */}
-        <div 
-          className={`absolute inset-0 overflow-y-auto overflow-x-hidden no-scrollbar z-10 flex flex-col py-16 px-6 ${
-            profile?.profile_align === 'left' ? 'items-start text-left' : 
-            profile?.profile_align === 'right' ? 'items-end text-right' : 'items-center text-center'
-          }`}
-        >
-          {/* Mockup Header Row */}
-          <div className="absolute top-6 left-6 right-6 flex items-center justify-between z-20">
-            <div className="w-9 h-9 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white/90 border border-white/10">
-              <Zap className="w-4 h-4 text-white" />
-            </div>
-            <div className="flex gap-2">
-              <button 
-                onClick={() => setIsShareOpen(true)}
-                className="w-9 h-9 rounded-full bg-black/20 backdrop-blur-md flex items-center justify-center text-white/90 hover:text-white border border-white/20 transition-all active:scale-95 shadow-sm"
-              >
-                <Share2 className="w-4 h-4" />
-              </button>
-            </div>
           </div>
+        )}
+
+        {/* Live Background Animations */}
+        {profile?.bg_animation === 'aurora' && <AuroraBackground config={profile?.bg_animation_config} />}
+        {profile?.bg_animation === 'particles' && <ParticlesBackground config={profile?.bg_animation_config} />}
+        {profile?.bg_animation === 'snowfall' && <SnowfallBackground config={profile?.bg_animation_config} />}
+        {profile?.bg_animation === 'stars' && <StarsBackground config={profile?.bg_animation_config} />}
+        {profile?.bg_animation === 'matrix' && <MatrixBackground config={profile?.bg_animation_config} />}
+        {profile?.bg_animation === 'confetti' && <ConfettiBackground config={profile?.bg_animation_config} />}
+        {profile?.bg_animation === 'bokeh' && <div className="absolute inset-0 z-0 opacity-40 mix-blend-screen blur-[8px]" style={{ backgroundImage: 'radial-gradient(circle at 20% 30%, rgba(236,72,153,0.4) 0%, transparent 40%), radial-gradient(circle at 80% 60%, rgba(249,115,22,0.4) 0%, transparent 40%)', animation: 'pulseSlow 5s infinite alternate, bgMove 20s ease-in-out infinite' }} />}
+
+        {/* Dark Overlay */}
+        {profile.bg_overlay_opacity > 0 && (
+          <div 
+            className="absolute inset-0 bg-black z-0 pointer-events-none" 
+            style={{ opacity: profile.bg_overlay_opacity / 100 }}
+          />
+        )}
+      </div>
+
+      {/* Main Content Container */}
+      <div className="relative z-10 w-full min-h-screen flex flex-col items-center justify-between py-8 sm:py-16 px-4 sm:px-6">
+        {/* Top Header Row (Logo & Share) */}
+        <div className="w-full max-w-lg flex items-center justify-between mb-6">
+          <div className="w-9 h-9 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white/90 border border-white/10 shadow-sm">
+            <Zap className="w-4 h-4 text-white" />
+          </div>
+          <div className="flex gap-2">
+            <button 
+              type="button"
+              onClick={() => setIsShareOpen(true)}
+              aria-label="Share profile"
+              className="w-9 h-9 rounded-full bg-black/30 backdrop-blur-md flex items-center justify-center text-white/90 hover:text-white border border-white/20 transition-all active:scale-95 shadow-sm hover:bg-black/50 cursor-pointer"
+            >
+              <Share2 className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
 
           {/* Analytics Tracking */}
           <PageTracker profileId={profile.id} />
@@ -375,7 +362,6 @@ export function AnimatedProfile({ profile, links, bgStyle: defaultBgStyle }: { p
             </motion.div>
           )}
         </motion.div>
-        </div>
       </div>
     </div>
   )

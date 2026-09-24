@@ -50,6 +50,8 @@ export async function login(formData: FormData) {
   redirect('/dashboard')
 }
 
+import { signupSchema } from '@/lib/validations'
+
 export async function signup(formData: FormData) {
   const clientIp = await getClientIp()
   const limit = checkRateLimit(`auth:${clientIp}`, { maxRequests: 5, windowMs: 60_000 })
@@ -59,21 +61,52 @@ export async function signup(formData: FormData) {
 
   const supabase = await createClient()
 
+  const rawUsername = formData.get('username') as string | null
   const data = {
     email: formData.get('email') as string,
     password: formData.get('password') as string,
+    username: rawUsername ? rawUsername.trim().toLowerCase() : undefined,
   }
 
-  const result = authSchema.safeParse(data)
+  const result = signupSchema.safeParse(data)
 
   if (!result.success) {
     return { error: result.error.issues[0].message }
   }
 
-  const { error } = await supabase.auth.signUp(data)
+  // If username provided, verify availability
+  if (data.username) {
+    const { data: existingProfile } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('username', data.username)
+      .maybeSingle()
+
+    if (existingProfile) {
+      return { error: 'Username is already taken. Please choose another one.' }
+    }
+  }
+
+  const { data: authData, error } = await supabase.auth.signUp({
+    email: data.email,
+    password: data.password,
+    options: {
+      data: {
+        username: data.username || undefined,
+      }
+    }
+  })
 
   if (error) {
     return { error: error.message }
+  }
+
+  // Persist claimed username directly into the created user profile
+  if (authData?.user && data.username) {
+    await supabase
+      .from('profiles')
+      .update({ username: data.username })
+      .eq('id', authData.user.id)
   }
 
   revalidatePath('/', 'layout')

@@ -45,6 +45,8 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
     glassBlur, setGlassBlur, glassOpacity, setGlassOpacity,
     bannerInputRef, fileInputRef, avatarInputRef,
     hostPrefix, themes, showBranding, setShowBranding, brandingLoading,
+    activePreviewTheme, saveThemeDirectly,
+    isDirty, isSavingAll, resetChanges, handleSaveAll,
     updateBgConfig, handleSelectTheme, onBrandingSubmit,
     handleFileChange, handleCropComplete,
     handleSocialChange, onSocialSubmit, onInfoSubmit, onAppSubmit,
@@ -190,6 +192,29 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
           <CardDescription className="text-zinc-400">Choose from professionally designed premium themes to instantly beautify your profile.</CardDescription>
         </CardHeader>
         <CardContent>
+          {activePreviewTheme && (
+            <div className="mb-4 p-3.5 rounded-xl bg-white/5 border border-white/15 flex flex-col sm:flex-row items-center justify-between gap-3 animate-in fade-in duration-200">
+              <div className="flex items-center gap-2.5 text-xs text-zinc-300">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                <span>Theme preset active in preview: <strong className="text-white font-bold">{activePreviewTheme}</strong></span>
+              </div>
+              <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+                <Button
+                  type="button"
+                  size="sm"
+                  disabled={appLoading}
+                  onClick={() => {
+                    const selected = themes.find(t => t.name === activePreviewTheme)
+                    if (selected) saveThemeDirectly(selected)
+                  }}
+                  className="rounded-xl bg-white hover:bg-zinc-200 text-black font-semibold text-xs h-8 px-3 shadow-md cursor-pointer"
+                >
+                  {appLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin mr-1.5" /> : null}
+                  Apply & Save to Profile
+                </Button>
+              </div>
+            </div>
+          )}
           {themes.length === 0 ? (
             <div className="flex items-center justify-center py-6 text-zinc-500 text-sm font-medium animate-pulse">Loading themes gallery...</div>
           ) : (
@@ -305,6 +330,38 @@ export function AppearanceManager({ profile }: { profile: Profile | null }) {
       {selectedImage && (
         <ImageCropDialog isOpen={isCropOpen} onClose={() => setIsCropOpen(false)} imageUrl={selectedImage}
           onCropComplete={handleCropComplete} cropShape={cropType === 'avatar' ? 'circle' : 'rect'} />
+      )}
+
+      {/* Floating Save Bar */}
+      {isDirty && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-zinc-950/95 backdrop-blur-xl border border-white/20 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center justify-between gap-4 animate-in fade-in slide-in-from-bottom-4 max-w-[90vw] w-auto">
+          <div className="flex items-center gap-2.5">
+            <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse shrink-0" />
+            <span className="text-xs sm:text-sm font-semibold text-zinc-200 whitespace-nowrap">Unsaved changes</span>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={resetChanges}
+              disabled={isSavingAll}
+              className="text-zinc-400 hover:text-white hover:bg-white/10 text-xs rounded-xl h-8 px-3 cursor-pointer"
+            >
+              Discard
+            </Button>
+            <Button
+              type="button"
+              size="sm"
+              onClick={handleSaveAll}
+              disabled={isSavingAll}
+              className="bg-white hover:bg-zinc-200 text-black font-bold text-xs rounded-xl h-8 px-4 shadow-lg cursor-pointer flex items-center gap-1.5"
+            >
+              {isSavingAll ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
+              Save All Changes
+            </Button>
+          </div>
+        </div>
       )}
     </div>
   )

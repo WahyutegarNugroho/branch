@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/utils/supabase/client'
 import { usePreviewStore } from '@/lib/preview-store'
@@ -137,6 +137,8 @@ export function useAppearanceState(profile: Profile | null) {
     fetchThemes()
   }, [])
 
+  const [activePreviewTheme, setActivePreviewTheme] = useState<string | null>(null)
+
   const handleSelectTheme = (theme: Theme) => {
     setBgType(theme.bg_type as 'solid' | 'gradient' | 'image' | 'video')
     setBgColor(theme.bg_color)
@@ -144,7 +146,8 @@ export function useAppearanceState(profile: Profile | null) {
     setButtonShape(theme.button_shape)
     setButtonStyle(theme.button_style)
     setFontFamily(theme.font_family)
-     usePreviewStore.getState().updateProfile({
+    setActivePreviewTheme(theme.name)
+    usePreviewStore.getState().updateProfile({
       bg_type: theme.bg_type as 'solid' | 'gradient' | 'image' | 'video', bg_color: theme.bg_color, bg_image_url: theme.bg_image_url || '',
       button_shape: theme.button_shape, button_style: theme.button_style, font_family: theme.font_family,
       theme_style: themeStyle, button_hover_effect: buttonHoverEffect, layout_type: layoutType,
@@ -153,7 +156,53 @@ export function useAppearanceState(profile: Profile | null) {
       social_placement: socialPlacement, theme_lock: themeLock,
       glass_blur: glassBlur[0], glass_opacity: glassOpacity[0],
     })
-    toast.success(`Theme "${theme.name}" applied to preview! Click "Save Appearance" below to save it to your public profile.`)
+    toast.success(`Theme "${theme.name}" applied to preview!`)
+  }
+
+  const saveThemeDirectly = async (theme: Theme) => {
+    setAppLoading(true)
+    try {
+      const formData = new FormData()
+      formData.set('bg_type', theme.bg_type)
+      formData.set('bg_color', theme.bg_color)
+      formData.set('bg_image_url', theme.bg_image_url || '')
+      formData.set('button_shape', theme.button_shape)
+      formData.set('button_style', theme.button_style)
+      formData.set('font_family', theme.font_family)
+      formData.append('bg_overlay_opacity', (opacity?.[0] ?? profile?.bg_overlay_opacity ?? 0).toString())
+      formData.set('text_color', textColor)
+      formData.set('social_style', socialStyle)
+      formData.set('profile_align', profileAlign)
+      formData.set('avatar_shape', avatarShape)
+      formData.set('banner_url', bannerUrl)
+      formData.set('link_spacing', linkSpacing)
+      formData.set('avatar_size', avatarSize)
+      formData.set('bg_video_url', bgVideoUrl)
+      formData.set('theme_style', themeStyle)
+      formData.set('button_hover_effect', buttonHoverEffect)
+      formData.set('layout_type', layoutType)
+      formData.set('bg_animation', bgAnimation)
+      formData.set('bg_animation_config', JSON.stringify(bgAnimationConfig))
+      formData.set('avatar_frame', avatarFrame)
+      formData.set('avatar_frame_config', JSON.stringify(avatarFrameConfig))
+      formData.set('social_placement', socialPlacement)
+      formData.set('theme_lock', themeLock ? 'true' : 'false')
+      formData.set('glass_blur', glassBlur[0].toString())
+      formData.set('glass_opacity', glassOpacity[0].toString())
+
+      const result = await updateAppearance(formData)
+      if (result.error) {
+        toast.error(result.error)
+      } else {
+        toast.success(`Theme "${theme.name}" applied and saved!`)
+        setActivePreviewTheme(null)
+        router.refresh()
+      }
+    } catch {
+      toast.error('Failed to save theme')
+    } finally {
+      setAppLoading(false)
+    }
   }
 
   async function onBrandingSubmit(e: React.FormEvent) {
@@ -345,6 +394,186 @@ export function useAppearanceState(profile: Profile | null) {
     setAppLoading(false)
   }
 
+  const [isSavingAll, setIsSavingAll] = useState(false)
+
+  const isDirty = useMemo(() => {
+    if (!profile) return false
+    const initialSocial = profile.social_links && typeof profile.social_links === 'object'
+      ? JSON.stringify(profile.social_links)
+      : '{}'
+    const currentSocial = JSON.stringify(socialLinks || {})
+
+    return (
+      fullName !== (profile.full_name ?? '') ||
+      bio !== (profile.bio ?? '') ||
+      username !== (profile.username ?? '') ||
+      avatarUrl !== (profile.avatar_url || '') ||
+      bgColor !== (profile.bg_color || '#09090b') ||
+      bgType !== (profile.bg_type || 'solid') ||
+      bgImageUrl !== (profile.bg_image_url || '') ||
+      bgVideoUrl !== (profile.bg_video_url || '') ||
+      (opacity?.[0] ?? 0) !== (profile.bg_overlay_opacity || 0) ||
+      buttonShape !== (profile.button_shape || 'rounded-2xl') ||
+      buttonStyle !== (profile.button_style || 'soft') ||
+      fontFamily !== (profile.font_family || 'font-sans-theme') ||
+      textColor !== (profile.text_color || '#ffffff') ||
+      themeStyle !== (profile.theme_style || 'solid') ||
+      buttonHoverEffect !== (profile.button_hover_effect || 'none') ||
+      layoutType !== (profile.layout_type || 'list') ||
+      bgAnimation !== (profile.bg_animation || 'none') ||
+      bannerUrl !== (profile.banner_url || '') ||
+      linkSpacing !== (profile.link_spacing || 'normal') ||
+      avatarSize !== (profile.avatar_size || 'medium') ||
+      socialPlacement !== (profile.social_placement || 'top') ||
+      socialStyle !== (profile.social_style || 'circle') ||
+      profileAlign !== (profile.profile_align || 'center') ||
+      avatarShape !== (profile.avatar_shape || 'circle') ||
+      themeLock !== (profile.theme_lock || false) ||
+      glassBlur[0] !== (profile.glass_blur ?? 10) ||
+      glassOpacity[0] !== (profile.glass_opacity ?? 20) ||
+      (profile.plan === 'premium' && showBranding !== (profile.show_branding !== false)) ||
+      currentSocial !== initialSocial
+    )
+  }, [
+    profile, fullName, bio, username, avatarUrl, bgColor, bgType, bgImageUrl, bgVideoUrl,
+    opacity, buttonShape, buttonStyle, fontFamily, textColor, themeStyle, buttonHoverEffect,
+    layoutType, bgAnimation, bannerUrl, linkSpacing, avatarSize, socialPlacement, socialStyle,
+    profileAlign, avatarShape, themeLock, glassBlur, glassOpacity, showBranding, socialLinks
+  ])
+
+  const resetChanges = useCallback(() => {
+    if (!profile) return
+    setFullName(profile.full_name ?? '')
+    setBio(profile.bio ?? '')
+    setUsername(profile.username ?? '')
+    setAvatarUrl(profile.avatar_url || '')
+    setBgColor(profile.bg_color || '#09090b')
+    setBgType(profile.bg_type || 'solid')
+    setBgImageUrl(profile.bg_image_url || '')
+    setBgVideoUrl(profile.bg_video_url || '')
+    setOpacity([profile.bg_overlay_opacity || 0])
+    setButtonShape(profile.button_shape || 'rounded-2xl')
+    setButtonStyle(profile.button_style || 'soft')
+    setFontFamily(profile.font_family || 'font-sans-theme')
+    setTextColor(profile.text_color || '#ffffff')
+    setThemeStyle(profile.theme_style || 'solid')
+    setButtonHoverEffect(profile.button_hover_effect || 'none')
+    setLayoutType(profile.layout_type || 'list')
+    setBgAnimation(profile.bg_animation || 'none')
+    setBgAnimationConfig(profile.bg_animation_config || {})
+    setAvatarFrame(profile.avatar_frame || 'none')
+    setAvatarFrameConfig(profile.avatar_frame_config || {})
+    setBannerUrl(profile.banner_url || '')
+    setLinkSpacing(profile.link_spacing || 'normal')
+    setAvatarSize(profile.avatar_size || 'medium')
+    setSocialPlacement(profile.social_placement || 'top')
+    setSocialStyle(profile.social_style || 'circle')
+    setProfileAlign(profile.profile_align || 'center')
+    setAvatarShape(profile.avatar_shape || 'circle')
+    setThemeLock(profile.theme_lock || false)
+    setGlassBlur([profile.glass_blur ?? 10])
+    setGlassOpacity([profile.glass_opacity ?? 20])
+    setShowBranding(profile.show_branding !== false)
+    setSocialLinks(
+      profile.social_links && typeof profile.social_links === 'object'
+        ? (profile.social_links as Record<string, string>)
+        : {}
+    )
+    setActivePreviewTheme(null)
+    toast.info('Changes discarded')
+  }, [profile])
+
+  const handleSaveAll = async () => {
+    setIsSavingAll(true)
+    try {
+      if (usernameStatus === 'taken') {
+        toast.error('Username is already taken by someone else!')
+        setIsSavingAll(false)
+        return
+      }
+      if (usernameStatus === 'invalid') {
+        toast.error('Invalid username!')
+        setIsSavingAll(false)
+        return
+      }
+
+      // 1. Profile Info
+      const infoFormData = new FormData()
+      infoFormData.append('full_name', fullName)
+      infoFormData.append('bio', bio)
+      infoFormData.append('avatar_url', avatarUrl)
+      infoFormData.append('username', username)
+      const infoRes = await updateProfileInfo(infoFormData)
+      if (infoRes.error) {
+        toast.error(`Profile: ${infoRes.error}`)
+        setIsSavingAll(false)
+        return
+      }
+
+      // 2. Appearance
+      const appFormData = new FormData()
+      appFormData.append('bg_overlay_opacity', (opacity?.[0] ?? profile?.bg_overlay_opacity ?? 0).toString())
+      appFormData.set('bg_color', bgColor)
+      appFormData.set('bg_type', bgType)
+      appFormData.set('bg_image_url', bgImageUrl)
+      appFormData.set('text_color', textColor)
+      appFormData.set('social_style', socialStyle)
+      appFormData.set('profile_align', profileAlign)
+      appFormData.set('avatar_shape', avatarShape)
+      appFormData.set('banner_url', bannerUrl)
+      appFormData.set('link_spacing', linkSpacing)
+      appFormData.set('avatar_size', avatarSize)
+      appFormData.set('bg_video_url', bgVideoUrl)
+      appFormData.set('theme_style', themeStyle)
+      appFormData.set('button_hover_effect', buttonHoverEffect)
+      appFormData.set('layout_type', layoutType)
+      appFormData.set('bg_animation', bgAnimation)
+      appFormData.set('bg_animation_config', JSON.stringify(bgAnimationConfig))
+      appFormData.set('avatar_frame', avatarFrame)
+      appFormData.set('avatar_frame_config', JSON.stringify(avatarFrameConfig))
+      appFormData.set('social_placement', socialPlacement)
+      appFormData.set('theme_lock', themeLock ? 'true' : 'false')
+      appFormData.set('glass_blur', glassBlur[0].toString())
+      appFormData.set('glass_opacity', glassOpacity[0].toString())
+      appFormData.set('button_shape', buttonShape)
+      appFormData.set('button_style', buttonStyle)
+      appFormData.set('font_family', fontFamily)
+      const appRes = await updateAppearance(appFormData)
+      if (appRes.error) {
+        toast.error(`Appearance: ${appRes.error}`)
+        setIsSavingAll(false)
+        return
+      }
+
+      // 3. Social Links
+      const socialRes = await updateSocialLinks(socialLinks)
+      if (socialRes.error) {
+        toast.error(`Social links: ${socialRes.error}`)
+        setIsSavingAll(false)
+        return
+      }
+
+      // 4. Branding
+      if (profile?.plan === 'premium') {
+        await updateBranding(showBranding)
+      }
+
+      toast.success('All appearance and profile changes saved successfully!')
+      setActivePreviewTheme(null)
+      if (username !== profile?.username) {
+        toast.info('Your username was changed, syncing dashboard...')
+        router.push('/dashboard')
+      } else {
+        router.refresh()
+      }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Unknown error'
+      toast.error(`Failed to save: ${msg}`)
+    } finally {
+      setIsSavingAll(false)
+    }
+  }
+
   return {
     router,
     infoLoading, setInfoLoading, appLoading, setAppLoading,
@@ -370,6 +599,8 @@ export function useAppearanceState(profile: Profile | null) {
     glassBlur, setGlassBlur, glassOpacity, setGlassOpacity,
     bannerInputRef, fileInputRef, avatarInputRef,
     hostPrefix, themes, showBranding, setShowBranding, brandingLoading,
+    activePreviewTheme, setActivePreviewTheme, saveThemeDirectly,
+    isDirty, isSavingAll, resetChanges, handleSaveAll,
     updateBgConfig, handleSelectTheme, onBrandingSubmit,
     handleFileChange, handleCropComplete,
     handleSocialChange, onSocialSubmit, onInfoSubmit, onAppSubmit,

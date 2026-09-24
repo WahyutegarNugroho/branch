@@ -52,7 +52,7 @@ export default function ResetPasswordPage() {
                 required
                 minLength={6}
                 placeholder="Min. 6 characters"
-                className="rounded-xl border-white/5 bg-white/[0.03] text-white focus-visible:ring-white/50 h-12 pr-12 transition-all duration-300 focus:bg-white/[0.05] hover:bg-white/[0.04]"
+                className="rounded-xl border-white/5 bg-white/[0.03] text-white focus-visible:ring-white/50 placeholder:text-zinc-400 h-12 pr-12 transition-all duration-300 focus:bg-white/[0.05] hover:bg-white/[0.04]"
               />
               <button
                 type="button"

@@ -74,7 +74,7 @@ export function SettingsForm({ profile }: { profile: Profile | null }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 max-w-[800px] font-sans-theme">
+    <form onSubmit={handleSubmit} className="space-y-6 max-w-4xl font-sans-theme">
       
       {/* 1. Custom SEO Settings */}
       <Card className="border-zinc-800 bg-zinc-950 shadow-sm rounded-xl">
@@ -94,9 +94,9 @@ export function SettingsForm({ profile }: { profile: Profile | null }) {
               name="seo_title"
               placeholder={profile?.full_name || `@${profile?.username}`}
               defaultValue={profile?.seo_title || ''}
-              className="bg-zinc-950 border-white/10 rounded-xl text-white focus-visible:ring-white"
+              className="bg-zinc-950 border-white/10 rounded-xl text-white placeholder:text-zinc-400 focus-visible:ring-white"
             />
-            <p className="text-[10px] text-zinc-500">Recommended under 60 characters for best Google search results.</p>
+            <p className="text-[11px] text-zinc-400">Recommended under 60 characters for best Google search results.</p>
           </div>
 
           <div className="space-y-2">
@@ -105,9 +105,9 @@ export function SettingsForm({ profile }: { profile: Profile | null }) {
               name="seo_description"
               placeholder={profile?.bio || "Connect and view all important links in one place."}
               defaultValue={profile?.seo_description || ''}
-              className="bg-zinc-950 border-white/10 rounded-xl text-white min-h-[80px] focus-visible:ring-white"
+              className="bg-zinc-950 border-white/10 rounded-xl text-white placeholder:text-zinc-400 min-h-[80px] focus-visible:ring-white"
             />
-            <p className="text-[10px] text-zinc-500">Recommended under 160 characters to provide a clear summary in search engine results.</p>
+            <p className="text-[11px] text-zinc-400">Recommended under 160 characters to provide a clear summary in search engine results.</p>
           </div>
         </CardContent>
       </Card>
@@ -133,9 +133,9 @@ export function SettingsForm({ profile }: { profile: Profile | null }) {
               name="meta_pixel_id"
               placeholder="Example: 123456789012345"
               defaultValue={profile?.meta_pixel_id || ''}
-              className="bg-zinc-950 border-white/10 rounded-xl text-white focus-visible:ring-blue-500"
+              className="bg-zinc-950 border-white/10 rounded-xl text-white placeholder:text-zinc-400 focus-visible:ring-blue-500"
             />
-            <p className="text-[10px] text-zinc-500">Record visits from Facebook & Instagram platforms to optimize ad delivery.</p>
+            <p className="text-[11px] text-zinc-400">Record visits from Facebook & Instagram platforms to optimize ad delivery.</p>
           </div>
 
           <div className="space-y-2">
@@ -147,9 +147,9 @@ export function SettingsForm({ profile }: { profile: Profile | null }) {
               name="tiktok_pixel_id"
               placeholder="Example: C52A6F18B3E49"
               defaultValue={profile?.tiktok_pixel_id || ''}
-              className="bg-zinc-950 border-white/10 rounded-xl text-white focus-visible:ring-red-500"
+              className="bg-zinc-950 border-white/10 rounded-xl text-white placeholder:text-zinc-400 focus-visible:ring-red-500"
             />
-            <p className="text-[10px] text-zinc-500">Track promotional campaign conversions and target audiences on TikTok.</p>
+            <p className="text-[11px] text-zinc-400">Track promotional campaign conversions and target audiences on TikTok.</p>
           </div>
 
           <div className="space-y-2">
@@ -161,9 +161,9 @@ export function SettingsForm({ profile }: { profile: Profile | null }) {
               name="ga_measurement_id"
               placeholder="Example: G-A1B2C3D4E5"
               defaultValue={profile?.ga_measurement_id || ''}
-              className="bg-zinc-950 border-white/10 rounded-xl text-white focus-visible:ring-emerald-500"
+              className="bg-zinc-950 border-white/10 rounded-xl text-white placeholder:text-zinc-400 focus-visible:ring-emerald-500"
             />
-            <p className="text-[10px] text-zinc-500">Connect Google Analytics (GA4) properties to monitor demographics & detailed visitor analysis.</p>
+            <p className="text-[11px] text-zinc-400">Connect Google Analytics (GA4) properties to monitor demographics & detailed visitor analysis.</p>
           </div>
         </CardContent>
       </Card>

@@ -31,6 +31,18 @@ export const animationEnum = z.enum(['none', 'pulse', 'bounce', 'shake', 'wobble
 const usernameRegex = /^[a-z0-9_-]+$/
 export const usernameBlacklist = ['admin', 'api', 'dashboard', 'login', 'register', 'auth', 'settings', 'appearance', 'analytics', 'static', 'assets', 'cdn', 'www', 'support', 'help', 'test']
 
+export const usernameSchema = z.string()
+  .min(3, 'Username must be at least 3 characters')
+  .max(30, 'Username too long (max 30)')
+  .regex(usernameRegex, 'Only lowercase letters, numbers, underscores, and hyphens allowed')
+  .refine(u => !usernameBlacklist.includes(u.toLowerCase()), 'This username is protected')
+
+export const signupSchema = z.object({
+  email: z.string().email({ message: 'Invalid email address' }),
+  password: z.string().min(6, { message: 'Password must be at least 6 characters' }),
+  username: usernameSchema.optional(),
+})
+
 export const createLinkSchema = z.object({
   linkType: z.enum(['link', 'header', 'carousel']).default('link'),
 })
@@ -149,11 +161,7 @@ export const updateProfileInfoSchema = z.object({
   full_name: z.string().max(100, 'Name too long').nullable().optional(),
   bio: z.string().max(500, 'Bio too long').nullable().optional(),
   avatar_url: z.string().max(2048).nullable().optional(),
-  username: z.string()
-    .min(3, 'Username must be at least 3 characters')
-    .max(30, 'Username too long (max 30)')
-    .regex(usernameRegex, 'Only lowercase letters, numbers, underscores, and hyphens allowed')
-    .refine(u => !usernameBlacklist.includes(u.toLowerCase()), 'This username is protected'),
+  username: usernameSchema,
 })
 
 export const updateSocialLinksSchema = z.record(z.string(), z.string().max(2048))

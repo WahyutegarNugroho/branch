@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
@@ -16,6 +16,7 @@ export function RegisterForm({ initialUsername }: { initialUsername?: string | n
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+  const [username, setUsername] = useState(initialUsername || '')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [passwordMatch, setPasswordMatch] = useState(true)
@@ -57,6 +58,29 @@ export function RegisterForm({ initialUsername }: { initialUsername?: string | n
           )}
 
           <div className="space-y-1.5">
+            <Label htmlFor="username" className="text-zinc-300 text-xs font-bold uppercase tracking-wider">
+              Choose your link
+            </Label>
+            <div className="flex items-center rounded-xl border border-white/10 bg-white/[0.03] focus-within:border-emerald-400 focus-within:ring-2 focus-within:ring-emerald-400/20 overflow-hidden h-12 px-3.5 transition-all duration-300 shadow-inner">
+              <span className="text-zinc-400 font-mono text-xs select-none pr-1">branch.bio/</span>
+              <Input
+                id="username"
+                name="username"
+                type="text"
+                autoComplete="username"
+                spellCheck={false}
+                value={username}
+                onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, ''))}
+                placeholder="yourname"
+                required
+                maxLength={30}
+                className="border-0 bg-transparent text-white focus-visible:ring-0 p-0 h-full text-sm font-medium placeholder:text-zinc-400 focus:outline-none"
+              />
+            </div>
+            <p className="text-[11px] text-zinc-400">Lowercase letters, numbers, hyphens, and underscores.</p>
+          </div>
+
+          <div className="space-y-1.5">
             <Label htmlFor="email" className="text-zinc-300 text-xs font-bold uppercase tracking-wider">Email Address</Label>
             <Input
               id="email"
@@ -64,7 +88,7 @@ export function RegisterForm({ initialUsername }: { initialUsername?: string | n
               type="email"
               placeholder="name@example.com"
               required
-              className="rounded-xl border-white/5 bg-white/[0.03] text-white focus-visible:ring-white/50 placeholder:text-zinc-600 h-12 transition-all duration-300 focus:bg-white/[0.05] hover:bg-white/[0.04]"
+              className="rounded-xl border-white/5 bg-white/[0.03] text-white focus-visible:ring-white/50 placeholder:text-zinc-400 h-12 transition-all duration-300 focus:bg-white/[0.05] hover:bg-white/[0.04]"
             />
           </div>
 
@@ -104,7 +128,7 @@ export function RegisterForm({ initialUsername }: { initialUsername?: string | n
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="Re-enter your password"
-              className={`rounded-xl border-white/5 bg-white/[0.03] text-white focus-visible:ring-white/50 h-12 transition-all duration-300 focus:bg-white/[0.05] hover:bg-white/[0.04] ${!passwordMatch ? 'border-red-500' : ''}`}
+              className={`rounded-xl border-white/5 bg-white/[0.03] text-white focus-visible:ring-white/50 placeholder:text-zinc-400 h-12 transition-all duration-300 focus:bg-white/[0.05] hover:bg-white/[0.04] ${!passwordMatch ? 'border-red-500' : ''}`}
             />
             {!passwordMatch && (
               <p className="text-red-400 text-xs font-medium flex items-center gap-1">

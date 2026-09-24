@@ -6,6 +6,8 @@ import {
   updateSocialLinksSchema,
   updateSettingsSchema,
   createLinkSchema,
+  signupSchema,
+  usernameSchema,
 } from '../validations'
 
 describe('updateLinkSchema', () => {
@@ -245,3 +247,47 @@ describe('updateSettingsSchema', () => {
     expect(result.success).toBe(false)
   })
 })
+
+describe('usernameSchema & signupSchema', () => {
+  it('accepts valid username in usernameSchema', () => {
+    const result = usernameSchema.safeParse('john_doe-99')
+    expect(result.success).toBe(true)
+  })
+
+  it('rejects uppercase or invalid characters in usernameSchema', () => {
+    const result = usernameSchema.safeParse('John Doe!')
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects protected usernames in usernameSchema', () => {
+    const result = usernameSchema.safeParse('admin')
+    expect(result.success).toBe(false)
+  })
+
+  it('accepts signup with valid email, password, and claimed username', () => {
+    const result = signupSchema.safeParse({
+      email: 'test@example.com',
+      password: 'password123',
+      username: 'myhandle',
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('accepts signup without username (optional)', () => {
+    const result = signupSchema.safeParse({
+      email: 'test@example.com',
+      password: 'password123',
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('rejects signup with invalid username', () => {
+    const result = signupSchema.safeParse({
+      email: 'test@example.com',
+      password: 'password123',
+      username: 'ab', // too short
+    })
+    expect(result.success).toBe(false)
+  })
+})
+
