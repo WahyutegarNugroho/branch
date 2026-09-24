@@ -83,6 +83,7 @@ export function LinkManager({ initialLinks }: { initialLinks: Link[] }) {
         </div>
       )}
       <DndContext 
+        id="dashboard-links-dnd"
         sensors={sensors}
         collisionDetection={closestCenter}
         onDragEnd={handleDragEnd}

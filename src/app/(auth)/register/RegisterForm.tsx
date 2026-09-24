@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { signup } from '@/app/auth/actions'
 import { Button } from '@/components/ui/button'
@@ -13,6 +14,7 @@ import { AuthCard } from '@/components/shared/AuthCard'
 import { Loader2, Eye, EyeOff } from 'lucide-react'
 
 export function RegisterForm({ initialUsername }: { initialUsername?: string | null }) {
+  const router = useRouter()
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
@@ -26,17 +28,35 @@ export function RegisterForm({ initialUsername }: { initialUsername?: string | n
     setPasswordMatch(password === confirmPassword || confirmPassword === '')
   }, [password, confirmPassword])
 
-  async function onSubmit(formData: FormData) {
-    const password = formData.get('password') as string
-    if (password !== confirmPassword) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    const formData = new FormData(e.currentTarget)
+    const formPassword = formData.get('password') as string
+    if (formPassword !== confirmPassword) {
       setError('Passwords do not match')
       return
     }
     setLoading(true)
     setError(null)
-    const result = await signup(formData)
-    if (result?.error) {
-      setError(result.error)
+
+    try {
+      const result = await signup(formData)
+      if (result?.error) {
+        setError(result.error)
+        setLoading(false)
+        return
+      }
+
+      if (result?.success) {
+        router.push('/dashboard')
+        router.refresh()
+      }
+    } catch (err: unknown) {
+      if (err instanceof Error && (err.message.includes('NEXT_REDIRECT') || (err as { digest?: string }).digest?.startsWith('NEXT_REDIRECT'))) {
+        return
+      }
+      console.error('Signup error:', err)
+      setError('An unexpected error occurred. Please try again.')
       setLoading(false)
     }
   }
@@ -44,7 +64,7 @@ export function RegisterForm({ initialUsername }: { initialUsername?: string | n
   return (
     <AuthCard title="Create an Account" description={initialUsername ? `Claim branch.bio/${initialUsername}` : 'Join Branch to power your digital presence'}>
       <CardContent>
-        <form action={onSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
           {error && (
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}

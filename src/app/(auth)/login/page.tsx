@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { login } from '@/app/auth/actions'
 import { Button } from '@/components/ui/button'
@@ -13,16 +14,36 @@ import { AuthCard } from '@/components/shared/AuthCard'
 import { Loader2, Eye, EyeOff } from 'lucide-react'
 
 export default function LoginPage() {
+  const router = useRouter()
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
 
-  async function onSubmit(formData: FormData) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
     setLoading(true)
     setError(null)
-    const result = await login(formData)
-    if (result?.error) {
-      setError(result.error)
+
+    try {
+      const formData = new FormData(e.currentTarget)
+      const result = await login(formData)
+
+      if (result?.error) {
+        setError(result.error)
+        setLoading(false)
+        return
+      }
+
+      if (result?.success) {
+        router.push('/dashboard')
+        router.refresh()
+      }
+    } catch (err: unknown) {
+      if (err instanceof Error && (err.message.includes('NEXT_REDIRECT') || (err as { digest?: string }).digest?.startsWith('NEXT_REDIRECT'))) {
+        return
+      }
+      console.error('Login error:', err)
+      setError('An unexpected error occurred. Please try again.')
       setLoading(false)
     }
   }
@@ -30,7 +51,7 @@ export default function LoginPage() {
   return (
     <AuthCard title="Welcome Back" description="Log in to manage your digital presence">
       <CardContent>
-        <form action={onSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
           {error && (
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
@@ -49,6 +70,7 @@ export default function LoginPage() {
               id="email"
               name="email"
               type="email"
+              autoComplete="email"
               placeholder="name@example.com"
               required
               className="rounded-xl border-white/5 bg-white/[0.03] text-white focus-visible:ring-white/50 placeholder:text-zinc-400 h-12 transition-all duration-300 focus:bg-white/[0.05] hover:bg-white/[0.04]"
@@ -67,6 +89,7 @@ export default function LoginPage() {
                 id="password"
                 name="password"
                 type={showPassword ? "text" : "password"}
+                autoComplete="current-password"
                 required
                 className="rounded-xl border-white/5 bg-white/[0.03] text-white focus-visible:ring-white/50 h-12 pr-12 transition-all duration-300 focus:bg-white/[0.05] hover:bg-white/[0.04]"
               />

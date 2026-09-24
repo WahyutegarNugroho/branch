@@ -22,9 +22,11 @@ async function getClientIp(): Promise<string> {
 
 export async function login(formData: FormData) {
   const clientIp = await getClientIp()
-  const limit = checkRateLimit(`auth:${clientIp}`, { maxRequests: 5, windowMs: 60_000 })
+  const isDev = process.env.NODE_ENV === 'development'
+  const maxRequests = isDev ? 100 : 10
+  const limit = checkRateLimit(`auth:${clientIp}`, { maxRequests, windowMs: 60_000 })
   if (!limit.allowed) {
-    return { error: 'Too many requests. Try again later.' }
+    return { error: 'Too many requests. Please wait a moment and try again.' }
   }
 
   const supabase = await createClient()
@@ -47,16 +49,18 @@ export async function login(formData: FormData) {
   }
 
   revalidatePath('/', 'layout')
-  redirect('/dashboard')
+  return { success: true }
 }
 
 import { signupSchema } from '@/lib/validations'
 
 export async function signup(formData: FormData) {
   const clientIp = await getClientIp()
-  const limit = checkRateLimit(`auth:${clientIp}`, { maxRequests: 5, windowMs: 60_000 })
+  const isDev = process.env.NODE_ENV === 'development'
+  const maxRequests = isDev ? 100 : 10
+  const limit = checkRateLimit(`auth:${clientIp}`, { maxRequests, windowMs: 60_000 })
   if (!limit.allowed) {
-    return { error: 'Too many requests. Try again later.' }
+    return { error: 'Too many requests. Please wait a moment and try again.' }
   }
 
   const supabase = await createClient()
@@ -110,7 +114,7 @@ export async function signup(formData: FormData) {
   }
 
   revalidatePath('/', 'layout')
-  redirect('/dashboard')
+  return { success: true }
 }
 
 export async function logout() {

@@ -1,22 +1,16 @@
-import { getProfile } from '@/app/actions/profile-actions'
-import { getLinks, createLink } from '@/app/actions/link-actions'
+import { createLink } from '@/app/actions/link-actions'
 import { redirect } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
 import { LinkManager } from '@/components/dashboard/LinkManager'
-import { getCachedLinks, getCachedProfile } from '@/lib/data-loaders'
+import { getCachedLinks } from '@/lib/data-loaders'
 import { requireAuth } from '@/utils/supabase/server'
 
 export default async function DashboardPage() {
   const { user } = await requireAuth()
   if (!user) redirect('/login')
 
-  const [profileRes, linksRes] = await Promise.all([
-    getCachedProfile(user.id),
-    getCachedLinks(user.id)
-  ])
-
-  const profile = profileRes.data
+  const linksRes = await getCachedLinks(user.id)
   const links = linksRes.data || []
 
   async function handleCreateLinkAction() {

@@ -63,6 +63,9 @@ export const LivePreview = memo(function LivePreview({ profile: initialProfile, 
     bgStyle.background = profile.bg_color || 'linear-gradient(to bottom, #ec4899, #f97316)'
   } else if (profile?.bg_type === 'image' && profile?.bg_image_url) {
     bgStyle.backgroundImage = `url(${profile.bg_image_url})`
+    bgStyle.backgroundSize = 'cover'
+    bgStyle.backgroundPosition = 'center'
+    bgStyle.backgroundRepeat = 'no-repeat'
     bgClass += " bg-cover bg-center bg-no-repeat"
   } else {
     bgStyle.backgroundColor = '#09090b' // fallback

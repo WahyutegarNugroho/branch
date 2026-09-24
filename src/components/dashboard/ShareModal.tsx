@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useSyncExternalStore } from 'react'
 import { createPortal } from 'react-dom'
 import { QRCodeCanvas } from 'qrcode.react'
 import { toast } from 'sonner'
@@ -28,10 +28,10 @@ export function ShareModal({
 }) {
   const [copied, setCopied] = useState(false)
   const canvasRef = useRef<HTMLDivElement>(null)
-  const shareUrl = typeof window !== 'undefined' && profile?.username
-    ? `${window.location.protocol}//${window.location.host}/${profile.username}`
-    : ''
-  const [mounted] = useState(() => typeof window !== 'undefined')
+  const emptySubscribe = () => () => {}
+  const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false)
+  const origin = useSyncExternalStore(emptySubscribe, () => `${window.location.protocol}//${window.location.host}`, () => '')
+  const shareUrl = profile?.username && origin ? `${origin}/${profile.username}` : ''
 
   if (!isOpen || !profile || !mounted) return null
 

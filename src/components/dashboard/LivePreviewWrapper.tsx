@@ -1,10 +1,6 @@
 import { LivePreview } from '@/components/dashboard/LivePreview'
-import { getLinks } from '@/app/actions/link-actions'
+import type { Profile, Link } from '@/types'
 
-import type { Profile } from '@/types'
-
-export default async function LivePreviewWrapper({ profile }: { profile: Profile | null }) {
-  const links = await getLinks()
-
+export default function LivePreviewWrapper({ profile, links = [] }: { profile: Profile | null; links?: Link[] }) {
   return <LivePreview profile={profile} links={links} />
 }

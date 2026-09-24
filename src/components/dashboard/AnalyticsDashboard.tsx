@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useSyncExternalStore } from 'react'
 import { getAnalyticsStats } from '@/app/actions/analytics-actions'
 import { AnalyticsChart } from '@/components/dashboard/AnalyticsChart'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
@@ -43,12 +43,9 @@ export function AnalyticsDashboard({
   const [loading, setLoading] = useState(false)
   const [copied, setCopied] = useState(false)
   const [showEmptyMetrics, setShowEmptyMetrics] = useState(false)
-
-  const profileUrl = typeof window !== 'undefined' && username
-    ? `${window.location.origin}/${username}`
-    : username
-    ? `https://branch.bio/${username}`
-    : ''
+  const emptySubscribe = () => () => {}
+  const origin = useSyncExternalStore(emptySubscribe, () => window.location.origin, () => 'https://branch.bio')
+  const profileUrl = username ? `${origin}/${username}` : ''
 
   const handleCopy = () => {
     if (!profileUrl) return

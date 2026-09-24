@@ -1,4 +1,3 @@
-import { createClient } from '@/utils/supabase/server'
 import { notFound } from 'next/navigation'
 import { AnimatedProfile } from '@/components/public/AnimatedProfile'
 import { Metadata } from 'next'
@@ -64,6 +63,12 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
     bgStyle.background = profile.bg_color || 'linear-gradient(to bottom, #ec4899, #f97316)'
   } else if (profile.bg_type === 'image' && profile.bg_image_url) {
     bgStyle.backgroundImage = `url(${profile.bg_image_url})`
+    bgStyle.backgroundSize = 'cover'
+    bgStyle.backgroundPosition = 'center'
+    bgStyle.backgroundRepeat = 'no-repeat'
+    if (profile.bg_color) {
+      bgStyle.backgroundColor = profile.bg_color
+    }
     bgClass += " bg-cover bg-center bg-no-repeat"
   } else if (profile.bg_type === 'video') {
     bgStyle.backgroundColor = '#09090b'

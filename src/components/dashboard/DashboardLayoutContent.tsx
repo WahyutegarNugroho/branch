@@ -2,15 +2,13 @@
 
 import React from 'react'
 import { usePathname } from 'next/navigation'
-import LivePreviewWrapper from '@/components/dashboard/LivePreviewWrapper'
-import type { Profile } from '@/types'
 
 interface DashboardLayoutContentProps {
-  profile: Profile | null
   children: React.ReactNode
+  preview?: React.ReactNode
 }
 
-export function DashboardLayoutContent({ profile, children }: DashboardLayoutContentProps) {
+export function DashboardLayoutContent({ children, preview }: DashboardLayoutContentProps) {
   const pathname = usePathname()
 
   // Full-width pages without the mobile live preview phone
@@ -33,7 +31,7 @@ export function DashboardLayoutContent({ profile, children }: DashboardLayoutCon
       
       {/* Right Column - Live Preview */}
       <aside aria-label="Live Profile Preview" className="hidden md:block bg-zinc-900/20 border-l border-white/10 relative">
-        <LivePreviewWrapper profile={profile} />
+        {preview}
       </aside>
     </div>
   )

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo, useSyncExternalStore } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/utils/supabase/client'
 import { usePreviewStore } from '@/lib/preview-store'
@@ -63,9 +63,9 @@ export function useAppearanceState(profile: Profile | null) {
   const bannerInputRef = useRef<HTMLInputElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const avatarInputRef = useRef<HTMLInputElement>(null)
-  const [hostPrefix] = useState(() =>
-    typeof window !== 'undefined' ? `${window.location.host}/` : 'branch.app/'
-  )
+  const emptySubscribe = () => () => {}
+  const hostPrefix = useSyncExternalStore(emptySubscribe, () => `${window.location.host}/`, () => 'branch.app/')
+
   const [themes, setThemes] = useState<Theme[]>([])
   const [showBranding, setShowBranding] = useState(profile?.show_branding !== false)
   const [brandingLoading, setBrandingLoading] = useState(false)
