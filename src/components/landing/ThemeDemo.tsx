@@ -71,10 +71,10 @@ export function ThemeDemo() {
       >
         <div className="flex items-center gap-3 mb-4">
           <div className="w-11 h-11 rounded-full bg-black/20 border border-white/15 flex items-center justify-center">
-            <span className="text-white text-sm font-bold">SC</span>
+            <span className="text-white text-sm font-bold">B</span>
           </div>
           <div>
-            <p className="text-white text-sm font-bold leading-tight">Sarah Chen</p>
+            <p className="text-white text-sm font-bold leading-tight">Ben</p>
             <p className="text-white/60 text-xs">Design engineer · side projects</p>
           </div>
         </div>

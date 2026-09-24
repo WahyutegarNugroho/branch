@@ -56,13 +56,13 @@ interface Archetype {
 
 const ARCHETYPES: Archetype[] = [
   {
-    id: 'minimal',
-    label: 'Minimal Dark',
+    id: 'ben',
+    label: 'Ben',
     tag: 'Design Engineer',
-    name: 'Elena Vance',
-    handle: 'elena.design',
+    name: 'Ben',
+    handle: 'ben',
     bio: 'Crafting design systems & web interfaces. Based in Tokyo.',
-    avatarInitials: 'EV',
+    avatarInitials: 'B',
     avatarBg: 'bg-zinc-800 text-white',
     bgType: 'solid',
     bgClass: 'bg-[#09090b]',
@@ -70,7 +70,7 @@ const ARCHETYPES: Archetype[] = [
     buttonShape: 'rounded-xl',
     fontClass: 'font-sans',
     verified: true,
-    domain: 'elena.design',
+    domain: 'branch.bio/ben',
     links: [
       { title: 'Read my latest design essay', sub: 'Substack &bull; 8 min read', clicks: '2.4k', isSpotlight: true },
       { title: 'Interactive Web Components Kit', sub: 'GitHub Open Source', clicks: '1.8k' },
@@ -83,13 +83,13 @@ const ARCHETYPES: Archetype[] = [
     }
   },
   {
-    id: 'aurora',
-    label: 'Aurora',
+    id: 'jack',
+    label: 'Jack',
     tag: 'Creative Tech',
-    name: 'Kaelen Thorne',
-    handle: 'kaelen.art',
+    name: 'Jack',
+    handle: 'jack',
     bio: 'Shader programmer & 3D generative artist. WebGL & GLSL.',
-    avatarInitials: 'KT',
+    avatarInitials: 'J',
     avatarBg: 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/30',
     bgType: 'aurora',
     bgClass: 'bg-black',
@@ -97,7 +97,7 @@ const ARCHETYPES: Archetype[] = [
     buttonShape: 'rounded-full',
     fontClass: 'font-sans',
     verified: true,
-    domain: 'branch.bio/kaelen',
+    domain: 'branch.bio/jack',
     links: [
       { title: 'Generative Canvas Collection 2026', sub: 'Live Interactive Shaders', clicks: '4.1k', isSpotlight: true },
       { title: 'Shader Programming Course', sub: '12 Chapters on WebGL & Three.js', clicks: '3.2k' },
@@ -110,13 +110,13 @@ const ARCHETYPES: Archetype[] = [
     }
   },
   {
-    id: 'matrix',
-    label: 'Matrix',
+    id: 'max',
+    label: 'Max',
     tag: 'Cybersec / Dev',
-    name: 'ZeroDay Protocol',
-    handle: 'zeroday.sh',
+    name: 'Max',
+    handle: 'max',
     bio: 'Root security research, reverse engineering, and exploit writeups.',
-    avatarInitials: '>_',
+    avatarInitials: 'M',
     avatarBg: 'bg-emerald-950 text-emerald-400 border border-emerald-500/40 font-mono',
     bgType: 'matrix',
     bgClass: 'bg-black',
@@ -124,21 +124,26 @@ const ARCHETYPES: Archetype[] = [
     buttonShape: 'rounded-md',
     fontClass: 'font-mono',
     verified: true,
-    domain: 'branch.bio/zeroday',
+    domain: 'branch.bio/max',
     links: [
       { title: './exploit-advisory-2026.pdf', sub: 'Zero-day vulnerability writeup', clicks: '5.6k', isSpotlight: true },
       { title: 'git clone /gh/security-toolkit', sub: 'Rust security audit tool suite', clicks: '2.9k' },
       { title: 'cat /etc/bug-bounty-hall-of-fame', sub: 'Recognized by Top 50 bounties', clicks: '1.2k' },
-    ]
+    ],
+    nowPlaying: {
+      title: 'Overclocked (Original Mix)',
+      artist: 'Master Boot Record',
+      albumArt: '⚡'
+    }
   },
   {
-    id: 'stars',
-    label: 'Stars',
+    id: 'sam',
+    label: 'Sam',
     tag: 'Photographer',
-    name: 'Aria Nova',
-    handle: 'aria.deepsky',
+    name: 'Sam',
+    handle: 'sam',
     bio: 'Deep sky astrophotographer. Capturing nebulae and distant galaxies.',
-    avatarInitials: 'AN',
+    avatarInitials: 'S',
     avatarBg: 'bg-indigo-950 text-indigo-200 border border-indigo-500/30',
     bgType: 'stars',
     bgClass: 'bg-[#050510]',
@@ -146,44 +151,22 @@ const ARCHETYPES: Archetype[] = [
     buttonShape: 'rounded-xl',
     fontClass: 'font-sans',
     verified: true,
-    domain: 'aria.stills',
+    domain: 'branch.bio/sam',
     links: [
       { title: 'Orion Nebula Ultra-HD Wallpapers', sub: 'Free 8K Download Pack', clicks: '3.8k', isSpotlight: true },
       { title: '2026 Milky Way Workshop Calendar', sub: 'Atacama Desert Expedition', clicks: '1.4k' },
       { title: 'My Astrophotography Gear Setup', sub: 'Telescopes, filters, mounts', clicks: '890' },
-    ]
-  },
-  {
-    id: 'sunset',
-    label: 'Warm Slate',
-    tag: 'Creator / Podcast',
-    name: 'Leo Rivera',
-    handle: 'leorivera',
-    bio: 'Storyteller, specialty coffee roaster, & host of The Craft Podcast.',
-    avatarInitials: 'LR',
-    avatarBg: 'bg-zinc-800 text-white border border-zinc-700',
-    bgType: 'solid',
-    bgClass: 'bg-[#18181b]',
-    buttonClass: 'bg-white text-zinc-950 font-semibold shadow-md hover:bg-zinc-100',
-    buttonShape: 'rounded-full',
-    fontClass: 'font-sans',
-    verified: true,
-    domain: 'branch.bio/leorivera',
-    links: [
-      { title: 'The Craft Podcast: Ep 42 with Sarah Chen', sub: 'Listen on Spotify / Apple', clicks: '6.2k', isSpotlight: true },
-      { title: 'Specialty Ethiopian Single-Origin Roast', sub: 'Small-batch release', clicks: '2.1k' },
-      { title: 'Sunday Morning Newsletter', sub: 'Join 14,000+ weekly readers', clicks: '1.5k' },
     ],
     nowPlaying: {
-      title: 'The Craft Podcast &bull; Ep 42',
-      artist: 'Leo Rivera ft. Sarah Chen',
-      albumArt: '🎙️'
+      title: 'Deep Sky Drift',
+      artist: 'Solar Fields',
+      albumArt: '✨'
     }
   }
 ]
 
 export function HeroLivePreview() {
-  const [activeId, setActiveId] = useState('aurora')
+  const [activeId, setActiveId] = useState('ben')
   const [isPlaying, setIsPlaying] = useState(false)
   const [activeLinkClicks, setActiveLinkClicks] = useState<Record<string, number>>({})
 

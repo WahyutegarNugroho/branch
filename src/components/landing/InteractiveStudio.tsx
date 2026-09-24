@@ -3,7 +3,6 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import {
-  Sliders,
   Type,
   Square,
   MousePointerClick,
@@ -215,9 +214,9 @@ export function InteractiveStudio() {
               {/* Sample Profile Header */}
               <div className={`text-center mb-6 ${getFontClass()}`}>
                 <div className="w-16 h-16 rounded-full bg-zinc-800 border border-zinc-700 text-white font-bold text-lg flex items-center justify-center mx-auto mb-3 shadow-md">
-                  ST
+                  S
                 </div>
-                <h3 className="text-lg font-bold text-white tracking-tight">Sarah Tan</h3>
+                <h3 className="text-lg font-bold text-white tracking-tight">Sam</h3>
                 <p className="text-xs text-zinc-300 mt-1">
                   Photographer & visual designer based in Jakarta.
                 </p>
